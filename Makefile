@@ -1,11 +1,11 @@
 all:
-	gnatprove -Pp.prj -j 2 tests.adb
+	gnatprove -Pp.gpr -j 2 tests.adb
 
 pp:
-	gnatpp -Pp.prj -rnb
+	gnatpp -Pp.gpr -rnb
 
 clean:
-	gnatclean -Pp.prj
+	gnatclean -Pp.gpr
 	-rm -rf *~
 
 distclean: clean
