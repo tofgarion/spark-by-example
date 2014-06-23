@@ -20,8 +20,8 @@ package body Chap6 is
       Temp : T;
    begin
       Temp := X;
-      X := Y;
-      Y := Temp;
+      X    := Y;
+      Y    := Temp;
    end Swap;
 
 end Chap6;
