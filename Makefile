@@ -1,5 +1,5 @@
 all:
-	gnatprove -Pp.gpr -j 2 tests.adb
+	gnatprove -Pp.gpr -j 2 chap*.adb
 
 pp:
 	gnatpp -Pp.gpr -rnb
