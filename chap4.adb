@@ -1,4 +1,7 @@
-package body Chap4 is
+package body Chap4
+  with SPARK_Mode
+is
+
 
    -----------------
    -- Max_Element --

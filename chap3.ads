@@ -2,10 +2,11 @@
 --  "ACSL by Example" technical report, chapter 3, from
 --  http://www.fokus.fraunhofer.de/de/sqc/_download_sqc/ACSL-by-Example.pdf
 
-generic
-   type T is (<>);
+package Chap3
+  with SPARK_Mode
+is
 
-package Chap3 is
+   type T is new Integer;
 
    type T_Arr is array (Positive range <>) of T;
 

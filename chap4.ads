@@ -6,10 +6,11 @@
 --  * all examples from this chapter are implemented
 --  * GNATProve GPL2014 discharges all VCs of this package
 
-generic
-   type T is (<>);
+package Chap4
+  with SPARK_Mode
+is
 
-package Chap4 is
+   type T is new Integer;
 
    type T_Arr is array (Positive range <>) of T;
 

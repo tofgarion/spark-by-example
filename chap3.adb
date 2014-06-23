@@ -1,4 +1,6 @@
-package body Chap3 is
+package body Chap3
+  with SPARK_Mode
+is
 
    -----------
    -- Equal --
