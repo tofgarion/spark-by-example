@@ -1,0 +1,15 @@
+project P is
+
+  for Source_Dirs use (".");
+
+  package Compiler is
+    for Default_Switches ("Ada") use ("-gnat12");
+  end Compiler;
+
+  package Prove is
+    for Switches use ("--mode=prove",
+                      "--report=fail",
+                      "--warnings=continue");
+  end Prove;
+
+end P;
