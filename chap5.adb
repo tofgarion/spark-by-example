@@ -13,7 +13,6 @@ package body Chap5 with
    begin
       Left   := A'First;
       Right  := A'Last;
-      Middle := (Left + Right) / 2;
 
       if A (Left) > Val or else A (Right) < Val then
          return 0;
@@ -22,10 +21,10 @@ package body Chap5 with
       while Left < Right loop
          pragma Loop_Invariant
            ((Left >= A'First) and
-            (Left <= Right) and
+            (Left <= Right + 1) and --  XXX differs from ACSL-by-Example
             (Right <= A'Last) and
-            (for all Index in A'First .. Left - 1 => A (Index) <= Val) and
-            (for all Index in Right .. A'Last => Val <= A (Index)));
+            (for all J in A'Range => (if J < Left then A (J) < Val)) and
+            (for all J in Right .. A'Last => Val <= A (J)));
 
          pragma Loop_Variant (Decreases => Right - Left);
 
@@ -33,14 +32,12 @@ package body Chap5 with
          if A (Middle) < Val then
             pragma Assert (for all J in A'First .. Middle => A (J) < Val);
             Left := Middle + 1;
-         elsif A (Middle) > Val then
-            Right := Middle;
          else
-            return Middle;
+            Right := Middle;
          end if;
       end loop;
 
-      return 0;
+      return Left;
    end Lower_Bound;
 
 end Chap5;

@@ -33,7 +33,8 @@ package Chap5 with
 
    function Lower_Bound (A : T_Arr; Val : T) return Index_T with
       Pre =>
-      --  For now, we inline definition of Is_Sorted
+     --  XXX GNATProve GPL 2014
+     --  For now, we inline definition of Is_Sorted
       (for all J in A'Range =>
          (for all K in J + 1 .. A'Last => A (J) <= A (K))),
       Post =>
