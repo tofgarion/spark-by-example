@@ -6,9 +6,8 @@
 --  * all examples from this chapter are implemented
 --  * GNATProve GPL2014 discharges all VCs of this package
 
-package Chap4
-  with SPARK_Mode
-is
+package Chap4 with
+     Spark_Mode is
 
    type T is new Integer;
 

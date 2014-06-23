@@ -1,7 +1,5 @@
-package body Chap6
-  with SPARK_Mode
-is
-
+package body Chap6 with
+     Spark_Mode is
 
    ----------
    -- Fill --

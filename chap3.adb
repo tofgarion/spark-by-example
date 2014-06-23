@@ -1,6 +1,5 @@
-package body Chap3
-  with SPARK_Mode
-is
+package body Chap3 with
+     Spark_Mode is
 
    -----------
    -- Equal --

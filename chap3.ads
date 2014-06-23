@@ -2,9 +2,8 @@
 --  "ACSL by Example" technical report, chapter 3, from
 --  http://www.fokus.fraunhofer.de/de/sqc/_download_sqc/ACSL-by-Example.pdf
 
-package Chap3
-  with SPARK_Mode
-is
+package Chap3 with
+     Spark_Mode is
 
    type T is new Integer;
 
@@ -39,9 +38,11 @@ is
       Size : Positive) return Natural with
       Pre  => (Size <= A'Length and Size <= B'Length),
       Post =>
-      ((Mismatch'Result < Size and then
-        Is_Equal (A, B, Mismatch'Result) and then
-        A (A'First + Mismatch'Result) /= B (B'First + Mismatch'Result)) or
+      ((Mismatch'Result < Size
+        and then Is_Equal (A, B, Mismatch'Result)
+        and then
+          A (A'First + Mismatch'Result) /=
+          B (B'First + Mismatch'Result)) or
        (Mismatch'Result = Size and Is_Equal (A, B, Size)));
 
       --  3.3 The 'find' algorithm

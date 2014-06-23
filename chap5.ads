@@ -2,9 +2,8 @@
 --  "ACSL by Example" technical report, chapter 5, from
 --  http://www.fokus.fraunhofer.de/de/sqc/_download_sqc/ACSL-by-Example.pdf
 
-package Chap5
-  with SPARK_Mode
-is
+package Chap5 with
+     Spark_Mode is
 
    type T is new Integer;
 
@@ -33,11 +32,10 @@ is
    --    can only be sure that val <= a[i] holds.
 
    function Lower_Bound (A : T_Arr; Val : T) return Index_T with
-     Pre  =>
-                --  For now, we inline definition of Is_Sorted
-              (for all J in A'Range =>
-                 (for all K in J + 1 .. A'Last => A (J) <= A (K)))
-             ,
+      Pre =>
+      --  For now, we inline definition of Is_Sorted
+      (for all J in A'Range =>
+         (for all K in J + 1 .. A'Last => A (J) <= A (K))),
       Post =>
       (if
          Lower_Bound'Result in A'Range

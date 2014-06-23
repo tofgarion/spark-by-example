@@ -2,9 +2,8 @@
 --  "ACSL by Example" technical report, chapter 6, from
 --  http://www.fokus.fraunhofer.de/de/sqc/_download_sqc/ACSL-by-Example.pdf
 
-package Chap6
-  with SPARK_Mode
-is
+package Chap6 with
+     Spark_Mode is
 
    type T is new Integer;
 

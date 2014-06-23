@@ -1,7 +1,5 @@
-package body Chap5
-  with SPARK_Mode
-is
-
+package body Chap5 with
+     Spark_Mode is
 
    -----------------
    -- Lower_Bound --
@@ -32,7 +30,6 @@ is
          pragma Loop_Variant (Decreases => Right - Left);
 
          Middle := Left + (Right - Left) / 2;
-
          if A (Middle) < Val then
             pragma Assert (for all J in A'First .. Middle => A (J) < Val);
             Left := Middle + 1;

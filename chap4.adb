@@ -1,7 +1,5 @@
-package body Chap4
-  with SPARK_Mode
-is
-
+package body Chap4 with
+     Spark_Mode is
 
    -----------------
    -- Max_Element --
