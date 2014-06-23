@@ -14,14 +14,14 @@ package Chap3 is
    --  The function returns true if a[i] == b[i] holds for each 0 <= i < n.
    --  Otherwise, equal returns false.
 
-   function Equal (A : T_Arr; B : T_Arr; Size : Positive) return Boolean with
+   function Equal (A : T_Arr; B : T_Arr; Size : Natural) return Boolean with
       Pre  => (Size <= A'Length and Size <= B'Length),
       Post => (Equal'Result = Is_Equal (A, B, Size));
 
    function Is_Equal
      (A    : T_Arr;
       B    : T_Arr;
-      Size : Positive) return Boolean is
+      Size : Natural) return Boolean is
      (for all I in 0 .. Size - 1 => A (A'First + I) = B (B'First + I)) with
       Pre => (Size <= A'Length and Size <= B'Length);
 
@@ -38,8 +38,8 @@ package Chap3 is
       Size : Positive) return Natural with
       Pre  => (Size <= A'Length and Size <= B'Length),
       Post =>
-      ((Mismatch'Result < Size and
-        Is_Equal (A, B, Mismatch'Result) and
+      ((Mismatch'Result < Size and then
+        Is_Equal (A, B, Mismatch'Result) and then
         A (A'First + Mismatch'Result) /= B (B'First + Mismatch'Result)) or
        (Mismatch'Result = Size and Is_Equal (A, B, Size)));
 

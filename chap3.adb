@@ -4,7 +4,7 @@ package body Chap3 is
    -- Equal --
    -----------
 
-   function Equal (A : T_Arr; B : T_Arr; Size : Positive) return Boolean is
+   function Equal (A : T_Arr; B : T_Arr; Size : Natural) return Boolean is
    begin
       --  Note: here, we provide a full implementation of the equal
       --  operator in place of a simple array comparison
