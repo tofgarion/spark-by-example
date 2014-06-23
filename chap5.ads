@@ -2,21 +2,23 @@
 --  "ACSL by Example" technical report, chapter 5, from
 --  http://www.fokus.fraunhofer.de/de/sqc/_download_sqc/ACSL-by-Example.pdf
 
-generic
-   type T is (<>);
+package Chap5
+  with SPARK_Mode
+is
 
-package Chap5 is
+   type T is new Integer;
 
-   type Index_T is range 0 ..10;
+   type Index_T is range 0 .. 10;
    subtype Index is Index_T range 1 .. 10;
 
    type T_Arr is array (Index) of T;
 
    --  Is_Sorted predicate
 
-   function Is_Sorted (A : T_Arr) return Boolean is
-      (for all J in A'Range =>
-         (for all K in J + 1 .. A'Last => A (J) <= A (K)));
+   function Is_Sorted
+     (A : T_Arr) return Boolean is
+     (for all J in A'Range =>
+        (for all K in J + 1 .. A'Last => A (J) <= A (K)));
 
    --  5.1 The 'lower_bound' algorithm
    --
@@ -30,11 +32,17 @@ package Chap5 is
    --  * If, however, lower_bound returns an index 0 <= i < n then we
    --    can only be sure that val <= a[i] holds.
 
-   function Lower_Bound (A : T_Arr; Val : T) return Index_T
-     with Pre => (Is_Sorted (A)),
-     Post =>
-     (if Lower_Bound'Result in A'Range then
-       (for all K in A'First .. Lower_Bound'Result - 1 => A (K) < Val) and
-       (for all K in Lower_Bound'Result .. A'Last => A(K) >= Val));
+   function Lower_Bound (A : T_Arr; Val : T) return Index_T with
+     Pre  =>
+                --  For now, we inline definition of Is_Sorted
+              (for all J in A'Range =>
+                 (for all K in J + 1 .. A'Last => A (J) <= A (K)))
+             ,
+      Post =>
+      (if
+         Lower_Bound'Result in A'Range
+       then
+         (for all K in A'First .. Lower_Bound'Result - 1 => A (K) < Val) and
+         (for all K in Lower_Bound'Result .. A'Last => A (K) >= Val));
 
 end Chap5;
