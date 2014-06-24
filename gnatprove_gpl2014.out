@@ -1,4 +1,4 @@
-gnatprove -Pp.gpr -j 2 chap*.adb
+gnatprove -Pp.gpr -j 2 --proof=progressive chap*.adb
 Phase 1 of 3: frame condition computation ...
 Phase 2 of 3: translation to intermediate language ...
 Phase 3 of 3: generation and proof of VCs ...
@@ -7,10 +7,8 @@ analyzing Chap6.Fill, 5 checks
 analyzing Chap6.Swap, 1 checks
 analyzing Chap5, 0 checks
 analyzing Chap5.Is_Sorted, 1 checks
-analyzing Chap5.Lower_Bound, 15 checks
-chap5.adb:23:10: warning: loop invariant might fail after first iteration
-chap5.adb:34:62: warning: assertion might fail, requires A (J) < Val
-chap5.ads:40:7: warning: postcondition might fail
+analyzing Chap5.Lower_Bound, 13 checks
+analyzing Chap5.Upper_Bound, 13 checks
 analyzing Chap4, 0 checks
 analyzing Chap4.Max_Element, 14 checks
 analyzing Chap4.Max_Seq, 5 checks

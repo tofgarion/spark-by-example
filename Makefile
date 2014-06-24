@@ -1,5 +1,5 @@
 all:
-	gnatprove -Pp.gpr -j 2 chap*.adb
+	gnatprove -Pp.gpr -j 2 --proof=progressive chap*.adb
 
 pp:
 	gnatpp -Pp.gpr -rnb

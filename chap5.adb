@@ -24,7 +24,7 @@ package body Chap5 with
             (Left <= Right + 1) and --  XXX differs from ACSL-by-Example
             (Right <= A'Last) and
             (for all J in A'Range => (if J < Left then A (J) < Val)) and
-            (for all J in Right .. A'Last => Val <= A (J)));
+            (for all J in Right .. A'Last => Val <= A (J)) and Is_Sorted (A));
 
          pragma Loop_Variant (Decreases => Right - Left);
 
