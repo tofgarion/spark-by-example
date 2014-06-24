@@ -8,6 +8,7 @@ project P is
 
   package Prove is
     for Switches use ("--mode=prove",
+                      "--proof=progressive",
                       "--report=fail",
                       "--warnings=continue");
   end Prove;
