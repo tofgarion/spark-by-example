@@ -16,11 +16,19 @@ package body Chap7 with
    -- Pop --
    ---------
 
-   procedure Pop (I : out Integer; S : in out Stack) with
+   procedure Pop (S : in out Stack) with
       Refined_Post => (S.Pointer = S.Pointer'Old - 1) is
    begin
-      I         := S.Vector (S.Pointer);
       S.Pointer := S.Pointer - 1;
    end Pop;
+
+   ---------------
+   -- Top_Stack --
+   ---------------
+
+   function Top_Stack (S : in Stack) return Integer is
+   begin
+      return S.Vector (S.Pointer);
+   end Top_Stack;
 
 end Chap7;

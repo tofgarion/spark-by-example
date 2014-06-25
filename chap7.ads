@@ -1,5 +1,5 @@
 --  This package provides an implementation of case studies from the
---  "ACSL by Example" technical report, chapter 6, from
+--  "ACSL by Example" technical report, chapter 7, from
 --  http://www.fokus.fraunhofer.de/de/sqc/_download_sqc/ACSL-by-Example.pdf
 
 package Chap7 with
@@ -10,15 +10,23 @@ package Chap7 with
 
    type Stack is private;
 
+   --  For now, we do not have stack initialization function, to be
+   --  refined later.
+
    function Empty_Stack (S : Stack) return Boolean;
+   function Full_Stack (S : Stack) return Boolean;
 
    function Size_Stack (S : Stack) return Pointer_Range;
 
    procedure Push (I : in Integer; S : in out Stack) with
-      Pre  => (Size_Stack (S) < Max_Stack_Size),
+      Pre  => (not Full_Stack (S)),
       Post => (not Empty_Stack (S));
 
-   procedure Pop (I : out Integer; S : in out Stack) with
+   procedure Pop (S : in out Stack) with
+      Pre  => (not Empty_Stack (S)),
+      Post => (not Full_Stack (S));
+
+   function Top_Stack (S : in Stack) return Integer with
       Pre => (not Empty_Stack (S));
 
 private
@@ -32,6 +40,9 @@ private
    end record;
 
    function Empty_Stack (S : Stack) return Boolean is (S.Pointer = 0);
+   function Full_Stack
+     (S : Stack) return Boolean is
+     (S.Pointer = Max_Stack_Size);
 
    function Size_Stack (S : Stack) return Pointer_Range is (S.Pointer);
 
