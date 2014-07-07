@@ -2,6 +2,10 @@
 --  "ACSL by Example" technical report, chapter 7, from
 --  http://www.fokus.fraunhofer.de/de/sqc/_download_sqc/ACSL-by-Example.pdf
 
+--  Note:
+--  * all examples from this chapter are implemented
+--  * GNATProve GPL2014 discharges all VCs of this package
+
 package Chap7 with
      Spark_Mode => On is
 
