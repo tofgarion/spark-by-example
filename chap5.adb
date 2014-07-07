@@ -79,4 +79,15 @@ package body Chap5 with
       return Right;
    end Upper_Bound;
 
+   -------------------
+   -- Binary_Search --
+   -------------------
+
+   function Binary_Search (A : T_Arr; Val : T) return Boolean is
+      Lwb : constant Index_T := Lower_Bound (A, Val);
+
+   begin
+      return Lwb in A'Range and then A (Lwb) <= Val;
+   end Binary_Search;
+
 end Chap5;
