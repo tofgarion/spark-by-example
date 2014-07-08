@@ -60,4 +60,24 @@ package Chap3 with
       (Find'Result = Size and
        (for all I in 0 .. Size - 1 => A (A'First + I) /= Val));
 
+      --  3.5 The find_first_of Algorithm
+      --
+      -- As in find it performs a sequential search. However, whereas
+      --  find searches for a particular value, find_first_of returns
+      --  the least index i such that a[i] is equal to one of the
+      --  values b[0], . . ., b[n-1].
+
+   function Find_First_Of
+     (A : T_Arr;
+      M : Positive;
+      B : T_Arr;
+      N : Positive) return Natural with
+      Pre  => (M <= A'Length and N <= B'Length),
+      Post =>
+      ((Find_First_Of'Result = M)
+       or else
+       (Find_First_Of'Result < M and
+        (for some I in 0 .. N - 1 =>
+           B (B'First + I) = A (A'First + Find_First_Of'Result))));
+
 end Chap3;

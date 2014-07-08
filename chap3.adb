@@ -55,4 +55,24 @@ package body Chap3 with
       return Size;
    end Find;
 
+   --------------------
+   --  Find_First_Of --
+   --------------------
+
+   function Find_First_Of
+     (A : T_Arr;
+      M : Positive;
+      B : T_Arr;
+      N : Positive) return Natural
+   is
+   begin
+      for J in 0 .. M - 1 loop
+         if Find (B, N, A (A'First + J)) < N then
+            return J;
+         end if;
+      end loop;
+
+      return M;
+   end Find_First_Of;
+
 end Chap3;
