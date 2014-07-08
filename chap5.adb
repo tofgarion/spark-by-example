@@ -11,8 +11,8 @@ package body Chap5 with
       Middle : Index;
 
    begin
-      Left   := A'First;
-      Right  := A'Last;
+      Left  := A'First;
+      Right := A'Last;
 
       if A (Left) > Val or else A (Right) < Val then
          return 0;
@@ -24,7 +24,8 @@ package body Chap5 with
             (Left <= Right + 1) and --  XXX differs from ACSL-by-Example
             (Right <= A'Last) and
             (for all J in A'Range => (if J < Left then A (J) < Val)) and
-            (for all J in Right .. A'Last => Val <= A (J)) and Is_Sorted (A));
+            (for all J in Right .. A'Last => Val <= A (J)) and
+            Is_Sorted (A));
 
          pragma Loop_Variant (Decreases => Right - Left);
 
@@ -50,8 +51,8 @@ package body Chap5 with
       Middle : Index;
 
    begin
-      Left   := A'First;
-      Right  := A'Last;
+      Left  := A'First;
+      Right := A'Last;
 
       if A (Left) > Val or else A (Right) <= Val then
          return 0;
