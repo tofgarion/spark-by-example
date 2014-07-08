@@ -15,7 +15,8 @@ package Chap7 with
    type Stack is private;
 
    --  For now, we do not have stack initialization function, to be
-   --  refined later.
+   --  refined later. Actually, this implementation is much simpler
+   --  than its C equivalent. Is it too simple?
 
    function Empty_Stack (S : Stack) return Boolean;
    function Full_Stack (S : Stack) return Boolean;
