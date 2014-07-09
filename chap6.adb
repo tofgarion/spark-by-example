@@ -25,4 +25,23 @@ package body Chap6 with
       Y    := Temp;
    end Swap;
 
+   ----------------
+   -- Swap_Range --
+   ----------------
+
+   procedure Swap_Range (X : in out T_Arr; Y : in out T_Arr) is
+   begin
+      Inner : for J in X'Range loop
+         Swap (X (J), Y (J));
+         pragma loop_invariant
+           (for all K in X'first .. J => X'Loop_Entry (Inner) (K) = Y (K));
+         pragma loop_invariant
+           (for all K in Y'first .. J => Y'Loop_Entry (Inner) (K) = X (K));
+         pragma loop_invariant
+           (for all K in J .. X'Last => (if K <= X'Last and K > J then X (K) = x'Loop_entry (inner) (K)));
+         pragma loop_invariant
+           (for all K in J .. Y'Last => (if K <= Y'Last and K > J then Y (K) = Y'Loop_entry (inner) (K)));
+      end loop Inner;
+   end Swap_Range;
+
 end Chap6;
