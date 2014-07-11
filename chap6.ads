@@ -30,7 +30,7 @@ package Chap6 with
       -- The swap_ranges algorithm in the C++ STL exchanges the contents
       --  of two expressed ranges element-wise.
 
-   procedure Swap_Range (X : in out T_Arr; Y : in out T_Arr) with
+   procedure Swap_Ranges (X : in out T_Arr; Y : in out T_Arr) with
       Pre =>
       (X'First = Y'First and
        X'Last = Y'Last and
