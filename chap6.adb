@@ -33,14 +33,14 @@ package body Chap6 with
    begin
       Inner : for J in X'Range loop
          Swap (X (J), Y (J));
+         pragma Loop_Invariant
+           (for all K in X'First .. J => X'Loop_Entry (Inner) (K) = Y (K));
+         pragma Loop_Invariant
+           (for all K in Y'First .. J => Y'Loop_Entry (Inner) (K) = X (K));
+         pragma Loop_Invariant
+           (for all K in J .. X'Last => (if K <= X'Last and K > J then X (K) = X'Loop_Entry (Inner) (K)));
          pragma loop_invariant
-           (for all K in X'first .. J => X'Loop_Entry (Inner) (K) = Y (K));
-         pragma loop_invariant
-           (for all K in Y'first .. J => Y'Loop_Entry (Inner) (K) = X (K));
-         pragma loop_invariant
-           (for all K in J .. X'Last => (if K <= X'Last and K > J then X (K) = x'Loop_entry (inner) (K)));
-         pragma loop_invariant
-           (for all K in J .. Y'Last => (if K <= Y'Last and K > J then Y (K) = Y'Loop_entry (inner) (K)));
+           (for all K in J .. Y'Last => (if K <= Y'Last and K > J then Y (K) = Y'Loop_Entry (Inner) (K)));
       end loop Inner;
    end Swap_Ranges;
 
@@ -60,8 +60,6 @@ package body Chap6 with
 
       pragma Assert (Result'Last = X'Last);
       pragma Assert (Result'First = X'First);
---      pragma Assert (for all K in Result'Range =>
---                     Result (K) = X (X'Last - K + X'First));
 
       return Result;
    end Reverse_Copy;
@@ -72,13 +70,30 @@ package body Chap6 with
 
    procedure Reverse_Array (A : in out T_Arr) is
    begin
-      for J in A'First .. A'Last / 2 loop
+      --  Note: I changed the implementation to match my own coding
+      --  style.
+
+     Inner : for J in A'First .. (A'Last + A'First) / 2 loop
          Swap (A (J), A (A'Last - J + A'First));
 
          pragma Loop_Invariant
-           (for all K in A'First .. J
-              => A (K) = A'Loop_Entry (A'Last - K + A'First));
-      end loop;
-   end Reverse_Array;
+           ((for all K in A'First .. J
+            => A (K) = A'Loop_Entry (Inner) (A'Last - K + A'First))
+            --  Invariant correct for range up to
+            -- => A'First .. (A'Last + A'First) /2
+              and
+              (for all K in A'Last - J + A'First .. A'Last
+                 => A (K) = A'Loop_Entry (Inner) (A'Last - K + A'First)));
+         --  Invariant correct for range up to
+         -- => A'Last - (A'Last + A'First)/2 + A'First .. A'Last
+         -- => (A'Last + A'First) /2 .. A'Last
+         pragma Loop_Invariant
+           (for all K in J .. A'Last - J + A'First =>
+            (if K <  A'Last - J + A'First and K > J then A (K) = A'Loop_Entry (Inner) (K)));
+      end loop Inner;
+      --  XXX GNATProve GPL 2014 Note from the loop invariant before,
+      --  we should have proved the post-condition, but this is not
+      --  the case
+    end Reverse_Array;
 
 end Chap6;
