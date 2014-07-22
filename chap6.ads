@@ -40,4 +40,41 @@ package Chap6 with
       ((for all J in X'Range => X (J) = Y'Old (J))
        and then (for all J in X'Range => X'Old (J) = Y (J)));
 
+      --  6.4 The copy Algorithm
+      --
+      --  The copy algorithm in the C++ Standard Library implements a
+      --  duplication algorithm for general sequences.
+
+      function Copy (X : T_Arr) return T_Arr is (X)
+        with Post => (Copy'Result = X);
+      --  This one is obviously a tautology
+
+      --  6.5 The reverse_copy Algorithm
+      --
+      --  The reverse_copy algorithm of the C++ Standard Library
+      --  invert the order of elements in a sequence. reverse_copy
+      --  does not change the input sequence and copies its result to
+      --  the output sequence.
+
+      function Reverse_Copy (X : T_Arr) return T_Arr with
+        Pre => (X'Last > X'First),
+        Post => (Reverse_Copy'Result'Last = X'Last and
+                 Reverse_Copy'Result'First = X'First and
+                 (for all K in Reverse_Copy'Result'Range =>
+                   Reverse_Copy'Result (K) = X (X'Last - K + X'First)));
+
+      --  6.6. The reverse Algorithm
+      --
+      --  The reverse algorithm of the C++ Standard Library inverts
+      --  the order of elements in a sequence. The reverse algorithm
+      --  works in place, meaning, that it modifies its input
+      --  sequence.
+      --
+      --  Note: the function has been renamed Reverse_Array, "reverse"
+      --  is a reserved word in Ada.
+
+      procedure Reverse_Array (A : in out T_Arr) with
+        Pre => (A'Last > A'First),
+        Post =>  (for all K in A'Range => A (K) = A (A'Last - K + A'First));
+
 end Chap6;

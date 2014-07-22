@@ -44,4 +44,41 @@ package body Chap6 with
       end loop Inner;
    end Swap_Ranges;
 
+   ------------------
+   -- Reverse_Copy --
+   ------------------
+
+   function Reverse_Copy (X : T_Arr) return T_Arr is
+      Result : T_Arr (X'First .. X'Last);
+   begin
+      for J in Result'Range loop
+         Result (J) := X (X'Last - J + X'First);
+         pragma Loop_Invariant
+           (for all K in Result'First .. J =>
+              Result (K) = X (X'Last - K + X'First));
+      end loop;
+
+      pragma Assert (Result'Last = X'Last);
+      pragma Assert (Result'First = X'First);
+--      pragma Assert (for all K in Result'Range =>
+--                     Result (K) = X (X'Last - K + X'First));
+
+      return Result;
+   end Reverse_Copy;
+
+   -------------------
+   -- Reverse_Array --
+   -------------------
+
+   procedure Reverse_Array (A : in out T_Arr) is
+   begin
+      for J in A'First .. A'Last / 2 loop
+         Swap (A (J), A (A'Last - J + A'First));
+
+         pragma Loop_Invariant
+           (for all K in A'First .. J
+              => A (K) = A'Loop_Entry (A'Last - K + A'First));
+      end loop;
+   end Reverse_Array;
+
 end Chap6;
