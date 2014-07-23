@@ -48,6 +48,9 @@ package Chap6 with
    function Copy (X : T_Arr) return T_Arr is (X) with
       Post => (Copy'Result = X);
       --  This one is obviously a tautology
+   procedure Copy (A : T_Arr; B : in out T_Arr) with
+      Pre  => (A'Length > 0 and A'First = B'First and A'Last = B'Last),
+      Post => (B = A);
 
       --  6.5 The reverse_copy Algorithm
       --
