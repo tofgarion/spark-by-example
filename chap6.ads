@@ -48,9 +48,20 @@ package Chap6 with
    function Copy (X : T_Arr) return T_Arr is (X) with
       Post => (Copy'Result = X);
       --  This one is obviously a tautology
-   procedure Copy (A : T_Arr; B : in out T_Arr) with
+
+      --  We add another variant of Copy to implement the Rotate_Copy
+      --  algorithm (in 6.7)
+
+   procedure Copy
+     (A       :        T_Arr;
+      A_Index :        Positive;
+      B       : in out T_Arr;
+      B_Index :        Positive;
+      Length  :        Positive) with
       Pre  => (A'Length > 0 and A'First = B'First and A'Last = B'Last),
-      Post => (B = A);
+      Post =>
+      (B (B_Index .. B_Index + Length - 1) =
+       A (A_Index .. A_Index + Length - 1));
 
       --  6.5 The reverse_copy Algorithm
       --
@@ -82,5 +93,11 @@ package Chap6 with
    procedure Reverse_Array (A : in out T_Arr) with
       Pre  => (A'Last > A'First),
       Post => (for all K in A'Range => A (K) = A (A'Last - K + A'First));
+
+      --  6.7. The Rotate_Copy Algorithm
+      --
+      --  The Rotate_Copy Algorithm in The C++ Standard Library rotates a
+      --  sequence by M positions and copies the results to another same
+      --  sized sequence.
 
 end Chap6;

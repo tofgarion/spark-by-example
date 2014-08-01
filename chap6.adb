@@ -42,14 +42,15 @@ package body Chap6 with
          pragma loop_invariant
            (for all K in J .. Y'Last => (if K <= Y'Last and K > J then Y (K) = Y'Loop_Entry (Inner) (K)));
       end loop Inner;
-           end Swap_Ranges;
-----------
--- Copy --
-----------
+   end Swap_Ranges;
 
-   procedure Copy (A : T_Arr; B : in out T_Arr) is
+   ----------
+   -- Copy --
+   ----------
+
+   procedure Copy (A : T_Arr; A_Index : Positive; B : in out T_Arr; B_Index : Positive; Length : Positive) is
    begin
-      B := A;
+     B (B_Index .. B_Index + Length - 1) := A (A_Index .. A_Index + Length - 1);
    end Copy;
 
    ------------------
