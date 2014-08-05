@@ -48,9 +48,16 @@ package body Chap6 with
    -- Copy --
    ----------
 
-   procedure Copy (A : T_Arr; A_Index : Positive; B : in out T_Arr; B_Index : Positive; Length : Positive) is
+   procedure Copy (A : T_Arr; A_Index : Integer; B : in out T_Arr; B_Index : Integer; Length : Integer) is
    begin
-     B (B_Index .. B_Index + Length - 1) := A (A_Index .. A_Index + Length - 1);
+      --  This should be equivalent to the code above, but cannot be discharged
+      --      B (B_Index .. B_Index + Length - 1) := A (A_Index .. A_Index + Length - 1);
+
+      for J in 0 .. Length - 1 loop
+         B (B_Index + J) := A (A_Index + J);
+         pragma Loop_Invariant
+           (for all K in 0 .. J => A (A_Index + K) = B (B_Index + K));
+      end loop;
    end Copy;
 
    ------------------

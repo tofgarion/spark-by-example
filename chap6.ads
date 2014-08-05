@@ -49,19 +49,33 @@ package Chap6 with
       Post => (Copy'Result = X);
       --  This one is obviously a tautology
 
-      --  We add another variant of Copy to implement the Rotate_Copy
-      --  algorithm (in 6.7)
+      --  We add a variant of Copy to implement the Rotate_Copy
+      --  algorithm (in 6.7). C gurus use pointers arithmetics, we
+      --  have to emulate it using start index for copying elements.
 
    procedure Copy
      (A       :        T_Arr;
-      A_Index :        Positive;
+      A_Index :        Integer;
       B       : in out T_Arr;
-      B_Index :        Positive;
-      Length  :        Positive) with
-      Pre  => (A'Length > 0 and A'First = B'First and A'Last = B'Last),
+      B_Index :        Integer;
+      Length  :        Integer) with
+     Pre =>
+      (A'Length > 0 and
+       B'Length > 0 and
+       A_Index >= A'First and
+       B_Index >= B'First and
+       Length  > 0 and
+       Length <= A'Length and
+       Length <= B'Length and
+       A_Index < A'Last - Length and
+       B_Index + Length < B'Last),
       Post =>
-      (B (B_Index .. B_Index + Length - 1) =
-       A (A_Index .. A_Index + Length - 1));
+        (for all J in 0 .. Length - 1 => A (A_Index + J) = B (B_Index + J));
+        --  XXX GNATProve GPL 2014: the following post-condition leads to
+        --  invalid Why3 code being emmitted
+        --
+        --         (B (B_Index .. B_Index + Length - 1) = A (A_Index
+        --  .. A_Index + Length - 1));
 
       --  6.5 The reverse_copy Algorithm
       --
@@ -96,7 +110,7 @@ package Chap6 with
 
       --  6.7. The Rotate_Copy Algorithm
       --
-      --  The Rotate_Copy Algorithm in The C++ Standard Library rotates a
+      --  The Rotate_Copy Algorithm in the C++ Standard Library rotates a
       --  sequence by M positions and copies the results to another same
       --  sized sequence.
 
