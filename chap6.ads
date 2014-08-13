@@ -106,7 +106,7 @@ package Chap6 with
 
    procedure Reverse_Array (A : in out T_Arr) with
       Pre  => (A'Last > A'First),
-      Post => (for all K in A'Range => A (K) = A (A'Last - K + A'First));
+      Post => (for all K in A'Range => A (K) = A'Old (A'Last - K + A'First));
 
       --  6.7. The Rotate_Copy Algorithm
       --

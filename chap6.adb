@@ -107,9 +107,6 @@ package body Chap6 with
            (for all K in J .. A'Last - J + A'First =>
             (if K <  A'Last - J + A'First and K > J then A (K) = A'Loop_Entry (Inner) (K)));
       end loop Inner;
-      --  XXX GNATProve GPL 2014 Note from the loop invariant before,
-      --  we should have proved the post-condition, but this is not
-      --  the case
     end Reverse_Array;
 
 end Chap6;
