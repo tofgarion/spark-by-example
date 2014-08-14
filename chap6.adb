@@ -89,7 +89,7 @@ package body Chap6 with
       --  Note: I changed the implementation to match my own coding
       --  style.
 
-     Inner : for J in A'First .. (A'Last + A'First) / 2 loop
+     Inner : for J in A'First .. A'First + (A'Last - A'First) / 2 loop
          Swap (A (J), A (A'Last - J + A'First));
 
          pragma Loop_Invariant
