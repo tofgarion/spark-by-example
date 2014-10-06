@@ -44,7 +44,7 @@ package Chap4 with
 
       --  4.5 The 'min_element' algorithm
       --
-   --  The function finds the largest element in the range a[0, n).
+      --  The function finds the smallest element in the range a[0, n).
    --  More precisely, it returns the unique valid index i such that
    --  1. for each index k with 0 <= k < n the condition a[k] >= a[i] holds and
    --  2. for each index k with 0 <= k < i the condition a[k] > a[i] holds.
