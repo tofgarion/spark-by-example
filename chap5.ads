@@ -1,6 +1,6 @@
 --  This package provides an implementation of case studies from the
 --  "ACSL by Example" technical report, chapter 5, from
---  http://www.fokus.fraunhofer.de/de/sqc/_download_sqc/ACSL-by-Example.pdf
+--  http://www.fokus.fraunhofer.de/download/acsl_by_example
 
 --  Note:
 --  * all examples from this chapter are implemented

@@ -1,6 +1,6 @@
 --  This package provides an implementation of case studies from the
 --  "ACSL by Example" technical report, chapter 3, from
---  http://www.fokus.fraunhofer.de/de/sqc/_download_sqc/ACSL-by-Example.pdf
+--  http://www.fokus.fraunhofer.de/download/acsl_by_example
 
 package Chap3 with
      Spark_Mode is
