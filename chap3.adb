@@ -16,7 +16,6 @@ package body Chap3 with
          end if;
          pragma Loop_Invariant
            (for all K in 0 .. J => A (A'First + K) = B (B'First + K));
-
       end loop;
 
       return True;
