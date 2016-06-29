@@ -1,7 +1,9 @@
+_SUBPROG_FILTER = $(if $(SUBP_FILTER),--limit-subp $(SUBP_FILTER),)
+_LEVEL = $(if $(LEVEL),--level=$(LEVEL),--level=0)
 .PHONY: all pp clean distclean
 
 all:
-	gnatprove -Pspark.gpr -j 2 --proof=progressive --timeout=120 chap*.adb
+	gnatprove -Pspark.gpr -j 2 $(_LEVEL) chap*.adb
 
 pp:
 	gnatpp -Pspark.gpr -rnb
@@ -14,4 +16,4 @@ distclean: clean
 	-rm -rf gnatprove auto.cgpr
 
 %:
-	gnatprove -Pspark.gpr -j 2 --proof=progressive --timeout=120 chap$@.adb
+	gnatprove -Pspark.gpr -j 2 $(_SUBPROG_FILTER) $(_LEVEL) chap$@.adb
