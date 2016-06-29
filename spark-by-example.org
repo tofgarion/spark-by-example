@@ -29,6 +29,15 @@
    - level 1: postcondition not proved
    - refactoring: still level 2 needed
 ** Find
+   :PROPERTIES:
+   :POS_IN_SPEC: chap3.ads:53
+   :Status:   Finished
+   :Level:    1
+   :END:
+
+   - level 0: invariant preservation + postcondition not proved
+   - level 1: postcondition not proved
+   - refactoring: level 1!
 ** Find_First_Of
 ** Adjacent_Find
 ** Search
