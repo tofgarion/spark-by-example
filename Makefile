@@ -16,4 +16,4 @@ distclean: clean
 	-rm -rf gnatprove auto.cgpr
 
 %:
-	gnatprove -Pspark.gpr -j 2 $(_SUBPROG_FILTER) $(_LEVEL) chap$@.adb
+	gnatprove -Pspark.gpr -f -j 4 $(_SUBPROG_FILTER) $(_LEVEL) chap$@.adb
