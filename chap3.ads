@@ -37,13 +37,12 @@ package Chap3 with
       B    : T_Arr;
       Size : Positive) return Natural with
         Pre  => (Size <= A'Length and Size <= B'Length),
-        Post =>
-     ((Mismatch'Result < Size
-         and then Is_Equal (A, B, Mismatch'Result)
-         and then
-         A (A'First + Mismatch'Result) /=
-         B (B'First + Mismatch'Result)) or
-        (Mismatch'Result = Size and Is_Equal (A, B, Size)));
+        Post => (Mismatch'Result <= Size and then
+                 Is_Equal (A, B, Mismatch'Result)),
+        Contract_Cases =>
+        (    Is_Equal (A, B, Size) => Mismatch'Result = Size,
+         not Is_Equal (A, B, Size) => Mismatch'Result < Size and then
+           A (A'First + Mismatch'Result) /= B (B'First + Mismatch'Result));
 
    --  3.3 The 'find' algorithm
    --
