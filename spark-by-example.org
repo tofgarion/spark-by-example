@@ -1,0 +1,30 @@
+#+TITLE: SPARK by example
+
+* Non-mutating algorithms
+  :PROPERTIES:
+  :SPEC_FILE: chap3.ads
+  :IMPL_FILE: chap3.adb
+  :COLUMNS:  %27ITEM(Function to prove) %11Status %6Level %15POS_IN_SPEC(Where)
+  :Status_ALL: "In progress" "Not started yet" "Finished" ""
+  :Level_ALL: "0" "1" "2" "3" "4"
+  :END:
+
+** Equal
+   :PROPERTIES:
+   :POS_IN_SPEC: chap3.ads:17
+   :Status:   Finished
+   :Level:    2
+   :END:
+
+   - level 0: invariant preservation + postcondition not proved
+   - level 1: postcondition not proved
+** Mismatch
+   :PROPERTIES:
+   :POS_IN_SPEC: chap3.ads:35
+   :END:
+
+** Find
+** Find_First_Of
+** Adjacent_Find
+** Search
+** Count
