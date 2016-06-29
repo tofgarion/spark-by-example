@@ -18,6 +18,7 @@ package Chap3 with
      Pre  => (Size <= A'Length and Size <= B'Length),
      Post => (Equal'Result = Is_Equal (A, B, Size));
 
+   -- Is_Equal is an helper function to write clearer assertions.
    function Is_Equal
      (A    : T_Arr;
       B    : T_Arr;
@@ -53,20 +54,28 @@ package Chap3 with
    function Find (A : T_Arr; Size : Positive; Val : T) return Natural with
      Pre  => (Size <= A'Length),
      Post => (Find'Result <= Size and then
-              (for all I in 0 .. Find'Result - 1 => A (A'First + I) /= Val)),
+              not Has_Value(A, Find'Result, Val)),
      Contract_Cases =>
-       ((for some I in 0 .. Size -1 => A (A'First + I) = Val) =>
+       (Has_Value(A, Size, Val) =>
            Find'Result < Size and then
            A (A'First + Find'Result) = Val,
-        others                      => Find'Result = Size
+        others                  => Find'Result = Size
        );
+
+   -- Has_Value is an helper function to write clearer assertions.
+   function Has_Value
+   (A    : T_Arr;
+    Size : Natural;
+    Val  : T) return Boolean is
+    (for some I in 0 .. Size - 1 => A (A'First + I) = Val) with
+      Pre => Size <= A'Length;
 
    --  3.5 The find_first_of Algorithm
    --
-   -- As in find it performs a sequential search. However, whereas
-   --  find searches for a particular value, find_first_of returns
-   --  the least index i such that a[i] is equal to one of the
-   --  values b[0], . . ., b[n-1].
+   -- As in Find this function performs a sequential search. However,
+   -- whereas find searches for a particular value, find_first_of
+   -- returns the least index i such that a[i] is equal to one of the
+   -- values b[0], . . ., b[n-1].
 
    function Find_First_Of
      (A : T_Arr;
