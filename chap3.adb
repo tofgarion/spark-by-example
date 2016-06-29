@@ -54,7 +54,11 @@ package body Chap3 with
          if A (A'First + J) = Val then
             return J;
          end if;
-         pragma Loop_Invariant (for all K in 0 .. J => A (A'First + K) /= Val);
+
+         pragma Loop_Invariant
+           (for all K in 0 .. J => A (A'First + K) /= Val);
+         pragma Loop_Variant
+           (Increases => J);
       end loop;
 
       return Size;
