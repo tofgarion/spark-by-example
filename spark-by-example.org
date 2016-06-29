@@ -21,8 +21,13 @@
 ** Mismatch
    :PROPERTIES:
    :POS_IN_SPEC: chap3.ads:35
+   :Status:   Finished
+   :Level:    2
    :END:
 
+   - level 0: invariant preservation + postcondition not proved
+   - level 1: postcondition not proved
+   - refactoring: still level 2 needed
 ** Find
 ** Find_First_Of
 ** Adjacent_Find
