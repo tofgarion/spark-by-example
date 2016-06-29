@@ -14,8 +14,11 @@ package body Chap3 with
          if A (A'First + J) /= B (B'First + J) then
             return False;
          end if;
+
          pragma Loop_Invariant
            (for all K in 0 .. J => A (A'First + K) = B (B'First + K));
+         pragma Loop_Variant
+           (Increases => J);
       end loop;
 
       return True;
@@ -31,8 +34,11 @@ package body Chap3 with
          if A (A'First + J) /= B (B'First + J) then
             return J;
          end if;
+
          pragma Loop_Invariant
            (for all K in 0 .. J => A (A'First + K) = B (B'First + K));
+         pragma Loop_Variant
+           (Increases => J);
       end loop;
 
       return Size;
