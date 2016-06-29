@@ -79,6 +79,11 @@ package body Chap3 with
          if Find (B, N, A (A'First + J)) < N then
             return J;
          end if;
+
+         pragma Loop_Invariant
+           (not Has_Value_Of(A, J + 1, B, N));
+         pragma Loop_Variant
+           (Increases => J);
       end loop;
 
       return M;

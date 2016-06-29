@@ -76,22 +76,35 @@ package Chap3 with
 
    --  3.5 The 'find_first_of' Algorithm
    --
-   -- As in Find this function performs a sequential search. However,
-   -- whereas find searches for a particular value, find_first_of
-   -- returns the least index i such that a[i] is equal to one of the
-   -- values b[0], . . ., b[n-1].
+   --  Has_Value_Of is an helper function to write clearer assertions.
+
+   function Has_Value_Of
+     (A : T_Arr;
+      M : Natural;
+      B : T_Arr;
+      N : Natural) return Boolean is
+     (for some I in 0 .. M - 1 => Has_Value(B, N, A (A'First + I))) with
+     Pre => M <= A'Length and then N <= B'Length;
+
+
+   --  As in Find this function performs a sequential search. However,
+   --  whereas find searches for a particular value, Find_First_Of
+   --  returns the least index i such that a[i] is equal to one of the
+   --  values b[0], . . ., b[n-1].
 
    function Find_First_Of
      (A : T_Arr;
       M : Positive;
       B : T_Arr;
       N : Positive) return Natural with
-        Pre  => (M <= A'Length and N <= B'Length),
-        Post =>
-     ((Find_First_Of'Result = M)
-        or else
-        (Find_First_Of'Result < M and
-           (for some I in 0 .. N - 1 =>
-              B (B'First + I) = A (A'First + Find_First_Of'Result))));
+     Pre  => (M <= A'Length and N <= B'Length),
+     Post => Find_First_Of'Result <= M,
+     Contract_Cases =>
+       (Has_Value_Of(A, M, B, N) =>
+          Find_First_Of'Result < M and then
+          Has_Value(B, N, A (A'First + Find_First_Of'Result)) and then
+          (not Has_Value_Of(A, Find_First_Of'Result, B, N)),
+        others => Find_First_Of'Result = M
+       );
 
 end Chap3;
