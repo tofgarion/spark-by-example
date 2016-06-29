@@ -37,7 +37,7 @@ package Chap3 with
    function Mismatch
      (A    : T_Arr;
       B    : T_Arr;
-      Size : Positive) return Natural with
+      Size : Natural) return Natural with
      Pre  => (Size <= A'Length and Size <= B'Length),
      Post => (Mismatch'Result <= Size and then
               Is_Equal (A, B, Mismatch'Result)),
@@ -62,7 +62,7 @@ package Chap3 with
    --  the condition a[i] == val holds.  If no such index exists then
    --  find returns the length n of the array.
 
-   function Find (A : T_Arr; Size : Positive; Val : T) return Natural with
+   function Find (A : T_Arr; Size : Natural; Val : T) return Natural with
      Pre  => (Size <= A'Length),
      Post => (Find'Result <= Size and then
                 not Has_Value(A, Find'Result, Val)),
@@ -94,16 +94,16 @@ package Chap3 with
 
    function Find_First_Of
      (A : T_Arr;
-      M : Positive;
+      M : Natural;
       B : T_Arr;
-      N : Positive) return Natural with
+      N : Natural) return Natural with
      Pre  => (M <= A'Length and N <= B'Length),
      Post => Find_First_Of'Result <= M,
      Contract_Cases =>
        (Has_Value_Of(A, M, B, N) =>
           Find_First_Of'Result < M and then
           Has_Value(B, N, A (A'First + Find_First_Of'Result)) and then
-          (not Has_Value_Of(A, Find_First_Of'Result, B, N)),
+          not Has_Value_Of(A, Find_First_Of'Result, B, N),
         others => Find_First_Of'Result = M
        );
 

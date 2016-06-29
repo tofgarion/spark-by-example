@@ -28,7 +28,7 @@ package body Chap3 with
    -- Mismatch --
    --------------
 
-   function Mismatch (A : T_Arr; B : T_Arr; Size : Positive) return Natural is
+   function Mismatch (A : T_Arr; B : T_Arr; Size : Natural) return Natural is
    begin
       for J in 0 .. Size - 1 loop
          if A (A'First + J) /= B (B'First + J) then
@@ -48,7 +48,7 @@ package body Chap3 with
    -- Find --
    ----------
 
-   function Find (A : T_Arr; Size : Positive; Val : T) return Natural is
+   function Find (A : T_Arr; Size : Natural; Val : T) return Natural is
    begin
       for J in 0 .. Size - 1 loop
          if A (A'First + J) = Val then
@@ -70,9 +70,9 @@ package body Chap3 with
 
    function Find_First_Of
      (A : T_Arr;
-      M : Positive;
+      M : Natural;
       B : T_Arr;
-      N : Positive) return Natural
+      N : Natural) return Natural
    is
    begin
       for J in 0 .. M - 1 loop
