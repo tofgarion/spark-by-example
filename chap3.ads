@@ -40,8 +40,8 @@ package Chap3 with
         Post => (Mismatch'Result <= Size and then
                  Is_Equal (A, B, Mismatch'Result)),
         Contract_Cases =>
-          (    Is_Equal (A, B, Size) => Mismatch'Result = Size,
-           not Is_Equal (A, B, Size) => Mismatch'Result < Size and then
+          (Is_Equal (A, B, Size) => Mismatch'Result = Size,
+           others                => Mismatch'Result < Size and then
              A (A'First + Mismatch'Result) /= B (B'First + Mismatch'Result));
 
    --  3.3 The 'find' algorithm
@@ -58,7 +58,7 @@ package Chap3 with
        ((for some I in 0 .. Size -1 => A (A'First + I) = Val) =>
            Find'Result < Size and then
            A (A'First + Find'Result) = Val,
-        others => Find'Result = Size
+        others                      => Find'Result = Size
        );
 
    --  3.5 The find_first_of Algorithm
