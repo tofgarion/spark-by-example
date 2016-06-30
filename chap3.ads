@@ -93,21 +93,21 @@ package Chap3 with
    --  As in Find this function performs a sequential search. However,
    --  whereas find searches for a particular value, Find_First_Of
    --  returns the least index i such that a[i] is equal to one of the
-   --  values b[0], . . ., b[n-1].
+   --  values B(0), . . ., B(Size_B - 1).
 
    function Find_First_Of
-     (A : T_Arr;
-      M : Natural;
-      B : T_Arr;
-      N : Natural) return Natural with
-     Pre  => (M <= A'Length and N <= B'Length),
-     Post => Find_First_Of'Result <= M,
+     (A      : T_Arr;
+      Size_A : Natural;
+      B      : T_Arr;
+      Size_B : Natural) return Natural with
+     Pre  => (Size_A <= A'Length and Size_B <= B'Length),
+     Post => Find_First_Of'Result <= Size_A,
      Contract_Cases =>
-       (Has_Value_Of(A, M, B, N) =>
-          Find_First_Of'Result < M and then
-          Has_Value(B, N, A (A'First + Find_First_Of'Result)) and then
-          not Has_Value_Of(A, Find_First_Of'Result, B, N),
-        others                   => Find_First_Of'Result = M
+       (Has_Value_Of(A, Size_A, B, Size_B) =>
+          Find_First_Of'Result < Size_A and then
+          Has_Value(B, Size_B, A (A'First + Find_First_Of'Result)) and then
+          not Has_Value_Of(A, Find_First_Of'Result, B, Size_B),
+        others                   => Find_First_Of'Result = Size_A
        );
 
    --  3.6 The 'adjacent_first' Algorithm

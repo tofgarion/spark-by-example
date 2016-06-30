@@ -69,24 +69,24 @@ package body Chap3 with
    --------------------
 
    function Find_First_Of
-     (A : T_Arr;
-      M : Natural;
-      B : T_Arr;
-      N : Natural) return Natural
+     (A      : T_Arr;
+      Size_A : Natural;
+      B      : T_Arr;
+      Size_B : Natural) return Natural
    is
    begin
-      for J in 0 .. M - 1 loop
-         if Find (B, N, A (A'First + J)) < N then
+      for J in 0 .. Size_A - 1 loop
+         if Find (B, Size_B, A (A'First + J)) < Size_B then
             return J;
          end if;
 
          pragma Loop_Invariant
-           (not Has_Value_Of(A, J + 1, B, N));
+           (not Has_Value_Of(A, J + 1, B, Size_B));
          pragma Loop_Variant
            (Increases => J);
       end loop;
 
-      return M;
+      return Size_A;
    end Find_First_Of;
 
    -------------------
@@ -135,6 +135,6 @@ package body Chap3 with
       end loop;
 
       return Size_A;
-   end;
+   end Search;
 
 end Chap3;
