@@ -98,17 +98,43 @@ package body Chap3 with
       Size : Natural) return Natural
    is
    begin
-     for J in 0 .. Size - 2 loop
-        pragma Loop_Invariant
-          (not Has_Equal_Neighbors(A, J + 1));
-        pragma Loop_Variant
-          (Increases => J);
+      for J in 0 .. Size - 2 loop
+         pragma Loop_Invariant
+           (not Has_Equal_Neighbors(A, J + 1));
+         pragma Loop_Variant
+           (Increases => J);
 
-        if A (A'First + J) = A (A'First + J + 1) then
-           return J;
-        end if;
-     end loop;
+         if A (A'First + J) = A (A'First + J + 1) then
+            return J;
+         end if;
+      end loop;
 
-     return Size;
+      return Size;
    end Adjacent_First;
+
+   ------------
+   -- Search --
+   ------------
+
+   function Search
+     (A      : T_Arr;
+      Size_A : Natural;
+      B      : T_Arr;
+      Size_B : Natural) return Natural
+   is
+   begin
+      for J in 0 .. Size_A - Size_B loop
+         pragma Loop_Invariant
+           (not Has_Sub_Range(A, Size_B + J - 1, B, Size_B));
+         pragma Loop_Variant
+           (Increases => J);
+
+         if Equal(A (A'First + J .. A'Last), B, Size_B) then
+           return J;
+         end if;
+      end loop;
+
+      return Size_A;
+   end;
+
 end Chap3;

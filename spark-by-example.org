@@ -58,4 +58,10 @@
    - level 0: invariant preservation + contract case not proved
    - level 1: idem
 ** Search
+   :PROPERTIES:
+   :POS_IN_SPEC: chap3.ads:158
+   :Status:   In progress
+   :Level:    0
+   :END:
+
 ** Count

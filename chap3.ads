@@ -115,8 +115,8 @@ package Chap3 with
    --  Has_Equal_Neighbors is an helper function to write clearer assertions.
 
    function Has_Equal_Neighbors
-     (A : T_Arr;
-      Size: Natural) return Boolean is
+     (A    : T_Arr;
+      Size : Natural) return Boolean is
      (for some I in 0 .. Size - 2 => A (A'First + I) = A (A'First + I + 1)) with
      Pre => Size <= A'Length,
      Ghost;
@@ -136,5 +136,39 @@ package Chap3 with
           and then not Has_Equal_Neighbors(A, Adjacent_First'Result),
         others                       => Adjacent_First'Result = Size
      );
+
+   --  3.7 The 'search' Algorithm
+   --
+   --  Has_Sub_Range is an helper function to write clearer assertions.
+
+   function Has_Sub_Range
+     (A      : T_Arr;
+      Size_A : Natural;
+      B      : T_Arr;
+      Size_B : Natural) return Boolean is
+     (for some I in 0 .. Size_A - Size_B => Is_Equal(A(A'First + I .. A'Last), B, Size_B)) with
+     Pre => Size_A <= A'Length and then
+            Size_B <= B'Length,
+     Ghost;
+
+   --  The function Search returns the first index I of the array A
+   --  where the condition A(I + K) = B(K) for each 0 <= K < Size
+   --  holds. If no such index exists then Search returns Size.
+
+   function Search
+     (A      : T_Arr;
+      Size_A : Natural;
+      B      : T_Arr;
+      Size_B : Natural) return Natural with
+     Pre  => Size_A <= A'Length and then
+             Size_B <= B'Length,
+     Post => Search'Result <= Size_A - Size_B,
+     Contract_Cases =>
+       (Has_Sub_Range(A, Size_A, B, Size_B) =>
+          Is_Equal(A(A'First + Search'Result .. A'Last), B, Size_B) and then
+          not Has_Sub_Range(A, Search'Result + Size_B - 1, B, Size_B),
+        others                              =>
+          Search'Result = Size_A
+       );
 
 end Chap3;
