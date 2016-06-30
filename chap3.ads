@@ -18,7 +18,8 @@ package Chap3 with
       B    : T_Arr;
       Size : Natural) return Boolean is
      (for all I in 0 .. Size - 1 => A (A'First + I) = B (B'First + I)) with
-       Pre => (Size <= A'Length and Size <= B'Length);
+     Pre => (Size <= A'Length and Size <= B'Length),
+     Ghost;
 
    --  The function Equal returns true if a[i] == b[i] holds for each
    --  0 <= i < n.  Otherwise, equal returns false.
@@ -56,7 +57,8 @@ package Chap3 with
       Size : Natural;
       Val  : T) return Boolean is
      (for some I in 0 .. Size - 1 => A (A'First + I) = Val) with
-     Pre => Size <= A'Length;
+     Pre => Size <= A'Length,
+     Ghost;
 
    --  The function Find returns the least valid index i of A where
    --  the condition a[i] == val holds.  If no such index exists then
@@ -84,7 +86,8 @@ package Chap3 with
       B : T_Arr;
       N : Natural) return Boolean is
      (for some I in 0 .. M - 1 => Has_Value(B, N, A (A'First + I))) with
-     Pre => M <= A'Length and then N <= B'Length;
+     Pre => M <= A'Length and then N <= B'Length,
+     Ghost;
 
 
    --  As in Find this function performs a sequential search. However,
