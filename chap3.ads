@@ -107,7 +107,34 @@ package Chap3 with
           Find_First_Of'Result < M and then
           Has_Value(B, N, A (A'First + Find_First_Of'Result)) and then
           not Has_Value_Of(A, Find_First_Of'Result, B, N),
-        others => Find_First_Of'Result = M
+        others                   => Find_First_Of'Result = M
        );
+
+   --  3.6 The 'adjacent_first' Algorithm
+   --
+   --  Has_Equal_Neighbors is an helper function to write clearer assertions.
+
+   function Has_Equal_Neighbors
+     (A : T_Arr;
+      Size: Natural) return Boolean is
+     (for some I in 0 .. Size - 2 => A (A'First + I) = A (A'First + I + 1)) with
+     Pre => Size <= A'Length,
+     Ghost;
+
+   --  The Adjacent_First function returns the smallest valid index I
+   --  such that I + 1 is also a valid index and A(I) = A(I + 1). If
+   --  there is no such index, Size is returned.
+
+   function Adjacent_First
+     (A    : T_Arr;
+      Size : Natural) return Natural with
+     Pre  => Size <= A'Length,
+     Post => Adjacent_First'Result <= Size,
+     Contract_Cases =>
+       (Has_Equal_Neighbors(A, Size) =>
+          A (A'First + Adjacent_First'Result) = A (A'First + Adjacent_First'Result + 1)
+          and then not Has_Equal_Neighbors(A, Adjacent_First'Result),
+        others                       => Adjacent_First'Result = Size
+     );
 
 end Chap3;

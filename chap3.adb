@@ -89,4 +89,26 @@ package body Chap3 with
       return M;
    end Find_First_Of;
 
+   -------------------
+   -- Adjacent_Find --
+   -------------------
+
+   function Adjacent_First
+     (A    : T_Arr;
+      Size : Natural) return Natural
+   is
+   begin
+     for J in 0 .. Size - 2 loop
+        pragma Loop_Invariant
+          (not Has_Equal_Neighbors(A, J + 1));
+        pragma Loop_Variant
+          (Increases => J);
+
+        if A (A'First + J) = A (A'First + J + 1) then
+           return J;
+        end if;
+     end loop;
+
+     return Size;
+   end Adjacent_First;
 end Chap3;

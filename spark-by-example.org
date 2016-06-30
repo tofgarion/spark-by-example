@@ -11,7 +11,7 @@
 
 ** Equal
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:26
+   :POS_IN_SPEC: chap3.ads:27
    :Status:   Finished
    :Level:    2
    :END:
@@ -30,7 +30,7 @@
    - refactoring: still level 2 needed
 ** Find
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:65
+   :POS_IN_SPEC: chap3.ads:67
    :Status:   Finished
    :Level:    1
    :END:
@@ -40,8 +40,8 @@
    - refactoring: level 1!
 ** Find_First_Of
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:95
-   :Status:   In progress
+   :POS_IN_SPEC: chap3.ads:98
+   :Status:   Finished
    :Level:    2
    :END:
 
@@ -49,5 +49,13 @@
    - level 1: postcondition not proved
    - refactoring: still level 2 needed
 ** Adjacent_Find
+   :PROPERTIES:
+   :POS_IN_SPEC: chap3.ads:128
+   :Status:   Finished
+   :Level:    2
+   :END:
+
+   - level 0: invariant preservation + contract case not proved
+   - level 1: idem
 ** Search
 ** Count
