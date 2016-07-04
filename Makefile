@@ -17,5 +17,9 @@ clean:
 distclean: clean
 	-rm -rf gnatprove auto.cgpr
 
+test_%: test_%.adb
+	gnatmake $^
+	./$@
+
 %:
 	gnatprove $(PROJECT) -f -j 4 $(_SUBPROG_FILTER) $(_LEVEL) chap$@.adb
