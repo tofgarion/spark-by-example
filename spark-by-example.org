@@ -64,4 +64,14 @@
    :Level:    0
    :END:
 
+   Cannot use Contract Cases with array slice. Bug reported and
+   corrected in SPARK development version
+   (cf. https://gt3-prod-2.adacore.com/#/tickets/P630-039).
+
+*** TODO investigate function proof for case when B is not a subsequence of A
+
+    SPARK cannot prove this part of the postcondition (cf. line 171 of
+    chap3.ads). Counterexample given : Result = 0 and Size_A = 1
+    (A'First = 1, A'Last = 1).
+
 ** Count

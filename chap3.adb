@@ -123,6 +123,14 @@ package body Chap3 with
       Size_B : Natural) return Natural
    is
    begin
+      if Size_A = 0 or else Size_B = 0 then
+         return 0;
+      end if;
+
+      if Size_B > Size_A then
+         return Size_A;
+      end if;
+
       for J in 0 .. Size_A - Size_B loop
          pragma Loop_Invariant
            (not Has_Sub_Range(A, Size_B + J - 1, B, Size_B));
@@ -130,9 +138,12 @@ package body Chap3 with
            (Increases => J);
 
          if Equal(A (A'First + J .. A'Last), B, Size_B) then
-           return J;
+            return J;
          end if;
+
       end loop;
+
+      pragma Assert (not Has_Sub_Range(A, Size_A, B, Size_B));
 
       return Size_A;
    end Search;

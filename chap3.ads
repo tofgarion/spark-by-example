@@ -162,13 +162,25 @@ package Chap3 with
       Size_B : Natural) return Natural with
      Pre  => Size_A <= A'Length and then
              Size_B <= B'Length,
-     Post => Search'Result <= Size_A - Size_B,
-     Contract_Cases =>
-       (Has_Sub_Range(A, Size_A, B, Size_B) =>
-          Is_Equal(A(A'First + Search'Result .. A'Last), B, Size_B) and then
-          not Has_Sub_Range(A, Search'Result + Size_B - 1, B, Size_B),
-        others                              =>
-          Search'Result = Size_A
-       );
+     Post => Search'Result <= Size_A and then
+     (if Size_A = 0 or Size_B = 0 then Search'Result = 0 else
+     (if Has_Sub_Range(A, Size_A, B, Size_B) then
+        (Search'Result <= Size_A - Size_B and then
+           (Is_Equal(A(A'First + Search'Result .. A'Last), B, Size_B) and then
+            not Has_Sub_Range(A, Search'Result + Size_B - 1, B, Size_B)))
+      else Search'Result = Size_A));
+
+   -- should have used Contract Cases here, but does not work due to a
+   -- bug with gnatprove (see
+   -- https://gt3-prod-2.adacore.com/#/tickets/P630-039)
+   --
+   --  Contract_Cases =>
+   --    (Size = 0 or Size_B = 0              =>
+   --       Search'Result = 0,
+   --     Has_Sub_Range(A, Size_A, B, Size_B) =>
+   --       Is_Equal(A(A'First + Search'Result .. A'Last), B, Size_B) and then
+   --       not Has_Sub_Range(A, Search'Result + Size_B - 1, B, Size_B),
+   --     others                              =>
+   --       Search'Result = Size_A);
 
 end Chap3;
