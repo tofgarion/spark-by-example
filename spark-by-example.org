@@ -48,7 +48,7 @@
    - level 0: invariant preservation + postcondition not proved
    - level 1: postcondition not proved
    - refactoring: still level 2 needed
-** Adjacent_Find
+** Adjacent_Find (new)
    :PROPERTIES:
    :POS_IN_SPEC: chap3.ads:128
    :Status:   Finished
@@ -57,7 +57,7 @@
 
    - level 0: invariant preservation + contract case not proved
    - level 1: idem
-** Search
+** Search (new)
    :PROPERTIES:
    :POS_IN_SPEC: chap3.ads:158
    :Status:   In progress
@@ -74,4 +74,40 @@
     chap3.ads). Counterexample given : Result = 0 and Size_A = 1
     (A'First = 1, A'Last = 1).
 
-** Count
+** Count (new)
+   :PROPERTIES:
+   :POS_IN_SPEC: chap3.ads:158
+   :Status:   In progress
+   :Level:    0
+   :END:
+
+* Maximum and minimum algorithms
+** Max_Element
+** Max_Seq
+** Min_Element
+
+* Binary search algorithms
+** Lower_Bound
+** Upper_Bound
+** Equal_Range
+** Binary_Search
+
+* Mutating algorithms
+** Swap
+** Fill
+** Swap_Ranges
+** Copy
+** Reverse_Copy
+** Rotate_Copy (not written)
+** Replace_Copy (not written)
+** Replace (not written)
+** Remove_Copy (not written)
+
+* Numeric algorithms (new)
+** Iota (new)
+** Accumulate (new)
+** Inner_Product (new)
+** Partial_Sum (new)
+** Adjacent_Differences (new)
+
+* The Stack data type
