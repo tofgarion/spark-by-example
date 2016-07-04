@@ -18,7 +18,7 @@ distclean: clean
 	-rm -rf gnatprove auto.cgpr
 
 test_%: test_%.adb
-	gnatmake $^
+	gnatmake -gnata -gnateE -f $^
 	./$@
 
 %:
