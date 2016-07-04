@@ -1,4 +1,4 @@
-project P is
+project Spark_By_Example is
 
   for Source_Dirs use (".");
 
@@ -13,4 +13,4 @@ project P is
                       "--warnings=continue");
   end Prove;
 
-end P;
+end Spark_By_Example;
