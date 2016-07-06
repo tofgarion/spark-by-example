@@ -183,4 +183,36 @@ package Chap3 with
    --     others                              =>
    --       Search'Result = Size_A);
 
+   --  3.8 the 'count' algorithm
+   --
+   --  Remove_Last and Occ are helper functions needed to
+   --  axiomatically define Count See
+   --  http://docs.adacore.com/spark2014-docs/html/ug/gnatprove.html#manual-proof-examples
+
+   function Remove_Last (A : T_Arr) return T_Arr is (A (A'First .. A'Last - 1))
+   with
+     Pre => A'Length > 0,
+     Ghost;
+
+   function Occ_Def
+     (A : T_Arr;
+      V : T) return Natural is
+      (if A'Length = 0 then 0
+       elsif A (A'Last) = V then Occ_Def(Remove_Last (A), V) + 1
+       else Occ_Def(Remove_Last (A), V)
+      )
+   with
+     Post => Occ_Def'Result <= A'Length,
+     Ghost;
+
+   -- this function is needed as Occ_Def is recursive to use Occ_Def
+   -- postcondition, see previous link
+   function Occ (A : T_Arr; V : T) return Natural is
+       (Occ_Def (A, V))
+   with
+     Post => Occ'Result <= A'Length,
+     Ghost;
+
+  --  The Count function
+
 end Chap3;
