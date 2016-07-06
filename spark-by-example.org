@@ -76,10 +76,14 @@
 
 ** Count (new)
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:158
-   :Status:   In progress
-   :Level:    0
+   :POS_IN_SPEC: chap3.ads:210
+   :Status:   Finished
+   :Level:    1
    :END:
+
+   - no particular problem using axiomatic definition of Occ (see
+     http://docs.adacore.com/spark2014-docs/html/ug/gnatprove.html#manual-proof-using-ghost-code)
+   - easier than ACSL, no need to prove lemmas?
 
 * Maximum and minimum algorithms
 ** Max_Element

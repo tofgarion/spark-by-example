@@ -148,4 +148,30 @@ package body Chap3 with
       return Size_A;
    end Search;
 
+   -----------
+   -- Count --
+   -----------
+
+   function Count (A      : T_Arr;
+                   -- Size_A : Natural;
+                   Val    : T) return Natural
+   is
+      Counted : Natural := 0;
+   begin
+      for J in A'Range loop
+         if A (J) = Val then
+            Counted := Counted + 1;
+         end if;
+
+         pragma Loop_Invariant
+           (Counted <= A'Length);
+         pragma Loop_Invariant
+           (Counted = Occ (A (A'First .. J), Val));
+         pragma Loop_Variant
+           (Increases => J);
+      end loop;
+
+      pragma Assert (Counted <= A'Length);
+      return Counted;
+   end Count;
 end Chap3;

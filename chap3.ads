@@ -195,24 +195,32 @@ package Chap3 with
      Ghost;
 
    function Occ_Def
-     (A : T_Arr;
-      V : T) return Natural is
-      (if A'Length = 0 then 0
-       elsif A (A'Last) = V then Occ_Def(Remove_Last (A), V) + 1
-       else Occ_Def(Remove_Last (A), V)
-      )
+     (A   : T_Arr;
+      Val : T) return Natural is
+     (if A'Length = 0 then 0
+      elsif A (A'Last) = Val then Occ_Def(Remove_Last (A), Val) + 1
+      else Occ_Def(Remove_Last (A), Val)
+     )
    with
      Post => Occ_Def'Result <= A'Length,
      Ghost;
 
    -- this function is needed as Occ_Def is recursive to use Occ_Def
    -- postcondition, see previous link
-   function Occ (A : T_Arr; V : T) return Natural is
-       (Occ_Def (A, V))
+   function Occ (A : T_Arr; Val : T) return Natural is
+     (Occ_Def (A, Val))
    with
      Post => Occ'Result <= A'Length,
      Ghost;
 
-  --  The Count function
+   --  The Count function counts the frequency of occurrences of a
+   --  particular element in a sequence.
+
+   function Count (A      : T_Arr;
+                   -- Size_A : Natural;
+                   Val    : T) return Natural
+   with
+     Post => Count'Result <= A'Length and then
+             Count'Result = Occ (A, Val);
 
 end Chap3;
