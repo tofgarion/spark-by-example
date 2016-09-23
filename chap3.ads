@@ -189,7 +189,7 @@ package Chap3 with
    --
    --  Remove_Last and Occ are helper functions needed to
    --  axiomatically define Count See
-   --  http://docs.adacore.com/spark2014-docs/html/ug/gnatprove.html#manual-proof-examples
+   --  http://docs.adacore.com/spark2014-docs/html/ug/gnatprove_by_example/manual_proof.html#manual-proof-using-ghost-code
 
    function Remove_Last (A : T_Arr) return T_Arr is (A (A'First .. A'Last - 1))
    with
