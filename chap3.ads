@@ -11,9 +11,9 @@ package Chap3 with
 
    --  3.1 The 'equal' algorithm
    --
-   --  Is_Equal is an helper function to write clearer assertions.
+   --  Equal_Ranges is an helper function to write clearer assertions.
 
-   function Is_Equal
+   function Equal_Ranges
      (A    : T_Arr;
       B    : T_Arr;
       Size : Natural) return Boolean is
@@ -26,7 +26,7 @@ package Chap3 with
 
    function Equal (A : T_Arr; B : T_Arr; Size : Natural) return Boolean with
      Pre  => (Size <= A'Length and Size <= B'Length),
-     Post => (Equal'Result = Is_Equal (A, B, Size));
+     Post => (Equal'Result = Equal_Ranges (A, B, Size));
 
    --  3.2 The 'mismatch' algorithm
    --
@@ -41,9 +41,9 @@ package Chap3 with
       Size : Natural) return Natural with
      Pre  => (Size <= A'Length and Size <= B'Length),
      Post => (Mismatch'Result <= Size and then
-              Is_Equal (A, B, Mismatch'Result)),
+              Equal_Ranges (A, B, Mismatch'Result)),
      Contract_Cases =>
-       (Is_Equal (A, B, Size) => Mismatch'Result = Size,
+       (Equal_Ranges (A, B, Size) => Mismatch'Result = Size,
         others                =>
           Mismatch'Result < Size and then
           A (A'First + Mismatch'Result) /= B (B'First + Mismatch'Result)
@@ -146,7 +146,7 @@ package Chap3 with
       Size_A : Natural;
       B      : T_Arr;
       Size_B : Natural) return Boolean is
-     (for some I in 0 .. Size_A - Size_B => Is_Equal(A(A'First + I .. A'Last), B, Size_B)) with
+     (for some I in 0 .. Size_A - Size_B => Equal_Ranges(A(A'First + I .. A'Last), B, Size_B)) with
      Pre => Size_A <= A'Length and then
             Size_B <= B'Length,
      Ghost;
@@ -166,7 +166,7 @@ package Chap3 with
      (if Size_A = 0 or Size_B = 0 then Search'Result = 0 else
      (if Has_Sub_Range(A, Size_A, B, Size_B) then
         (Search'Result <= Size_A - Size_B and then
-           (Is_Equal(A(A'First + Search'Result .. A'Last), B, Size_B) and then
+           (Equal_Ranges(A(A'First + Search'Result .. A'Last), B, Size_B) and then
             not Has_Sub_Range(A, Search'Result + Size_B - 1, B, Size_B)))
       else Search'Result = Size_A));
 
@@ -178,7 +178,7 @@ package Chap3 with
    --    (Size = 0 or Size_B = 0              =>
    --       Search'Result = 0,
    --     Has_Sub_Range(A, Size_A, B, Size_B) =>
-   --       Is_Equal(A(A'First + Search'Result .. A'Last), B, Size_B) and then
+   --       Equal_Ranges(A(A'First + Search'Result .. A'Last), B, Size_B) and then
    --       not Has_Sub_Range(A, Search'Result + Size_B - 1, B, Size_B),
    --     others                              =>
    --       Search'Result = Size_A);
