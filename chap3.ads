@@ -147,7 +147,9 @@ package Chap3 with
       B      : T_Arr;
       Size_B : Natural) return Boolean is
      (for some I in 0 .. Size_A - Size_B => Equal_Ranges(A(A'First + I .. A'Last), B, Size_B)) with
-     Pre => Size_A <= A'Length and then
+     Pre => Size_B <= Size_A and then
+            A'Last <  Integer'Last and then
+            Size_A <= A'Length and then
             Size_B <= B'Length,
      Ghost;
 
