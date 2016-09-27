@@ -146,26 +146,30 @@ package Chap3 with
       Size_A : Natural;
       B      : T_Arr;
       Size_B : Natural) return Boolean is
-     (for some I in 0 .. Size_A - Size_B => Equal_Ranges(A(A'First + I .. A'Last), B, Size_B)) with
-     Pre => Size_B <= Size_A and then
-            A'Last <  Integer'Last and then
+     -- The following does not wor. Maybe a slice problem?
+     -- (for some I in 0 .. Size_A - Size_B => Equal_Ranges(A(A'First + I .. A'Last), B, Size_B)) with
+     (for some I in 0 .. Size_A - Size_B =>
+        (for all J in 0 .. Size_B - 1 => A(A'First + I + J) = B(B'First + J))) with
+     Pre => A'Last <  Integer'Last and then
             Size_A <= A'Length and then
             Size_B <= B'Length,
+     Post => (if Has_Sub_Range'Result then Size_B <= Size_A),
      Ghost;
 
    --  The function Search returns the first index I of the array A
-   --  where the condition A(I + K) = B(K) for each 0 <= K < Size
-   --  holds. If no such index exists then Search returns Size.
+   --  where the condition A(I + K) = B(K) for each 0 <= K < Size_B
+   --  holds. If no such index exists then Search returns Size_B.
 
    function Search
      (A      : T_Arr;
       Size_A : Natural;
       B      : T_Arr;
       Size_B : Natural) return Natural with
-     Pre  => Size_A <= A'Length and then
+      Pre => A'Last < Integer'Last and then
+             Size_A <= A'Length and then
              Size_B <= B'Length,
      Post => Search'Result <= Size_A and then
-     (if Size_A = 0 or Size_B = 0 then Search'Result = 0 else
+     (if Size_A = 0 or else Size_B = 0 then Search'Result = 0 else
      (if Has_Sub_Range(A, Size_A, B, Size_B) then
         (Search'Result <= Size_A - Size_B and then
            (Equal_Ranges(A(A'First + Search'Result .. A'Last), B, Size_B) and then
