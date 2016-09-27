@@ -19,7 +19,7 @@ procedure Test_Search is
       return SU.To_String(Res);
    end T_Arr_To_String;
 
-   procedure My_Test
+   procedure My_Search_Test
      (A        : T_Arr;
       B        : T_Arr;
       Size_B   : Natural;
@@ -40,13 +40,13 @@ procedure Test_Search is
          Put_Line ("KO, found index" & Integer'Image(Res) &
                    " instead of" & Integer'Image(Expected));
       end if;
-   end My_Test;
+   end My_Search_Test;
 
 begin
-   My_Test(A, (3, 2, 8), 3, 2);
-   My_Test(A, (1, 5, 4), 3, 7);
-   My_Test(A, (1, 5, 4), 2, 0);
-   My_Test(A, (1, 5, 4, 3), 4, A'Length);
-   My_Test(A_Sing, (1 => 1), 1, 0);
-   My_Test(A_Sing, (1 => 2), 1, 1);
+   My_Search_Test(A, (3, 2, 8), 3, 2);
+   My_Search_Test(A, (1, 5, 4), 3, 7);
+   My_Search_Test(A, (1, 5, 4), 2, 0);
+   My_Search_Test(A, (1, 5, 4, 3), 4, A'Length);
+   My_Search_Test(A_Sing, (1 => 1), 1, 0);
+   My_Search_Test(A_Sing, (1 => 2), 1, 1);
 end Test_Search;
