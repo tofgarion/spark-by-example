@@ -173,4 +173,14 @@ package body Chap3 with
 
       return Counted;
    end Count;
+
+   --------------------
+   -- Equal_Mismatch --
+   --------------------
+
+   function Equal_Mismatch (A : T_Arr; B : T_Arr; Size : Natural) return Boolean is
+   begin
+       return Mismatch(A, B, Size) = Size;
+   end Equal_Mismatch;
+
 end Chap3;

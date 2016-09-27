@@ -98,6 +98,15 @@
    - functions Occ_Def and Occ are also proved
    - easier than ACSL, no need to prove lemmas?
 
+** Equal_Mismatch (new)
+   :PROPERTIES:
+   :POS_IN_SPEC: chap3.ads:233
+   :Status:   Finished
+   :Level:    1
+   :END:
+
+   A simple reimplementation of Equal using Mismatch as stated in ACSL
+   By Example Magnesium edition.
 * Maximum and minimum algorithms
 ** Max_Element
 ** Max_Seq

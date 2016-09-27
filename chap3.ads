@@ -227,4 +227,12 @@ package Chap3 with
      Post => Count'Result <= A'Length and then
              Count'Result = Occ (A, Val);
 
+   --  IMPLEMENTATION: the function Equal_Mismatch behaves like Equal,
+   --  but its implementation use Mismatch.
+
+   function Equal_Mismatch (A : T_Arr; B : T_Arr; Size : Natural) return Boolean with
+     Pre  => (Size <= A'Length and Size <= B'Length),
+     Post => (Equal_Mismatch'Result = Equal_Ranges (A, B, Size));
+
+
 end Chap3;
