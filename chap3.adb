@@ -171,7 +171,6 @@ package body Chap3 with
            (Increases => J);
       end loop;
 
-      pragma Assert (Counted <= A'Length);
       return Counted;
    end Count;
 end Chap3;
