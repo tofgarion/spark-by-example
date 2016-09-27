@@ -20,14 +20,14 @@
    - level 1: postcondition not proved
 ** Mismatch
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:37
+   :POS_IN_SPEC: chap3.ads:38
    :Status:   Finished
    :Level:    2
    :END:
 
    - level 0: invariant preservation + postcondition not proved
    - level 1: postcondition not proved
-   - refactoring: still level 2 needed
+   - refactoring: level 2 still needed
 ** Find
    :PROPERTIES:
    :POS_IN_SPEC: chap3.ads:67
@@ -59,30 +59,40 @@
    - level 1: idem
 ** Search (new)
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:158
-   :Status:   In progress
-   :Level:    0
+   :POS_IN_SPEC: chap3.ads:163
+   :Status:   Finished
+   :Level:    2
    :END:
 
    Cannot use Contract Cases with array slice. Bug reported and
    corrected in SPARK development version
    (cf. https://gt3-prod-2.adacore.com/#/tickets/P630-039).
 
-*** TODO investigate function proof for case when B is not a subsequence of A
+   Level 2 is sufficient to prove all VCs.
+
+*** DONE investigate function proof for case when B is not a subsequence of A
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2016-09-27 Tue 14:17]
+    :END:
 
     SPARK cannot prove this part of the postcondition (cf. line 171 of
     chap3.ads). Counterexample given : Result = 0 and Size_A = 1
     (A'First = 1, A'Last = 1).
 
+    It seems to be the same problem with array slices in the for
+    expression. Maybe a bug report should be produced?
+
 ** Count (new)
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:210
+   :POS_IN_SPEC: chap3.ads:225
    :Status:   Finished
    :Level:    1
    :END:
 
    - no particular problem using axiomatic definition of Occ (see
-     http://docs.adacore.com/spark2014-docs/html/ug/gnatprove.html#manual-proof-using-ghost-code)
+     http://docs.adacore.com/spark2014-docs/html/ug/gnatprove_by_example/manual_proof.html#manual-proof-using-ghost-code)
+   - not using a Size parameter seems to make the proof easier
+   - functions Occ_Def and Occ are also proved
    - easier than ACSL, no need to prove lemmas?
 
 * Maximum and minimum algorithms
