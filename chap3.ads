@@ -150,8 +150,7 @@ package Chap3 with
      -- (for some I in 0 .. Size_A - Size_B => Equal_Ranges(A(A'First + I .. A'Last), B, Size_B)) with
      (for some I in 0 .. Size_A - Size_B =>
         (for all J in 0 .. Size_B - 1 => A(A'First + I + J) = B(B'First + J))) with
-     Pre => A'Last <  Integer'Last and then
-            Size_A <= A'Length and then
+     Pre => Size_A <= A'Length and then
             Size_B <= B'Length,
      Post => (if Has_Sub_Range'Result then Size_B <= Size_A),
      Ghost;
@@ -165,8 +164,7 @@ package Chap3 with
       Size_A : Natural;
       B      : T_Arr;
       Size_B : Natural) return Natural with
-      Pre => A'Last < Integer'Last and then
-             Size_A <= A'Length and then
+      Pre => Size_A <= A'Length and then
              Size_B <= B'Length,
      Post => Search'Result <= Size_A and then
      (if Size_A = 0 or else Size_B = 0 then Search'Result = 0 else

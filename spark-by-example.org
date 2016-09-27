@@ -59,7 +59,7 @@
    - level 1: idem
 ** Search (new)
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:163
+   :POS_IN_SPEC: chap3.ads:162
    :Status:   Finished
    :Level:    2
    :END:
@@ -84,7 +84,7 @@
 
 ** Count (new)
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:225
+   :POS_IN_SPEC: chap3.ads:224
    :Status:   Finished
    :Level:    1
    :END:
