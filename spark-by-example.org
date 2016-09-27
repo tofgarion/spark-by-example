@@ -82,6 +82,9 @@
     It seems to be the same problem with array slices in the for
     expression. Maybe a bug report should be produced?
 
+    Strange fact also : when using slices, a precondition on the
+    length of A must be used (~A'Length < Integer'Last~ for instance).
+
 ** Count (new)
    :PROPERTIES:
    :POS_IN_SPEC: chap3.ads:224
