@@ -180,7 +180,50 @@ package body Chap3 with
 
    function Equal_Mismatch (A : T_Arr; B : T_Arr; Size : Natural) return Boolean is
    begin
-       return Mismatch(A, B, Size) = Size;
+      return Mismatch(A, B, Size) = Size;
    end Equal_Mismatch;
+
+   --------------
+   -- Search_N --
+   --------------
+
+   function  Search_N (A      : T_Arr;
+                       -- Size_A : Natural;
+                       N      : Natural;
+                       Val    : T) return Integer
+   is
+      Start : Integer := A'First;
+   begin
+      if (A'Length = 0 or else N = 0) then
+         return 0;
+      end if;
+
+      if (A'Length < N) then
+         return A'Length;
+      end if;
+
+      for I in A'Range Loop
+         pragma Loop_Invariant
+           (Start in A'Range);
+         pragma Loop_Invariant
+           (Constant_Range(A, Start, I - 1, Val));
+         pragma Loop_Invariant
+           (Start = A'First or else not Constant_Range(A, Start - 1, I, Val));
+         pragma Loop_Invariant
+           (not Has_Constant_Sub_Range(A(A'First .. I - 1), N, Val));
+         pragma Loop_Variant
+           (Increases => I);
+
+         if A (I) /= Val then
+            Start := I + 1;
+         elsif I + 1 - Start >= N then
+            return Start;
+         end if;
+      end loop;
+
+      pragma assert (not Has_Constant_Sub_Range(A, N, Val));
+
+      return A'Length;
+   end Search_N;
 
 end Chap3;

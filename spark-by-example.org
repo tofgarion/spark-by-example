@@ -48,7 +48,7 @@
    - level 0: invariant preservation + postcondition not proved
    - level 1: postcondition not proved
    - refactoring: still level 2 needed
-** Adjacent_Find (new)
+** Adjacent_First (new)
    :PROPERTIES:
    :POS_IN_SPEC: chap3.ads:128
    :Status:   Finished
@@ -97,6 +97,12 @@
    - not using a Size parameter seems to make the proof easier
    - functions Occ_Def and Occ are also proved
    - easier than ACSL, no need to prove lemmas?
+
+**** TODO compare ACSL lemmas and SPARK ghost functions
+     :PROPERTIES:
+     :ID:       aaa94786-47f6-45ae-a2c7-0f2ab753c3e1
+     :Effort:   1:00
+     :END:
 
 ** Equal_Mismatch (new)
    :PROPERTIES:
