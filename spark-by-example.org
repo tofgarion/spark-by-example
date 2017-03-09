@@ -113,6 +113,15 @@
 
    A simple reimplementation of Equal using Mismatch as stated in ACSL
    By Example Magnesium edition.
+** Search_N (new)
+   :PROPERTIES:
+   :POS_IN_SPEC: chap3.ads:264
+   :Status:   Finished
+   :Level:    3
+   :END:
+
+   Need to add an assertion after the loop.
+
 * Maximum and minimum algorithms
 ** Max_Element
 ** Max_Seq

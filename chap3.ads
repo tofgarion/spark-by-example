@@ -234,5 +234,45 @@ package Chap3 with
      Pre  => (Size <= A'Length and Size <= B'Length),
      Post => (Equal_Mismatch'Result = Equal_Ranges (A, B, Size));
 
+   --  The Search_N algorithm
+   --
+   --  Constant_Range is an helper predicate for Search_N
+
+   function Constant_Range (A     : T_Arr;
+                            First : Integer;
+                            Last  : Integer;
+                            Val   : T) return Boolean is
+     (if Last < First then True else
+        (for all I in First .. Last => A (I) = Val)) with
+     -- Pre  => (First in A'Range and then Last in A'Range),
+     Ghost;
+
+   function Has_Constant_Sub_Range (A      : T_Arr;
+                                    -- Size_A : Natural;
+                                    N      : Natural;
+                                    Val    : T) return Boolean is
+     --(if A'Length < N then False else
+        (for some I in A'First .. A'Last - N + 1 =>
+           Constant_Range(A, I, I + N - 1, Val)) with
+     Post => (if Has_Constant_Sub_Range'Result then N <= A'Length),
+     Ghost;
+
+   --  The Search_N function returns the first natural number I such
+   --  that value Val occurs a given number of times (denoted here by
+   --  N) starting from A'First + I.
+
+   function Search_N (A      : T_Arr;
+                      -- Size_A : Natural;
+                      N      : Natural;
+                      Val    : T) return Integer with
+     Pre  => -- (Size_A <= A'Length) and then A'Last < Natural'Last and then A'First <= A'Last,
+             A'Last < Natural'Last,
+     Post => (if N = 0 then Search_N'Result = 0
+              elsif Has_Constant_Sub_Range(A, N, Val) then
+               (Search_N'Result <= A'Last - N + 1 and then
+                Constant_Range(A, Search_N'Result, Search_N'Result + N - 1, Val) and then
+                (not Has_Constant_Sub_Range(A(A'First .. Search_N'Result + N - 2), N, Val)))
+              else Search_N'Result = A'Length
+             );
 
 end Chap3;
