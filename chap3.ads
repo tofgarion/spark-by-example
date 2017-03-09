@@ -244,16 +244,14 @@ package Chap3 with
                             Val   : T) return Boolean is
      (if Last < First then True else
         (for all I in First .. Last => A (I) = Val)) with
-     -- Pre  => (First in A'Range and then Last in A'Range),
      Ghost;
 
    function Has_Constant_Sub_Range (A      : T_Arr;
                                     -- Size_A : Natural;
                                     N      : Natural;
                                     Val    : T) return Boolean is
-     --(if A'Length < N then False else
-        (for some I in A'First .. A'Last - N + 1 =>
-           Constant_Range(A, I, I + N - 1, Val)) with
+     (for some I in A'First .. A'Last - N + 1 =>
+        Constant_Range(A, I, I + N - 1, Val)) with
      Post => (if Has_Constant_Sub_Range'Result then N <= A'Length),
      Ghost;
 
@@ -265,8 +263,7 @@ package Chap3 with
                       -- Size_A : Natural;
                       N      : Natural;
                       Val    : T) return Integer with
-     Pre  => -- (Size_A <= A'Length) and then A'Last < Natural'Last and then A'First <= A'Last,
-             A'Last < Natural'Last,
+     Pre  => A'Last < Natural'Last,
      Post => (if N = 0 then Search_N'Result = 0
               elsif Has_Constant_Sub_Range(A, N, Val) then
                (Search_N'Result <= A'Last - N + 1 and then
