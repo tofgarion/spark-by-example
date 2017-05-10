@@ -1,6 +1,6 @@
 #+TITLE: SPARK by example
 
-* Non-mutating algorithms
+* Non-mutating algorithms (GPL2016)
   :PROPERTIES:
   :SPEC_FILE: chap3.ads
   :IMPL_FILE: chap3.adb
@@ -121,6 +121,8 @@
    :END:
 
    Need to add an assertion after the loop.
+
+* Non-mutating algorithms (SPARK Pro 2017)
 
 * Maximum and minimum algorithms
 ** Max_Element
