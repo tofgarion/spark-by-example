@@ -1,11 +1,13 @@
 _SUBPROG_FILTER = $(if $(SUBP_FILTER),--limit-subp $(SUBP_FILTER),)
 _LEVEL = $(if $(LEVEL),--level=$(LEVEL),--level=0)
+_TIMEOUT = $(if $(TIMEOUT),--timeout=$(TIMEOUT),--timeout=0)
+_PARALLEL = $(if $(PARALLEL),-j $(PARALLEL),-j 0)
 PROJECT = -Pspark_by_example.gpr
 
 .PHONY: all pp clean distclean
 
 all:
-	gnatprove $(PROJECT) -j 2 $(_LEVEL) chap*.adb
+	gnatprove $(PROJECT) -j 4 $(_TIMEOUT) $(_LEVEL) chap*.adb
 
 pp:
 	gnatpp $(PROJECT) -rnb
@@ -22,4 +24,4 @@ test_%: test_%.adb
 	./$@
 
 %:
-	gnatprove $(PROJECT) -f -j 4 $(_SUBPROG_FILTER) $(_LEVEL) chap$@.adb
+	gnatprove $(PROJECT) -f $(_PARALLEL) $(_SUBPROG_FILTER) $(_LEVEL) $(_TIMEOUT) chap$@.adb
