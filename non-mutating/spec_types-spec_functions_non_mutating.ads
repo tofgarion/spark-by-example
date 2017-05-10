@@ -8,7 +8,8 @@ package Spec_Types.Spec_Functions_Non_Mutating with
   Spark_Mode,
   Ghost
 is
-  function Has_Value (A   : T_Arr;
-                      Val : T) return Boolean is
+   function Has_Value (A   : T_Arr;
+                       Val : T) return Boolean is
      (for some I in A'Range => A (I) = Val);
+
 end Spec_Types.Spec_Functions_Non_Mutating;
