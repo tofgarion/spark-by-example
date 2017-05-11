@@ -21,4 +21,15 @@ is
    pragma Annotate (GNATprove, False_Positive,
                     "overflow check might fail",
                     "reviewed by C. Garion");
+
+   function Equal_Ranges (A : T_Arr; B : T_Arr; Offset : Natural)
+     return Boolean is
+     (for all I in 0 .. Offset => A(A'First + I) = B(B'First + I))
+   with
+     Pre => Offset < A'Length and then Offset < B'Length;
+
+   function Equal_Ranges (A : T_Arr; B : T_Arr) return Boolean is
+     (if (A'Length = 0) then True else Equal_Ranges(A, B, A'Length - 1))
+   with
+     Pre => A'Length <= B'Length;
 end Spec_Types.Spec_Functions_Non_Mutating;
