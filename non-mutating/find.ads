@@ -12,8 +12,8 @@ package Find with
        (Has_Value(A, Val) =>
           (Find'Result.Exists = True) and then
           (A (Find'Result.Value) = Val) and then
-          (for all I in A'First .. Find'Result.Value - 1 => A(I) /= Val),
-        others            => Find'Result.Exists = False
+          (not Has_Value(A(A'First .. Find'Result.Value - 1), Val)),
+          others            => Find'Result.Exists = False
        );
 
 end Find;
