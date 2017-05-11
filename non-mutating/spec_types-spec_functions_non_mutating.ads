@@ -12,4 +12,8 @@ is
                        Val : T) return Boolean is
      (for some I in A'Range => A (I) = Val);
 
+   function Has_Value_Of (A : T_Arr;
+                          B : T_Arr) return Boolean Is
+     (for some I in A'Range => Has_Value(B, A(I)));
+
 end Spec_Types.Spec_Functions_Non_Mutating;
