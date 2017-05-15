@@ -17,10 +17,7 @@ is
      (for some I in A'Range => Has_Value(B, A(I)));
 
    function Has_Equal_Neighbors (A : T_Arr) return Boolean is
-     (for some I in A'First .. A'Last - 1 => A(I) = A(I + 1));
-   pragma Annotate (GNATprove, False_Positive,
-                    "overflow check might fail",
-                    "reviewed by C. Garion");
+     (if (A'Length = 0 or else A'Length = 1) then False else (for some I in A'First .. A'Last - 1 => A(I) = A(I + 1)));
 
    function Equal_Ranges (A : T_Arr; B : T_Arr; Offset : Natural)
      return Boolean is
