@@ -1,0 +1,7 @@
+* Non-mutating algorithms
+
+  This directory contains the specification and implementation files
+  for the following algorithms: ~Find~, ~Find_First_Of~,
+  ~Adjacent_Find~, ~Equal~, ~Search~, ~Search_N~, ~Find_End~ and
+  ~Count~. As usual, ghost functions used in specification are located
+  in the ~spec~ directory at project root.
