@@ -11,6 +11,7 @@ package body Naive_Find with
          end if;
 
          pragma Loop_Invariant (for all J in A'First .. I => A (J) /= Val);
+         pragma Loop_Variant (Increases => I);
       end loop;
 
       return A'Last + 1;
