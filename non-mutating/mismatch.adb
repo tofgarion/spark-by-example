@@ -15,7 +15,7 @@ package body Mismatch with
          end if;
 
          pragma Loop_Invariant
-           (Equal_Ranges(A, B, I));
+           (Equal_Ranges.Equal_Ranges(A, B, I));
          pragma Loop_Invariant
            (Result.Exists = False);
       end loop;

@@ -15,7 +15,7 @@ package body Adjacent_Find with
          end if;
 
          pragma Loop_Invariant
-           (not Has_Equal_Neighbors(A(A'First .. I + 1)));
+           (not Has_Equal_Neighbors.Has_Equal_Neighbors(A(A'First .. I + 1)));
          pragma Loop_Invariant
            (Result.Exists = False);
       end loop;

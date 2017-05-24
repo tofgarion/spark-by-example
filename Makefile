@@ -14,10 +14,10 @@ pp:
 
 clean:
 	gnatclean $(_PROJECT)
-	-rm -rf *~
+	- rm -rf *~
 
 distclean: clean
-	-rm -rf gnatprove auto.cgpr
+	- rm -rf gnatprove auto.cgpr
 
 test_%: test_%.adb
 	gnatmake -gnata -gnateE -f $^

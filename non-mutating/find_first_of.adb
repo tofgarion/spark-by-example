@@ -16,7 +16,7 @@ package body Find_First_Of with
          end if;
 
          pragma Loop_Invariant
-           (not Has_Value_Of(A(A'First .. I), B));
+           (not Has_Value_Of.Has_Value_Of(A(A'First .. I), B));
          pragma Loop_Invariant
            (Result.Exists = False);
       end loop;

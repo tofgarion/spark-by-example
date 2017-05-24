@@ -1,6 +1,6 @@
 -- Naive Find function specification
-with Spec_Types;
-use Spec_Types;
+
+with Types; use Types;
 
 package Naive_Find with
   SPARK_Mode is
