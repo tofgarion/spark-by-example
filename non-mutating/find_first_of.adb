@@ -2,23 +2,22 @@
 with Find;
 
 package body Find_First_Of with
-  SPARK_Mode is
+     Spark_Mode is
 
-   function Find_First_Of (A : T_Arr; B : T_Arr) return Option Is
-      Result: Option := (Exists => False, Value => 1);
+   function Find_First_Of (A : T_Arr; B : T_Arr) return Option is
+      Result : Option := (Exists => False, Value => 1);
    begin
-      for I in A'Range Loop
-         if (Find.Find(B, A(I)).Exists = True) Then
+      for I in A'Range loop
+         if (Find.Find (B, A (I)).Exists = True) then
             Result.Exists := True;
-            Result.Value := I;
+            Result.Value  := I;
 
             return Result;
          end if;
 
          pragma Loop_Invariant
-           (not Has_Value_Of.Has_Value_Of(A(A'First .. I), B));
-         pragma Loop_Invariant
-           (Result.Exists = False);
+           (not Has_Value_Of.Has_Value_Of (A (A'First .. I), B));
+         pragma Loop_Invariant (Result.Exists = False);
       end loop;
 
       return Result;

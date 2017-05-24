@@ -2,8 +2,10 @@
 with Mismatch;
 
 package body Equal with
-  SPARK_Mode is
+     Spark_Mode is
 
-   function Equal (A : T_Arr; B : T_Arr) return Boolean is
-     (not Mismatch.Mismatch(A, B).Exists);
+   function Equal
+     (A : T_Arr;
+      B : T_Arr) return Boolean is
+     (not Mismatch.Mismatch (A, B).Exists);
 end Equal;
