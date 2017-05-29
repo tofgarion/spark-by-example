@@ -1,6 +1,6 @@
 -- implementation of a better version of Find
 
-package body Find with
+package body Find_P with
      Spark_Mode is
 
    function Find (A : T_Arr; Val : T) return Option is
@@ -15,10 +15,10 @@ package body Find with
          end if;
 
          pragma Loop_Invariant
-           (not Has_Value.Has_Value (A (A'First .. I), Val));
+           (not Has_Value (A (A'First .. I), Val));
          pragma Loop_Invariant (Result.Exists = False);
       end loop;
 
       return Result;
    end Find;
-end Find;
+end Find_P;

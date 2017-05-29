@@ -3,7 +3,7 @@
 
 with Types; use Types;
 
-package Equal_Ranges with
+package Equal_Ranges_P with
      Spark_Mode,
      Ghost is
 
@@ -24,4 +24,4 @@ package Equal_Ranges with
      (if (A'Length = 0) then True else Equal_Ranges (A, B, A'Length - 1)) with
       Pre => A'Length <= B'Length;
 
-end Equal_Ranges;
+end Equal_Ranges_P;

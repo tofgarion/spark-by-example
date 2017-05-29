@@ -1,6 +1,6 @@
 -- Naive Find implementation
 
-package body Naive_Find with
+package body Naive_Find_P with
      Spark_Mode is
 
    function Find (A : T_Arr; Val : T) return Positive is
@@ -16,4 +16,4 @@ package body Naive_Find with
 
       return A'Last + 1;
    end Find;
-end Naive_Find;
+end Naive_Find_P;

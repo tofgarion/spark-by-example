@@ -3,7 +3,7 @@
 
 with Types; use Types;
 
-package Has_Equal_Neighbors with
+package Has_Equal_Neighbors_P with
      Spark_Mode,
      Ghost is
    function Has_Equal_Neighbors
@@ -11,4 +11,4 @@ package Has_Equal_Neighbors with
      (if (A'Length = 0 or else A'Length = 1) then False
       else (for some I in A'First .. A'Last - 1 => A (I) = A (I + 1)));
 
-end Has_Equal_Neighbors;
+end Has_Equal_Neighbors_P;

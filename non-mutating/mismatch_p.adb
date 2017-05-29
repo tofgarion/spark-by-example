@@ -1,6 +1,6 @@
 -- implementation of Mismatch
 
-package body Mismatch with
+package body Mismatch_P with
      Spark_Mode is
 
    function Mismatch (A : T_Arr; B : T_Arr) return Option is
@@ -14,10 +14,10 @@ package body Mismatch with
             return Result;
          end if;
 
-         pragma Loop_Invariant (Equal_Ranges.Equal_Ranges (A, B, I));
+         pragma Loop_Invariant (Equal_Ranges (A, B, I));
          pragma Loop_Invariant (Result.Exists = False);
       end loop;
 
       return Result;
    end Mismatch;
-end Mismatch;
+end Mismatch_P;

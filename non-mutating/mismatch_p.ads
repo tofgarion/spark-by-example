@@ -2,14 +2,14 @@
 -- offset from which the two arrays are different.
 
 with Types; use Types;
-with Equal_Ranges;
+with Equal_Ranges_P; use Equal_Ranges_P;
 
-package Mismatch with
+package Mismatch_P with
      Spark_Mode is
    function Mismatch (A : T_Arr; B : T_Arr) return Option with
       Pre            => A'Length <= B'Length,
       Contract_Cases =>
-      (Equal_Ranges.Equal_Ranges (A, B (B'First .. B'First - 1 + A'Length)) =>
+      (Equal_Ranges (A, B (B'First .. B'First - 1 + A'Length)) =>
          not Mismatch'Result.Exists,
        others =>
          Mismatch'Result.Exists
@@ -20,5 +20,5 @@ package Mismatch with
          (if
             (Mismatch'Result.Value /= 0)
           then
-            Equal_Ranges.Equal_Ranges (A, B, Mismatch'Result.Value - 1)));
-end Mismatch;
+            Equal_Ranges (A, B, Mismatch'Result.Value - 1)));
+end Mismatch_P;

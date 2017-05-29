@@ -1,6 +1,6 @@
 -- implementation of Adjacent_Find
 
-package body Adjacent_Find with
+package body Adjacent_Find_P with
      Spark_Mode is
 
    function Adjacent_Find (A : T_Arr) return Option is
@@ -15,7 +15,7 @@ package body Adjacent_Find with
          end if;
 
          pragma Loop_Invariant
-           (not Has_Equal_Neighbors.Has_Equal_Neighbors
+           (not Has_Equal_Neighbors
               (A (A'First .. I + 1)));
          pragma Loop_Invariant (Result.Exists = False);
       end loop;
@@ -27,4 +27,4 @@ package body Adjacent_Find with
 
       return Result;
    end Adjacent_Find;
-end Adjacent_Find;
+end Adjacent_Find_P;

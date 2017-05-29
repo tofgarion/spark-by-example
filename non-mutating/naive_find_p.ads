@@ -2,7 +2,7 @@
 
 with Types; use Types;
 
-package Naive_Find with
+package Naive_Find_P with
      Spark_Mode is
 
    function Find (A : T_Arr; Val : T) return Positive with
@@ -14,4 +14,4 @@ package Naive_Find with
          Find'Result <= A'Last and then A (Find'Result) = Val,
        others => Find'Result = A'Last + 1);
 
-end Naive_Find;
+end Naive_Find_P;

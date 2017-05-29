@@ -3,7 +3,7 @@
 
 with Types; use Types;
 
-package Has_Value with
+package Has_Value_P with
      Spark_Mode,
      Ghost is
    function Has_Value
@@ -11,4 +11,4 @@ package Has_Value with
       Val : T) return Boolean is
      (for some I in A'Range => A (I) = Val);
 
-end Has_Value;
+end Has_Value_P;
