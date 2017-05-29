@@ -1,5 +1,5 @@
 -- a specification of Adjacent_Find
-with Types; use Types;
+with Types;                 use Types;
 with Has_Equal_Neighbors_P; use Has_Equal_Neighbors_P;
 
 package Adjacent_Find_P with

@@ -14,8 +14,7 @@ package body Find_P with
             return Result;
          end if;
 
-         pragma Loop_Invariant
-           (not Has_Value (A (A'First .. I), Val));
+         pragma Loop_Invariant (not Has_Value (A (A'First .. I), Val));
          pragma Loop_Invariant (Result.Exists = False);
       end loop;
 

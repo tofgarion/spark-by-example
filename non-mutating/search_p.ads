@@ -1,7 +1,7 @@
 -- specification of Search
 
-with Types; use Types;
-with Equal_Ranges_P; use Equal_Ranges_P;
+with Types;           use Types;
+with Equal_Ranges_P;  use Equal_Ranges_P;
 with Has_Sub_Range_P; use Has_Sub_Range_P;
 
 package Search_P with

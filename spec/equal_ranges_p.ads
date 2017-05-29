@@ -16,8 +16,8 @@ package Equal_Ranges_P with
      (for all I in 0 .. Offset => A (A'First + I) = B (B'First + I)) with
       Pre => Offset < A'Length and then Offset < B'Length;
 
-   -- this version of Equal_Ranges verifies if the array A is equal to
-   -- array B (on the length of A, cf. precondition).
+      -- this version of Equal_Ranges verifies if the array A is equal to
+      -- array B (on the length of A, cf. precondition).
    function Equal_Ranges
      (A : T_Arr;
       B : T_Arr) return Boolean is

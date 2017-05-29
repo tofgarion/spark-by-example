@@ -1,6 +1,6 @@
 -- a better specification of Find using the Has_Value function
 
-with Types; use Types;
+with Types;       use Types;
 with Has_Value_P; use Has_Value_P;
 
 package Find_P with
@@ -11,8 +11,7 @@ package Find_P with
       (Has_Value (A, Val) =>
          (Find'Result.Exists = True)
          and then (A (Find'Result.Value) = Val)
-         and then
-         (not Has_Value (A (A'First .. Find'Result.Value - 1), Val)),
+         and then (not Has_Value (A (A'First .. Find'Result.Value - 1), Val)),
        others => Find'Result.Exists = False);
 
 end Find_P;

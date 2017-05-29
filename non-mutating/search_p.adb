@@ -22,9 +22,7 @@ package body Search_P with
          end if;
 
          pragma Loop_Invariant
-           (not Has_Sub_Range
-              (A (A'First .. I + B'Length - 1),
-               B));
+           (not Has_Sub_Range (A (A'First .. I + B'Length - 1), B));
          pragma Loop_Invariant (not Result.Exists);
       end loop;
 

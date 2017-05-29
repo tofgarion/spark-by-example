@@ -1,6 +1,6 @@
 -- specification of Equal
 
-with Types; use Types;
+with Types;          use Types;
 with Equal_Ranges_P; use Equal_Ranges_P;
 
 package Equal_P with

@@ -1,7 +1,7 @@
 -- specification of Mismatch. The Option returned contains the first
 -- offset from which the two arrays are different.
 
-with Types; use Types;
+with Types;          use Types;
 with Equal_Ranges_P; use Equal_Ranges_P;
 
 package Mismatch_P with

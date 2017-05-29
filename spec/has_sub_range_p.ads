@@ -1,7 +1,7 @@
 -- The Has_Sub_Range function function is used to specify if an array
 -- is a subrange of another one.
 
-with Types; use Types;
+with Types;          use Types;
 with Equal_Ranges_P; use Equal_Ranges_P;
 
 package Has_Sub_Range_P with
