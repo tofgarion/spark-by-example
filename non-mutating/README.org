@@ -63,6 +63,33 @@
         equal to ~A'Last + 1~ (and is not a valid index of the
         array).
 
+      Notice that ~gnatprove~ verifies the completeness and the
+      disjointness of contract cases. For instance, consider the
+      following specification for ~Find~:
+
+      #+BEGIN_SRC ada
+        function Find (A : T_Arr; Val : T) return Positive with
+           Post =>
+           (Find'Result <= A'Last + 1
+            and then (for all I in A'First .. Find'Result - 1 => A (I) /= Val)),
+           Contract_Cases =>
+           ((for some I in A'Range => A (I) = Val) =>
+              Find'Result <= A'Last and then A (Find'Result) = Val,
+            (for some I in A'Range => A (I) /= Val) => Find'Result = A'Last + 1);
+      #+END_SRC
+
+      In this case, ~gnatprove~ emits two errors:
+
+      #+BEGIN_SRC shell
+        medium: contract cases might not be complete (e.g. when A = (others => 0) and A'First = 1 and A'Last = 0 and Val = 0)
+        medium: contract cases might not be disjoint (e.g. when A = (1 => 1, others => 0) and A'First = 1 and A'Last = 2 and Val = 0)
+      #+END_SRC
+
+      The first one is a *completeness* error: the two cases do not
+      cover all possible cases. The second one is a *disjointness*
+      error: it may be the case that an array verifies both
+      cases.
+
     The implementation of ~Find~ is straightforward:
 
     #+BEGIN_SRC ada
