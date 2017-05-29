@@ -171,7 +171,10 @@
      Given a value of type ~Option~, you should first check if
      ~Exists~ is true: in this case, it means that ~Value~ has a
      meaning, otherwise there is no acceptable value for the
-     request. For ~Find~, if the value is not found in the array, then
+     request. We will say that the ~Option~ is false or does not hold
+     a valid index if the corresponding field ~Exists~ is ~False~.
+
+     For ~Find~, if the value is not found in the array, then
      ~Exists~ will be false, otherwise ~Value~ will hold the index of
      the array at which the element is equal to the value.
 
