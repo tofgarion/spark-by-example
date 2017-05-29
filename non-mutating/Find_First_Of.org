@@ -5,6 +5,12 @@
    such that the element at this position also occurs in ~B~. We will
    again use the ~Option~ type to encapsulate the result.
 
+   Its signature is the following:
+
+   #+BEGIN_SRC ada
+     function Find_First_Of (A : T_Arr; B : T_Arr) return Option
+   #+END_SRC
+
 *** The predicate Has_Value_Of
 
    In order to specify ~Find_First_Of~, we will first define the
