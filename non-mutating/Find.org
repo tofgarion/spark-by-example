@@ -58,7 +58,7 @@
          array).
 
        Notice that ~gnatprove~ verifies the completeness and the
-       disjointness of contract cases. For instance, consider the
+       disjointedness of contract cases. For instance, consider the
        following specification for ~Find~:
 
        #+BEGIN_SRC ada
@@ -80,7 +80,7 @@
        #+END_SRC
 
        The first one is a *completeness* error: the two cases do not
-       cover all possible cases. The second one is a *disjointness*
+       cover all possible cases. The second one is a *disjointedness*
        error: it may be the case that an array verifies both cases.
 
 **** Implementation of Find
