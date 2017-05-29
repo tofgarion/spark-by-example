@@ -15,16 +15,18 @@
   following table (click on the link to have more details one the
   specification/implementation of each function):
 
-  | function | files                        | comments                                                   |
-  |----------+------------------------------+------------------------------------------------------------|
-  | [[./Find.org][Find]]     | ~naive_find_p.ads~           | a first naive version of ~Find~                            |
-  |          | ~naive_find_p.adb~           |                                                            |
-  |          | ~naive_find_contract_pb.ads~ | a simple example of contract non completeness/disjointness |
-  |          | ~find_p.ads~                 | the final version of ~Find~                                |
-  |          | ~find_p.adb~                 |                                                            |
-  |          | ~../spec/has_value_p.ads~    | the specification of the ~Has_Value~ predicate             |
-  |----------+------------------------------+------------------------------------------------------------|
-  |          |                              |                                                            |
+  | function      | files                        | comments                                                   |
+  |---------------+------------------------------+------------------------------------------------------------|
+  | [[./Find.org][Find]]          | ~naive_find_p.ads~           | a first naive version of ~Find~                            |
+  |               | ~naive_find_p.adb~           |                                                            |
+  |               | ~naive_find_contract_pb.ads~ | a simple example of contract non completeness/disjointness |
+  |               | ~find_p.ads~                 | the final version of ~Find~                                |
+  |               | ~find_p.adb~                 |                                                            |
+  |               | ~../spec/has_value_p.ads~    | the specification of the ~Has_Value~ predicate             |
+  |---------------+------------------------------+------------------------------------------------------------|
+  | [[./Find_First_Of.org][Find_First_Of]] | ~find_first_of_p.ads~        |                                                            |
+  |               | ~find_first_of_p.adb~        |                                                            |
+  |               | ~../spec/has_value_of_p.ads~ |                                                            |
 # Local Variables:
 # ispell-dictionary: "english"
 # End:
