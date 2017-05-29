@@ -6,6 +6,10 @@ package body Adjacent_Find_P with
    function Adjacent_Find (A : T_Arr) return Option is
       Result : Option := (Exists => False, Value => 1);
    begin
+      if A'Length <= 1 then
+         return Result;
+      end if;
+
       for I in A'First .. A'Last - 1 loop
          if (A (I) = A (I + 1)) then
             Result.Exists := True;
@@ -19,11 +23,6 @@ package body Adjacent_Find_P with
          pragma Loop_Invariant (Result.Exists = False);
          pragma Loop_Variant (Increases => I);
       end loop;
-      pragma Annotate
-        (Gnatprove,
-         False_Positive,
-         "overflow check might fail",
-         "reviewed by C. Garion");
 
       return Result;
    end Adjacent_Find;
