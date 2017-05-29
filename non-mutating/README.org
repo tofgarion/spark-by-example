@@ -12,7 +12,8 @@
   a ~_P~ suffixes, hence the file names.
 
   The functions are the corresponding files are presented in the
-  following table:
+  following table (click on the link to have more details one the
+  specification/implementation of each function):
 
   | function | files                        | comments                                                   |
   |----------+------------------------------+------------------------------------------------------------|
