@@ -1,0 +1,60 @@
+** The Adjacent_Find algorithm
+
+   The ~Adjacent_Find~ algorithm is another finding algorithm. Its
+   signature is the following:
+
+   #+BEGIN_SRC ada
+     function Adjacent_Find (A : T_Arr) return Option
+   #+END_SRC
+
+   Given an array ~A~, ~Adjacent_Find~ will either return:
+
+   - an option whose value is a valid index ~I~ of ~A~ such that ~A
+     (I) = A (I + 1)~ and ~I~ is the smallest index verifying this
+     property
+   - an option with ~Result~ equal to ~False~ if no such index exists
+
+*** The predicate Has_Equal_Neighbors
+
+    As usual, we will first define a predicate to help us write the
+    specification. ~Has_Equal_Neigbors (A)~ is true if the array ~A~
+    has two consecutive elements that are equal:
+
+    #+INCLUDE: "../spec/has_equal_nieghbors_p.ads" src ada :lines "9-12"
+
+    Notice that we must take care of two boundary cases, i.e., when
+    ~A~ is empty or has only one element.
+
+*** Specification of Adjacent_Find
+
+    The specification of ~Adjacent_Find~ will use the following
+    contract cases:
+
+    - either there is two adjacent elements in ~A~ that are equal and
+      in this case, ~Adjacent_Find~ must return an ~Option~ with a
+      valid index ~I~ such that ~A (I) = A (I + 1)~ and there is no
+      adjacent equal elements in ~A~ up to ~I~
+    - otherwise ~Adjacent_Find~ must return an ~Option~ specifying
+      that such an index does not exist.
+
+    #+INCLUDE: "./adjacent_find_p.ads" src ada :lines "8-17"
+
+*** Implementation of Adjacent_Find
+
+    The implementation of ~Adjacent_Find~ goes through ~A~, searching
+    for two consecutive elements that are equal:
+
+    #+INCLUDE: "./adjacent_find_p.adb" src ada :lines "6-29"
+
+    The invariant needed to prove the function are the following:
+
+    - two consecutive and equal elements have not been found yet in
+      ~A~
+    - the result specifies that there is no index respecting the
+      expected property.
+
+    The variant is classically built with the loop index.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

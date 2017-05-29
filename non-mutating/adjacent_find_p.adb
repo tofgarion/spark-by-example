@@ -17,6 +17,7 @@ package body Adjacent_Find_P with
          pragma Loop_Invariant
            (not Has_Equal_Neighbors (A (A'First .. I + 1)));
          pragma Loop_Invariant (Result.Exists = False);
+         pragma Loop_Variant (Increases => I);
       end loop;
       pragma Annotate
         (Gnatprove,
