@@ -15,23 +15,30 @@
   following table (click on the link to have more details one the
   specification/implementation of each function):
 
-  | function      | files                               | comments                                                     |
-  |---------------+-------------------------------------+--------------------------------------------------------------|
-  | [[./Find.org][Find]]          | ~naive_find_p.ads~                  | a first naive version of ~Find~                              |
-  |               | ~naive_find_p.adb~                  |                                                              |
-  |               | ~naive_find_contract_pb.ads~        | a simple example of contract non completeness/disjointedness |
-  |               | ~../spec/has_value_p.ads~           | the specification of the ~Has_Value~ predicate               |
-  |               | ~find_p.ads~                        | the final version of ~Find~                                  |
-  |               | ~find_p.adb~                        |                                                              |
-  |---------------+-------------------------------------+--------------------------------------------------------------|
-  | [[./Find_First_Of.org][Find_First_Of]] | ~../spec/has_value_of_p.ads~        |                                                              |
-  |               | ~find_first_of_p.ads~               |                                                              |
-  |               | ~find_first_of_p.adb~               |                                                              |
-  |---------------+-------------------------------------+--------------------------------------------------------------|
-  | [[./Adjacent_Find.org][Adjacent_Find]] | ~../spec/has_equal_neighbors_p.ads~ |                                                              |
-  |               | ~adjacent_find_p.ads~               |                                                              |
-  |               | ~adjacent_find_p.adb~               |                                                              |
-  |               |                                     |                                                              |
+  | function           | files                               | comments                                                     |
+  |--------------------+-------------------------------------+--------------------------------------------------------------|
+  | [[./Find.org][Find]]               | ~naive_find_p.ads~                  | a first naive version of ~Find~                              |
+  |                    | ~naive_find_p.adb~                  |                                                              |
+  |                    | ~naive_find_contract_pb.ads~        | a simple example of contract non completeness/disjointedness |
+  |                    | ~../spec/has_value_p.ads~           | the specification of the ~Has_Value~ predicate               |
+  |                    | ~find_p.ads~                        | the final version of ~Find~                                  |
+  |                    | ~find_p.adb~                        |                                                              |
+  |--------------------+-------------------------------------+--------------------------------------------------------------|
+  | [[./Find_First_Of.org][Find_First_Of]]      | ~../spec/has_value_of_p.ads~        |                                                              |
+  |                    | ~find_first_of_p.ads~               |                                                              |
+  |                    | ~find_first_of_p.adb~               |                                                              |
+  |--------------------+-------------------------------------+--------------------------------------------------------------|
+  | [[./Adjacent_Find.org][Adjacent_Find]]      | ~../spec/has_equal_neighbors_p.ads~ |                                                              |
+  |                    | ~adjacent_find_p.ads~               |                                                              |
+  |                    | ~adjacent_find_p.adb~               |                                                              |
+  |--------------------+-------------------------------------+--------------------------------------------------------------|
+  | [[./Equal_Mismatch.org][Equal and Mismatch]] | ~../spec/equal_ranges_p.ads~        |                                                              |
+  |                    | ~mismatch_p.ads~                    |                                                              |
+  |                    | ~mismatch_p.adb~                    |                                                              |
+  |                    | ~equal_p.ads~                       |                                                              |
+  |                    | ~equal_p.adb~                       |                                                              |
+  |                    | ~equal_rev_p.ads~                   | another specification and implementation of Equal            |
+  |                    | ~equal_rev_p.adb~                   |                                                              |
 # Local Variables:
 # ispell-dictionary: "english"
 # End:
