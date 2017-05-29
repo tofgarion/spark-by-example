@@ -20,7 +20,11 @@
   | [[./Find.org][Find]]     | ~naive_find_p.ads~           | a first naive version of ~Find~                            |
   |          | ~naive_find_p.adb~           |                                                            |
   |          | ~naive_find_contract_pb.ads~ | a simple example of contract non completeness/disjointness |
-
+  |          | ~find_p.ads~                 | the final version of ~Find~                                |
+  |          | ~find_p.adb~                 |                                                            |
+  |          | ~../spec/has_value_p.ads~    | the specification of the ~Has_Value~ predicate             |
+  |----------+------------------------------+------------------------------------------------------------|
+  |          |                              |                                                            |
 # Local Variables:
 # ispell-dictionary: "english"
 # End:
