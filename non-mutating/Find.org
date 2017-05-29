@@ -1,0 +1,127 @@
+** The Find algorithm
+
+   The ~Find~ algorithm is a classic sequential search in an array.
+   The array will be represented by the following types:
+
+   #+BEGIN_SRC ada
+     type T is new Integer;
+     type T_Arr is array (Positive range <>) of T;
+   #+END_SRC
+
+   ~T_Arr~ is an array of integers, with indexes ranging the positive
+   integers. We will use this type in all the functions needing an
+   array.
+
+   Mimicking the C++ standard library, the signature of ~Find~ can be
+   defined as follows:
+
+   #+BEGIN_SRC ada
+     function Find (A : T_Arr; Val : T) return Positive
+   #+END_SRC
+
+   ~Find~ will return the *least valid* index ~I~ of ~A~ such that ~A
+   (I) = Val~. If no such index exists, ~Find~ returns the length of
+   ~A~.
+
+*** A first (naive) version of Find
+
+    A first specification of ~Find~ can be the following:
+
+    #+BEGIN_SRC ada
+      function Find (A : T_Arr; Val : T) return Positive with
+         Post =>
+         (Find'Result <= A'Last + 1
+          and then (for all I in A'First .. Find'Result - 1 => A (I) /= Val)),
+         Contract_Cases =>
+         ((for some I in A'Range => A (I) = Val) =>
+            Find'Result <= A'Last and then A (Find'Result) = Val,
+          others => Find'Result = A'Last + 1);
+    #+END_SRC
+
+    - the postcondition indicates that the result of ~Find~ is always
+      less or equal than ~A'Last + 1~ and that for every index ~I~ in
+      ~A~ less than the result of ~Find~, ~A (I)~ differs from ~Val~.
+    - we can divide the specification of ~Find~ into two *contract
+      cases*:
+
+      - the first one when there is some ~I~ in ~A~ range such that ~A
+        (I)~ is equal to ~Val~. In this case, the result of ~Find~
+        should be less or equal than ~A'Last~ (i.e. it should be a
+        valid index of ~A~) and the returned index ~I~ is such that ~A
+        (I) = Val~.
+      - the second case is specified with ~others~, as we will
+        consider the cases for which there is no element of ~A~ equal
+        to ~Val~. In this case, the value returned by ~Find~ should be
+        equal to ~A'Last + 1~ (and is not a valid index of the
+        array).
+
+      Notice that ~gnatprove~ verifies the completeness and the
+      disjointness of contract cases. For instance, consider the
+      following specification for ~Find~:
+
+      #+BEGIN_SRC ada
+        function Find (A : T_Arr; Val : T) return Positive with
+           Post =>
+           (Find'Result <= A'Last + 1
+            and then (for all I in A'First .. Find'Result - 1 => A (I) /= Val)),
+           Contract_Cases =>
+           ((for some I in A'Range => A (I) = Val) =>
+              Find'Result <= A'Last and then A (Find'Result) = Val,
+            (for some I in A'Range => A (I) /= Val) => Find'Result = A'Last + 1);
+      #+END_SRC
+
+      In this case, ~gnatprove~ emits two errors:
+
+      #+BEGIN_SRC shell
+        medium: contract cases might not be complete (e.g. when A = (others => 0) and A'First = 1 and A'Last = 0 and Val = 0)
+        medium: contract cases might not be disjoint (e.g. when A = (1 => 1, others => 0) and A'First = 1 and A'Last = 2 and Val = 0)
+      #+END_SRC
+
+      The first one is a *completeness* error: the two cases do not
+      cover all possible cases. The second one is a *disjointness*
+      error: it may be the case that an array verifies both
+      cases.
+
+    The implementation of ~Find~ is straightforward:
+
+    #+BEGIN_SRC ada
+         function Find (A : T_Arr; Val : T) return Positive is
+         begin
+            for I in A'Range loop
+               if A (I) = Val then
+                  return I;
+               end if;
+
+               pragma Loop_Invariant (for all J in A'First .. I => A (J) /= Val);
+               pragma Loop_Variant (Increases => I);
+            end loop;
+
+            return A'Last + 1;
+         end Find;
+    #+END_SRC
+
+    - the implementation is classic: we range over ~A~ indexes trying
+      to find an element equal to ~Val~. If we find such an element,
+      we return its index, which guarantees that this will be the
+      least valid index.
+    - in order to prove the postconditions of ~Find~, we must add a
+      *loop invariant*. In each loop turn, after the conditional we
+      can assert that every traversed element differs from ~Val~. This
+      will be useful to prove that the returned value is the least
+      valid index of ~A~ such that the corresponding element is equal
+      to ~A~ and this is the invariant we have chosen.
+
+      You can try to remove the invariant: in this case, some
+      postconditions cannot be proved.
+    - a *variant* is necessary to prove the termination of the
+      function: we simply use ~I~.
+
+    When using ~gnatprove~ on the body of ~Find~, the contract is
+    proved, but a range check and an overflow check performed by SPARK
+    are not verified. These checks are done for the expression
+    ~A'Last + 1~: it may be the case that ~A'Last~ is ~Positive'Last~
+    and in this case, an overflow occurs.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:
