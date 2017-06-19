@@ -11,7 +11,7 @@ package body Search_P with
       end if;
 
       for I in A'First .. A'Last + 1 - B'Length loop
-         if (Equal_Subrange (A, I, B)) then
+         if (A (I .. I + B'Length - 1) = B) then
             Result.Exists := True;
             Result.Value  := I;
 

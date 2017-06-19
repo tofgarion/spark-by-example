@@ -243,8 +243,7 @@
             (for some J in A'First .. Last => Equal_Subrange (A, J, B)) with
              Pre => A'Length >= B'Length
              and then A'Last < Positive'Last
-             and then Last <= A'Last + 1 - B'Length,
-             Ghost;
+             and then Last <= A'Last + 1 - B'Length;
         #+END_SRC
 
      3. finally ~Has_Sub_Range~ is defined using
@@ -256,8 +255,7 @@
             (A : T_Arr;
              B : T_Arr) return Boolean is
             (Has_Sub_Range_In_Prefix (A, A'Last + 1 - B'Length, B)) with
-             Pre => A'Length >= B'Length and then A'Last < Positive'Last,
-             Ghost;
+             Pre => A'Length >= B'Length and then A'Last < Positive'Last;
         #+END_SRC
 
 **** Specification of Search
@@ -298,7 +296,7 @@
           end if;
 
           for I in A'First .. A'Last + 1 - B'Length loop
-             if (Equal_Subrange (A, I, B)) then
+             if (A (I .. I + B'Length - 1)) then
                 Result.Exists := True;
                 Result.Value  := I;
 

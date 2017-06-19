@@ -5,7 +5,8 @@ with Types;          use Types;
 with Equal_Ranges_P; use Equal_Ranges_P;
 
 package Has_Sub_Range_P with
-     Spark_Mode is
+     Spark_Mode,
+     Ghost is
 
    function Equal_Subrange
      (A : T_Arr;
@@ -23,14 +24,12 @@ package Has_Sub_Range_P with
      (for some J in A'First .. Last => Equal_Subrange (A, J, B)) with
       Pre => A'Length >= B'Length
       and then A'Last < Positive'Last
-      and then Last <= A'Last + 1 - B'Length,
-      Ghost;
+      and then Last <= A'Last + 1 - B'Length;
 
    function Has_Sub_Range
      (A : T_Arr;
       B : T_Arr) return Boolean is
      (Has_Sub_Range_In_Prefix (A, A'Last + 1 - B'Length, B)) with
-      Pre => A'Length >= B'Length and then A'Last < Positive'Last,
-      Ghost;
+      Pre => A'Length >= B'Length and then A'Last < Positive'Last;
 
 end Has_Sub_Range_P;
