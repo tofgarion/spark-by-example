@@ -159,12 +159,16 @@
      the expression.
 
      Defining an "option" type for holding the result of ~Find~ can be
-     done using a record:
+     done using a [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/type_contracts.html?highlight=variant%20record#record-discriminants][variant record]]:
 
      #+BEGIN_SRC ada
-       type Option is record
-          Exists : Boolean;
-          Value  : Natural;
+       type Option (Exists : Boolean := False) is record
+          case Exists is
+             when True =>
+                Value : Integer;
+             when False =>
+                null;
+          end case;
        end record;
      #+END_SRC
 
@@ -206,18 +210,17 @@
 
      #+BEGIN_SRC ada
        function Find (A : T_Arr; Val : T) return Option is
-          Result : Option := (Exists => False, Value => 1);
+          Result : Option := (Exists => False);
        begin
           for I in A'Range loop
              if A (I) = Val then
-                Result.Exists := True;
-                Result.Value  := I;
+                Result := (Exists => False, Value => I);
 
                 return Result;
              end if;
 
              pragma Loop_Invariant (not Has_Value (A (A'First .. I), Val));
-             pragma Loop_Invariant (Result.Exists = False);
+             pragma Loop_Invariant (not Result.Exists);
              pragma Loop_Variant (Increases => I);
           end loop;
 

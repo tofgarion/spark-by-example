@@ -4,8 +4,12 @@ package Types is
    type T is new Integer;
    type T_Arr is array (Positive range <>) of T;
 
-   type Option is record
-      Exists : Boolean;
-      Value  : Natural;
+   type Option (Exists : Boolean := False) is record
+      case Exists is
+         when True =>
+            Value : Integer;
+         when False =>
+            null;
+      end case;
    end record;
 end Types;

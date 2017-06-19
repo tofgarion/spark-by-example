@@ -61,18 +61,17 @@
 
     #+BEGIN_SRC ada
       function Find_First_Of (A : T_Arr; B : T_Arr) return Option is
-         Result : Option := (Exists => False, Value => 1);
+         Result : Option := (Exists => False);
       begin
          for I in A'Range loop
-            if (Find (B, A (I)).Exists = True) then
-               Result.Exists := True;
-               Result.Value  := I;
+            if Find (B, A (I)).Exists then
+               Result := (Exists => True, Value => I);
 
                return Result;
             end if;
 
             pragma Loop_Invariant (not Has_Value_Of (A (A'First .. I), B));
-            pragma Loop_Invariant (Result.Exists = False);
+            pragma Loop_Invariant (not Result.Exists);
             pragma Loop_Variant (Increases => I);
          end loop;
 

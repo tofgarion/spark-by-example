@@ -70,16 +70,15 @@
 
      #+BEGIN_SRC ada
        function Search (A : T_Arr; B : T_Arr) return Option is
-          Result : Option := (Exists => False, Value => 1);
+          Result : Option := (Exists => False);
        begin
           if (A'Length < B'Length or else B'Length = 0) then
              return Result;
           end if;
 
           for I in A'First .. A'Last + 1 - B'Length loop
-             if (A (I .. I - 1 + B'Length) = B) then
-                Result.Exists := True;
-                Result.Value  := I;
+             if A (I .. I - 1 + B'Length) = B then
+                Result := (Exists =>True, Value => I);
 
                 return Result;
              end if;
@@ -173,16 +172,15 @@
 
      #+BEGIN_SRC ada
        function Search (A : T_Arr; B : T_Arr) return Option is
-          Result : Option := (Exists => False, Value => 1);
+          Result : Option := (Exists => False);
        begin
           if (A'Length < B'Length or else B'Length = 0) then
              return Result;
           end if;
 
           for I in A'First .. A'Last + 1 - B'Length loop
-             if (A (I .. I - 1 + B'Length) = B) then
-                Result.Exists := True;
-                Result.Value  := I;
+             if A (I .. I - 1 + B'Length) = B then
+                Result := (Exists =>True, Value => I);
 
                 return Result;
              end if;
@@ -289,16 +287,15 @@
 
      #+BEGIN_SRC ada
        function Search (A : T_Arr; B : T_Arr) return Option is
-          Result : Option := (Exists => False, Value => 1);
+          Result : Option := (Exists => False);
        begin
           if (A'Length < B'Length or else B'Length = 0) then
              return Result;
           end if;
 
           for I in A'First .. A'Last + 1 - B'Length loop
-             if (A (I .. I + B'Length - 1)) then
-                Result.Exists := True;
-                Result.Value  := I;
+             if A (I .. I + B'Length - 1) = B then
+                Result := (Exists =>True, Value => I);
 
                 return Result;
              end if;
@@ -313,9 +310,7 @@
        end Search;
      #+END_SRC
 
-     ~Equal_Subrange~ is used in the implementation (and thus is not
-     defined with the ~Ghost~ aspect) and ~Has_Sub_Range_In_Prefix~ in
-     the specification. Now everything is proved by ~gnatprove~.
+     Everything is now proved by ~gnatprove~.
 
 # Local Variables:
 # ispell-dictionary: "english"

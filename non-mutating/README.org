@@ -38,7 +38,6 @@
   |                    | ~equal_p.ads~                       |                                                                      |
   |                    | ~equal_p.adb~                       |                                                                      |
   |                    | ~equal_rev_p.ads~                   | another specification and implementation of Equal                    |
-  |                    | ~equal_rev_p.adb~                   |                                                                      |
   |--------------------+-------------------------------------+----------------------------------------------------------------------|
   | [[Search.org][Search]]             | ~search_wo_ghost.ads~               | a first specification and implementation without ghost functions     |
   |                    | ~search_wo_ghost.adb~               |                                                                      |
