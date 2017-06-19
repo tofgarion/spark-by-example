@@ -199,7 +199,125 @@
      #+END_SRC
 
      Using this specification and this implementation, ~gnatprove~
-     cannot prove contract cases.
+     cannot prove contract cases. This is mainly due to the way SMT
+     provers (CVC4, Z3 and Alt-Ergo in our case) handle functions with
+     quantifiers and how they instanciate these quantifiers.
+
+*** A correct version of Search with ghost functions
+
+    An usual trick to solve the previous problem is to hide the
+    unnecessary quantifiers in auxiliary subprograms (this has been
+    suggested by Yannick Moy of Adacore).
+
+**** A new definition for Has_Sub_Range
+
+     In order to help the solvers, ~Has_Sub_Range~ will be defined in
+     three steps:
+
+     1. first, a function ~Equal_Subrange~ is defined. This function
+        expresses the fact that there is a subrange in ~A~ equal to
+        ~B~ starting at index ~J~. This function contains the
+        necessary slice for ~A~.
+
+        #+BEGIN_SRC ada
+          function Equal_Subrange
+            (A : T_Arr;
+             J : Integer;
+             B : T_Arr) return Boolean is
+            (A (J .. J - 1 + B'Length) = B) with
+             Pre => A'Length >= B'Length
+             and then A'Last < Positive'Last
+             and then J in A'First .. A'Last + 1 - B'Length;
+        #+END_SRC
+
+     2. a function ~Has_Sub_Range_In_Prefix~ is then defined. It
+        expresses the fact that a subrange of ~A~ is equal to ~B~ and
+        that the index of ~A~ at which the subrange starts is less
+        than ~J~.
+
+        #+BEGIN_SRC ada
+          function Has_Sub_Range_In_Prefix
+            (A    : T_Arr;
+             Last : Integer;
+             B    : T_Arr) return Boolean is
+            (for some J in A'First .. Last => Equal_Subrange (A, J, B)) with
+             Pre => A'Length >= B'Length
+             and then A'Last < Positive'Last
+             and then Last <= A'Last + 1 - B'Length,
+             Ghost;
+        #+END_SRC
+
+     3. finally ~Has_Sub_Range~ is defined using
+        ~Has_Sub_Range_In_Prefix~ and does not contain directly
+        quantifiers or slices.
+
+        #+BEGIN_SRC ada
+          function Has_Sub_Range
+            (A : T_Arr;
+             B : T_Arr) return Boolean is
+            (Has_Sub_Range_In_Prefix (A, A'Last + 1 - B'Length, B)) with
+             Pre => A'Length >= B'Length and then A'Last < Positive'Last,
+             Ghost;
+        #+END_SRC
+
+**** Specification of Search
+
+     The specification of ~Search~ is now the following:
+
+     #+BEGIN_SRC ada
+       function Search (A : T_Arr; B : T_Arr) return Option with
+          Pre            => A'Last < Positive'Last and then B'First <= B'Last,
+          Contract_Cases =>
+          (B'Length = 0 => not Search'Result.Exists,
+           A'Length < B'Length => not Search'Result.Exists,
+           A'Length >= B'Length and then Has_Sub_Range (A, B) =>
+             Search'Result.Exists
+             and then Equal_Subrange (A, Search'Result.Value, B)
+             and then
+             (if
+                Search'Result.Value > A'First
+              then
+                (not Has_Sub_Range_In_Prefix (A, Search'Result.Value - 1, B))),
+           others => not Search'Result.Exists);
+     #+END_SRC
+
+     The previously defined functions are now used in the
+     specification. Notice that no more slices or quantifiers are
+     appearing directly.
+
+**** Implementation of Search
+
+     The implementation of ~Search~ is the following:
+
+     #+BEGIN_SRC ada
+       function Search (A : T_Arr; B : T_Arr) return Option is
+          Result : Option := (Exists => False, Value => 1);
+       begin
+          if (A'Length < B'Length or else B'Length = 0) then
+             return Result;
+          end if;
+
+          for I in A'First .. A'Last + 1 - B'Length loop
+             if (Equal_Subrange (A, I, B)) then
+                Result.Exists := True;
+                Result.Value  := I;
+
+                return Result;
+             end if;
+
+             pragma Loop_Invariant ((not Has_Sub_Range_In_Prefix (A, I, B)));
+             pragma Loop_Invariant (not Result.Exists);
+             pragma Loop_Variant (Increases => I);
+
+          end loop;
+
+          return Result;
+       end Search;
+     #+END_SRC
+
+     ~Equal_Subrange~ is used in the implementation (and thus is not
+     defined with the ~Ghost~ aspect) and ~Has_Sub_Range_In_Prefix~ in
+     the specification. Now everything is proved by ~gnatprove~.
 
 # Local Variables:
 # ispell-dictionary: "english"
