@@ -15,7 +15,7 @@ package body Find_P with
          end if;
 
          pragma Loop_Invariant (not Has_Value (A (A'First .. I), Val));
-         pragma Loop_Invariant (Result.Exists = False);
+         pragma Loop_Invariant (not Result.Exists);
          pragma Loop_Variant (Increases => I);
       end loop;
 
