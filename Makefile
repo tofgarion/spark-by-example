@@ -3,11 +3,12 @@ _LEVEL = $(if $(LEVEL),--level=$(LEVEL),--level=0)
 _TIMEOUT = $(if $(TIMEOUT),--timeout=$(TIMEOUT),--timeout=0)
 _PARALLEL = $(if $(PARALLEL),-j $(PARALLEL),-j 0)
 _PROJECT = $(if $(PROJECT),-P $(PROJECT),-P spark_by_example.gpr)
+_WHYCONF = $(if $(WHYCONF),--why3-conf=$(WHYCONF),)
 
 .PHONY: all pp clean distclean
 
 all:
-	gnatprove $(_PROJECT) -j 4 $(_TIMEOUT) $(_LEVEL) chap*.adb
+	gnatprove $(_PROJECT) -j 4 $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) chap*.adb
 
 pp:
 	gnatpp $(_PROJECT) -rnb
@@ -24,7 +25,7 @@ test_%: test_%.adb
 	./$@
 
 %:
-	gnatprove $(_PROJECT) -f $(_PARALLEL) $(_SUBPROG_FILTER) $(_LEVEL) $(_TIMEOUT) chap$@.adb
+	gnatprove $(_PROJECT) -f $(_PARALLEL) $(_SUBPROG_FILTER) $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) chap$@.adb
 
 prove:
-	gnatprove $(_PROJECT) -f $(_PARALLEL) $(_SUBPROG_FILTER) $(_LEVEL) $(_TIMEOUT) $(FILE)
+	gnatprove $(_PROJECT) -f $(_PARALLEL) $(_SUBPROG_FILTER) $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) $(FILE)
