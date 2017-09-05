@@ -41,7 +41,7 @@
   |--------------------+-------------------------------------+----------------------------------------------------------------------|
   | [[Search.org][Search]]             | ~search_wo_ghost.ads~               | a first specification and implementation without ghost functions     |
   |                    | ~search_wo_ghost.adb~               |                                                                      |
-  |                    | ~search_with_ghost.ads~             | a try to use "naively" ghost functions                               |
+  |                    | ~search_with_ghost.ads~             | a try to "naively" use ghost functions                               |
   |                    | ~search_with_ghost.adb~             |                                                                      |
   |                    | ~../spec/has_sub_range_p.ads~       | the correct specification and implementation (thanks to Yannick Moy) |
   |                    | ~search_p.ads~                      |                                                                      |

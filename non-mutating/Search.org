@@ -1,4 +1,4 @@
-** The Find algorithm
+** The Search algorithm
 
    The ~Search~ algorithm finds a subsequence in an array identical
    to a given sequence. Its signature can be expressed as:
