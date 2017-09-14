@@ -49,8 +49,8 @@
          ~Positive~ value, as we will use ~A'Last + 1~ in the
          implementation.
        - the fact that ~B'First~ is less than ~B'Last~. This
-         precondition is necessary, otherwise nor the contract cases
-         cannot be proved neither their disjointedness
+         precondition is necessary, otherwise the contract cases can
+         neither be proved nor their disjointedness
      - the postconditions are expressed through 4 contract cases:
        1. if ~B~ is empty, then there is no index returned
        2. if ~A~ is shorter than ~B~, then there is again no index

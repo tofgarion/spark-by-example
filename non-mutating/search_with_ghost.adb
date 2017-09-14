@@ -12,7 +12,7 @@ package body Search_With_Ghost with
 
       for I in A'First .. A'Last + 1 - B'Length loop
          if A (I .. I - 1 + B'Length) = B then
-            Result := (Exists =>True, Value => I);
+            Result := (Exists => True, Value => I);
 
             return Result;
          end if;
