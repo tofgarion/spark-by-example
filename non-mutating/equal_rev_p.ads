@@ -9,8 +9,8 @@ package Equal_Rev_P with
 
    function Equal
      (A : T_Arr;
-      B : T_Arr) return Boolean
-      (A = B (B'First .. B'First - 1 + A'Length)) with
+      B : T_Arr) return Boolean is
+     (A = B (B'First .. B'First - 1 + A'Length)) with
       Pre  => A'Length <= B'Length,
       Post => Equal'Result = (not Mismatch (A, B).Exists);
 end Equal_Rev_P;
