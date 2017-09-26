@@ -1,5 +1,5 @@
 _SUBPROG_FILTER = $(if $(SUBP_FILTER),--limit-subp=$(SUBP_FILTER),)
-_LINE_FILTER = $(if $(LINE_FILTER),--limit-line=$(SUBP_FILTER),)
+_LINE_FILTER = $(if $(LINE_FILTER),--limit-line=$(LINE_FILTER),)
 _LEVEL = $(if $(LEVEL),--level=$(LEVEL),--level=0)
 _TIMEOUT = $(if $(TIMEOUT),--timeout=$(TIMEOUT),--timeout=0)
 _PARALLEL = $(if $(PARALLEL),-j $(PARALLEL),-j 0)
