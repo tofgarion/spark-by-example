@@ -88,9 +88,9 @@ Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
 
 ** Find_End
    :PROPERTIES:
-   :Status:      Not started yet
+   :Status:      In progress
    :Level:
-   :Assigned_To:
+   :Assigned_To: Léo Creuse
    :END:
 
 ** Count
