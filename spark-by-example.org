@@ -1,95 +1,103 @@
-#+TITLE: SPARK by example
+#+TITLE: SPARK by Example -- results, notes and progress
 
-* Non-mutating algorithms (GPL2016)
+Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
+2017 edition.
+
+* Non-mutating algorithms
   :PROPERTIES:
-  :SPEC_FILE: chap3.ads
-  :IMPL_FILE: chap3.adb
-  :COLUMNS:  %27ITEM(Function to prove) %11Status %6Level %15POS_IN_SPEC(Where)
+  :COLUMNS:  %27ITEM(Function to prove) %15Status %6Level %16Assigned_To(Assigned to)
   :Status_ALL: "In progress" "Not started yet" "Finished" ""
   :Level_ALL: "0" "1" "2" "3" "4"
+  :Assigned_to_ALL: "Christophe" "Léo" "Joffrey" "Jérôme"
   :END:
+
+** Find (naive version)
+   :PROPERTIES:
+   :Status:      Finished
+   :Level:       0
+   :Assigned_To: Christophe
+   :END:
+
+   - level 0: everything is proved but overflow and range check
+     (normal)
+
+** Find
+   :PROPERTIES:
+   :Status:      Finished
+   :Level:       0
+   :Assigned_To: Christophe
+   :END:
+
+   -level 0: everything is proved
+
+** Find_First_Of
+   :PROPERTIES:
+   :Status:      Finished
+   :Level:       0
+   :Assigned_To: Christophe
+   :END:
+
+   - level 0: everything is proved
+
+** Adjacent_Find
+   :PROPERTIES:
+   :Status:      Finished
+   :Level:       0
+   :Assigned_To: Christophe
+   :END:
+
+   - level 0: everything is proved
 
 ** Equal
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:27
-   :Status:   Finished
-   :Level:    2
+   :Status:      Finished
+   :Level:       1
+   :Assigned_To: Christophe
    :END:
 
    - level 0: invariant preservation + postcondition not proved
-   - level 1: postcondition not proved
+   - level 1: everything is proved
+
 ** Mismatch
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:38
-   :Status:   Finished
-   :Level:    2
+   :Status:      Finished
+   :Level:       1
+   :Assigned_To: Christophe
    :END:
 
    - level 0: invariant preservation + postcondition not proved
-   - level 1: postcondition not proved
-   - refactoring: level 2 still needed
-** Find
+   - level 1: everything is proved
+
+** Search
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:67
-   :Status:   Finished
-   :Level:    1
+   :Status:      Finished
+   :Level:       1
+   :Assigned_To: Christophe
    :END:
 
-   - level 0: invariant preservation + postcondition not proved
-   - level 1: postcondition not proved
-   - refactoring: level 1!
-** Find_First_Of
+   - can be proved with SPARK GPL with a timeout of 30s on my
+     machine. Can be proved easily with SPARK PRO 2017. Need
+     investigation.
+
+** Search_N
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:98
-   :Status:   Finished
-   :Level:    2
+   :Status:      In progress
+   :Level:
+   :Assigned_To: Christophe
    :END:
 
-   - level 0: invariant preservation + postcondition not proved
-   - level 1: postcondition not proved
-   - refactoring: still level 2 needed
-** Adjacent_First (new)
+** Find_End
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:128
-   :Status:   Finished
-   :Level:    2
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
    :END:
 
-   - level 0: invariant preservation + contract case not proved
-   - level 1: idem
-** Search (new)
+** Count
    :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:162
-   :Status:   Finished
-   :Level:    2
-   :END:
-
-   Cannot use Contract Cases with array slice. Bug reported and
-   corrected in SPARK development version
-   (cf. https://gt3-prod-2.adacore.com/#/tickets/P630-039).
-
-   Level 2 is sufficient to prove all VCs.
-
-*** DONE investigate function proof for case when B is not a subsequence of A
-    :LOGBOOK:
-    - State "DONE"       from "TODO"       [2016-09-27 Tue 14:17]
-    :END:
-
-    SPARK cannot prove this part of the postcondition (cf. line 171 of
-    chap3.ads). Counterexample given : Result = 0 and Size_A = 1
-    (A'First = 1, A'Last = 1).
-
-    It seems to be the same problem with array slices in the for
-    expression. Maybe a bug report should be produced?
-
-    Strange fact also : when using slices, a precondition on the
-    length of A must be used (~A'Length < Integer'Last~ for instance).
-
-** Count (new)
-   :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:224
-   :Status:   Finished
-   :Level:    1
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
    :END:
 
    - no particular problem using axiomatic definition of Occ (see
@@ -98,59 +106,230 @@
    - functions Occ_Def and Occ are also proved
    - easier than ACSL, no need to prove lemmas?
 
-**** TODO compare ACSL lemmas and SPARK ghost functions
-     :PROPERTIES:
-     :ID:       aaa94786-47f6-45ae-a2c7-0f2ab753c3e1
-     :Effort:   1:00
-     :END:
-
-** Equal_Mismatch (new)
-   :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:233
-   :Status:   Finished
-   :Level:    1
-   :END:
-
-   A simple reimplementation of Equal using Mismatch as stated in ACSL
-   By Example Magnesium edition.
-** Search_N (new)
-   :PROPERTIES:
-   :POS_IN_SPEC: chap3.ads:264
-   :Status:   Finished
-   :Level:    3
-   :END:
-
-   Need to add an assertion after the loop.
-
-* Non-mutating algorithms (SPARK Pro 2017)
-
 * Maximum and minimum algorithms
 ** Max_Element
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
 ** Max_Seq
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
 ** Min_Element
 
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
 * Binary search algorithms
 ** Lower_Bound
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
 ** Upper_Bound
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
 ** Equal_Range
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
 ** Binary_Search
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
 
 * Mutating algorithms
 ** Swap
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
 ** Fill
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
 ** Swap_Ranges
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
 ** Copy
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Copy_Backward
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
 ** Reverse_Copy
-** Rotate_Copy (not written)
-** Replace_Copy (not written)
-** Replace (not written)
-** Remove_Copy (not written)
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Reverse
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Rotate_Copy
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Rotate
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Replace_Copy
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Replace
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Remove_Copy
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Remove
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Random_Shuffle
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+* Numeric algorithms
+** Iota
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Accumulate
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Inner_Product
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Partial_Sum
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Adjacent_Difference
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+* Heap algorithms
+** Is_Heap
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Push_Heap
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Pop_Heap
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Make_Heap
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Sort_Heap
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
 
-* Numeric algorithms (new)
-** Iota (new)
-** Accumulate (new)
-** Inner_Product (new)
-** Partial_Sum (new)
-** Adjacent_Differences (new)
+* Sorting Algorithms
+** Is_Sorted
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Partial_Sort
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Selection_Sort
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Insertion_Sort
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
+** Heap_Sort
+   :PROPERTIES:
+   :Status:      Not started yet
+   :Level:
+   :Assigned_To:
+   :END:
 
 * The Stack data type
