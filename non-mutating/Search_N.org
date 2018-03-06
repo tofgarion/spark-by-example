@@ -1,0 +1,44 @@
+* The Search_N algorithm
+
+  The Search_N algorithm finds the first index in an array at which a
+  value occurs a given number of times. Its signature is the
+  following:
+
+  #+BEGIN_SRC ada
+    function Search_N (A : T_Arr; Val : Integer; N : Positive) return Option;
+  #+END_SRC
+
+  As usual, we will use an ~Option~ to encapsulate the result.
+
+** The Constant_Range and Has_Constant_Subrange predicates
+
+   As usual, we will define predicates to express more easily the
+   specification of ~Search_N~.
+
+   First, we define a ~Constant_Range~ ghost function to express that
+   an array contains only a given value:
+
+   #+BEGIN_SRC ada
+     function Constant_Range
+       (A   : T_Arr;
+        Val : T) return Boolean is
+       (for all I in A'Range => A (I) = Val);
+   #+END_SRC
+
+   Then, we define a ~Has_Constant_Subrange~ ghost function to express
+   that an array has a subrange containing only a given value (the
+   precondition avoids a possible overflow):
+
+   #+BEGIN_SRC ada
+     function Has_Constant_Subrange
+       (A   : T_Arr;
+        Val : T;
+        N   : Positive) return Boolean is
+       (for some I in A'First .. A'Last - N + 1 =>
+          Constant_Range (A (I .. I + N - 1), Val)) with
+     Pre => A'First <= A'Last;
+   #+END_SRC
+
+** Specification of Search_N
+
+   The specification of ~Search_N~ is rather easy to express:
