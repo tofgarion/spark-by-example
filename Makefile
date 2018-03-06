@@ -30,3 +30,6 @@ test_%: test_%.adb
 
 prove:
 	gnatprove $(_PROJECT) -f $(_PARALLEL) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) $(FILE)
+
+prove-coq:
+	gnatprove --prover=coq $(_PROJECT) -f $(_PARALLEL) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(FILE)
