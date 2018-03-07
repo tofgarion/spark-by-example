@@ -1,0 +1,16 @@
+project Tests is
+
+   for Source_Dirs use (".", "../spec", "src");
+   for Object_Dir use "obj";
+   for Main use ("main.adb");
+
+   package Compiler is
+      for Switches ("ada") use ("-gnat12", "-gnato13");
+   end Compiler;
+
+   package Builder is
+      for Switches ("ada") use ("-s");
+   end Builder;
+
+end Tests;
+
