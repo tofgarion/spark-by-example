@@ -13,7 +13,7 @@ package Has_Constant_Subrange_P with
       and then (for all I in Loc .. Loc - 1 + Length => A (I) = Val)) with
       Pre => Loc >= A'First
       and then Loc <= A'Last - Length + 1
-      and then Loc + Length - 1 <= Positive'Last;
+      and then Loc - 1 + Length <= Positive'Last;
 
    function Has_Constant_Subrange
      (A   : T_Arr;
