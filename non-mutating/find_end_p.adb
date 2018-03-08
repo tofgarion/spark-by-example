@@ -10,7 +10,7 @@ package body Find_End_P with
 	 return Result;
       end if;
       
-      for I in A'First .. A'Last +1 - B'Length loop
+      for I in A'First .. A'Last - B'Length +1 loop
 	 if A(I..I-1+B'Length) = B then
 	    Result := (Exists => True, Value => I);
 	    
@@ -19,8 +19,11 @@ package body Find_End_P with
 	 
 	 pragma Loop_Variant (Increases => I);
 	 pragma Loop_Invariant(if Result.Exists
-				 then Has_Sub_Range_In_Postfix(A,I,B)
-	                         and then not Has_Sub_Range(A(Result.Value +1 .. I+B'Length-1),B)
+				 then Equal_Subrange(A,Result.Value,B)
+	                         and then Result.Value in A'First .. A'Last-B'Length +1
+	                         and then (if I - Result.Value >= B'Length
+					     then  not Has_Sub_Range(A(Result.Value +1 .. I-1+B'Length),B)
+					  else True)
 	                         else not Has_Sub_Range_In_Prefix(A,I,B));
 	 
 	 

@@ -13,10 +13,10 @@ package Find_End_P with SPARK_Mode is
       A'Length < B'Length => not Find_End'Result.Exists,
       A'Length >=B'Length and then Has_Sub_Range(A,B) =>
 	Find_End'Result.Exists
-	and then Equal_Subrange(A, Find_End'Result.Value -1, B)
+	and then Equal_Subrange(A, Find_End'Result.Value , B)
 	and then 
 	(if
-	   Find_End'Result.Value < A'Last+1-B'Length
+	   Find_End'Result.Value < A'Last-B'Length+1
 	   then
              (not Has_Sub_Range_In_Postfix(A, Find_End'Result.Value,B))),
        others  => not Find_End'Result.Exists);
