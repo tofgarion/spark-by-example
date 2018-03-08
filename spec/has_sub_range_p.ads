@@ -39,7 +39,10 @@ package Has_Sub_Range_P with
 	(for Some J in Index .. A'Last-B'Length+1 => Equal_Subrange(A, J, B)) with
 	Pre => A'Length >=B'Length
 	and then A'Last<Positive'Last
-	and then Index <= A'Last - B'Length + 1;
+	and then Index <= A'Last - B'Length + 1
+	and then Index >=A'First;
 	
+        
+	     
 
 end Has_Sub_Range_P;

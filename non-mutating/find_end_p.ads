@@ -18,7 +18,7 @@ package Find_End_P with SPARK_Mode is
 	(if
 	   Find_End'Result.Value < A'Last-B'Length+1
 	   then
-             (not Has_Sub_Range_In_Postfix(A, Find_End'Result.Value,B))),
+             (not Has_Sub_Range_In_Postfix(A, Find_End'Result.Value+1,B))),
        others  => not Find_End'Result.Exists);
      
      

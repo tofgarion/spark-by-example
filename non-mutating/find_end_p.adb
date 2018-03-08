@@ -21,9 +21,10 @@ package body Find_End_P with
 	 pragma Loop_Invariant(if Result.Exists
 				 then Equal_Subrange(A,Result.Value,B)
 	                         and then Result.Value in A'First .. A'Last-B'Length +1
-	                         and then (if I - Result.Value >= B'Length
-					     then  not Has_Sub_Range(A(Result.Value +1 .. I-1+B'Length),B)
-					  else True)
+	                         and then Result.Value <=I
+	                         and then (if Result.Value<I
+					     then (for all J in Result.Value+1 .. I => not Equal_Subrange(A,J,B))
+	                                     else True)
 	                         else not Has_Sub_Range_In_Prefix(A,I,B));
 	 
 	 
