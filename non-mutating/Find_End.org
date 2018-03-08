@@ -1,0 +1,11 @@
+** The Find_End algorithm
+
+   The ~Find_End~ algorithm finds the last occurence of a given
+   array. I'ts signature can be expressed as:
+   
+   #+BEGIN_SRC 
+     function Find_End (A : T_Arr; B : T_Arr) return Option
+   #+END_SRC
+   
+   ~Find_End~ will return an option containing the *last valid* index
+   ~I~ of ~A~ such that ~A (I .. I + B'Length -1 ) = B~ if it exists.
