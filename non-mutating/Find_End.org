@@ -119,12 +119,12 @@ Function Find_End (A : T_Arr; B: T_arr) return Option with
       - We haven't yet found a matching subsequence of ~A~ starting at an
         index lower than ~I~
       - Or We have found a matching subsequence of ~A~, and then:
-	1. It starts at ~Result.Value~
-	2. ~Result.Value~ is in the range ~A'First .. A'Last-B'Length
-           +1~
-	3. If ~Result.Value is different from I then for all ~K~ in
-           ~Result'Value+1 .. I~ there is no subrange of ~A~ starting
-           at index ~K~ of length ~B'Length~ equal to ~B~.
+	 1. It starts at ~Result.Value~
+	 2. ~Result.Value~ is in the range ~A'First .. A'Last-B'Length
+            +1~
+	 3. If ~Result.Value is different from I then for all ~K~ in
+            ~Result'Value+1 .. I~ there is no subrange of ~A~ starting
+            at index ~K~ of length ~B'Length~ equal to ~B~
     - the loop variant is ~I~ again.
 
 When using ~gnatprove~ on ~Find_End~ all the assertions are proved.
