@@ -59,24 +59,24 @@ Function Find_End (A : T_Arr; B: T_arr) return Option with
        others  => not Find_End'Result.Exists);
 #+END_SRC
 
-  -The precondtition expresses:
-     -the fact that the last index of A is less than the last ~Positive~
+  - The precondtition expresses:
+     - the fact that the last index of A is less than the last ~Positive~
       value, as in the ghost functions we will use ~A'Last+1~.
-     -the fact that B'First is less than B'Last. This precondition is
+     - the fact that B'First is less than B'Last. This precondition is
       necessary, otherwise the contract cases can neither be proved,
-      nor their disjointedness.
-  -The post conditions are expressed through 4 contract cases:
+      nor their disjointedness
+  - The post conditions are expressed through 4 contract cases:
      1. if B is empty, then there is no index returned
      2. if A is shorter than B, then again there is no index returned
      3. A is longer than B and there is a subsequence in A equal to
       B. Then 
-       -a valid index will be returned 
-       -the subsequence of A starting at this index and of length
-        ~B'Length~ will be equal to B
-       -if the returned index is not ~A'Last - B'Length + 1~ (the last
-        index where a subsequence of A can be equal to B), then for all
-        indexes K of A greater than the returned index, the subsequence
-        of length ~B'Length~ starting at index K is not equal to B.
+       - a valid index will be returned 
+       - the subsequence of A starting at this index and of length
+         ~B'Length~ will be equal to B
+       - if the returned index is not ~A'Last - B'Length + 1~ (the last
+         index where a subsequence of A can be equal to B), then for all
+         indexes K of A greater than the returned index, the subsequence
+         of length ~B'Length~ starting at index K is not equal to B.
      4. Otherwise there is no index returned.
 
 *** Imprementation of Find_End
@@ -108,3 +108,38 @@ Function Find_End (A : T_Arr; B: T_arr) return Option with
       
    end Find_End;
     #+END_SRC
+ 
+    - The implementation is rather simple: We range over ~A~ indexes
+      trying to find a subsequence equalt to ~B~, each time we do find
+      one we save the current index ~I~ in ~Result.Value~. In this
+      function we do not return at the first match since we want to
+      find the last subsequence of ~A~ equal to ~B~, instead we let the
+      programm look at the entire range of indexes.
+    - The loop invariant specifies that:
+      - We haven't yet found a matching subsequence of ~A~ starting at an
+        index lower than ~I~
+      - Or We have found a matching subsequence of ~A~, and then:
+	1. It starts at ~Result.Value~
+	2. ~Result.Value~ is in the range ~A'First .. A'Last-B'Length
+           +1~
+	3. If ~Result.Value is different from I then for all ~K~ in
+           ~Result'Value+1 .. I~ there is no subrange of ~A~ starting
+           at index ~K~ of length ~B'Length~ equal to ~B~.
+    - the loop variant is ~I~ again.
+
+When using ~gnatprove~ on ~Find_End~ all the assertions are proved.
+
+One can notice that there are quantifiers in the loop invariant in the
+second condition, with . If we
+tried to hide the quantifiers through the use of ghost functions, the
+second condition of the loop invariant would be :
+
+#+BEGIN_SRC ada
+if Result.Value <I
+  then (not Has_Sub_Range(A(Result.Value+1 .. I-1+B'Length),B))
+  else True
+#+END_SRC
+
+This approach, while being easier to read and understand for humans,
+does not work. Indeed, all the solvers (CVC4, Z3 and AltErgo) fail to
+prove the negation of ~Has_Sub_Range~.
