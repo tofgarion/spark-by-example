@@ -92,3 +92,5 @@ function Count (A : T_Arr; Val : T) return Natural is
     The first invariant states that we always stay in the good range for the result.
     The second one states that at each loop iteration, we can assert that ~Result~ is equal
     to the number of occurrences of ~Val~ in the slice of the array he has traversed.
+    
+    When using ~gnatprove~ on ~Count~, except for the termination of ~Occ_Def~ everything is proved.
