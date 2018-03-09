@@ -12,7 +12,7 @@
 
 ** The Constant_Range and Has_Constant_Subrange predicates
 
-   As usual, we will define predicates to express more easily the
+   Like we did before, we will define predicates to express more easily the
    specification of ~Search_N~.
 
    First, we define a ~Constant_Range_From_Location~ ghost function to express that
@@ -89,8 +89,7 @@ function Constant_Range_From_Location
        3. if the returned index is not the first index of ~A~, then for all
 	indexes ~K~ of ~A~ less than the returned index, there aren't ~N~
 	occurrences of ~Val~ starting at the index ~K~.
-     - the fact that if ~Option.Exists~ is false, then there are
-       no subsequence with ~Val~ repeated ~N~ times in the array ~A~.
+     - the fact that if ~Option.Exists~ is false, then there are no subsequence with ~Val~ repeated ~N~ times in the array ~A~.
 ** Implementation of Search_N
 
    The implementation of ~Search_N~ is the following:
@@ -140,7 +139,7 @@ function Constant_Range_From_Location
        ~A'First .. I~ of the array.
      - if ~A'First~ is less than ~Start~, then the value at index ~Start - 1~
        is different from ~Val~. This allows to prove the previous
-       invariant. In fact, there could be a subsequence of length ~N~ if the
+       invariant. Indeed, there could be a subsequence of length ~N~ if the
        values before ~A(Start)~ were equal to ~Val~. This invariant states
        that ~Start~ *is* the first index of the constant range.
 
