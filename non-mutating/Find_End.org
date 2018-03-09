@@ -1,7 +1,7 @@
 ** The Find_End algorithm
 
    The ~Find_End~ algorithm finds the last occurence of a given
-   subsquence in a given array. It's signature can be expressed as:
+   subsquence in a given array. Its signature can be expressed as:
 
    
    #+BEGIN_SRC ada
@@ -60,23 +60,23 @@ Function Find_End (A : T_Arr; B: T_arr) return Option with
 #+END_SRC
 
   - The precondtition expresses:
-     - the fact that the last index of A is less than the last ~Positive~
+     - the fact that the last index of ~A~ is less than the last ~Positive~
       value, as in the ghost functions we will use ~A'Last+1~.
-     - the fact that B'First is less than B'Last. This precondition is
+     - the fact that ~B'First~ is less than ~B'Last~. This precondition is
       necessary, otherwise the contract cases can neither be proved,
       nor their disjointedness
   - The post conditions are expressed through 4 contract cases:
-     1. if B is empty, then there is no index returned
-     2. if A is shorter than B, then again there is no index returned
-     3. A is longer than B and there is a subsequence in A equal to
-      B. Then 
+     1. if ~B~ is empty, then there is no index returned
+     2. if ~A~ is shorter than ~B~, then again there is no index returned
+     3. A is longer than ~B~ and there is a subsequence in ~A~ equal to
+      ~B~. Then 
        - a valid index will be returned 
-       - the subsequence of A starting at this index and of length
-         ~B'Length~ will be equal to B
+       - the subsequence of ~A~ starting at this index and of length
+         ~B'Length~ will be equal to ~B~
        - if the returned index is not ~A'Last - B'Length + 1~ (the last
-         index where a subsequence of A can be equal to B), then for all
-         indexes K of A greater than the returned index, the subsequence
-         of length ~B'Length~ starting at index K is not equal to B.
+         index where a subsequence of ~A~ can be equal to ~B~), then for all
+         indexes K of ~A~ greater than the returned index, the subsequence
+         of length ~B'Length~ starting at index K is not equal to ~B~.
      4. Otherwise there is no index returned.
 
 *** Imprementation of Find_End
@@ -110,25 +110,25 @@ Function Find_End (A : T_Arr; B: T_arr) return Option with
     #+END_SRC
  
     * the implementation is rather simple: We range over ~A~ indexes
-      trying to find a subsequence equalt to ~B~, each time we do find
+      trying to find a subsequence equat to ~B~, each time we do find
       one we save the current index ~I~ in ~Result.Value~. In this
       function we do not return at the first match since we want to
       find the last subsequence of ~A~ equal to ~B~, instead we let the
       programm look at the entire range of indexes.
     * the loop variant is ~I~ again
     * the loop invariant specifies that:
-    	1. we haven't found any matching subsequence of ~A~ starting at an index lower than ~I~
+        1. we haven't found any matching subsequence of ~A~ starting at an index lower than ~I~.
 	2. or we have found a matching subsequence of ~A~, and then:
-		- It starts at ~Result.Value
+		- It starts at ~Result.Value~
 		- ~Result.Value~ is in the range ~A'First .. A'Last-B'Length+1~
-		- If ~Result.Value is different from I then for all ~K~ in ~Result'Value+1 .. I~ there is no subrange of ~A~ starting at index ~K~ of length ~B'Length~ equal to ~B~
+		- If ~Result.Value~ is different from ~I~ then for all ~K~ in ~Result'Value+1 .. I~ there is no subrange of ~A~ starting at index ~K~ of length ~B'Length~ equal to ~B~
       
 	
 
 When using ~gnatprove~ on ~Find_End~ all the assertions are proved.
 
 One can notice that there are quantifiers in the loop invariant in the
-second condition, with . If we
+second condition, along with a ghost function. If we
 tried to hide the quantifiers through the use of ghost functions, the
 second condition of the loop invariant would be :
 
