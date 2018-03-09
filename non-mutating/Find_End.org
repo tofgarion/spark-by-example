@@ -38,7 +38,46 @@
     the array ~B~ can be found in the array ~A~ starting after the
     index ~J~.
 
+*** Specification of Find_End
 
+The specification of ~Find_End~ is as follows:
+
+#+BEGIN_SRC ada
+Function Find_End (A : T_Arr; B: T_arr) return Option with
+     Pre            =>A'Last < Positive'Last and then B'First <= B'Last,
+     Contract_Cases =>
+     (B'Length = 0 => not Find_End'Result.Exists,
+      A'Length < B'Length => not Find_End'Result.Exists,
+      A'Length >=B'Length and then Has_Sub_Range(A,B) =>
+	Find_End'Result.Exists
+	and then Equal_Subrange(A, Find_End'Result.Value , B)
+	and then 
+	(if
+	   Find_End'Result.Value < A'Last-B'Length+1
+	   then
+             (not Has_Sub_Range_In_Postfix(A, Find_End'Result.Value+1,B))),
+       others  => not Find_End'Result.Exists);
+#+END_SRC
+
+-The precondtition expresses:
+  -the fact that the last index of A is less than the last ~Positive~
+  value, as in the ghost functions we will use ~A'Last+1~.
+  - the fact that B'First is less than B'Last. This precondition is
+    necessary, otherwise the contract cases can neither be proved,
+    nor their disjointedness.
+-The post conditions are expressed through 4 contract cases:
+    I. if B is empty, then there is no index returned
+   II. if A is shorter than B, then again there is no index returned
+  III. A is longer than B and there is a subsequence in A equal to
+  B. Then 
+     -a valid index will be returned 
+     -the subsequence of A starting at this index and of length
+     ~B'Length~ will be equal to B
+     -if the returned index is not ~A'Last - B'Length + 1~ (the last
+     index where a subsequence of A can be equal to B), then for all
+     indexes K of A greater than the returned index, the subsequence
+     of length ~B'Length~ starting at index K is not equal to B.
+   IV. Otherwise there is no index returned.
 
 
     
