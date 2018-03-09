@@ -124,7 +124,7 @@ Function Find_End (A : T_Arr; B: T_arr) return Option with
 	3. If ~Result.Value is different from I then for all ~K~ in
             ~Result'Value+1 .. I~ there is no subrange of ~A~ starting
             at index ~K~ of length ~B'Length~ equal to ~B~
-        -or we haven't found any matching subsequence of ~A~ starting at an index lower than ~I~
+      - or we haven't found any matching subsequence of ~A~ starting at an index lower than ~I~
       
 	
 
