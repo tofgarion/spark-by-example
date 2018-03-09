@@ -89,9 +89,12 @@ Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
 ** Find_End
    :PROPERTIES:
    :Status:      In progress
-   :Level:
+   :Level:       1
    :Assigned_To: Léo Creuse
    :END:
+
+   -level 0: Cannot prove Has_Sub_Range_In_Prefix function in loop invariant.
+   -level 1: everything is proved
 
 ** Count
    :PROPERTIES:

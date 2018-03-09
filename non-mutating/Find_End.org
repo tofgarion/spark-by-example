@@ -1,11 +1,44 @@
 ** The Find_End algorithm
 
    The ~Find_End~ algorithm finds the last occurence of a given
-   array. I'ts signature can be expressed as:
+   subsquence in a given array. It's signature can be expressed as:
+
    
-   #+BEGIN_SRC 
+   #+BEGIN_SRC ada
      function Find_End (A : T_Arr; B : T_Arr) return Option
    #+END_SRC
    
    ~Find_End~ will return an option containing the *last valid* index
    ~I~ of ~A~ such that ~A (I .. I + B'Length -1 ) = B~ if it exists.
+
+
+*** The predicate Has_Sub_Range_In_Postfix
+
+    The ~Find_End~ function is quite similar to the [[Search.org][Search]] function,
+    since they both have to find the same thing, the main difference
+    being that ~Search~ stops at the first occurence of the
+    subsequence, whereas ~Find_End~ will continue looking until
+    finding the last. For this reason the specification of ~Find_End~
+    will re-use many of the ghost functions used in the specification
+    of ~Search~. We still need to add one new ghost function: ~Has_Sub_Range_In_Postfix~
+
+    #+BEGIN_SRC ada
+     function Has_Sub_Range_In_Postfix
+       (A     : T_Arr;
+	Index : Integer;
+	B     : T_Arr) return Boolean is
+	(for Some J in Index .. A'Last-B'Length+1 => Equal_Subrange(A, J, B)) with
+	Pre => A'Length >=B'Length
+	and then A'Last<Positive'Last
+	and then Index <= A'Last - B'Length + 1
+	and then Index >=A'First;
+    #+END_SRC
+    
+    This function will check wether the subsequence represented by
+    the array ~B~ can be found in the array ~A~ starting after the
+    index ~J~.
+
+
+
+
+    
