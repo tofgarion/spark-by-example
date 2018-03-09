@@ -66,7 +66,7 @@
             equal to ~B~
        4. otherwise there is no index returned
 
-**** Implementation of Find
+**** Implementation of Search
 
      #+BEGIN_SRC ada
        function Search (A : T_Arr; B : T_Arr) return Option is
