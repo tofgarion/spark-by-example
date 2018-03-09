@@ -1,19 +1,19 @@
 -- implementation of a version of Count
 
 package body Count_P with
-   Spark_Mode is
+     Spark_Mode is
 
-  function Count (A : T_Arr; Val : T) return Natural is
-      Result : Natural:=0;
+   function Count (A : T_Arr; Val : T) return Natural is
+      Result : Natural := 0;
    begin
       for I in A'Range loop
-	 if A(I)=Val then
-	    Result := Result + 1;
-	 end if;
+         if A (I) = Val then
+            Result := Result + 1;
+         end if;
 
-	 pragma Loop_Invariant (Result <= A'Length);
-	 pragma Loop_Invariant (Result = Occ(A (A'First .. I), Val));
-	 pragma Loop_Variant (Increases => I);
+         pragma Loop_Invariant (Result <= A'Length);
+         pragma Loop_Invariant (Result = Occ (A (A'First .. I), Val));
+         pragma Loop_Variant (Increases => I);
       end loop;
 
       return Result;
