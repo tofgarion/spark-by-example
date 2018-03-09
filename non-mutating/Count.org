@@ -17,7 +17,7 @@
     informations [[http://docs.adacore.com/spark2014-docs/html/ug/gnatprove_by_example/manual_proof.html#manual-proof-using-ghost-code][here]].
 
     #+BEGIN_SRC ada
-       function Remove_Last
+   function Remove_Last
      (A : T_Arr) return T_Arr is
      (A (A'First .. A'Last - 1)) with
       Pre => A'Length > 0,
@@ -64,10 +64,8 @@ function Count (A : T_Arr; Val : T) return Natural with
     #+END_SRC
 
     The postconditions express
-      - that the number returned is rational (it is not less than 0 nor is it
-	more than ~A'Length~.
-      - that the number returned is equal to the number of occurrences of ~Val~
-	in the array ~A~.
+      - that the number returned is rational (it is not less than 0 nor is it more than ~A'Length~.
+      - that the number returned is equal to the number of occurrences of ~Val~ in the array ~A~.
 
 *** Implementation of Count
 
@@ -92,5 +90,5 @@ function Count (A : T_Arr; Val : T) return Natural is
     #+END_SRC
 
     The first invariant states that we always stay in the good range for the result.
-    The second one states that at each loop turn, we can assert that ~Result~ is equal
+    The second one states that at each loop iteration, we can assert that ~Result~ is equal
     to the number of occurrences of ~Val~ in the slice of the array he has traversed.
