@@ -109,22 +109,21 @@ Function Find_End (A : T_Arr; B: T_arr) return Option with
    end Find_End;
     #+END_SRC
  
-    * The implementation is rather simple: We range over ~A~ indexes
+    * the implementation is rather simple: We range over ~A~ indexes
       trying to find a subsequence equalt to ~B~, each time we do find
       one we save the current index ~I~ in ~Result.Value~. In this
       function we do not return at the first match since we want to
       find the last subsequence of ~A~ equal to ~B~, instead we let the
       programm look at the entire range of indexes.
     * the loop variant is ~I~ again
-    * The loop invariant specifies that:
-      - Or We have found a matching subsequence of ~A~, and then:
-	+ It starts at ~Result.Value~
-	+ ~Result.Value~ is in the range ~A'First .. A'Last-B'Length
+    * the loop invariant specifies that:
+      - we have found a matching subsequence of ~A~, and then:
+	1. It starts at ~Result.Value~
+	2. ~Result.Value~ is in the range ~A'First .. A'Last-B'Length
            +1~
-	+ If ~Result.Value is different from I then for all ~K~ in
+	3. If ~Result.Value is different from I then for all ~K~ in
             ~Result'Value+1 .. I~ there is no subrange of ~A~ starting
             at index ~K~ of length ~B'Length~ equal to ~B~
-      - We haven't yet found a matching subsequence of ~A~ starting at an
         index lower than ~I~
       
 	
