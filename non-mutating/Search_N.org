@@ -86,9 +86,7 @@ function Constant_Range_From_Location
      - the fact that if ~Option.Exists~ is true, then
        1. a valid index will be returned.
        2. ~Val~ occurs ~N~ times starting at the returned index.
-       3. if the returned index is not the first index of ~A~, then for all
-	indexes ~K~ of ~A~ less than the returned index, there aren't ~N~
-	occurrences of ~Val~ starting at the index ~K~.
+       3. if the returned index is not the first index of ~A~, then for all indexes ~K~ of ~A~ less than the returned index, there aren't ~N~ occurrences of ~Val~ starting at the index ~K~.
      - the fact that if ~Option.Exists~ is false, then there are no subsequence with ~Val~ repeated ~N~ times in the array ~A~.
 ** Implementation of Search_N
 
