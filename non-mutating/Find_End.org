@@ -117,8 +117,6 @@ Function Find_End (A : T_Arr; B: T_arr) return Option with
       programm look at the entire range of indexes.
     * the loop variant is ~I~ again
     * The loop invariant specifies that:
-      - We haven't yet found a matching subsequence of ~A~ starting at an
-        index lower than ~I~
       - Or We have found a matching subsequence of ~A~, and then:
 	+ It starts at ~Result.Value~
 	+ ~Result.Value~ is in the range ~A'First .. A'Last-B'Length
@@ -126,6 +124,10 @@ Function Find_End (A : T_Arr; B: T_arr) return Option with
 	+ If ~Result.Value is different from I then for all ~K~ in
             ~Result'Value+1 .. I~ there is no subrange of ~A~ starting
             at index ~K~ of length ~B'Length~ equal to ~B~
+      - We haven't yet found a matching subsequence of ~A~ starting at an
+        index lower than ~I~
+      
+	
 
 When using ~gnatprove~ on ~Find_End~ all the assertions are proved.
 
