@@ -61,11 +61,10 @@ Function Find_End (A : T_Arr; B: T_arr) return Option with
 
 -The precondtition expresses:
   -the fact that the last index of A is less than the last ~Positive~
-    value, as in the ghost functions we will use ~A'Last+1~.
+   value, as in the ghost functions we will use ~A'Last+1~.
   -the fact that B'First is less than B'Last. This precondition is
-    necessary, otherwise the contract cases can neither be proved,
-    nor their disjointedness.
-
+   necessary, otherwise the contract cases can neither be proved,
+   nor their disjointedness.
 -The post conditions are expressed through 4 contract cases:
    1. if B is empty, then there is no index returned
    2. if A is shorter than B, then again there is no index returned
