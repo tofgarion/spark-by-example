@@ -54,7 +54,7 @@ Here the post conditions are expressed through 2 contract cases :
 - if A is empty then there is no index returned
 - else there is a valid index returned and:
   1. the result is a lower bound for the value in ~A~
-  2. for all value ~V~ of ~A~ found at an index stricly lower than ~Result.Value~ then ~V < A(Result.Value)~. This expresses the fact that Our result is indeed the lesser index of the minimum of A.
+  2. for all value ~V~ of ~A~ found at an index stricly lower than ~Result.Value~ then ~V > A(Result.Value)~. This expresses the fact that our result is indeed the first index of the minimum of A.
 
 
 *** Implementation of Min_Element
@@ -83,10 +83,8 @@ function Min_Element(A:T_Arr) return Option is
 	 end loop;
 	    
 	 return Result;
-
-	 end if;
-
-	 end Min_ELement;
+        end if
+    end Min_ELement;
 #+END_SRC
 
 The implementation is quite similar to the one of [[Max_Element.org][Max_Element]] with predicates. Here:
