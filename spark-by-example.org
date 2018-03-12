@@ -122,9 +122,9 @@ Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
 ** Min_Element
 
    :PROPERTIES:
-   :Status:      Not started yet
+   :Status:      in progress
    :Level:
-   :Assigned_To:
+   :Assigned_To: Léo
    :END:
 * Binary search algorithms
 ** Lower_Bound
