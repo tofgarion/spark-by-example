@@ -1,19 +1,19 @@
 ** The Min_Element algorithm
 
 The ~Min_Element~ algorith searches the minimum in a general sequence.
-It's signature can be expressed as:
+Its signature can be expressed as:
 
 #+BEGIN_SRC ada
 function Min_Element(A : T_arr) return Option
 #+END_SRC
 
-~Min_Element~ will return an option containing the first index ~I~ of ~A~ such as for all ~K~ in ~A'First .. A'Last~, ~A(I) < A(K)~.
+~Min_Element~ will return an option containing the first index ~I~ of ~A~ such as for all ~K~ in ~A'First .. A'Last~, ~A(I) <= A(K)~.
 
 *** Used predicates
 
 **** The Lower_Bound predicate
 
-The ~Lower_Bound~ predicate will be used to assert that our return value is a lower_bound for the values of ~A(A'First .. N)~, where ~N~ is given:
+The ~Lower_Bound~ predicate will be used to assert that our return value is a lower bound for the values of ~A(A'First .. N)~, where ~N~ is given:
 
 #+BEGIN_SRC ada 
 function Lower_Bound(A : T_Arr; N : Positive; V : T)return Boolean is
@@ -51,7 +51,7 @@ function Min_Element(A: T_Arr) return Option  with
 #+END_SRC
 
 Here the post conditions are expressed through 2 contract cases :
-- if A is empty then there is no index returned
+- if ~A~ is empty then there is no index returned
 - else there is a valid index returned and:
   1. the result is a lower bound for the value in ~A~
   2. for all value ~V~ of ~A~ found at an index stricly lower than ~Result.Value~ then ~V > A(Result.Value)~. This expresses the fact that our result is indeed the first index of the minimum of A.
@@ -88,7 +88,7 @@ function Min_Element(A:T_Arr) return Option is
 #+END_SRC
 
 The implementation is quite similar to the one of [[Max_Element.org][Max_Element]] with predicates. Here:
-- The loop variant is classicaly equal to I
+- The loop variant is classicaly equal to ~I~
 - the loop invariants specify that:
   1. the result is in a valid range
   2. the current result is a minimum for all the values already examined (from ~A'First~ to ~I~)
