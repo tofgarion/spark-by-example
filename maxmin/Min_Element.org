@@ -37,7 +37,7 @@ function Strict_Lower_Bound(A : T_Arr; N : Positive; V : T)return Boolean is
 
 The specification of ~Min_Element~ can be expressed such as follows:
 
-#+BEGIN_SRC 
+#+BEGIN_SRC ada
 function Min_Element(A: T_Arr) return Option  with
      Contract_Cases => 
      (A'Length = 0 => not Min_Element'Result.Exists,
@@ -59,7 +59,7 @@ Here the post conditions are expressed through 2 contract cases :
 
 *** Implementation of Min_Element
 
-#+BEGIN_SRC 
+#+BEGIN_SRC ada
 function Min_Element(A:T_Arr) return Option is
       Result : Option := (Exists => False);
       
