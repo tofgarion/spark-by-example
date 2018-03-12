@@ -39,7 +39,7 @@
 **** Implementation of Max_Element
 
      The implementation is classic : we range over ~A~ indexes, trying
-     to find an element more than ~A(Max)~. If we find such an element,
+     to find an element greater than ~A(Max)~. If we find such an element,
      we replace ~Max~ by its index.
 
      #+BEGIN_SRC ada
