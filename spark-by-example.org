@@ -88,11 +88,12 @@ Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
 
 ** Find_End
    :PROPERTIES:
-   :Status:      In progress
-   :Level:
+   :Status:      Finished
+   :Level:       1
    :Assigned_To: Léo Creuse
    :END:
-
+Level 0 : one case of the loop invariant is not proved
+Level 1 : everything is proved
 ** Count
    :PROPERTIES:
    :Status:      Not started yet
@@ -122,10 +123,12 @@ Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
 ** Min_Element
 
    :PROPERTIES:
-   :Status:      in progress
-   :Level:
+   :Status:      Finished
+   :Level:       0
    :Assigned_To: Léo
    :END:
+   Level 0 : Everything is proved.
+   
 * Binary search algorithms
 ** Lower_Bound
    :PROPERTIES:
