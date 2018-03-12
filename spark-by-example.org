@@ -112,9 +112,9 @@ Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
 * Maximum and minimum algorithms
 ** Max_Element
    :PROPERTIES:
-   :Status:      Not started yet
-   :Level:
-   :Assigned_To:
+   :Status:      Finished
+   :Level: 0
+   :Assigned_To: Joffrey
    :END:
 ** Max_Seq
    :PROPERTIES:

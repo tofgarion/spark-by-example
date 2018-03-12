@@ -1,0 +1,16 @@
+project Max_Min_Algorithms is
+
+  for Source_Dirs use (".", "../spec", "../spec/spec-4");
+
+  package Compiler is
+    for Default_Switches ("Ada") use ("-gnat12", "-gnato13");
+  end Compiler;
+
+  package Prove is
+    for Switches use ("--mode=prove",
+                      "--report=statistics",
+                      "--proof=per_path",
+                      "--warnings=continue");
+  end Prove;
+
+end Max_Min_Algorithms;
