@@ -16,10 +16,9 @@ function Min_Element(A : T_arr) return Option
 The ~Lower_Bound~ predicate will be used to assert that our return value is a lower bound for the values of ~A(A'First .. N)~, where ~N~ is given:
 
 #+BEGIN_SRC ada 
-function Lower_Bound(A : T_Arr; N : Positive; V : T)return Boolean is
-      (for all I in A'First .. N => V <= A(I)) with
-	Pre => N>= A'First
-	and then N<= A'Last;
+function Lower_Bound(A : T_Arr;
+                     V : T)return Boolean is
+      (for all I in A'First ..A'Last => V <= A(I));
 #+END_SRC
 
 **** The Strict_Lower_Bound predicate
@@ -27,10 +26,10 @@ function Lower_Bound(A : T_Arr; N : Positive; V : T)return Boolean is
 The ~Strict_Lower_Bound~ predicate will be used to confirm that the value we return is the *first* valid index for a minimum. It expresses the fact that all the values of ~A~ before index ~N~ are strictly lesser than ~V~:
 
 #+BEGIN_SRC ada 
-function Strict_Lower_Bound(A : T_Arr; N : Positive; V : T)return Boolean is
-      (for all I in A'First .. N => V < A(I))with
-	Pre => N>= A'First
-	and then N <= A'Last;
+function Strict_Lower_Bound
+(A : T_Arr;
+V : T)return Boolean is
+(for all I in A'First .. N => V < A(I));
 #+END_SRC
 
 *** The Specification of Min_Element
