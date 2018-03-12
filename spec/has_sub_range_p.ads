@@ -29,20 +29,18 @@ package Has_Sub_Range_P with
    function Has_Sub_Range
      (A : T_Arr;
       B : T_Arr) return Boolean is
-     (Has_Sub_Range_In_Prefix (A, A'Last - B'Length +1, B)) with
-       Pre => A'Length >= B'Length and then A'Last < Positive'Last;
-     
-     function Has_Sub_Range_In_Postfix
-       (A     : T_Arr;
-	Index : Integer;
-	B     : T_Arr) return Boolean is
-	(for Some J in Index .. A'Last-B'Length+1 => Equal_Subrange(A, J, B)) with
-	Pre => A'Length >=B'Length
-	and then A'Last<Positive'Last
-	and then Index <= A'Last - B'Length + 1
-	and then Index >=A'First;
-	
-        
-	     
+     (Has_Sub_Range_In_Prefix (A, A'Last - B'Length + 1, B)) with
+      Pre => A'Length >= B'Length and then A'Last < Positive'Last;
+
+   function Has_Sub_Range_In_Postfix
+     (A     : T_Arr;
+      Index : Integer;
+      B     : T_Arr) return Boolean is
+     (for some J in Index .. A'Last - B'Length + 1 =>
+        Equal_Subrange (A, J, B)) with
+      Pre => A'Length >= B'Length
+      and then A'Last < Positive'Last
+      and then Index <= A'Last - B'Length + 1
+      and then Index >= A'First;
 
 end Has_Sub_Range_P;
