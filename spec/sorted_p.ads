@@ -1,3 +1,5 @@
+with Types; use Types;
+
 package Sorted_P with
   SPARK_Mode,
   Ghost is
