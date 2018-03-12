@@ -1,0 +1,156 @@
+** The Max_Element algorithm
+
+   The ~Max_Element~ algorithm finds where the index of the maximum value
+   of an array is. Its signature can be expressed as :
+
+   #+BEGIN_SRC ada
+   function Max_Element (A : T_Arr) return Positive
+   #+END_SRC
+
+   ~Max_Element~ will return the first index where the maximum is located.
+
+*** A first version of Max_Element without ghost functions for specification
+
+    We will first specify and implement ~Max_Element~ without using ghost
+    function. Here, there will be minor changes between the functions
+    with and without ghost functions for specification (and loop invariants).
+
+**** Specification of Max_Element without ghost functions
+
+    #+BEGIN_SRC ada
+    function Max_Element (A : T_Arr) return Positive with
+      Pre  => A'Length > 0,
+      Post => (Max_Element'Result >= A'First)
+      and then (Max_Element'Result <= A'Last)
+      and then
+      (for all I in A'First .. A'Last => A (I) <= A (Max_Element'Result))
+      and then
+      (for all I in A'First .. Max_Element'Result - 1 =>
+         A (I) < A (Max_Element'Result));
+    #+END_SRC
+
+    - the precondition expresses the fact that ~A~ cannot be
+      empty if we want to find the maximum value and its index.
+    - the postconditions express the facts that:
+      1. the result is in range ~A'First .. A'Last~.
+      2. all the elements of the array are less or equal than the
+	 value located at the returned index.
+      3. all the elements of the array located before the index returned
+	 are less than the value located at the index returned. This
+	 postcondition state that the index returned is the first index
+	 containing the maximum value of the array.
+
+**** Implementation of Max_Element
+
+     The implementation is classic : we range over ~A~ indexes, trying
+     to find an element more than ~A(Max)~. If we find such an element,
+     we replace ~Max~ by its index.
+
+     #+BEGIN_SRC ada
+     function Max_Element (A : T_Arr) return Positive is
+      Max : Positive := A'First;
+   begin
+      for I in A'First .. A'Last loop
+         if A (Max) < A (I) then
+            Max := I;
+         end if;
+
+         pragma Loop_Invariant (A'First <= Max);
+         pragma Loop_Invariant (A'Last >= Max);
+         pragma Loop_Invariant (for all K in A'First .. I => A (K) <= A (Max));
+         pragma Loop_Invariant
+           (for all K in A'First .. Max - 1 => A (K) < A (Max));
+      end loop;
+
+      return Max;
+     #+END_SRC
+
+     The loop invariants specify that :
+     1. the ~Max~ value is in range ~A'First .. A'Last~.
+     2. every traversed elements is less or equal than the value at index ~Max~.
+     3. every element before index ~Max~ are less than the value at index ~Max~.
+
+     When using ~gnatprove~ on the body of ~Max_Element~, everything is proved.
+     
+*** A version of Max_Element with ghost functions
+
+    We will now define two predicates to represent the main
+    properties, i.e., the fact that all elements of the array
+    are less or equal than the value located at the index returned,
+    and the fact that every element before the returned index is
+    less than the maximum value.
+
+**** Predicates Upper_Bound and Strict_Upper_Bound
+
+     #+BEGIN_SRC 
+     function Upper_Bound
+     (A   : T_Arr;
+      Val : T) return Boolean is
+     (for all I in A'Range => A (I) <= Val);
+     #+END_SRC
+
+     #+BEGIN_SRC ada
+     function Strict_Upper_Bound
+     (A   : T_Arr;
+      Val : T) return Boolean is
+     (for all I in A'Range => A (I) < Val);
+     #+END_SRC
+     
+     The two functions are the same as in the specification
+     of the specification of ~Max_Element~ previously 
+     showed, except for the fact that we check for the entire
+     array given in entry.
+
+**** Specification of Max_Element
+
+     With the previously defined, the specification of Max_Element is:
+
+     #+BEGIN_SRC ada
+     function Max_Element_With_Ghost (A : T_Arr) return Positive with
+      Pre  => A'Length > 0,
+      Post => (Max_Element_With_Ghost'Result >= A'First)
+      and then (Max_Element_With_Ghost'Result <= A'Last)
+      and then (Upper_Bound (A, A (Max_Element_With_Ghost'Result)))
+      and then
+      (Strict_Upper_Bound
+         (A (A'First .. Max_Element_With_Ghost'Result - 1),
+          A (Max_Element_With_Ghost'Result)));
+     #+END_SRC
+     
+     Because in the predicates we check for the entire array, we split the array ~A~ 
+     to write the postconditions.
+
+**** Implementation of Max_Element 
+
+     The implementation is almost the same as before:
+
+     #+BEGIN_SRC ada
+     function Max_Element_With_Ghost (A : T_Arr) return Positive is
+      Max : Positive := A'First;
+   begin
+      for I in A'First .. A'Last loop
+         if A (Max) < A (I) then
+            Max := I;
+         end if;
+
+         pragma Loop_Invariant (A'First <= Max);
+         pragma Loop_Invariant (Max <= A'Last);
+         pragma Loop_Invariant (Upper_Bound (A (A'First .. I), A (Max)));
+         pragma Loop_Invariant
+           (if
+              Max > A'First
+            then
+              Strict_Upper_Bound (A (A'First .. Max - 1), A (Max)));
+      end loop;
+
+      return Max;
+
+   end Max_Element_With_Ghost;
+     #+END_SRC
+
+     The last predicate has been modified : we check first if ~A'First~
+     is less than ~Max~. If we didn't we would face a ~range check might fail~
+     exception (in the case ~A'First = A'Last~, we can't split the array ~A~ with
+     ~A (A'First .. A'Last - 1)~.
+
+     With this implementation, using ~gnatprove~ everything is proved.
