@@ -1,7 +1,7 @@
 ** The Max_Element algorithm
 
-   The ~Max_Element~ algorithm finds where the index of the maximum value
-   of an array is. Its signature can be expressed as :
+   The ~Max_Element~ algorithm finds the index of the maximum value
+   of an array. Its signature can be expressed as :
 
    #+BEGIN_SRC ada
    function Max_Element (A : T_Arr) return Positive
@@ -33,12 +33,8 @@
       empty if we want to find the maximum value and its index.
     - the postconditions express the facts that:
       1. the result is in range ~A'First .. A'Last~.
-      2. all the elements of the array are less or equal than the
-	 value located at the returned index.
-      3. all the elements of the array located before the index returned
-	 are less than the value located at the index returned. This
-	 postcondition state that the index returned is the first index
-	 containing the maximum value of the array.
+      2. all the elements of the array are less or equal than the value located at the returned index.
+      3. all the elements of the array located before the index returned are less than the value located at the index returned. This postcondition state that the index returned is the first index containing the maximum value of the array.
 
 **** Implementation of Max_Element
 
