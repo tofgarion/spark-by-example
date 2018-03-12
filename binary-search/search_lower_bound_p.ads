@@ -6,7 +6,7 @@ package Search_Lower_Bound_P with
   SPARK_Mode is
    
    function Search_Lower_Bound
-     (A: T_Arr,
+     (A: T_Arr;
 	V: T) return Option with
      Pre => Sorted(A),
      Contract_Cases => 
