@@ -78,7 +78,7 @@
 
 **** Predicates Upper_Bound and Strict_Upper_Bound
 
-     #+BEGIN_SRC 
+     #+BEGIN_SRC ada
      function Upper_Bound
      (A   : T_Arr;
       Val : T) return Boolean is
