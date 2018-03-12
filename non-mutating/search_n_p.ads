@@ -19,5 +19,13 @@ package Search_N_P with
             Val,
             Search_N'Result.Value,
             N)
+         and then
+         (if
+            Search_N'Result.Value > A'First
+          then
+            not Has_Constant_Subrange
+              (A (A'First .. Search_N'Result.Value - 1),
+               Val,
+               N))
        else not Has_Constant_Subrange (A, Val, N));
 end Search_N_P;

@@ -17,20 +17,20 @@ package body Search_N_P with
          elsif I + 1 - Start = N then
             Result := (Exists => True, Value => Start);
 
-            -- Pragma Assert (Constant_Range_From_Location (A, Val, Start, N));
-            -- Pragma Assert (Has_Constant_Subrange (A, Val, N));
-
             return Result;
          end if;
 
-         Pragma Loop_Invariant (Not Result.Exists);
-         Pragma Loop_Invariant (Start in A'First .. A'Last + 1);
-         Pragma Loop_Invariant (If Start <= I Then Constant_Range_From_Location (A, Val, Start, I + 1 - Start));
-         Pragma Loop_Invariant (Not Has_Constant_Subrange (A (A'First .. I), Val, N));
+         pragma Loop_Invariant (not Result.Exists);
+         pragma Loop_Invariant (Start in A'First .. I + 1);
+         pragma Loop_Invariant
+           (if
+              Start <= I
+            then
+              Constant_Range_From_Location (A, Val, Start, I + 1 - Start));
+         pragma Loop_Invariant
+           (not Has_Constant_Subrange (A (A'First .. I), Val, N));
+         pragma Loop_Invariant (if Start > A'First then A (Start - 1) /= Val);
       end loop;
-
-      -- Pragma Assert (Not Has_Constant_Subrange (A (A'First .. A'Last), Val, N));
-      Pragma Assert (Not Has_Constant_Subrange (A, Val, N));
 
       return Result;
 
