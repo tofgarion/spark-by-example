@@ -1,0 +1,182 @@
+** The Search_Equal_Range Algorithm
+
+The ~Search_Equal_Range~ algorithm will find the range of a given value ~V~ in a given array ~A~.
+
+Its signature can be expressed as :
+
+#+BEGIN_SRC ada 
+ function Search_Equal_Range(A : T_Arr; V : T) return Option_Pair
+#+END_SRC
+
+This function returns an ~Option_Pair~ defined by:
+
+#+BEGIN_SRC ada
+type Option_Pair (Exists : Boolean := False) is record
+      case Exists is
+         when True =>
+            Lower : Integer;
+            Upper : Integer;
+         when False =>
+            null;
+      end case;
+   end record;
+#+END_SRC
+
+If ~Result~ is of type ~Option_Pair~, and equal to the result of ~Search_Equal_Range(A,V)~,
+ then these inequalities are verified, provided that ~Result.Exists~ is true:
+- for all ~K~ in ~A'First .. Result.Lower - 1~ then ~A(K) < V~ (This range may be empty)
+- for all ~K~ in ~Result.Lower .. Result.Upper - 1~ then ~A(K) = V~ (This range may be empty)
+- for all ~K~ in ~Result.Upper .. A'Last~ then ~V < A(K)~ (this range may be empty)
+
+This algorithm is the combination of the result of both [[Search_Lower_Bound.org][Search_Lower_Bound]] and [[Search_Upper_Bound.org][Search_Upper_Bound]], so the 
+properties of the returned ~Option_Pair~ can be easily infered from those of the result of these two functions.
+
+
+*** Specification of Search_Equal_Range
+
+This algorithm can be specified as follows:
+
+#+BEGIN_SRC ada
+function Search_Equal_Range (A : T_Arr; V : T) return Option_Pair with
+      Pre            => A'Last < Positive'Last and then Sorted (A),
+      Contract_Cases =>
+      (A'Length = 0 => not Search_Equal_Range'Result.Exists,
+       A'Length > 0 =>
+         Search_Equal_Range'Result.Exists
+         and then A'First <= Search_Equal_Range'Result.Lower
+         and then
+           Search_Equal_Range'Result.Lower <=
+           Search_Equal_Range'Result.Upper
+         and then Search_Equal_Range'Result.Upper <= A'Last + 1
+         and then Strict_Upper_Bound
+           (A (A'First .. Search_Equal_Range'Result.Lower - 1),
+            V)
+         and then
+         (if
+            Search_Equal_Range'Result.Lower /= Search_Equal_Range'Result.Upper
+          then
+            Constant_Range
+              (A,
+               V,
+               Search_Equal_Range'Result.Lower,
+               Search_Equal_Range'Result.Upper - 1))
+         and then Strict_Lower_Bound
+           (A (Search_Equal_Range'Result.Upper .. A'Last),
+            V));
+#+END_SRC
+
+In this specification there are two preconditions:
+- ~A~ should be sorted, as with all binary search algorithms 
+- ~A'Last~ should be less than ~Positive'Last~ as the returned values can be equal to ~A'Last +1~
+
+The postconditions are expresses with contract cases, stating that:
+- there are no indexes returned if the array is empty
+- if the array is not empty then a valid pais of indexes is returned, and:
+  1. the pair of indexes verify ~A'First <= Result'Lower <= Result.Upper <= A'Last +1
+  2. for all ~K~ in ~A'First .. Result.Lower - 1~ then ~A(K) < V~ (This range may be empty)
+  3. for all ~K~ in ~Result.Lower .. Result.Upper - 1~ then ~A(K) = V~ (This range may be empty)
+  4. for all ~K~ in ~Result.Upper .. A'Last~ then ~V < A(K)~ (this range may be empty)
+
+*** Implementations of Search_Equal_Range
+
+We will present two implementations of this algorithm, both using the same specification.
+
+**** First implementation
+
+The ~Search_Equal_Range~ can be easily implemented using the two previous functions, as they directly provide the desired pair of indexes:
+
+#+BEGIN_SRC ada 
+function Search_Equal_Range (A : T_Arr; V : T) return Option_Pair is
+
+      Result : Option_Pair := (Exists => False);
+   begin
+
+      if A'Length > 0 then
+         Result :=
+           (Exists => True,
+            Lower  => Search_Lower_Bound (A, V).Value,
+            Upper  => Search_Upper_Bound (A, V).Value);
+
+      else
+         null;
+
+      end if;
+
+      return Result;
+   end Search_Equal_Range;
+#+END_SRC
+
+~gnatprove~ doesn't need any annotations other than the specification of the function itself to prove this implementation.
+
+**** A more elaborate implementation
+
+The first version, while being easy to implement, undestand and prove, does some work two times. This is why another implementation is proposed in the C++ standard library, 
+which in ADA translates to:
+
+#+BEGIN_SRC ada 
+function Search_Equal_Range2 (A : T_Arr; V : T) return Option_Pair is
+
+      Result : Option_Pair := (Exists => False);
+      Middle : Integer     := A'First;
+      Left   : Integer     := A'First;
+      Right  : Integer     := A'Last + 1;
+   begin
+      if A'Length > 0 then
+         Result := (Exists => True, Lower => A'First, Upper => A'Last + 1);
+         while Right > Left loop
+            Middle := Left + (Right - Left) / 2;
+
+            if A (Middle) < V then
+               Left := Middle + 1;
+            elsif V < A (Middle) then
+               Right := Middle;
+            else
+               exit;
+            end if;
+
+            pragma Loop_Variant (Decreases => Right - Left);
+            pragma Loop_Invariant
+              (A'First <= Left
+               and then Left <= Right
+               and then Right <= A'Last + 1);
+            pragma Loop_Invariant
+              (if
+                 Left /= A'First
+               then
+                 Strict_Upper_Bound (A (A'First .. Left - 1), V));
+            pragma Loop_Invariant
+              (if
+                 Right /= A'Last + 1
+               then
+                 Strict_Lower_Bound (A (Right .. A'Last), V));
+
+         end loop;
+
+         if Left < Right then
+
+            Result.Lower := Search_Lower_Bound (A (Left .. Middle), V).Value;
+
+            Middle := Middle + 1;
+
+            if Middle < A'Last + 1 then
+               Result.Upper :=
+                 Search_Upper_Bound (A (Middle .. A'Last), V).Value;
+            else
+               Result.Upper := A'Last + 1;
+            end if;
+
+         else
+            Result.Lower := Left;
+            Result.Upper := Right;
+
+         end if;
+
+      end if;
+
+      return Result;
+
+   end Search_Equal_Range2;
+#+END_SRC
+
+The working principle of this code is to narrow down at the same time the ranges where ~Search_Lower_Bound~ 
+and ~Search_Upper_Bound~ will look for the results, where these two programms would both do the same job otherwise.

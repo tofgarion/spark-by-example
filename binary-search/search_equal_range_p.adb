@@ -12,8 +12,6 @@ package body Search_Equal_Range_P with
             Lower  => Search_Lower_Bound (A, V).Value,
             Upper  => Search_Upper_Bound (A, V).Value);
 
-         pragma Assert (if Result.Upper <= A'Last then V < A (Result.Upper));
-
       else
          null;
 
