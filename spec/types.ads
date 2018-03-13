@@ -12,16 +12,15 @@ package Types is
             null;
       end case;
    end record;
-   
+
    type Option_Pair (Exists : Boolean := False) is record
       case Exists is
-	 when True =>
-	    Lower : Integer;
-	    Upper : Integer;
-	 when False =>
-	    null;
+         when True =>
+            Lower : Integer;
+            Upper : Integer;
+         when False =>
+            null;
       end case;
    end record;
-   
-   
+
 end Types;
