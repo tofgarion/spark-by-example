@@ -43,8 +43,8 @@
 **** Implementation of Max_Element
 
      The implementation is classic : we range over ~A~ indexes, trying
-     to find an element greater than ~A(Max)~. If we find such an element,
-     we replace ~Max~ by its index.
+     to find an element greater than ~A(Result.Value)~. If we find such an element,
+     we replace ~Result.Value~ by its index.
 
      #+BEGIN_SRC ada
      function Max_Element (A : T_Arr) return Option is
@@ -74,9 +74,9 @@
      #+END_SRC
 
      The loop invariants specify that :
-     1. the ~Max~ value is in range ~A'First .. A'Last~.
-     2. every traversed elements is less or equal than the value at index ~Max~.
-     3. every element before index ~Max~ are less than the value at index ~Max~.
+     1. the ~Result.Value~ value is in range ~A'First .. A'Last~.
+     2. every traversed elements is less or equal than the value at index ~Result.Value~.
+     3. every element before index ~Result.Value~ are less than the value at index ~Result.Value~.
 
      When using ~gnatprove~ on the body of ~Max_Element~, everything is proved.
      
@@ -166,7 +166,7 @@
      #+END_SRC
 
      The last predicate has been modified : we check first if ~A'First~
-     is less than ~Max~. If we didn't we would face a ~range check might fail~
+     is less than ~Result.Value~. If we didn't we would face a ~range check might fail~
      exception (in the case ~A'First = A'Last~, we can't split the array ~A~ with
      ~A (A'First .. A'Last - 1)~).
 
