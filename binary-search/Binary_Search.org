@@ -3,7 +3,6 @@
    The ~Binary_Search~ algorithm is a search in a sorted array. Its signature can be expressed:
    ~function Binary_Search (A : T_Arr; Val : T) return Boolean~
    It will return true if ~Val~ is contained in ~A~.
-
 *** Specification of Binary_Search
     
     The specification of ~Binary_Search~ can be the following:
@@ -16,7 +15,9 @@ function Binary_Search (A : T_Arr; Val : T) return Boolean with
 The first precondition specify that the array has to be sorted.
 The second is here because we will use ~Search_Lower_Bound~ function defined above.
 If we don't specify that ~A'Last < Positive'Last~, we might encounter a message like
-~precondition might fail~ during the proof.
+~precondition might fail~ during the proof. The difference between ~Find~ and 
+~Binary_Search~ is that ~Find~ has a linear complexity whereas ~Binary_Search~
+has a logarithmic complexity.
 
 *** Implementation of Binary_Search
 
