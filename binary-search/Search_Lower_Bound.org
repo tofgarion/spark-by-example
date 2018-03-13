@@ -1,7 +1,7 @@
 **  The Search_Lower_Bound algorithm
 
-The ~Search_Lower_Bound~ algorithm searches for the lower index at which a value can be found in a sorted array.
-It's signature can be expressed as:
+The ~Search_Lower_Bound~ algorithm searches for the lowest index at which a value can be found in a sorted array.
+Its signature can be expressed as:
 #+BEGIN_SRC ada 
  function Search_Lower_Bound(A : T_arr; V : T) return Option
 #+END_SRC
@@ -39,14 +39,14 @@ It uses the predicates ~Lower_Bound~ and ~Strict_Upper_Bound~ defined in chapter
 
 The specification contains two precondition :
 - ~A~ should be sorted.
-- ~A'Last~ must be less than A'Last since the result can be ~A'Last+1~.
+- ~A'Last~ must be less than Positive'Last since the result can be ~A'Last+1~.
 The postconditions are expressed with contract cases:
 - if ~A~ is empty, there is no index returned
 - otherwise, there is an index returned in range ~A'First .. A'Last +1~ and
   1. For all ~K~ in ~A'First .. Result.Value -1,  A[K] < V~ (this range can be empty)
   2. For all ~K~ in ~Result.Value .. A'Last, V <= A[K]~ (this range can also be empty)
 
-*** The sepcification of Search_Lower_Bound
+*** The implementation of Search_Lower_Bound
 
 The implementation of ~Search_Lower_Bound~ is as follows:
 
@@ -89,7 +89,8 @@ function Search_Lower_Bound
    end Search_Lower_Bound;
 #+END_SRC
 
-At aech iteration, the range that contains the sought-after result is narrowed down. Note that the ~middle~ is calculated so as to avoid potential overflows.
+At aech iteration, the range that contains the sought-after result is narrowed down. Note
+that the ~middle~ is calculated so as to avoid potential overflows.
 
 Here the loop variant is ~Right - Result.Value~ which decreases at each step.
 The loop invariants express :
