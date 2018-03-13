@@ -1,23 +1,29 @@
 package body Max_Element_P with
      Spark_Mode is
 
-   function Max_Element (A : T_Arr) return Positive is
-      Max : Positive := A'First;
+   function Max_Element (A : T_Arr) return Option is
+      Result : Option := (Exists => False);
    begin
-      for I in A'First .. A'Last loop
-         if A (Max) < A (I) then
-            Max := I;
-         end if;
+      if A'Length = 0 then
+         return Result;
+      else
+         Result := (Exists => True, Value => A'First);
+         for I in A'First .. A'Last loop
+            if A (Result.Value) < A (I) then
+               Result.Value := I;
+            end if;
 
-         pragma Loop_Invariant (A'First <= Max);
-         pragma Loop_Invariant (A'Last >= Max);
-         pragma Loop_Invariant (for all K in A'First .. I => A (K) <= A (Max));
-         pragma Loop_Invariant
-           (for all K in A'First .. Max - 1 => A (K) < A (Max));
-      end loop;
+            pragma Loop_Invariant (A'First <= Result.Value);
+            pragma Loop_Invariant (A'Last >= Result.Value);
+            pragma Loop_Invariant
+              (for all K in A'First .. I => A (K) <= A (Result.Value));
+            pragma Loop_Invariant
+              (for all K in A'First .. Result.Value - 1 =>
+                 A (K) < A (Result.Value));
+         end loop;
 
-      return Max;
-
+         return Result;
+      end if;
    end Max_Element;
 
 end Max_Element_P;

@@ -20,7 +20,8 @@
      and then (Upper_Bound(A, Max_Seq'Result));
     #+END_SRC
 
-    As we've seen before, we don't want the array ~A~ to be empty.
+    Because we are going to use the function ~Max_Element_With_Ghost~ on A
+    and we want to use the ~Value~ of option, we forbid the case ~A'Length = 0~.
     The postconditions express the fact that:
       - the value in contained in the array.
       - is more or equal than the others values contained in the array.
@@ -30,7 +31,7 @@
     #+BEGIN_SRC ada
     function Max_Seq (A : T_Arr) return T is
    begin
-      return A(Max_Element_With_Ghost(A));
+      return A(Max_Element_With_Ghost(A).Value);
    end Max_Seq;
     #+END_SRC
 

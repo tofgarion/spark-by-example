@@ -1,0 +1,101 @@
+**  The Search_Lower_Bound algorithm
+
+The ~Search_Lower_Bound~ algorithm searches for the lowest index at which a value can be found in a sorted array.
+Its signature can be expressed as:
+#+BEGIN_SRC ada 
+ function Search_Lower_Bound(A : T_arr; V : T) return Option
+#+END_SRC
+
+*** TODO Working principle 
+
+The ~Search_Lower_Bound~ algorithm searches for a given value ~V~ the index ~Lb~ of a given array ~A~ 
+so that if ~A'First <= K < Lb~ then ~A[K] < V~, and if ~Lb <= K <= A'Last~ then ~V < A[K]~. It should
+be noted that ~Lb~ satisfies the inequality ~A'First <= Lb <= A'Last +1~.
+
+##########################################
+add example here, such as the one in ACSL.
+##########################################
+
+*** Specification of Search_Lower_Bound
+
+The ~Search_Lower_Bound~ algorithm can be specified as follow:
+
+#+BEGIN_SRC ada 
+function Search_Lower_Bound
+     (A: T_Arr;
+	V: T) return Option with
+     Pre => Sorted(A) and then
+     A'Last < Positive'Last,
+     Contract_Cases => 
+     (A'Length = 0 => not Search_Lower_Bound'Result.Exists,
+      A'Length > 0 => Search_Lower_Bound'Result.Exists
+	and then A'First <= Search_Lower_Bound'Result.Value
+	and then Search_Lower_Bound'Result.Value <= A'Last+1
+	and then Strict_Upper_Bound(A(A'First .. Search_Lower_Bound'Result.Value-1),V)
+	and then Lower_Bound(A(Search_Lower_Bound'Result.Value .. A'Last), V));
+#+END_SRC
+
+It uses the predicates ~Lower_Bound~ and ~Strict_Upper_Bound~ defined in chapter 4.
+
+The specification contains two precondition :
+- ~A~ should be sorted.
+- ~A'Last~ must be less than Positive'Last since the result can be ~A'Last+1~.
+The postconditions are expressed with contract cases:
+- if ~A~ is empty, there is no index returned
+- otherwise, there is an index returned in range ~A'First .. A'Last +1~ and
+  1. For all ~K~ in ~A'First .. Result.Value -1,  A[K] < V~ (this range can be empty)
+  2. For all ~K~ in ~Result.Value .. A'Last, V <= A[K]~ (this range can also be empty)
+
+*** The implementation of Search_Lower_Bound
+
+The implementation of ~Search_Lower_Bound~ is as follows:
+
+#+BEGIN_SRC ada 
+function Search_Lower_Bound
+     (A : T_Arr;
+      V : T) return Option is
+      
+      Result :Option := (Exists => False);
+      Right : Integer :=A'Last+1;
+      Middle : Integer := A'Last+1;
+   begin
+      
+      if A'Length = 0 then
+	 return Result;
+      else
+	 Result := (Exists => True, Value => A'First);
+	 
+	 while Result.Value<Right loop
+	    Middle := Result.Value +(Right - Result.Value)/2;
+	    if A(Middle) <V then
+	       Result.Value := Middle +1;
+	    else
+	       Right := Middle;
+	    end if;
+	    
+	    pragma Loop_Variant(Decreases => Right-Result.Value);
+	    pragma Loop_Invariant(A'First <= Result.Value 
+				    and then Result.Value <= Right
+				    and then Right <= A'Last +1);
+	    pragma Loop_Invariant(if Result.Value /= A'First 
+				    then Strict_Upper_Bound(A(A'First .. Result.Value-1),V));
+	    pragma Loop_Invariant(if Right /= A'Last + 1 
+				    then Lower_Bound(A(Right .. A'Last),V));
+	    
+	 end loop;
+	 
+	 return Result;
+      end if; 
+   end Search_Lower_Bound;
+#+END_SRC
+
+At aech iteration, the range that contains the sought-after result is narrowed down. Note
+that the ~middle~ is calculated so as to avoid potential overflows.
+
+Here the loop variant is ~Right - Result.Value~ which decreases at each step.
+The loop invariants express :
+- that ~Result.Value~ and ~Right~ are in the correct range and corectly postitionned with regard to eachother,
+- that all indexes stricly lower than ~Result.value~ contain value sctrictly lower than ~V~
+- that all indexes greater than ~Right~ contain values greater than ~V~
+
+With this specification and implementation, when using ~gnatprove~, everything is proved.
