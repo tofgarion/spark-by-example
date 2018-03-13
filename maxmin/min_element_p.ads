@@ -19,6 +19,5 @@ package Min_Element_P with
             Strict_Lower_Bound
               (A (A'First .. Min_Element'Result.Value - 1),
                A (Min_Element'Result.Value))));
-      -- Others => not Min_Element'Result.Exists);
 
 end Min_Element_P;

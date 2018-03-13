@@ -16,9 +16,10 @@ function Min_Element(A : T_arr) return Option
 The ~Lower_Bound~ predicate will be used to assert that our return value is a lower bound for the values of ~A(A'First .. N)~, where ~N~ is given:
 
 #+BEGIN_SRC ada 
-function Lower_Bound(A : T_Arr;
-                     V : T)return Boolean is
-      (for all I in A'First ..A'Last => V <= A(I));
+function Lower_Bound
+     (A : T_Arr;
+      V : T) return Boolean is
+     (for all I in A'First .. A'Last => A (I) >= V);
 #+END_SRC
 
 **** The Strict_Lower_Bound predicate
@@ -27,9 +28,10 @@ The ~Strict_Lower_Bound~ predicate will be used to confirm that the value we ret
 
 #+BEGIN_SRC ada 
 function Strict_Lower_Bound
-(A : T_Arr;
-V : T)return Boolean is
-(for all I in A'First .. N => V < A(I));
+     (A : T_Arr;
+      V : T) return Boolean is
+     (for all I in A'First .. A'Last => A (I) > V);
+
 #+END_SRC
 
 *** The Specification of Min_Element
@@ -37,53 +39,65 @@ V : T)return Boolean is
 The specification of ~Min_Element~ can be expressed such as follows:
 
 #+BEGIN_SRC ada
-function Min_Element(A: T_Arr) return Option  with
-     Contract_Cases => 
-     (A'Length = 0 => not Min_Element'Result.Exists,
-      A'Length > 0 => Min_Element'Result.Exists
-	and then Min_Element'Result.Value <= A'Last
-	and then Min_Element'Result.Value >= A'First
-	and then Lower_Bound(A,A'Last,A(Min_Element'Result.Value))
-	and then 
-	(if Min_Element'Result.Value > A'First 
-	   then Strict_Lower_Bound(A,Min_Element'Result.Value-1,A(Min_Element'Result.Value))));
+function Min_Element (A : T_Arr) return Option with
+      Contract_Cases =>
+      (A'Length = 0 => not Min_Element'Result.Exists,
+       A'Length > 0 =>
+         Min_Element'Result.Exists
+         and then Min_Element'Result.Value <= A'Last
+         and then Min_Element'Result.Value >= A'First
+         and then Lower_Bound (A, A (Min_Element'Result.Value))
+         and then
+         (if
+            Min_Element'Result.Value > A'First
+          then
+            Strict_Lower_Bound
+              (A (A'First .. Min_Element'Result.Value - 1),
+               A (Min_Element'Result.Value))));
 #+END_SRC
 
 Here the post conditions are expressed through 2 contract cases :
 - if ~A~ is empty then there is no index returned
 - else there is a valid index returned and:
-  1. the result is a lower bound for the value in ~A~
+  1. the result is a lower bound for the values in ~A~
   2. for all value ~V~ of ~A~ found at an index stricly lower than ~Result.Value~ then ~V > A(Result.Value)~. This expresses the fact that our result is indeed the first index of the minimum of A.
 
 
 *** Implementation of Min_Element
 
 #+BEGIN_SRC ada
-function Min_Element(A:T_Arr) return Option is
+function Min_Element (A : T_Arr) return Option is
       Result : Option := (Exists => False);
-      
+
    begin
-      if A'Length = 0 then 
-	 return Result;
+      if A'Length = 0 then
+         return Result;
       else
-	 Result := (Exists => True, Value => A'First);
-	 for I in A'First .. A'Last loop
-	    if A(I)< A(Result.Value) then
-	       Result.Value := I;
-	    end if;
-	      
-	    pragma Loop_Variant (Increases => I);
-	    pragma Loop_Invariant(Result.Value in A'First .. A'Last);
-	    pragma Loop_Invariant(Lower_Bound(A,I, A(Result.Value)));
-	    pragma Loop_Invariant((if Result.Value > A'First then
-	      Strict_Lower_Bound(A,Result.Value-1,A(Result.Value))));
-	   
-	      
-	 end loop;
-	    
-	 return Result;
-        end if
-    end Min_ELement;
+         Result := (Exists => True, Value => A'First);
+         for I in A'First .. A'Last loop
+            if A (I) < A (Result.Value) then
+               Result.Value := I;
+            end if;
+
+            pragma Loop_Variant (Increases => I);
+            pragma Loop_Invariant (Result.Value in A'First .. A'Last);
+            pragma Loop_Invariant
+              (Lower_Bound (A (A'First .. I), A (Result.Value)));
+            pragma Loop_Invariant
+              ((if
+                  Result.Value > A'First
+                then
+                  Strict_Lower_Bound
+                    (A (A'First .. Result.Value - 1),
+                     A (Result.Value))));
+
+         end loop;
+
+         return Result;
+
+      end if;
+
+   end Min_Element;
 #+END_SRC
 
 The implementation is quite similar to the one of [[Max_Element.org][Max_Element]] with predicates. Here:
