@@ -180,3 +180,11 @@ function Search_Equal_Range2 (A : T_Arr; V : T) return Option_Pair is
 
 The working principle of this code is to narrow down at the same time the ranges where ~Search_Lower_Bound~ 
 and ~Search_Upper_Bound~ will look for the results, where these two programms would both do the same job otherwise.
+
+The loop variant is ~Right - Left~, which decreases at each iteration.
+The loop invariants express that:
+- ~Left~ and ~Right~ remain in the correct range, and in the correct position with relation to eachother
+- that all values found at an index striclty lower than ~Left~ are less than ~V~
+- that all values found at an index greater or equal than ~Right~ are striclty greater than ~V~.
+
+These loop invariants, in additions to the post-conditions of ~Search_Lower_Bound~ and ~Search_Upper_Bound~ enable ~gnatprove~ to prove everything.

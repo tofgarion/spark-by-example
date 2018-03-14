@@ -46,7 +46,7 @@ The postconditions are expressed with contract cases:
   1. For all ~K~ in ~A'First .. Result.Value -1,  A[K] < V~ (this range can be empty)
   2. For all ~K~ in ~Result.Value .. A'Last, V <= A[K]~ (this range can also be empty)
 
-*** The sepcification of Search_Lower_Bound
+*** The implementation of Search_Lower_Bound
 
 The implementation of ~Search_Lower_Bound~ is as follows:
 
@@ -89,7 +89,7 @@ function Search_Lower_Bound
    end Search_Lower_Bound;
 #+END_SRC
 
-At aech iteration, the range that contains the sought-after result is narrowed down. Note that the ~middle~ is calculated so as to avoid potential overflows.
+At each iteration, the range that contains the sought-after result is narrowed down. Note that the ~middle~ is calculated so as to avoid potential overflows.
 
 Here the loop variant is ~Right - Result.Value~ which decreases at each step.
 The loop invariants express :
