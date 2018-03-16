@@ -6,8 +6,7 @@ package Reverse_In_Place_P with
   SPARK_Mode is
    
    procedure Reverse_In_Place(A : in out T_Arr) with
-     Pre => A'First <=1 and then A'Last >= 2,
+     Pre => A'First >0 and then A'Last >0,
      Post => Is_Reversed(A,A'Old);
    
 end Reverse_In_Place_P;
-     
