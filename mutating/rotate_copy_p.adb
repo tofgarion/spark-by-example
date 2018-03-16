@@ -8,9 +8,5 @@ package body Rotate_Copy_P with
    begin
       Copy(A(A'First + N .. A'Last), B(B'First .. B'Last - N));
       Copy(A(A'First .. A'First + (N -1)),B(B'Last - (N - 1) .. B'Last));
-      pragma Assert(A(A'First + N .. A'Last)= B(B'First .. B'Last - N));
-      pragma Assert(A(A'First + N .. A'Last)= B(B'First .. B'Last - N));
-      pragma Assert(A(A'First .. A'First + (N -1)) = B(B'Last - (N - 1) .. B'Last));
-      pragma Assert(A(A'First .. A'First + (N -1)) = B(B'Last - (N - 1) .. B'Last));
    end Rotate_Copy;
 end Rotate_Copy_P;
