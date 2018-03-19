@@ -1,3 +1,5 @@
+* SPARK by Example
+
 SPARK by Example is a project (greatly) inspired by [[https://github.com/fraunhoferfokus/acsl-by-example][ACSL by Example]], a
 collection of verified C functions and data types from the C++
 standard library. SPARK by Example has two objectives
@@ -7,7 +9,7 @@ standard library. SPARK by Example has two objectives
 - highlighy differences between verification of C programs and
   verification of SPARK programs
 
-* Tools used
+** Tools used
 
 The following tools have been used for this project:
 
@@ -15,7 +17,7 @@ The following tools have been used for this project:
 - [[http://cvc4.cs.stanford.edu/web/][CVC4 1.5]]
 - [[https://github.com/Z3Prover/z3/releases][Z3 4.6.0]]
 
-* Content of each directory
+** Content of each directory
 
 Each directory corresponds to a chapter of ACSL by Example. For each
 algorithm ~Algo~ to be proved, you will find the specification of
@@ -30,11 +32,11 @@ provers timeouts, levels of proof etc. These default values are
 sufficient to prove the corresponding algorithms with the previous
 tools on a machine equipped with an Intel Core i7-4810MQ CPU.
 
-* Table of contents
+** Table of contents
 
   1. [[./non-mutating/README.org][non mutating algorithms]]
 
-* References
+** References
 
   - [[http://docs.adacore.com/spark2014-docs/html/ug/index.html][SPARK 2014 user guide 19.0]]
 
