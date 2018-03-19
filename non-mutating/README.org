@@ -6,12 +6,7 @@
   ~Count~. As usual, ghost functions used in specification are located
   in the ~spec~ directory at project root.
 
-  Each function is specified and defined in its own
-  files. Specifications and implementations are defined in
-  packages. To avoid name clashes with functions, packages names have
-  a ~_P~ suffixes, hence the file names.
-
-  The functions are the corresponding files are presented in the
+  The functions and the corresponding files are presented in the
   following table (click on the link to have more details one the
   specification/implementation of each function):
 

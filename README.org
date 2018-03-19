@@ -22,7 +22,9 @@ The following tools have been used for this project:
 Each directory corresponds to a chapter of ACSL by Example. For each
 algorithm ~Algo~ to be proved, you will find the specification of
 ~Algo~ in the ~algo_p.ads~ file and its implementation if the
-~algo_p.adb~ file.
+~algo_p.adb~ file. Specifications and implementations are defined in
+packages. To avoid name clashes with functions, packages names have a
+~_P~ suffixes, hence the file names.
 
 Ghost functions that may be used in several algorithms are grouped in
 the ~spec~ directory at the root of the project.
