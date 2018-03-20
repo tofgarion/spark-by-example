@@ -9,8 +9,7 @@
    #+END_SRC
 
    ~T_Arr~ is an array of integers, with indexes ranging the positive
-   integers. We will use this type in all the functions needing an
-   array.
+   integers. We will use this type in the functions needing an array.
 
    Mimicking the C++ standard library, the signature of ~Find~ can be
    defined as follows:
@@ -43,14 +42,14 @@
      - the [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#postconditions][postcondition]] indicates that the result of ~Find~ is always
        less or equal than ~A'Last + 1~ and that for every index ~I~ in
        ~A~ less than the result of ~Find~, ~A (I)~ differs from ~Val~.
-     - we can divide the specification of ~Find~ into two [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#contract-cases][contract
-       cases]]:
+     - we can divide the specification of ~Find~ into two
+       [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#contract-cases][contract cases]]:
 
-       - the first one when there is some ~I~ in ~A~ range such that
-         ~A (I)~ is equal to ~Val~. In this case, the result of ~Find~
-         should be less or equal than ~A'Last~ (i.e. it should be a
-         valid index of ~A~) and the returned index ~I~ is such that
-         ~A (I) = Val~.
+       - the first case specifies the behavior of the function when
+         there is some ~I~ in ~A~ range such that ~A (I)~ is equal to
+         ~Val~. In this case, the result of ~Find~ should be less or
+         equal than ~A'Last~ (i.e. it should be a valid index of ~A~)
+         and the returned index ~I~ is such that ~A (I) = Val~.
        - the second case is specified with ~others~, as we will
          consider the cases for which there is no element of ~A~ equal
          to ~Val~. In this case, the value returned by ~Find~ should
@@ -178,9 +177,9 @@
      request. We will say that the ~Option~ is false or does not hold
      a valid index if the corresponding field ~Exists~ is ~False~.
 
-     For ~Find~, if the value is not found in the array, then
-     ~Exists~ will be false, otherwise ~Value~ will hold the index of
-     the array at which the element is equal to the value.
+     For ~Find~, if the value is not found in the array, then ~Exists~
+     will be false, otherwise ~Value~ will hold the index of the array
+     at which the element is equal to the value.
 
 **** Specification of Find
 
@@ -205,8 +204,8 @@
 
 **** Implementation of Find
 
-     The implementation of ~Find~ is the same as previous excepting
-     the use of ~Option~:
+     The implementation of ~Find~ is the same as previous except the
+     use of the ~Option~ type:
 
      #+BEGIN_SRC ada
        function Find (A : T_Arr; Val : T) return Option is
