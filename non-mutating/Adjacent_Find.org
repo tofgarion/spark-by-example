@@ -9,7 +9,7 @@
 
    Given an array ~A~, ~Adjacent_Find~ will either return:
 
-   - an option whose value is a valid index ~I~ of ~A~ such that ~A
+   - an ~Option~ whose value is a valid index ~I~ of ~A~ such that ~A
      (I) = A (I + 1)~ and ~I~ is the smallest index verifying this
      property
    - an option with ~Result~ equal to ~False~ if no such index exists
@@ -85,7 +85,7 @@
       end Adjacent_Find;
     #+END_SRC
 
-    The invariant needed to prove the function are the following:
+    The invariants needed to prove the function are the following:
 
     - two consecutive and equal elements have not been found yet in
       ~A~
