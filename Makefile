@@ -6,7 +6,9 @@ _PARALLEL = $(if $(PARALLEL),-j $(PARALLEL),-j 0)
 _PROJECT = $(if $(PROJECT),-P $(PROJECT),-P spark_by_example.gpr)
 _WHYCONF = $(if $(WHYCONF),--why3-conf=$(WHYCONF),)
 
-.PHONY: all pp clean distclean
+GENERATE_DEP = $1_p.ads $1_p.adb
+
+.PHONY: prove prove-coq all pp clean distclean
 
 all:
 	gnatprove $(_PROJECT) -j 4 $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) chap*.adb
@@ -24,9 +26,6 @@ distclean: clean
 test_%: test_%.adb
 	gnatmake -gnata -gnateE -f $^
 	./$@
-
-%:
-	gnatprove $(_PROJECT) -f $(_PARALLEL) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) chap$@.adb
 
 prove:
 	gnatprove $(_PROJECT) -f $(_PARALLEL) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) $(FILE)
