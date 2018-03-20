@@ -11,7 +11,7 @@ the same goal for arrays of same length. Our procedure only works with arrays of
 part of an array into another can be achived through slicing.
 
 The purpose of this document being to prove classicals algorithms, and compare what can be done in ADA
- with what was donne in C++ in *ACSL by Example*, where this procedure makes sense.
+ with what was done in C++ in *ACSL by Example*, where this procedure makes sense.
 
 *** Specification of Copy
 
@@ -26,7 +26,7 @@ procedure Copy
 #+END_SRC
 
 The precondition expresses the fact that ~A~ and ~B~ should be of the same size.
-The psot condition expresses that ~A~ and ~B~ are equal element-wise.
+The post condition expresses that ~A~ and ~B~ are equal element-wise.
 
 *** Implementation of Copy
 
