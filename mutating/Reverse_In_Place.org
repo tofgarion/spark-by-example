@@ -1,0 +1,85 @@
+** The Reverse_In_Place algorithm
+
+The ~Reverse_In_Place~ algorithm aims to achieve the same goal as [[Reverse_Copy.org][Reverse_Copy]] but the result is stored in the original array, thus modifing it, instead of copying it.
+Its signature reads:
+
+#+BEGIN_SRC ada 
+ procedure Reverse_In_Place( A : in out T_Arr)
+#+END_SRC
+
+*** Specification of Reverse_In_Place
+
+~Reverse_In_Place~ can be specified as follows:
+
+#+BEGIN_SRC ada
+procedure Reverse_In_Place(A : in out T_Arr) with
+     Pre => A'First >0 and then A'Last >0,
+     Post => Is_Reversed(A,A'Old);
+#+END_SRC
+
+The preconditions are only required to suppress an issue where ~gnatprove~ doesn't consider the indexes of T_Arr to be ~Positives~ despite being declared as such in [[../spec/types.ads][types.ads]].
+This leads to false range_check issues.
+
+The postcondition ensures that ~A~ is indeed reversed at the end of the procedure compared to it's state at the begining of the procedure.
+
+*** Implementation of Reverse_In_Place
+
+**** A first version
+
+~Reverse_In_Place~ can be implemented using the [[Swap.org][Swap]] function defined earlier:
+
+#+BEGIN_SRC ada
+ procedure Reverse_In_Place(A : in out T_Arr) is
+      Half : Integer :=(if A'Length > 0 then A' First + (A'Last - A'First)/2 - (if A'Length mod 2 = 0 then 0 else 1) else -1);
+   begin
+      
+      for I in 0 .. Half-A'First  loop
+
+	Swap(A(A'First+I), A(A'Last - I));
+	 pragma Loop_Variant(Increases => I);
+	 pragma Loop_Invariant(A(A'First+I+1 .. A'Last -(I+1))=A'Loop_Entry(A'First+I+1 .. A'Last - (I+1)));
+	 pragma Loop_Invariant(Is_Reversed(A(A'First .. A'First+I), A'Loop_Entry(A'Last - I .. A'Last)));
+	 pragma Loop_Invariant(Is_Reversed(A'Loop_Entry(A'First .. A'First+I), A(A'Last - I .. A'Last)));
+	
+      end loop;
+      
+   end Reverse_In_Place;
+#+END_SRC
+
+There are a few things to point out here:
+- ~Half~ is calculated so that when ~A~ if of odd length then we do not try to swap the middle value with itself. This helps avoid aliasing issues.
+- The first loop invariant specifies that the array remains unchanged in the ~A'Length-2*I~ middle indexes, which the algorithm has not yet covered at iteration ~I~
+- The two other invariants specifiy that the sub-arrays A(A'First .. A'First + I) and A(A'Last - I .. A'Last) are reversed compared to the arrays before entering the loop.
+
+With this implementation ~gnatprove~ manages to prove everything but one thing: it cannot verify that ~A(A'First + I)~ and ~A(A'Last - I)~ are not alised (see [[http://docs.adacore.com/spark2014-docs/html/lrm/subprograms.html#anti-aliasing][SPARK reference manual section 6.4.2]]). 
+Indeed, if ~A'Firs+I = A'Last-I~ then there could be aliasing issue, but we took care of that by ranging I from 0 to Half -A'First. One can add the assertion ~pragma Assert(A'First + I /= A'Last - I);~ in the loop,
+but this assertion is prooved, so we are sure that the aliasing does not come from equal indexes.
+
+**** Avoiding the aliasing
+
+In order to avoir the aliasing issue, it is possible to modify the implementation of ~Reverse_In_Place~
+by removing the call to ~Swap~ and doing the swap "manualy" :
+
+#+BEGIN_SRC ada
+ procedure Reverse_In_Place(A : in out T_Arr) is
+      Half : Integer :=(if A'Length > 0 then A' First + (A'Last - A'First)/2 - (if A'Length mod 2 = 0 then 0 else 1) else -1);
+      T1 : T;
+   begin
+      
+      for I in 0 .. Half-A'First  loop
+	 T1 := A(A'First+I);
+	 A(A'First+I) :=A(A'Last -I);
+	 A(A'Last -I) := T1;
+	 pragma Loop_Variant(Increases => I);
+	 pragma Loop_Invariant(A(A'First+I+1 .. A'Last -(I+1))=A'Loop_Entry(A'First+I+1 .. A'Last - (I+1)));
+	 pragma Loop_Invariant(Is_Reversed(A(A'First .. A'First+I), A'Loop_Entry(A'Last - I .. A'Last)));
+	 pragma Loop_Invariant(Is_Reversed(A'Loop_Entry(A'First .. A'First+I), A(A'Last - I .. A'Last)));
+	
+      end loop;
+      
+   end Reverse_In_Place;
+#+END_SRC
+
+Here the invariants remain the same, since we simply explicitly coded ~Swap~ instead of calling it.
+
+This implementation enables ~gnatprove~ to prove everything.
