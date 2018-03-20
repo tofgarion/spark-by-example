@@ -82,8 +82,9 @@
     We use the ~Find~ algorithm on each element of ~A~ to check if it
     is present in ~B~. The invariants and the variant are rather
     straightforward. Notice that we could have "inlined" ~Find~ inside
-    ~Find_First_Of~, but this would leads to more invariants and like
-    in ACSL by example we emphasize here reuse over efficiency.
+    ~Find_First_Of~, but this would leads to write more
+    invariants. Like ACSL by Example, we emphasize here reuse over
+    efficiency.
 
 # Local Variables:
 # ispell-dictionary: "english"
