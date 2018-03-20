@@ -3,7 +3,7 @@
    The ~swap_ranges~ algorithm exchanges the contents of two arrays.
    Its signature reads:
    
-   ~ procedure Swap_Ranges(A : in out T_Arr; B: in out T_Arr)~
+   ~procedure Swap_Ranges(A : in out T_Arr; B: in out T_Arr)~
    
 *** Specification of Swap_Ranges
 
