@@ -13,7 +13,7 @@ Post => P = Q'Old and then Q = P'Old;
     #+END_SRC
 
     The postcondition expresses the fact that the two variables have actually been
-    exchanged.
+    exchanged, using the ~'Old~ attribute available in SPARK. This attribute stores the state of the variables *before* the excecution of the procedure.
 
 *** Implementation of Swap
 
