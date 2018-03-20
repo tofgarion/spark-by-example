@@ -1,6 +1,6 @@
 project Mutating_Algorithms is
 
-  for Source_Dirs use (".", "../spec");
+  for Source_Dirs use (".", "../spec", "../non-mutating");
 
   package Compiler is
     for Default_Switches ("Ada") use ("-gnat12", "-gnato13");
