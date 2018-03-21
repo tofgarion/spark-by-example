@@ -38,11 +38,14 @@ TIMEOUT_SEARCH_WITH_GHOST = "TIMEOUT=60"
 TIMEOUT_SEARCH            = "TIMEOUT=30"
 TIMEOUT_FIND_END          = "TIMEOUT=60"
 
+# all proof targets
+ALL_PROOF_TARGETS = naive_find naive_find_contract_pb find find_first_of adjacent_find \
+		mismatch equal equal_rev search_wo_ghost search_with_ghost search \
+		search_n find_end count
+
 include ../Makefile-common
 
-.PHONY: naive_find naive_find_contract_pb find find_first_of adjacent_find \
-	mismatch equal equal_rev search_wo_ghost search_with_ghost search \
-	search_n find_end count
+.PHONY:
 
 # Find
 naive_find: $(call GENERATE_DEP,naive_find)
@@ -93,3 +96,6 @@ find_end: $(call GENERATE_DEP,find_end) $(SPEC_FIND_END)
 # Count
 count: $(call GENERATE_DEP,count) $(SPEC_COUNT)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_COUNT) $(NON_MUTATING_DEFAULT_TIMEOUT)
+
+# All proofs
+all: $(ALL_PROOF_TARGETS)
