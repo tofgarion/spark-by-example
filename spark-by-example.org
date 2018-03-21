@@ -88,7 +88,7 @@ Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
 
 ** Find_End
    :PROPERTIES:
-   :Status:      In progress
+   :Status:   Finished
    :Level:       1
    :Assigned_To: Léo Creuse
    :END:
@@ -123,6 +123,8 @@ Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
    :Assigned_To: Joffrey
    :END:
 ** Min_Element
+   :PROPERTIES:
+   :END:
 
    :PROPERTIES:
    :Status:      Not started yet
