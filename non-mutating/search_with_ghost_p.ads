@@ -14,10 +14,9 @@ package Search_With_Ghost_P with
    function Search (A : T_Arr; B : T_Arr) return Option with
       Pre            => A'Last < Positive'Last and then B'First <= B'Last,
       Contract_Cases =>
-      (B'Length = 0        => not Search'Result.Exists,
+      (B'Length = 0 => not Search'Result.Exists,
        A'Length < B'Length => not Search'Result.Exists,
-       A'Length >= B'Length and then
-       Has_Sub_Range (A, B) =>
+       A'Length >= B'Length and then Has_Sub_Range (A, B) =>
          Search'Result.Exists
          and then
            A (Search'Result.Value .. Search'Result.Value - 1 + B'Length) =

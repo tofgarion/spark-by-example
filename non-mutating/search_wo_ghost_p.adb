@@ -1,6 +1,6 @@
 -- implementation of Search without ghost funtions
 
-package body Search_WO_Ghost_P with
+package body Search_Wo_Ghost_P with
      Spark_Mode is
 
    function Search (A : T_Arr; B : T_Arr) return Option is
@@ -27,4 +27,4 @@ package body Search_WO_Ghost_P with
       return Result;
    end Search;
 
-end Search_WO_Ghost_P;
+end Search_Wo_Ghost_P;
