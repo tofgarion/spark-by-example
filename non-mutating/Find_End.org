@@ -10,7 +10,7 @@
    ~Find_End~ will return an option containing the *last valid* index
    ~I~ of ~A~ such that ~A (I .. I + B'Length -1 ) = B~ if it exists.
 
-*** The predicate Has_Sub_Range_In_Postfix
+*** The predicate Has_Subrange_In_Postfix
 
     The ~Find_End~ function is quite similar to the [[Search.org][Search]] function,
     since they both have to find the same thing, the main difference
@@ -19,10 +19,10 @@
     finding the last. For this reason the specification of ~Find_End~
     will re-use many of the ghost functions used in the specification
     of ~Search~. We still need to add one new ghost function:
-    ~Has_Sub_Range_In_Postfix~
+    ~Has_Subrange_In_Postfix~
 
     #+BEGIN_SRC ada
-     function Has_Sub_Range_In_Postfix
+     function Has_Subrange_In_Postfix
        (A     : T_Arr;
 	Index : Integer;
 	B     : T_Arr) return Boolean is
@@ -47,14 +47,14 @@
            Contract_Cases =>
            (B'Length = 0 => not Find_End'Result.Exists,
             A'Length < B'Length => not Find_End'Result.Exists,
-            A'Length >=B'Length and then Has_Sub_Range(A,B) =>
+            A'Length >=B'Length and then Has_Subrange(A,B) =>
               Find_End'Result.Exists
               and then Equal_Subrange(A, Find_End'Result.Value , B)
               and then
               (if
                  Find_End'Result.Value < A'Last-B'Length+1
                  then
-                   (not Has_Sub_Range_In_Postfix(A, Find_End'Result.Value+1,B))),
+                   (not Has_Subrange_In_Postfix(A, Find_End'Result.Value+1,B))),
              others  => not Find_End'Result.Exists);
     #+END_SRC
 
@@ -101,7 +101,7 @@
                                     and then (if Result.Value<I
                                                 then (for all J in Result.Value+1 .. I => not Equal_Subrange(A,J,B))
                                                 else True)
-                                    else not Has_Sub_Range_In_Prefix(A,I,B));
+                                    else not Has_Subrange_In_Prefix(A,I,B));
          end loop;
 
          return Result;
@@ -136,13 +136,13 @@
 
     #+BEGIN_SRC ada
       if Result.Value <I
-        then (not Has_Sub_Range(A (Result.Value+1 .. I-1+B'Length), B))
+        then (not Has_Subrange(A (Result.Value+1 .. I-1+B'Length), B))
         else True
     #+END_SRC
 
     This approach, while being easier to read and understand for
     humans, does not work. Indeed, all the solvers (CVC4, Z3 and
-    AltErgo) fail to prove the negation of ~Has_Sub_Range~.
+    AltErgo) fail to prove the negation of ~Has_Subrange~.
 
 # Local Variables:
 # ispell-dictionary : "english"
