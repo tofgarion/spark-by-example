@@ -89,7 +89,7 @@ Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
 ** Find_End
    :PROPERTIES:
    :Status:   Finished
-   :Level:       1
+   :Level:    1
    :Assigned_To: Léo Creuse
    :END:
 
@@ -98,9 +98,9 @@ Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
 
 ** Count
    :PROPERTIES:
-   :Status:      Not started yet
-   :Level:
-   :Assigned_To:
+   :Status:   Finished
+   :Level:    1
+   :Assigned_To: Joffrey
    :END:
 
    - no particular problem using axiomatic definition of Occ (see
