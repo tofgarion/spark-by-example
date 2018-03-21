@@ -31,7 +31,7 @@ package body Find_End_P with
                  (for all J in Result.Value + 1 .. I =>
                     not Equal_Subrange (A, J, B))
                else True)
-            else not Has_Sub_Range_In_Prefix (A, I, B));
+            else not Has_Subrange_In_Prefix (A, I, B));
 
       end loop;
 

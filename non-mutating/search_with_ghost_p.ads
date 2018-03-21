@@ -3,7 +3,7 @@ with Types; use Types;
 package Search_With_Ghost_P with
      Spark_Mode is
 
-   function Has_Sub_Range
+   function Has_Subrange
      (A : T_Arr;
       B : T_Arr) return Boolean is
      (for some J in A'First .. A'Last + 1 - B'Length =>
@@ -16,7 +16,7 @@ package Search_With_Ghost_P with
       Contract_Cases =>
       (B'Length = 0 => not Search'Result.Exists,
        A'Length < B'Length => not Search'Result.Exists,
-       A'Length >= B'Length and then Has_Sub_Range (A, B) =>
+       A'Length >= B'Length and then Has_Subrange (A, B) =>
          Search'Result.Exists
          and then
            A (Search'Result.Value .. Search'Result.Value - 1 + B'Length) =
@@ -25,7 +25,7 @@ package Search_With_Ghost_P with
          (if
             Search'Result.Value > A'First
           then
-            (not Has_Sub_Range
+            (not Has_Subrange
                (A (A'First .. Search'Result.Value + B'Length - 2),
                 B))),
        others => not Search'Result.Exists);

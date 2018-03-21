@@ -17,7 +17,7 @@ package body Search_P with
             return Result;
          end if;
 
-         pragma Loop_Invariant (not Has_Sub_Range_In_Prefix (A, I, B));
+         pragma Loop_Invariant (not Has_Subrange_In_Prefix (A, I, B));
          pragma Loop_Invariant (not Result.Exists);
          pragma Loop_Variant (Increases => I);
 

@@ -1,10 +1,10 @@
--- The Has_Sub_Range function function is used to specify if an array
+-- The Has_Subrange function function is used to specify if an array
 -- is a subrange of another one.
 
 with Types;          use Types;
 with Equal_Ranges_P; use Equal_Ranges_P;
 
-package Has_Sub_Range_P with
+package Has_Subrange_P with
      Spark_Mode,
      Ghost is
 
@@ -17,7 +17,7 @@ package Has_Sub_Range_P with
       and then A'Last < Positive'Last
       and then J in A'First .. A'Last + 1 - B'Length;
 
-   function Has_Sub_Range_In_Prefix
+   function Has_Subrange_In_Prefix
      (A    : T_Arr;
       Last : Integer;
       B    : T_Arr) return Boolean is
@@ -26,13 +26,13 @@ package Has_Sub_Range_P with
       and then A'Last < Positive'Last
       and then Last <= A'Last + 1 - B'Length;
 
-   function Has_Sub_Range
+   function Has_Subrange
      (A : T_Arr;
       B : T_Arr) return Boolean is
-     (Has_Sub_Range_In_Prefix (A, A'Last - B'Length + 1, B)) with
+     (Has_Subrange_In_Prefix (A, A'Last - B'Length + 1, B)) with
       Pre => A'Length >= B'Length and then A'Last < Positive'Last;
 
-   function Has_Sub_Range_In_Postfix
+   function Has_Subrange_In_Postfix
      (A     : T_Arr;
       Index : Integer;
       B     : T_Arr) return Boolean is
@@ -43,4 +43,4 @@ package Has_Sub_Range_P with
       and then Index <= A'Last - B'Length + 1
       and then Index >= A'First;
 
-end Has_Sub_Range_P;
+end Has_Subrange_P;
