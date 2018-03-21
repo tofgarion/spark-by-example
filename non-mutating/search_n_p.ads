@@ -10,9 +10,10 @@ package Search_N_P with
       Pre  => A'First <= A'Last and then A'Last < Positive'Last,
       Post =>
       (if
-         Search_N'Result.Exists
+         Has_Constant_Subrange (A, Val, N)
        then
-         Search_N'Result.Value >= A'First
+         Search_N'Result.Exists
+         and then Search_N'Result.Value >= A'First
          and then Search_N'Result.Value <= A'Last - N + 1
          and then Constant_Range_From_Location
            (A,
@@ -27,5 +28,6 @@ package Search_N_P with
               (A (A'First .. Search_N'Result.Value - 1),
                Val,
                N))
-       else not Has_Constant_Subrange (A, Val, N));
+       else not Search_N'Result.Exists);
+
 end Search_N_P;
