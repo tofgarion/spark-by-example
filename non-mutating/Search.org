@@ -1,7 +1,7 @@
 ** The Search algorithm
 
    The ~Search~ algorithm finds a subsequence in an array identical
-   to a given sequence. Its signature can be expressed as:
+   to a given sequence. Its signature can be defined as:
 
    #+BEGIN_SRC ada
      function Search (A : T_Arr; B : T_Arr) return Option
@@ -13,9 +13,9 @@
 *** A first version of Search without ghost functions for specification
 
     We will first specify and implement ~Search~ without using ghost
-    functions: we will see using ghost functions to factorize
-    specification as usual is not trivial in this case (this is mainly
-    due to the solvers).
+    functions: we will see in the next sections that using ghost
+    functions to factorize specification as usual is not trivial in
+    this case (this is mainly due to limitations of the SMT solvers).
 
 **** Specification of Search without ghost functions
 
@@ -102,16 +102,15 @@
      - the loop variant is again ~I~
 
      When using ~gnatprove~ on ~Search~, all the assertions are
-     proved. Notice that the invariant preservation VC and the
-     contract case VC are the most difficult to prove and take some
-     time.
+     proved. Notice that proving the invariant preservation VC and the
+     contract case VC is difficult and takes some time.
 
 *** A version of Search with ghost functions: first try
 
     We will now try to define a predicate to represent the main
     property, i.e., the fact that ~B~ is a subsequence of ~A~. We will
     see in the following that using this ghost function does not
-    permit to prove ~Search~.
+    permit to prove ~Search~ with the SMT solvers used in the project.
 
 **** The predicate Has_Sub_Range
 
@@ -148,8 +147,6 @@
           (B'Length = 0        => not Search'Result.Exists,
            A'Length < B'Length => not Search'Result.Exists,
            A'Length >= B'Length and then
-           --  (for some J in A'First .. A'Last - B'Length + 1 =>
-           --     A (J .. J - 1 + B'Length) = B) =>
            Has_Sub_Range(A, B) =>
              Search'Result.Exists
              and then
@@ -278,8 +275,8 @@
      #+END_SRC
 
      The previously defined functions are now used in the
-     specification. Notice that no more slices or quantifiers are
-     appearing directly.
+     specification. Notice that slices or quantifiers do not appear
+     directly in the specification.
 
 **** Implementation of Search
 
@@ -310,7 +307,7 @@
        end Search;
      #+END_SRC
 
-     Everything is now proved by ~gnatprove~.
+     Everything is now proved by ~gnatprove~ (using a timeout of 30s).
 
 # Local Variables:
 # ispell-dictionary: "english"
