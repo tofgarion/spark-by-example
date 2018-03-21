@@ -12,6 +12,7 @@ SPEC_EQUAL_MISMATCH    = ../spec/equal_ranges_p.ads $(SPEC_TYPES)
 SPEC_SEARCH_WO_GHOST   = $(SPEC_TYPES)
 SPEC_SEARCH_WITH_GHOST = $(SPEC_TYPES)
 SPEC_SEARCH            = ../spec/has_sub_range_p.ads $(SPEC_TYPES)
+SPEC_SEARCH_N          = ../spec/has_constant_subrange_p.ads $(SPEC_TYPES)
 
 # level for each function
 LEVEL_NAIVE_FIND        = 0
@@ -24,7 +25,8 @@ LEVEL_EQUAL             = 1
 LEVEL_EQUAL_REV         = 1
 LEVEL_SEARCH_WO_GHOST   = 4
 LEVEL_SEARCH_WITH_GHOST = 4
-LEVEL_SEARCH            = 4
+LEVEL_SEARCH            = 1
+LEVEL_SEARCH_N          = 1
 
 # specific timeouts
 TIMEOUT_SEARCH_WO_GHOST   = "TIMEOUT=10"
@@ -34,7 +36,8 @@ TIMEOUT_SEARCH            = "TIMEOUT=30"
 include ../Makefile
 
 .PHONY: naive_find naive_find_contract_pb find find_first_of adjacent_find \
-	mismatch equal equal_rev
+	mismatch equal equal_rev search_wo_ghost search_with_ghost search \
+	search_n
 
 # Find
 naive_find: $(call GENERATE_DEP,naive_find)
@@ -71,5 +74,9 @@ search_wo_ghost: $(call GENERATE_DEP,search_wo_ghost) $(SPEC_SEARCH_WO_GHOST)
 search_with_ghost: $(call GENERATE_DEP,search_with_ghost) $(SPEC_SEARCH_WO_GHOST)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SEARCH_WITH_GHOST) $(TIMEOUT_SEARCH_WITH_GHOST)
 
-search: $(call GENERATE_DEP,search_wo_ghost) $(SPEC_SEARCH)
+search: $(call GENERATE_DEP,search) $(SPEC_SEARCH)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SEARCH) $(TIMEOUT_SEARCH)
+
+# Search_N
+search_n: $(call GENERATE_DEP,search_n) $(SPEC_SEARCH_N)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SEARCH_N) $(NON_MUTATING_DEFAULT_TIMEOUT)
