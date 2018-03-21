@@ -7,11 +7,9 @@ package Search_N_P with
      Spark_Mode is
 
    function Search_N (A : T_Arr; Val : T; N : Positive) return Option with
-      Pre  => A'First <= A'Last and then A'Last < Positive'Last,
-      Post =>
-      (if
-         Has_Constant_Subrange (A, Val, N)
-       then
+      Pre            => A'First <= A'Last and then A'Last < Positive'Last,
+      Contract_Cases =>
+      (Has_Constant_Subrange (A, Val, N) =>
          Search_N'Result.Exists
          and then Search_N'Result.Value >= A'First
          and then Search_N'Result.Value <= A'Last - N + 1
@@ -27,7 +25,7 @@ package Search_N_P with
             not Has_Constant_Subrange
               (A (A'First .. Search_N'Result.Value - 1),
                Val,
-               N))
-       else not Search_N'Result.Exists);
+               N)),
+       others => not Search_N'Result.Exists);
 
 end Search_N_P;
