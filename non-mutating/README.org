@@ -6,54 +6,49 @@
   ~Count~. As usual, ghost functions used in specification are located
   in the ~spec~ directory at project root.
 
-  Each function is specified and defined in its own
-  files. Specifications and implementations are defined in
-  packages. To avoid name clashes with functions, packages names have
-  a ~_P~ suffixes, hence the file names.
-
-  The functions are the corresponding files are presented in the
+  The functions and the corresponding files are presented in the
   following table (click on the link to have more details one the
   specification/implementation of each function):
 
-  | function           | files                                 | comments                                                             |
-  |--------------------+---------------------------------------+----------------------------------------------------------------------|
-  | [[./Find.org][Find]]               | ~naive_find_p.ads~                    | a first naive version of ~Find~                                      |
-  |                    | ~naive_find_p.adb~                    |                                                                      |
-  |                    | ~naive_find_contract_pb.ads~          | a simple example of contract non completeness/disjointedness         |
-  |                    | ~../spec/has_value_p.ads~             | the specification of the ~Has_Value~ predicate                       |
-  |                    | ~find_p.ads~                          | the final version of ~Find~                                          |
-  |                    | ~find_p.adb~                          |                                                                      |
-  |--------------------+---------------------------------------+----------------------------------------------------------------------|
-  | [[./Find_First_Of.org][Find_First_Of]]      | ~../spec/has_value_of_p.ads~          |                                                                      |
-  |                    | ~find_first_of_p.ads~                 |                                                                      |
-  |                    | ~find_first_of_p.adb~                 |                                                                      |
-  |--------------------+---------------------------------------+----------------------------------------------------------------------|
-  | [[./Adjacent_Find.org][Adjacent_Find]]      | ~../spec/has_equal_neighbors_p.ads~   |                                                                      |
-  |                    | ~adjacent_find_p.ads~                 |                                                                      |
-  |                    | ~adjacent_find_p.adb~                 |                                                                      |
-  |--------------------+---------------------------------------+----------------------------------------------------------------------|
-  | [[./Equal_Mismatch.org][Equal and Mismatch]] | ~../spec/equal_ranges_p.ads~          |                                                                      |
-  |                    | ~mismatch_p.ads~                      |                                                                      |
-  |                    | ~mismatch_p.adb~                      |                                                                      |
-  |                    | ~equal_p.ads~                         |                                                                      |
-  |                    | ~equal_p.adb~                         |                                                                      |
-  |                    | ~equal_rev_p.ads~                     | another specification and implementation of Equal                    |
-  |--------------------+---------------------------------------+----------------------------------------------------------------------|
-  | [[Search.org][Search]]             | ~search_wo_ghost.ads~                 | a first specification and implementation without ghost functions     |
-  |                    | ~search_wo_ghost.adb~                 |                                                                      |
-  |                    | ~search_with_ghost.ads~               | a try to "naively" use ghost functions                               |
-  |                    | ~search_with_ghost.adb~               |                                                                      |
-  |                    | ~../spec/has_sub_range_p.ads~         | the correct specification and implementation (thanks to Yannick Moy) |
-  |                    | ~search_p.ads~                        |                                                                      |
-  |                    | ~search_p.adb~                        |                                                                      |
-  |--------------------+---------------------------------------+----------------------------------------------------------------------|
-  | [[./Search_N.org][Search_N]]           | ~../spec/has_constant_subrange_p.ads~ |                                                                      |
-  |                    | ~search_n_p.ads~                      |                                                                      |
-  |                    | ~search_n_p.adb~                      |                                                                      |
-  |--------------------+---------------------------------------+----------------------------------------------------------------------|
-  | [[Find_End.org][Find_End]]           | ~find_end_p.ads~                      |                                                                      |
-  |                    | ~find_end_p.adb~                      |                                                                      |
-  |--------------------+---------------------------------------+----------------------------------------------------------------------|
+  | function           | files                                 | comments                                                               |
+  |--------------------+---------------------------------------+------------------------------------------------------------------------|
+  | [[./Find.org][Find]]               | ~naive_find_p.ads~                    | a first naive version of ~Find~                                        |
+  |                    | ~naive_find_p.adb~                    |                                                                        |
+  |                    | ~naive_find_contract_pb.ads~          | a simple example of contract with completeness/disjointedness problems |
+  |                    | ~../spec/has_value_p.ads~             | the specification of the ~Has_Value~ predicate                         |
+  |                    | ~find_p.ads~                          | the final version of ~Find~                                            |
+  |                    | ~find_p.adb~                          |                                                                        |
+  |--------------------+---------------------------------------+------------------------------------------------------------------------|
+  | [[./Find_First_Of.org][Find_First_Of]]      | ~../spec/has_value_of_p.ads~          |                                                                        |
+  |                    | ~find_first_of_p.ads~                 |                                                                        |
+  |                    | ~find_first_of_p.adb~                 |                                                                        |
+  |--------------------+---------------------------------------+------------------------------------------------------------------------|
+  | [[./Adjacent_Find.org][Adjacent_Find]]      | ~../spec/has_equal_neighbors_p.ads~   |                                                                        |
+  |                    | ~adjacent_find_p.ads~                 |                                                                        |
+  |                    | ~adjacent_find_p.adb~                 |                                                                        |
+  |--------------------+---------------------------------------+------------------------------------------------------------------------|
+  | [[./Equal_Mismatch.org][Equal and Mismatch]] | ~../spec/equal_ranges_p.ads~          |                                                                        |
+  |                    | ~mismatch_p.ads~                      |                                                                        |
+  |                    | ~mismatch_p.adb~                      |                                                                        |
+  |                    | ~equal_p.ads~                         |                                                                        |
+  |                    | ~equal_p.adb~                         |                                                                        |
+  |                    | ~equal_rev_p.ads~                     | another specification and implementation of Equal                      |
+  |--------------------+---------------------------------------+------------------------------------------------------------------------|
+  | [[Search.org][Search]]             | ~search_wo_ghost.ads~                 | a first specification and implementation without ghost functions       |
+  |                    | ~search_wo_ghost.adb~                 |                                                                        |
+  |                    | ~search_with_ghost.ads~               | a try to "naively" use ghost functions                                 |
+  |                    | ~search_with_ghost.adb~               |                                                                        |
+  |                    | ~../spec/has_sub_range_p.ads~         | the correct specification and implementation (thanks to Yannick Moy)   |
+  |                    | ~search_p.ads~                        |                                                                        |
+  |                    | ~search_p.adb~                        |                                                                        |
+  |--------------------+---------------------------------------+------------------------------------------------------------------------|
+  | [[./Search_N.org][Search_N]]           | ~../spec/has_constant_subrange_p.ads~ |                                                                        |
+  |                    | ~search_n_p.ads~                      |                                                                        |
+  |                    | ~search_n_p.adb~                      |                                                                        |
+  |--------------------+---------------------------------------+------------------------------------------------------------------------|
+  | [[Find_End.org][Find_End]]           | ~find_end_p.ads~                      |                                                                        |
+  |                    | ~find_end_p.adb~                      |                                                                        |
+  |--------------------+---------------------------------------+------------------------------------------------------------------------|
 
 # Local Variables:
 # ispell-dictionary: "english"
