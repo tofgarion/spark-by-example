@@ -38,7 +38,7 @@ TIMEOUT_SEARCH_WITH_GHOST = "TIMEOUT=60"
 TIMEOUT_SEARCH            = "TIMEOUT=30"
 TIMEOUT_FIND_END          = "TIMEOUT=60"
 
-include ../Makefile
+include ../Makefile-common
 
 .PHONY: naive_find naive_find_contract_pb find find_first_of adjacent_find \
 	mismatch equal equal_rev search_wo_ghost search_with_ghost search \
