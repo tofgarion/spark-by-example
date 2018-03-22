@@ -25,6 +25,7 @@ package Remove_Copy_With_Aux_P with
         (Remove_Last (A),
          B (B'First .. J - 1),
          Val)
+      and then B'Last >= Remove_Count (A, Val) - A'First + B'First
       and then Remove_Mapping (A (A'First .. A'Last - 1), B, Val),
       Post => J = B'First + Remove_Count (A, Val) - A'First
       and then not Has_Value (B (B'First .. J - 1), Val)

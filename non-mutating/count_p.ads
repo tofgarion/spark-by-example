@@ -7,7 +7,7 @@ package Count_P with
    function Count (A : T_Arr; Val : T) return Natural with
       Post =>
       (Count'Result <= A'Length
-       and then 0 <= Count'Result
+       and then Count'Result in 0 .. A'Length
        and then Count'Result = Occ (A, Val));
 
 end Count_P;

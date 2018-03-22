@@ -2,33 +2,36 @@ package body Remove_Copy_P with
      Spark_Mode is
 
    procedure Remove_Copy (A : in T_Arr; B : in out T_Arr; Val : T) is
-      J : Integer := B'First;
+      K : Integer := B'First;
    begin
-      for I in A'Range loop
-         if A (I) /= Val then
-            --pragma Assert(Multiset_Retain_Rest(A (A'First .. I - 1), B( B'First .. J-1), Val));
-            B (J) := A (I);
-            J     := J + 1;
-            --pragma Assert(Count (A(A'First .. I), A(I)) = Count (B(B'First .. J-1), A(I)));
-            --pragma Assert(Multiset_Retain_Rest(A (A'First .. I), B(B'First .. J-1), Val));
-         end if;
+      if B'Length > 0 then
+         for J in A'Range loop
 
-         pragma Loop_Invariant (J in B'First .. B'Last + 1);
-         pragma Loop_Invariant
-           (J = B'First - A'First + Remove_Count (A (A'First .. I), Val) + 1);
-         pragma Loop_Invariant
-           (if J = B'First then (for all K in A'First .. I => A (K) = Val));
-         pragma Loop_Invariant
-           (if
-              J > B'First
-            then
-              Multiset_Retain_Rest
-                (A (A'First .. I),
-                 B (B'First .. J - 1),
-                 Val));
-         pragma Loop_Invariant (for all K in B'First .. J - 1 => B (K) /= Val);
-        pragma Loop_Invariant
-          (Remove_Mapping (A (A'First .. I), B , Val));
-      end loop;
+            if A (J) /= Val then
+               B (K) := A (J);
+               K     := K + 1;
+            end if;
+
+            pragma Loop_Invariant (K in B'First .. B'Last + 1);
+            pragma Loop_Invariant
+              (K =
+               B'First + Remove_Count (A (A'First .. J), Val) + 1);
+           pragma Loop_Invariant
+             (if K = B'First then (for all L in A'First .. J => A (L) = Val));
+            pragma Loop_Invariant
+              (if
+                 K > B'First
+		 then
+	    --  Remove_Mapping(A(A'First .. J), B(B'First .. K-1), Val) and then
+	      Multiset_Retain_Rest
+                   (A (A'First .. J),
+                    B (B'First .. K - 1),
+                    Val));
+	    pragma Loop_Invariant(if K > B'First then Remove_Mapping(A(A'First .. J),B(B'First .. K-1),Val));
+            pragma Loop_Invariant
+              (for all L in B'First .. K - 1 => B (L) /= Val);
+         end loop;
+      end if;
+
    end Remove_Copy;
 end Remove_Copy_P;
