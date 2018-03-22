@@ -49,11 +49,11 @@ The postcondition ensures that ~A~ is indeed reversed at the end of the procedur
 There are a few things to point out here:
 - ~Half~ is calculated so that when ~A~ if of odd length then we do not try to swap the middle value with itself. This helps avoid aliasing issues.
 - The first loop invariant specifies that the array remains unchanged in the ~A'Length-2*I~ middle indexes, which the algorithm has not yet covered at iteration ~I~
-- The two other invariants specifiy that the sub-arrays A(A'First .. A'First + I) and A(A'Last - I .. A'Last) are reversed compared to the arrays before entering the loop.
+- The two other invariants specify that the sub-arrays ~A(A'First .. A'First + I)~ and ~A(A'Last - I .. A'Last)~ are reversed compared to the arrays before entering the loop.
 
 With this implementation ~gnatprove~ manages to prove everything but one thing: it cannot verify that ~A(A'First + I)~ and ~A(A'Last - I)~ are not alised (see [[http://docs.adacore.com/spark2014-docs/html/lrm/subprograms.html#anti-aliasing][SPARK reference manual section 6.4.2]]). 
 Indeed, if ~A'Firs+I = A'Last-I~ then there could be aliasing issue, but we took care of that by ranging I from 0 to Half -A'First. One can add the assertion ~pragma Assert(A'First + I /= A'Last - I);~ in the loop,
-but this assertion is prooved, so we are sure that the aliasing does not come from equal indexes.
+but this assertion is proved, so we are sure that the aliasing does not come from equal indexes.
 
 **** Avoiding the aliasing
 

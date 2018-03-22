@@ -2,7 +2,7 @@
 
    The ~Fill~ algorithm initializes an array with a particular value.
    Its signature reads:
-   ~ procedure Fill (A : in out T_Arr; Val : T) ~
+   ~procedure Fill (A : in out T_Arr; Val : T)~
 
    ~A~ needs to be passed as an ~in~ parameter because we are going to
    use the function ~Constant_Range_From_Location~ on ~A~. (see Implementation)

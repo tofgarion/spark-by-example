@@ -1,7 +1,7 @@
 ** The Replace algorithm
 
    The ~replace~ algorithm replaces all the occurences of a value ~V~ with another value ~W~.
-   It is the same as ~replace_copy~ except for the fact that it does it in the same array.
+   It is the same as [[Replace_Copy.org][Replace_Copy]] except for the fact that it does it in the same array.
    Its signature reads:
    ~procedure Replace ( A : in out T_Arr; Val : T ; Rep : T)~
 

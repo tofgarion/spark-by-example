@@ -1,6 +1,6 @@
 ** The Reverse_Copy algorithm
 
-The ~Reverse_Copy~ algorithm inverts the order of the elements of a given array ~A~ in another array ~B~ without modifing ~A~.
+The ~Reverse_Copy~ algorithm inverts the order of the elements of a given array ~A~ in another array ~B~ without modifying ~A~.
 Its signature reads:
 
 #+BEGIN_SRC ada 
@@ -23,7 +23,7 @@ wether the elements of ~A~ are in reverse order of those of ~B~, i.e. ~A(A'Last)
  
 *** Specification of Reverse_Copy
 
-~Reverse_Copy can be specified as follows :
+~Reverse_Copy~ can be specified as follows :
 
 #+BEGIN_SRC ada 
 procedure Reverse_Copy
