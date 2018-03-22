@@ -3,7 +3,8 @@ with Types; use Types;
 package Acc_Def_P with
      Spark_Mode,
      Ghost is
-
+   
+   
    function Acc_Def_Rec
      (A    : T_Arr;
       Init : T) return T is

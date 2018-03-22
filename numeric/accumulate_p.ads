@@ -6,7 +6,7 @@ package Accumulate_P with
   SPARK_Mode is
    
    function Accumulate(A : T_Arr; Init : T) return T with
-     Pre => Acc_No_Overflow(A,Init),
+     Pre => (for all I in A'Range => Acc_Def(A(A'First ..I),Init) in T),
      Post => Accumulate'Result = Acc_Def(A,Init);
    
 end Accumulate_P;
