@@ -1,22 +1,28 @@
 package body Shuffle_Lemmas with
   SPARK_Mode is
    
+   
+   procedure Occ_Union
+     (A : T_Arr;
+      B : T_Arr;
+      Concat : T_Arr;
+      V : T) is
+   begin
+      null;
+   end Occ_Union;
+   
+   
    procedure Swap_Multiset_Inv_Lemma
      (A : T_Arr;
       B : T_Arr;
       I : Positive;
       J : Positive) is
+      
    begin
-      pragma Assume(Multiset_Unchanged(A,B));
+      null;
    end Swap_Multiset_Inv_Lemma;
    
-    procedure Multiset_Transitivity_Lemma
-      (A : T_Arr;
-       B : T_Arr;
-       C : T_Arr) is
-    begin
-       pragma Assume(Multiset_Unchanged(A,C));
-    end Multiset_Transitivity_Lemma;
-    
+   
+       
    
 end Shuffle_Lemmas;

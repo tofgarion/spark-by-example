@@ -18,7 +18,10 @@ package body Random_Shuffle_P with
 	A:= Swap_Array(A,I,J);
 	-- Swap(A(I),A(J));
 	Swap_Multiset_Inv_Lemma(Tmp,A,I,J);
-	Multiset_Transitivity_Lemma(Init,Tmp,A);
+	if A'Length >=1 then
+	   pragma Assert(for all J in A'Range => A = A(A'First .. J-1) & A(J .. A'Last));
+	end if;
+	
 	pragma Loop_Invariant(Multiset_Unchanged(Tmp,A));
 	pragma Loop_Invariant(Multiset_Unchanged(Init,Tmp));
 	--pragma Loop_Invariant(Multiset_Unchanged(A(A'First .. I),A'Loop_Entry(A'First .. I)));
