@@ -13,8 +13,8 @@ package Remove_Mapping_P with
         (if
            A (I) /= Val
          then
-           B (B'First+Remove_Count(A(A'First .. I), Val)) =
-           A (I))) with
-       Pre => A'Length > 0 and then B'Length > 0 and then
-       B'Last = B'First + Remove_Count(A,Val);
+           B (B'First + Remove_Count (A (A'First .. I), Val)) = A (I))) with
+      Pre => A'Length > 0
+      and then B'Length > 0
+      and then B'Last = B'First + Remove_Count (A, Val);
 end Remove_Mapping_P;
