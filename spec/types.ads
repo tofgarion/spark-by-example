@@ -2,12 +2,9 @@
 
 package Types is
    type T is new Integer;
-<<<<<<< HEAD
+   
    type T_Arr is array (Natural range <>) of T;
-=======
-   type T_Arr is array (Positive range <>) of T;
-   type H_Arr is array (Natural range <>) of T;
->>>>>>> f956d53fcf9eb5ec9f236ade37efe40f4ef49769
+
    MAX_SIZE : constant Positive := 1000;
 
    type Option (Exists : Boolean := False) is record
