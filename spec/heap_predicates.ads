@@ -11,7 +11,7 @@ package Heap_Predicates with
    function Heap_Parent(I : Natural) return Natural is ((I-1)/2);
    
    function Is_Heap_Def(H : Heap) return Boolean is
-      (H.Size = 0 or else (for all I in 1 .. H.Size => H.A(I) <= H.A(Heap_Parent(I))));
+      (H.Size = 0 or else (for all I in 1 .. H.Size-1 => H.A(I) <= H.A(Heap_Parent(I))));
       
 end Heap_Predicates;
 
