@@ -4,7 +4,7 @@ package Types is
    type T is new Integer;
    type T_Arr is array (Positive range <>) of T;
    type H_Arr is array (Natural range <>) of T;
-   type MAX_SIZE is constant Positive := 1000;
+   MAX_SIZE : constant Positive := 1000;
 
    type Option (Exists : Boolean := False) is record
       case Exists is
