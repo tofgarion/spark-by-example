@@ -1,4 +1,4 @@
---implemenation if Find_end
+-- implementation of Find_End
 
 package body Find_End_P with
      Spark_Mode is
@@ -28,8 +28,7 @@ package body Find_End_P with
               (if
                  Result.Value < I
                then
-                 (for all J in Result.Value + 1 .. I =>
-                    not Equal_Subrange (A, J, B))
+                 (Has_Not_Subrange_In_Prefix (A, Result.Value + 1, I, B))
                else True)
             else not Has_Subrange_In_Prefix (A, I, B));
 

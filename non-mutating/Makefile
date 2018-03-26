@@ -11,9 +11,9 @@ SPEC_ADJACENT_FIND     = ../spec/has_equal_neighbors_p.ads $(SPEC_TYPES)
 SPEC_EQUAL_MISMATCH    = ../spec/equal_ranges_p.ads $(SPEC_TYPES)
 SPEC_SEARCH_WO_GHOST   = $(SPEC_TYPES)
 SPEC_SEARCH_WITH_GHOST = $(SPEC_TYPES)
-SPEC_SEARCH            = ../spec/has_sub_range_p.ads $(SPEC_TYPES)
+SPEC_SEARCH            = ../spec/has_subrange_p.ads $(SPEC_TYPES)
 SPEC_SEARCH_N          = ../spec/has_constant_subrange_p.ads $(SPEC_TYPES)
-SPEC_FIND_END          = ../spec/has_sub_range_p.ads $(SPEC_TYPES)
+SPEC_FIND_END          = ../spec/has_subrange_p.ads $(SPEC_TYPES)
 SPEC_COUNT             = ../spec/occ_p.ads $(SPEC_TYPES)
 
 # level for each function
@@ -29,14 +29,13 @@ LEVEL_SEARCH_WO_GHOST   = 4
 LEVEL_SEARCH_WITH_GHOST = 4
 LEVEL_SEARCH            = 1
 LEVEL_SEARCH_N          = 1
-FIND_END                = 1
-COUNT                   = 0
+LEVEL_FIND_END          = 1
+LEVEL_COUNT             = 0
 
 # specific timeouts
 TIMEOUT_SEARCH_WO_GHOST   = "TIMEOUT=10"
 TIMEOUT_SEARCH_WITH_GHOST = "TIMEOUT=60"
 TIMEOUT_SEARCH            = "TIMEOUT=30"
-TIMEOUT_FIND_END          = "TIMEOUT=60"
 
 # all proof targets
 ALL_PROOF_TARGETS = naive_find naive_find_contract_pb find find_first_of adjacent_find \
@@ -91,7 +90,7 @@ search_n: $(call GENERATE_DEP,search_n) $(SPEC_SEARCH_N)
 
 # Find_End
 find_end: $(call GENERATE_DEP,find_end) $(SPEC_FIND_END)
-	make prove FILE=$@_p.adb LEVEL=$(LEVEL_FIND_END) $(TIMEOUT_FIND_END)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_FIND_END) $(NON_MUTATING_DEFAULT_TIMEOUT)
 
 # Count
 count: $(call GENERATE_DEP,count) $(SPEC_COUNT)
