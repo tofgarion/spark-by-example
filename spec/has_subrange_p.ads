@@ -10,7 +10,7 @@ package Has_Subrange_P with
 
    function Equal_Subrange
      (A     : T_Arr;
-      Start : Integer;
+      Start : Positive;
       B     : T_Arr) return Boolean is
      (A (Start .. Start - 1 + B'Length) = B) with
       Pre => A'Length >= B'Length
@@ -19,7 +19,7 @@ package Has_Subrange_P with
 
    function Has_Subrange_In_Prefix
      (A    : T_Arr;
-      Last : Integer;
+      Last : Positive;
       B    : T_Arr) return Boolean is
      (for some J in A'First .. Last => Equal_Subrange (A, J, B)) with
       Pre => A'Length >= B'Length
@@ -29,7 +29,7 @@ package Has_Subrange_P with
    function Has_Not_Subrange_In_Prefix
      (A     : T_Arr;
       Start : Positive;
-      Last  : Integer;
+      Last  : Positive;
       B     : T_Arr) return Boolean is
      (for all J in Start .. Last => not Equal_Subrange (A, J, B)) with
       Pre => A'Length >= B'Length
@@ -40,12 +40,14 @@ package Has_Subrange_P with
    function Has_Subrange
      (A : T_Arr;
       B : T_Arr) return Boolean is
-     (Has_Subrange_In_Prefix (A, A'Last - B'Length + 1, B)) with
-      Pre => A'Length >= B'Length and then A'Last < Positive'Last;
+     (Has_Subrange_In_Prefix (A, A'Last + 1 - B'Length, B)) with
+      Pre => A'Length > 0
+      and then A'Length >= B'Length
+      and then A'Last < Positive'Last;
 
    function Has_Subrange_In_Postfix
      (A     : T_Arr;
-      Index : Integer;
+      Index : Positive;
       B     : T_Arr) return Boolean is
      (for some J in Index .. A'Last - B'Length + 1 =>
         Equal_Subrange (A, J, B)) with
