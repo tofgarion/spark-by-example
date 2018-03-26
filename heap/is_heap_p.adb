@@ -13,7 +13,7 @@ package body Is_Heap_P with
 	    
 	    pragma Loop_Invariant(0 <= Parent and then Parent < Child and then Child <= H.Size);
 	    pragma Loop_Invariant(Parent = Heap_Parent(Child));
-	    pragma Loop_Invariant(Is_Heap_Def((A => H.A, Size=>Child)));	    
+	    pragma Loop_Invariant(Is_Heap_Def((A => H.A, Size=>Child+1)));
 	    
 	    if Child mod 2 = 0 then
 	       Parent := Parent +1;
