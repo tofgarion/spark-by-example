@@ -99,15 +99,14 @@
 
             pragma Loop_Invariant (Equal_Ranges (A, B, I));
             pragma Loop_Invariant (not Result.Exists);
-            pragma Loop_Variant (Increases => I);
          end loop;
 
          return Result;
       end Mismatch;
     #+END_SRC
 
-    The invariants and the variant are rather simple to write given
-    the predicate ~Equal_Ranges~.
+    The invariants are rather simple to write given the predicate
+    ~Equal_Ranges~.
 
 *** Specification of Equal
 

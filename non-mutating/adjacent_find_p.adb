@@ -1,4 +1,4 @@
--- implementation of Adjacent_Find
+-- implementation of Adjacent_Find.
 
 package body Adjacent_Find_P with
      Spark_Mode is
@@ -20,7 +20,6 @@ package body Adjacent_Find_P with
          pragma Loop_Invariant
            (not Has_Equal_Neighbors (A (A'First .. I + 1)));
          pragma Loop_Invariant (not Result.Exists);
-         pragma Loop_Variant (Increases => I);
       end loop;
 
       return Result;

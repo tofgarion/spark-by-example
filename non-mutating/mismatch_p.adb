@@ -15,7 +15,6 @@ package body Mismatch_P with
 
          pragma Loop_Invariant (Equal_Ranges (A, B, I));
          pragma Loop_Invariant (not Result.Exists);
-         pragma Loop_Variant (Increases => I);
       end loop;
 
       return Result;

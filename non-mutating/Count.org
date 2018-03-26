@@ -86,7 +86,6 @@
 
                pragma Loop_Invariant (Result <= A'Length);
                pragma Loop_Invariant (Result = Occ (A (A'First .. I), Val));
-               pragma Loop_Variant (Increases => I);
             end loop;
 
             return Result;

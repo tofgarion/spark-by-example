@@ -78,7 +78,6 @@
             pragma Loop_Invariant
               (not Has_Equal_Neighbors (A (A'First .. I + 1)));
             pragma Loop_Invariant (not Result.Exists);
-            pragma Loop_Variant (Increases => I);
          end loop;
 
          return Result;
@@ -91,8 +90,6 @@
       ~A~
     - the result specifies that there is no index respecting the
       expected property
-
-    The variant is classically built with the loop index.
 
 # Local Variables:
 # ispell-dictionary: "english"

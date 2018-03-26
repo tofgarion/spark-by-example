@@ -16,7 +16,6 @@ package body Find_First_Of_P with
 
          pragma Loop_Invariant (not Has_Value_Of (A (A'First .. I), B));
          pragma Loop_Invariant (not Result.Exists);
-         pragma Loop_Variant (Increases => I);
       end loop;
 
       return Result;

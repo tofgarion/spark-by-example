@@ -20,8 +20,6 @@ package body Search_Wo_Ghost_P with
          pragma Loop_Invariant
            (for all J in A'First .. I => A (J .. J - 1 + B'Length) /= B);
          pragma Loop_Invariant (not Result.Exists);
-         pragma Loop_Variant (Increases => I);
-
       end loop;
 
       return Result;

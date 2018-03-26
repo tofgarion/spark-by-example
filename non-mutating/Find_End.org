@@ -94,7 +94,6 @@
                Result := (Exists => True, Value => I);
             end if;
 
-            pragma Loop_Variant (Increases => I);
             pragma Loop_Invariant(if Result.Exists
                                     then Equal_Subrange(A,Result.Value,B)
                                     and then Result.Value in A'First .. A'Last-B'Length +1

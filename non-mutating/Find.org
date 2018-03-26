@@ -95,7 +95,6 @@
              end if;
 
              pragma Loop_Invariant (for all J in A'First .. I => A (J) /= Val);
-             pragma Loop_Variant (Increases => I);
           end loop;
 
           return A'Last + 1;
@@ -116,8 +115,16 @@
 
        You can try to remove the invariant: in this case, some
        postconditions cannot be proved.
-     - a *variant* is necessary to prove the termination of the
-       function: we simply use ~I~.
+     - a *variant* should be necessary to prove the termination of the
+       function with the following pragma:
+
+       #+BEGIN_SRC ada
+         pragma Loop_Variant (Increases => I);
+       #+END_SRC
+
+       As in SPARK every ~for~ loop terminates, such a variant is not
+       needed here (but it would be necessary with a ~while~ loop or a
+       plain loop).
 
      When using ~gnatprove~ on the body of ~Find~, the contract is
      proved, but a range check and an overflow check performed by
@@ -220,7 +227,6 @@
 
              pragma Loop_Invariant (not Has_Value (A (A'First .. I), Val));
              pragma Loop_Invariant (not Result.Exists);
-             pragma Loop_Variant (Increases => I);
           end loop;
 
           return Result;

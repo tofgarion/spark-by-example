@@ -16,7 +16,6 @@ package body Find_End_P with
 
          end if;
 
-         pragma Loop_Variant (Increases => I);
          pragma Loop_Invariant
            (if
               Result.Exists
