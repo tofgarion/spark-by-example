@@ -25,6 +25,7 @@ package Heap_Predicates with
    function Is_Heap_Def(H : Heap) return Boolean 
    is
       (H.Size <= H.A'Last
+
       and then (H.Size = 0 or else (for all I in 2 .. H.Size => H.A(I) <= H.A(Heap_Parent(I)))));
        
       
