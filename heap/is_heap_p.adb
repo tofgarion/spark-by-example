@@ -11,7 +11,7 @@ package body Is_Heap_P with
 	       return False;
 	    end if;
 	    
-	    pragma Loop_Invariant( <= Parent and then Parent < Child and then Child <= H.Size);
+	    pragma Loop_Invariant(1 <= Parent and then Parent < Child and then Child <= H.Size);
 	    pragma Loop_Invariant(Parent = Heap_Parent(Child));
 	    pragma Loop_Invariant(Is_Heap_Def((A => H.A, Size=>Child)));
 	    
