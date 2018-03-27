@@ -3,7 +3,7 @@
 package Types is
    type T is new Integer;
    
-   type T_Arr is array (Natural range <>) of T;
+   type T_Arr is array (Positive range <>) of T;
 
    MAX_SIZE : constant Positive := 1000;
 
@@ -27,7 +27,7 @@ package Types is
    end record;
    
    type Heap  is record
-      A : T_Arr(0 .. MAX_SIZE);
+      A : T_Arr(1 .. MAX_SIZE);
       Size : Natural := 0;
    end record;
    
