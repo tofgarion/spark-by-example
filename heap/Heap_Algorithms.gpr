@@ -1,6 +1,6 @@
 project Heap_Algorithms is
 
-  for Source_Dirs use (".", "../spec","../maxmin");
+  for Source_Dirs use (".", "../spec","../maxmin","../non-mutating");
 
   package Compiler is
     for Default_Switches ("Ada") use ("-gnat12", "-gnato13");
