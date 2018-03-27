@@ -11,7 +11,7 @@ package Multiset_Predicates with
       Val : T) return Boolean is
      (for all X in T => (if X /= Val then Count (A, X) = Count (B, X)));
 
-   function Multiset_Retain_Rest
+   function Multiset_Retain_Rest_Double
      (A    : T_Arr;
       B    : T_Arr;
       Val1 : T;
@@ -30,13 +30,15 @@ package Multiset_Predicates with
       B   : T_Arr;
       Val : T) return Boolean is
      (Count (A, Val) = Count (B, Val) + 1) with
-      Pre => A'Length = B'Length;
+       Pre => A'Length = B'Length
+       and then A'Length < Positive'Last;
 
    function Multiset_Minus
      (A   : T_Arr;
       B   : T_Arr;
-      Val : T) return Boolean is
-     (Count (A, Val) = Count (B, Val) - 1) with
-      Pre => A'Length = B'Length;
+     Val : T) return Boolean is
+    (Count (A, Val) = Count (B, Val) - 1) with
+      Pre => A'Length = B'Length
+      and then A'Length < Positive'Last;
 
 end Multiset_Predicates;

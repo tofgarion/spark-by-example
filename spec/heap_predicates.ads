@@ -1,8 +1,7 @@
 with Types; use Types;
 
 package Heap_Predicates with
-  SPARK_Mode,
-  Ghost is
+  SPARK_Mode is
    
    function Heap_Left(I : Positive) return Positive
    is 
