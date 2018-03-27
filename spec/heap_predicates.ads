@@ -20,7 +20,7 @@ package Heap_Predicates with
    is 
      (I/2) 
      with
-     Pre => I /=0;
+     Pre => I > 1;
    
    function Is_Heap_Def(H : Heap) return Boolean 
    is
