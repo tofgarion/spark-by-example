@@ -2,10 +2,10 @@ package body Is_Heap_P with
   SPARK_Mode is
    
    function Is_Heap(H : Heap) return Boolean is
-      Parent : Natural :=0;
+      Parent : Natural :=1;
    begin
       if H.Size >=1 then
-	 for Child in 1 .. H.Size-1 loop
+	 for Child in 2 .. H.Size loop
 	 
 	    if H.A(Parent) < H.A(Child) then
 	       return False;
@@ -15,7 +15,7 @@ package body Is_Heap_P with
 	    pragma Loop_Invariant(Parent = Heap_Parent(Child));
 	    pragma Loop_Invariant(Is_Heap_Def((A => H.A, Size=>Child+1)));
 	    
-	    if Child mod 2 = 0 then
+	    if Child mod 2 = 1 then
 	       Parent := Parent +1;
 	    end if;
 	    
