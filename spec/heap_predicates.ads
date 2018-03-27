@@ -6,26 +6,26 @@ package Heap_Predicates with
    
    function Heap_Left(I : Positive) return Positive
    is 
+     (2*I) 
+     with
+     Pre => I <= (Positive'Last)/2;
+   
+   function Heap_Right(I : Positive) return Positive
+   is
      (2*I+1) 
      with
      Pre => I <= (Positive'Last-1)/2;
    
-   function Heap_Right(I : Positive) return Positive
-   is
-     (2*I+2) 
-     with
-     Pre => I <= (Positive'Last-2)/2;
-   
    function Heap_Parent(I : Positive) return Positive 
    is 
-     ((I-1)/2) 
+     (I/2) 
      with
-     Pre => I /=0;
+     Pre => I > 1 ;
    
    function Is_Heap_Def(H : Heap) return Boolean 
    is
-      (H.Size <= H.A'Last 
-      and then (H.Size = 0 or else (for all I in 1 .. H.Size => H.A(I) <= H.A(Heap_Parent(I)))));
+      (H.Size <= H.A'Last
+      and then (H.Size = 0 or else (for all I in 2 .. H.Size => H.A(I) <= H.A(Heap_Parent(I)))));
        
       
 end Heap_Predicates;
