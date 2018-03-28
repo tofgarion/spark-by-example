@@ -1,8 +1,8 @@
 with Types; use Types;
-with Replace_Check_P; use Replace_Check_P;
+with Is_Replaced_P; use Is_Replaced_P;
 
 package Replace_P with
   Spark_Mode is
    procedure Replace ( A : in out T_Arr; Val : T ; Rep : T) with
-     Post => Replace_Check(A'Old, A, Val, Rep);
+     Post => Is_Replaced(A'Old, A, Val, Rep);
 end Replace_P;

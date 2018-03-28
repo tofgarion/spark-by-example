@@ -7,7 +7,7 @@ package body Replace_P with
 	    A(I) := Rep;
 	 end if;
 	 
-	 pragma Loop_Invariant(Replace_Check( A'Loop_Entry ( A'First ..I ), A(A'First ..I), Val, Rep));
+	 pragma Loop_Invariant(Is_Replaced( A'Loop_Entry ( A'First ..I ), A(A'First ..I), Val, Rep));
 	 pragma Loop_Invariant( if I < A'Last then A'Loop_Entry (I+1 .. A'Last) = A( I+1 .. A'Last));
 	 end loop;
       end Replace;
