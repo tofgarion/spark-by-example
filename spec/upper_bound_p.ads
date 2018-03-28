@@ -13,7 +13,7 @@ package Upper_Bound_P with
       Val : T) return Boolean is
       (for all I in A'Range => A (I) < Val);
       
-      function Max_Element_Def(A : T_Arr; Max : Natural)
+      function Max_Element_Def(A : T_Arr; Max : Natural) return Boolean
       is
 	 (Max in A'Range and then Upper_Bound(A,A(Max)));
 
