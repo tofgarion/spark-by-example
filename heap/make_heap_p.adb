@@ -6,7 +6,6 @@ is
    begin
       if A'Length > 0 then
 
-
          for J in 0 .. A'Length - 1 loop
             Result.A (1 + J) := A (A'First + J);
             Result.Size := Result.Size + 1;
