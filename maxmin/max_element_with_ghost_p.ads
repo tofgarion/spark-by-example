@@ -1,6 +1,5 @@
-with Types;                use Types;
-with Upper_Bound_P;        use Upper_Bound_P;
-with Strict_Upper_Bound_P; use Strict_Upper_Bound_P;
+with Types;         use Types;
+with Upper_Bound_P; use Upper_Bound_P;
 
 package Max_Element_With_Ghost_P with
      Spark_Mode is
