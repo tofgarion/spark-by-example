@@ -1,0 +1,43 @@
+** The Binary_Search algorithm
+
+   The ~Binary_Search~ algorithm is a search in a sorted array. Its signature can be expressed:
+   ~function Binary_Search (A : T_Arr; Val : T) return Boolean~
+   It will return true if ~Val~ is contained in ~A~.
+*** Specification of Binary_Search
+    
+    The specification of ~Binary_Search~ can be the following:
+    #+BEGIN_SRC ada
+function Binary_Search (A : T_Arr; Val : T) return Boolean with
+      Pre  => Sorted (A) and then A'Last < Positive'Last,
+      Post => Binary_Search'Result = Has_Value (A, Val);
+    #+END_SRC
+
+The first precondition specify that the array has to be sorted.
+The second is here because we will use ~Search_Lower_Bound~ function defined above.
+If we don't specify that ~A'Last < Positive'Last~, we might encounter a message like
+~precondition might fail~ during the proof. The difference between ~Find~ and 
+~Binary_Search~ is that ~Find~ has a linear complexity whereas ~Binary_Search~
+has a logarithmic complexity.
+
+*** Implementation of Binary_Search
+
+    The implementation of ~Binary_Search~ can be:
+    #+BEGIN_SRC ada
+    function Binary_Search (A : T_Arr; Val : T) return Boolean is
+      Low : Option := Search_Lower_Bound (A, Val);
+      I   : Positive;
+   begin
+      if Low.Exists then
+         I := Low.Value;
+         return (I <= A'Last and then A (I) <= Val);
+      else
+         return False;
+      end if;
+
+   end Binary_Search;
+    #+END_SRC
+   
+    Note that if ~Low.Exists = True~, ~Val <= A(Low.Value)~ is always true. This
+    is why we only check for ~A (I) <= Val~ to be true.
+
+    Using ~gnatprove~, the function is proved.
