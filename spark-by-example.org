@@ -243,9 +243,9 @@ Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
 * Numeric algorithms
 ** Iota
    :PROPERTIES:
-   :Status:      Not started yet
-   :Level:
-   :Assigned_To:
+   :Status:   Finished
+   :Level: 0 
+   :Assigned_To: Joffrey
    :END:
 ** Accumulate
    :PROPERTIES:
