@@ -116,9 +116,9 @@ Level 1 : everything is proved
    :END:
 ** Max_Seq
    :PROPERTIES:
-   :Status:      Not started yet
-   :Level:
-   :Assigned_To:
+   :Status:   Finished
+   :Level: 0
+   :Assigned_To: Joffrey
    :END:
 ** Min_Element
 
