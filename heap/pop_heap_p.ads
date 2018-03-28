@@ -24,7 +24,7 @@ is
      and then Is_Heap_Def(H),
      Post => Is_Heap_Def(H) 
      and then H.A(H.Size+1) = H'Old.A(1)
-     and then Max_Element_Def(H.A(1 .. H.Size),H.Size)
+     and then Max_Element_Def(H.A(1 .. H.Size+1),H.Size+1)
      and then Multiset_Unchanged(H.A,H'Old.A);
    
 end Pop_Heap_P;
