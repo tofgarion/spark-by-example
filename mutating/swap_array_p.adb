@@ -29,14 +29,14 @@ package body Swap_Array_P with
       
    begin
       Result(I) := Result(J);
-      Interm := Result;
+      Interm := Result; -- ghost
       
       pragma Assert(Is_Set(A,I,A(J),Result));
 
       Result(J) := Temp;
       
       pragma Assert(Is_Set(Interm,J,A(I),Result));
-      Prove_Perm;
+      Prove_Perm; --ghost
       return Result;
    end Swap_Array;
 end Swap_Array_P;
