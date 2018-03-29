@@ -23,8 +23,6 @@ package body Random_Shuffle_P with
 	
 	pragma Loop_Invariant(Multiset_Unchanged(Tmp,A));
 	pragma Loop_Invariant(Multiset_Unchanged(Init,Tmp));
-	--pragma Loop_Invariant(Multiset_Unchanged(A(A'First .. I),A'Loop_Entry(A'First .. I)));
-	--pragma Loop_Invariant(if I /=A'Last then A'Loop_Entry(I+1 .. A'Last) = A(I+1 .. A'Last));
 	pragma Loop_Invariant(Multiset_Unchanged(Init,A));
 	 
       end loop;
