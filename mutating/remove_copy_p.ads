@@ -16,6 +16,6 @@ package Remove_Copy_P with
      and then K = B'First + Remove_Count(A,Val) 
      and then (for all L in B'First .. K => B(L) /= Val)
      and then (for all L in K + 1 .. B'Last => B(L) = B'Old(L))
-     and then (if K >= B'First then Multiset_Retain_Rest (A, B (B'First .. K), Val))
-   and then (if K = B'First - 1 then (for all L in A'Range => A(L)=Val));
+     and then (if K >= B'First then Multiset_Retain_Rest (A, B (B'First .. K), Val));
+  -- and then (if K = B'First - 1 then (for all L in A'Range => A(L)=Val));
 end Remove_Copy_P;
