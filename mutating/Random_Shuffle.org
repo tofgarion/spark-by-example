@@ -289,9 +289,6 @@ In the body of ~Swap_Array~ we then initialize ~Interm~ to the correct value, as
 With this implementation and proof lemmas, ~gnatprove~ manages to proove everything.
 
 
-
-***
-
 **** A word on the implementation of Random_Number
 
 For the purpose of our exercise we didn't look in detail how the random number generator is specified and implemented, nevertheless we present here a 
