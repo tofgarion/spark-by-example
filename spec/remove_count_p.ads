@@ -1,13 +1,13 @@
 with Types;   use Types;
-with Count_P; use Count_P;
+with Occ_P; use Occ_P;
 
 package Remove_Count_P with
      Spark_Mode,
      Ghost is
    function Remove_Count
      (A   : T_Arr;
-      Val : T) return Integer is
-     (A'Length - Count (A, Val) - 1) with
+      Val : T) return Natural is
+     (A'Length - Occ (A, Val))  with
       Pre  => A'Length > 0,
-      Post => Remove_Count'Result in -1 .. A'Length - 1;
+      Post => Remove_Count'Result in 0 .. A'Length ;
 end Remove_Count_P;
