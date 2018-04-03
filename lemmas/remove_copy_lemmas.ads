@@ -17,12 +17,12 @@ package Remove_Copy_Lemmas with
       Pre  => A = B,
       Post => Occ (A, E) = Occ (B, E);
 
-   procedure No_Changes (A, B_Save, B : T_Arr; Val : T) with
+   procedure No_Changes (A, B, C : T_Arr; Val : T) with
       Ghost,
       Pre => A'Length > 0
-      and then B_Save = B
-      and then Multiset_Retain_Rest (A, B_Save, Val),
-      Post => Multiset_Retain_Rest (A, B, Val);
+      and then B = C
+      and then Multiset_Retain_Rest (A, B, Val),
+      Post => Multiset_Retain_Rest (A, C, Val);
 
    procedure Make_Prove_Multiset (A : T_Arr; B : T_Arr; Val : T) with
       Ghost,

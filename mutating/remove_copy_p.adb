@@ -30,7 +30,7 @@ package body Remove_Copy_P with
          end if;
 
          pragma Loop_Invariant
-           (if K = B'First then (for all L in A'First .. J => A (L) = Val));
+              (if K = B'First then (for all L in A'First .. J => A (L) = Val));
          pragma Loop_Invariant
            (K = B'First + Remove_Count (A (A'First .. J), Val));
          pragma Loop_Invariant
