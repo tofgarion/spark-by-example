@@ -286,8 +286,28 @@ This is done with the ~for~ loop, and the loop invariant is here to accumulate t
 
 In the body of ~Swap_Array~ we then initialize ~Interm~ to the correct value, assert the preconditions of the proof procedure, and then call the proof procedure so that the solvers apply our proof to ~Swap_Array~.
 
-With this implementation and proof lemmas, ~gnatprove~ manages to proove everything.
+***** Final implementation of Random_Shuffle
 
+With all of our lemmas and pghost proof procedure we can give a somewhat condensed and simple implementation of ~Random_Shuffle~:
+
+#+BEGIN_SRC ada
+procedure Random_Shuffle (A : in out T_Arr) is
+      J : Positive;
+   begin
+      
+      for I in A'Range loop
+	 J := Random_Number(A'First, I);
+     
+	A:= Swap_Array(A,I,J);
+	pragma Loop_Invariant(Multiset_Unchanged(A,A'Loop_Entry));
+
+      end loop;
+end Random_Shuffle;
+#+END_SRC
+
+Here we simply replace the ~swap~ procedure by our newly coded ~Swap_Array~ function, and the only loop_invariant is that the ~A~ is a permutation of ~A'Loop_Entry~, which is eaxactly the postcondition of our procedure at the exit of the loop.
+
+With this implementation and theses ghost procedures, ~gnatprove~ manages to prove everything.
 
 **** A word on the implementation of Random_Number
 
