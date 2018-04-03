@@ -26,13 +26,23 @@ is
       V : T := H.A(1);
       Hole : Positive := 1;
       Child : Positive;
+      Interm : T_Arr(H.A'Range) with Ghost;
+      Init : T_Arr(H.A'Range) := H.A with Ghost;
    begin
       if H.A(H.Size) < V then
 	 pragma Assert(H.Size >=2);
 	 Child := Maximum_Heap_Child(H,Hole);
 	 
 	 while Child < H.Size and then H.A(H.Size) < H.A(Child) loop
+	    Interm := H.A; -- ghost
 	    H.A(Hole) := H.A(Child);
+	    pragma Assert(Is_Set(Interm,Hole,H.A(Child),H.A));
+	    
+	    for E in T loop
+	       Occ_Set(Interm,H.A,Hole,H.A(Child),E);
+	    end loop;
+            --pragma Loop_Invariant(H.A'Length = Init'Length);
+            pragma Loop_Invariant(H.Size >= 2);
             pragma Assert(Child < H.Size);
 	    pragma Loop_Invariant(Hole in 1 .. H.Size-1);
 	    pragma Loop_Invariant(Hole < Child);
@@ -48,15 +58,29 @@ is
 	    pragma Assert(Child < H.Size);
 	    pragma Assert(Hole < H.Size);
 	    Child := Maximum_Heap_Child(H,Hole);
-	 end loop;
-	
-      H.A(Hole) := H.A(H.Size);
-      H.A(H.Size) := V;
-      pragma Assert(Is_Heap_Def(H));
-	 else
-	    pragma Assert(Is_Heap_Def(H));
-	    end if;
-      pragma Assert(Is_Heap_Def(H));
+	    end loop;
+         Interm := H.A;
+         
+	 H.A(Hole) := H.A(H.Size);
+	 
+	 pragma Assert(Is_Set(Interm,Hole,H.A(H.Size),H.A));
+	    
+	    for E in T loop
+	       Occ_Set(Interm,H.A,Hole,H.A(H.Size),E);
+	    end loop;
+	    
+	 Interm := H.A;
+	 H.A(H.Size) := V;
+	 
+	 pragma Assert(Is_Set(Interm,H.Size,V,H.A));
+	    
+	    for E in T loop
+	       Occ_Set(Interm,H.A,H.Size,V,E);
+	       pragma Loop_Invariant(for all F in T'First .. E => Occ(H.A,F) = Occ(Init,F));
+	    end loop;
+	 
+      end if;
+      
       H.Size := H.Size-1;
       pragma Assert(H.A'Length >= H.Size+1);
       pragma Assert(Upper_Bound(H.A(1 .. H.Size+1),H.A(H.Size+1)));

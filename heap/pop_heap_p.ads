@@ -2,6 +2,8 @@ with Types; use Types;
 with Heap_Predicates; use Heap_Predicates;
 with Multiset_Predicates; use Multiset_Predicates;
 with Upper_Bound_P; use Upper_Bound_P;
+with Shuffle_Lemmas; use Shuffle_Lemmas;
+with Occ_P; use Occ_P;
 
 package Pop_Heap_P with
   SPARK_Mode
@@ -20,9 +22,11 @@ is
    
    
      procedure Pop_Heap(H : in out Heap) with
-     Pre => H.Size >=1 
+     Pre => H.Size >=1
+     and then H.A'Length >=1
      and then Is_Heap_Def(H),
      Post => Is_Heap_Def(H) 
+     and then H'Old.Size = H.Size+1
      and then H.A(H.Size+1) = H'Old.A(1)
      and then Max_Element_Def(H.A(1 .. H.Size+1),H.Size+1)
      and then Multiset_Unchanged(H.A,H'Old.A);
