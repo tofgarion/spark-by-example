@@ -141,7 +141,7 @@
 
 **** First Lemma
 
-     A first lemma will be defined. It states that each value 
+     A first lemma will be defined. It states that if each value 
      of an array ~A~ is equal to ~Val~, then for a value ~E~
      different from ~Val~, ~Occ(A,E) = 0~. Given the fact that
      GNAT does not yet use inductive reasoning, we need to
@@ -177,8 +177,7 @@
 **** The Make_Prove_Multiset procedure
 
      The ~Make_Prove_Multiset~ procedure is here to help the prover
-     to prove some properties by guiding him. We specify the income
-     properties and the outcomes properties in the .ads file:
+     to prove some properties by guiding him. We specify the hypothesis (preconditions) and results of the proof (postconditions) in the .ads file:
 
      #+BEGIN_SRC ada
      procedure Make_Prove_Multiset (A : T_Arr; B : T_Arr; Val : T) with
