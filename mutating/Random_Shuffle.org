@@ -1,6 +1,6 @@
 ** The Random_Shuffle algorithm
 
-The ~Random_Shuffle~ algorithms aims to randomly rearanges the lelements of an array. Its signature reads:
+The ~Random_Shuffle~ algorithms aims to randomly rearranges the elements of an array. Its signature reads:
 
 #+BEGIN_SRC ada
 procedure Random_Shuffle(A : in out T_Arr)
@@ -14,7 +14,7 @@ help us in the proof of this function.
 **** Formal specification of Random_Shuffle
 
 As mentionned earlier, ~Random_Shuffle~ should rearrange the elements of ~A~ in a "random" order.
-That being said, it is not easy to mathematicaly define what a true random rearrangement is, so we will only require 
+That being said, it is not easy to mathematically define what a true random rearrangement is, so we will only require 
 that ~Random_Shuffle~ acts as a permutation, i.e. the number of occurences of each element of ~A~ remains constant when calling ~Random_Shuffle~.
 With this consideration in mind, we can write a specification for ~Random_Shuffle~:
 #+BEGIN_SRC ada
@@ -26,7 +26,7 @@ The postcondition ensures that the elements of ~A~ are simply permuted by ~Rando
 
 **** The predicate Multiset_Unchanged
 
-The predicate ~Multiset_Unchanged~ which is used in the specification of ~Random_Shuffle~ checks wether two arrays are a permutation of eachother, 
+The predicate ~Multiset_Unchanged~ which is used in the specification of ~Random_Shuffle~ checks whether two arrays are a permutation of eachother, 
 i.e. each element of the first array appears the same number of time in the second array, but not necessarly in the same order. This is done with the help of
 the ~Occ~  predicate, defined in chapter 3 for the function [[../non-mutating/Count.org][Count]]. ~Multiset_Unchanged~ is defined as follows:
 
@@ -38,7 +38,7 @@ function Multiset_Unchanged
        Pre => A'Length = B'Length;
 #+END_SRC
 
-Here we simply check that for two arrays of same length the number of occurences of a givent ~T~ is the same for both arrays.
+Here we simply check that for two arrays of same length the number of occurences of a given ~T~ is the same for both arrays.
 It is important to do the check on all elements of ~T~ and not only on the elements of ~A~, otherwise the solvers cannot determine that 
 we can obtain ~B~ by permuting the elements of ~A~ and vice-versa.
 
@@ -74,7 +74,7 @@ Our first implementation is as follows:
 
 There are a few issues with this implementation:
 - The use of ~Swap~ on an array introduces aliasing warnings
-- The solvers cannot autimaticaly prove that swaping two elements of an array is a permutation, so the only loop invariant cannot be proved.
+- The solvers cannot automatically prove that swapping two elements of an array is a permutation, so the only loop invariant cannot be proved.
 
 We have already encountered the first solution, and an easy workaround is to manualy do the swap with
 an intermediary variable. This solution however does not permit the proof of the loop invariant. We will have
@@ -87,7 +87,7 @@ use of the examples given in the [[https://docs.adacore.com/spark2014-docs/html/
 ***** The Swap_Array function
 
 In order to proove the loop invariant, we would like to write a function which takes an array and two indexes as
-parameters, and swaps the two values found at these indexes, and which would prove that this opperation is a 
+parameters, and swaps the two values found at these indexes, and which would prove that this operation is a 
 permutation on the array.
 Its specification would then be:
 
@@ -103,10 +103,10 @@ function Swap_Array(A : T_Arr; I : Positive; J : Positive) return T_Arr with
 #+END_SRC
 
 The precondition simply express that ~I~ and ~J~ are valid indexes; the postconditions express that:
--The result array has the same range as the input array
--the values at indexes ~I~ and ~J~ were swapped
--All values found a indexes different to ~I~ and ~J~ remain unchanged
--The resulting array is a permutation of the input array.
+  - The result array has the same range as the input array
+  - The values at indexes ~I~ and ~J~ were swapped
+  - All values found a indexes different to ~I~ and ~J~ remain unchanged
+  - The resulting array is a permutation of the input array.
 
 The implementation (without SPARK annotations) is quite straightforward:
 
@@ -121,7 +121,7 @@ function Swap_Array(A : T_Arr; I : Positive; J : Positive)return T_Arr is
    end Swap_Array;
 #+END_SRC
 
-With this current implementation, the desired result is achieved, but the last postcondition is still not prooved.
+With this current implementation, the desired result is achieved, but the last postcondition is still not proved.
 
 ***** The Is_Set predicate
 
@@ -137,9 +137,9 @@ function Is_Set(A : T_Arr; I : Positive; V : T; B : T_Arr) return Boolean
    Pre => I in A'Range;
 #+END_SRC
 
-The ~Is_Set~ predicates verifies that B is equal to A, except for the value found at index ~I~, which should
-be equal to ~V~. This predicate will be usefull when comparing the occurences of certain values before and 
-after an array has it's vales changed (when swapping two values for instance).
+The ~Is_Set~ predicates verifies that ~B~ is equal to ~A~, except for the value found at index ~I~, which should
+be equal to ~V~. This predicate will be useful when comparing the occurences of certain values before and 
+after an array has its vales changed (when swapping two values for instance).
 
 ***** The Occ_Eq lemma
 The ~Occ_Eq~ lemma is an example of how we can manualy prove a property that the SMT solvers struggle, or cannot prove on their own.
@@ -171,9 +171,9 @@ procedure Occ_Eq(A: T_Arr; B : T_Arr; E : T) is
 end Occ_Eq;
 #+END_SRC
 The property is proved inductively:
--If both arrays are empty then there is nothing to prove.
--If the arrays are of length greater than zero, then:
- - We verify that if the last value of ~A~ is equal to ~E~ then so is the last value of ~B~, and if the last value of ~A~ is different from ~E~ then is is the last value of ~B~, which given the definition of [[../non-mutating/Count.org][Occ]] will help prove that the contribution of the last index of ~A~ and ~B~ are the same in ~Occ(A,E)~ and ~Occ(B,E)~.
+- If both arrays are empty then there is nothing to prove.
+- If the arrays are of length greater than zero, then:
+ - We verify that if the last value of ~A~ is equal to ~E~ then so is the last value of ~B~, and if the last value of ~A~ is different from ~E~ then is is the last value of ~B~, which given the definition of [[../non-mutating/Count.org][Occ]] will help prove that the contribution of the last index of ~A~ and ~B~ is the same in ~Occ(A,E)~ and ~Occ(B,E)~.
  - We verify that the nuber of occurences of ~E~ in ~A~ and ~B~ is the same, for the other indexes.
 
 ***** The Occ_Set lemma
@@ -191,7 +191,7 @@ procedure Occ_Set (A : T_Arr; B : T_Arr; I : Positive; V ,E : T) with
               else Occ(B,E)=Occ(A,E));
 #+END_SRC
 
-The precondition expresses the fact that B should be equal to A, to the exception of the value at index ~I~,
+The precondition expresses the fact that ~B~ should be equal to ~A~, to the exception of the value at index ~I~,
 which should be equal to ~V~.
 The postconditions are the mathematical relations we expect to find concerning the number of occurences of ~E~ in ~A~ and ~B~.
 
@@ -218,15 +218,15 @@ end Occ_Set;
 
 The proof is once again inductive:
 - If ~A~ is empty then there is nothing to prove
-- If ~I~ is equal to A'Last, i.e. ~A~ and ~B~ only differ by the last index, then we verify that the number of occurences of ~E~ is equal on both arrays on the rest of the indexes, the provers can then deduce the postconditions depending on the values of ~E~ and ~V~.
-- If I isn't equal to A'Last, then we call ~Occ_Eq~ on the first indexes of ~B~ and on the first indexes of ~A~, but with the value at index ~I~ equal to ~V~ (the array ~tmp~). This tells the solvers that ~Tmp = Remove_Last(B)~, and can deduce that hte contribution of the last index is the same in ~Occ(A,E)~ and ~Occ(B,E)~. We then proceed to prove the property on the rest of the indexes.
+- If ~I~ is equal to ~A'Last~, i.e. ~A~ and ~B~ only differ by the last index, then we verify that the number of occurences of ~E~ is equal on both arrays on the rest of the indexes, the provers can then deduce the postconditions depending on the values of ~E~ and ~V~.
+- If ~I~ isn't equal to ~A'Last~, then we call ~Occ_Eq~ on the first indexes of ~B~ and on the first indexes of ~A~, but with the value at index ~I~ equal to ~V~ (the array ~tmp~). This tells the solvers that ~Tmp = Remove_Last(B)~, and can deduce that hte contribution of the last index is the same in ~Occ(A,E)~ and ~Occ(B,E)~. We then proceed to prove the property on the rest of the indexes.
 
 With these lemmas proved, we can now move on to the proof of the las postcondition of ~Swap_Array~.
 
-***** The Pove_Perm procedure
+***** The Prove_Perm procedure
 
 We will write a ghost procedure in the declarative part of ~Swap_Array~ which will guide the automatic solvers to verify our last psotcondition.
-We write this procedure in the declarative part of ~Swap_Array~ so we can access all the parametters and intermediate variables used in the 
+We write this procedure in the declarative part of ~Swap_Array~ so we can access all the parameters and intermediate variables used in the 
 function, but we could have written it in another package, it would simply have required that we give the working arrays as parameters to the ghost procedure.
 
 Since we wrote the procedure in the declarative part of ~Swap_Array~ to be able to use all the working variables,
