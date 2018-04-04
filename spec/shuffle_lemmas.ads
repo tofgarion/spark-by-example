@@ -9,6 +9,7 @@ with Occ_Def_P; use Occ_Def_P;
 -- https://docs.adacore.com/spark2014-docs/html/ug/gnatprove_by_example/manual_proof.html
 
 
+
 package Shuffle_Lemmas with
   SPARK_Mode, 
   Ghost is
