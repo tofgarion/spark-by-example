@@ -28,7 +28,9 @@
     #+END_SRC
 
     Notice that we must take care of one boundary case, i.e., when ~A~
-    is empty.
+    is empty, otherwise as ~A'Last~ can be negative when ~A'Length =
+    0~, it could take ~Integer'First~ as a value and an overflow would
+    occur due to ~A'Last - 1~.
 
 *** Specification of Adjacent_Find
 
