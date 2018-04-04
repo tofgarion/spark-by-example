@@ -1,9 +1,9 @@
 package body Swap_Array_P with
   SPARK_Mode is
    
-    function Swap_Array(A : T_Arr; I : Positive; J : Positive)return T_Arr is
-      Result : T_Arr (A'Range) :=A;
-      Temp : T := Result(I);
+    procedure Swap_Array(A : in out T_Arr; I : Positive; J : Positive) is
+      Init : T_Arr (A'Range) :=A;
+      Temp : T := A(I);
       
       --ghost variables
       
@@ -13,30 +13,29 @@ package body Swap_Array_P with
       
       procedure Prove_Perm with Ghost,
         Pre => I in A'Range and then J in A'Range
-        and then Is_Set(A,I,A(J),Interm)
-        and then Is_Set(Interm,J,A(I),Result),
-        Post => Multiset_Unchanged(A,Result)
+        and then Is_Set(Init,I,Init(J),Interm)
+        and then Is_Set(Interm,J,Init(I),A),
+        Post => Multiset_Unchanged(Init,A)
       is
       begin
          for V in T loop
-            Occ_Set(A,Interm,I,A(J),V);
-            Occ_Set(Interm,Result,J,A(I),V);
+            Occ_Set(Init,Interm,I,Init(J),V);
+            Occ_Set(Interm,A,J,Init(I),V);
             pragma Loop_Invariant
               (for all F in T'First .. V =>
-                 Occ(Result,F) = Occ(A,F));
+                 Occ(Init,F) = Occ(A,F));
          end loop;
       end Prove_Perm;
       
    begin
-      Result(I) := Result(J);
-      Interm := Result; -- ghost
+      A(I) := A(J);
+      Interm := A; -- ghost
       
-      pragma Assert(Is_Set(A,I,A(J),Result));
+      pragma Assert(Is_Set(Init,I,Init(J),Interm));
 
-      Result(J) := Temp;
+      A(J) := Temp;
       
-      pragma Assert(Is_Set(Interm,J,A(I),Result));
+      pragma Assert(Is_Set(Interm,J,Init(I),A));
       Prove_Perm; --ghost
-      return Result;
    end Swap_Array;
 end Swap_Array_P;

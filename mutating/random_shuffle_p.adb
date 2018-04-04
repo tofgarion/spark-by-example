@@ -8,7 +8,7 @@ package body Random_Shuffle_P with
       for I in A'Range loop
 	 J := Random_Number(A'First, I);
      
-	A:= Swap_Array(A,I,J);
+	Swap_Array(A,I,J);
 	pragma Loop_Invariant(Multiset_Unchanged(A,A'Loop_Entry));
 
       end loop;
