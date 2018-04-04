@@ -10,6 +10,4 @@ package Random_Shuffle_P with
   procedure Random_Shuffle (A : in out T_Arr) with
      Post => Multiset_Unchanged(A'Old,A);
    
-  
-   
 end Random_Shuffle_P;
