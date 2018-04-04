@@ -7,7 +7,7 @@ package Swap_Array_P with
   SPARK_Mode is
    
     procedure Swap_Array(A : in out T_Arr; I : Positive; J : Positive) with
-      Pre => A'Length >= 1 and then I in A'Range and then J in A'Range and then I >= J,
+      Pre => A'Length >= 1 and then I in A'Range and then J in A'Range,
       Post =>A'Old(I) = A(J) 
       and then A'Old(J) = A(I)
      and then (for all K in A'Old'Range => (if I/=K and then J /= K then A'Old(K) = A(K)))

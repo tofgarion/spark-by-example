@@ -84,26 +84,23 @@ to help the solvers understand that swapping two values in an array is a permuta
 We will here help the solvers prove our function by adding a manual proof in the form of ghost code. This section makes
 use of the examples given in the [[https://docs.adacore.com/spark2014-docs/html/ug/gnatprove_by_example/manual_proof.html#manual-proof-using-ghost-code][SPARK 2014 User's Guide]].
 
-***** The Swap_Array function
+***** The Swap_Array procedure
 
-In order to proove the loop invariant, we would like to write a function which takes an array and two indexes as
+In order to proove the loop invariant, we would like to write a procedure which takes an array and two indexes as
 parameters, and swaps the two values found at these indexes, and which would prove that this operation is a 
 permutation on the array.
 Its specification would then be:
 
 #+BEGIN_SRC ada
-function Swap_Array(A : T_Arr; I : Positive; J : Positive) return T_Arr with
-      Pre => A'Length >= 1 and then I in A'Range and then J in A'Range and then I >= J,
-      Post =>A'First = Swap_Array'Result'First 
-      and then A'Last = Swap_Array'Result'Last 
-      and then A(I) = Swap_Array'Result(J) 
-      and then A(J) = Swap_Array'Result(I)
-     and then (for all K in A'Range => (if I/=K and then J /= K then A(K) = Swap_Array'Result(K)))
-     and then Multiset_Unchanged(A,Swap_Array'Result);
+procedure Swap_Array(A : in out T_Arr; I : Positive; J : Positive) with
+      Pre => A'Length >= 1 and then I in A'Range and then J in A'Range,
+      Post =>A'Old(I) = A(J) 
+      and then A'Old(J) = A(I)
+     and then (for all K in A'Old'Range => (if I/=K and then J /= K then A'Old(K) = A(K)))
+     and then Multiset_Unchanged(A'Old,A);
 #+END_SRC
 
 The precondition simply express that ~I~ and ~J~ are valid indexes; the postconditions express that:
-  - The result array has the same range as the input array
   - The values at indexes ~I~ and ~J~ were swapped
   - All values found a indexes different to ~I~ and ~J~ remain unchanged
   - The resulting array is a permutation of the input array.
@@ -112,12 +109,10 @@ The implementation (without SPARK annotations) is quite straightforward:
 
 #+BEGIN_SRC ada 
 function Swap_Array(A : T_Arr; I : Positive; J : Positive)return T_Arr is
-      Result : T_Arr (A'Range) :=A;
-      Temp : T := Result(I);
+      Temp : T := A(I);
    begin
-      Result(I) := Result(J);
-      Result(J) := Temp;
-      return Result;
+      A(I) := A(J);
+      A(J) := Temp;
    end Swap_Array;
 #+END_SRC
 
@@ -233,9 +228,9 @@ Since we wrote the procedure in the declarative part of ~Swap_Array~ to be able 
 we need to look at the full implementation of ~Swap_Array~ in order to understand how it functions:
 
 #+BEGIN_SRC ada
-function Swap_Array(A : T_Arr; I : Positive; J : Positive)return T_Arr is
-      Result : T_Arr (A'Range) :=A;
-      Temp : T := Result(I);
+procedure Swap_Array(A : in out T_Arr; I : Positive; J : Positive) is
+      Init : T_Arr (A'Range) :=A;
+      Temp : T := A(I);
       
       --ghost variables
       
@@ -245,31 +240,30 @@ function Swap_Array(A : T_Arr; I : Positive; J : Positive)return T_Arr is
       
       procedure Prove_Perm with Ghost,
         Pre => I in A'Range and then J in A'Range
-        and then Is_Set(A,I,A(J),Interm)
-        and then Is_Set(Interm,J,A(I),Result),
-        Post => Multiset_Unchanged(A,Result)
+        and then Is_Set(Init,I,Init(J),Interm)
+        and then Is_Set(Interm,J,Init(I),A),
+        Post => Multiset_Unchanged(Init,A)
       is
       begin
          for V in T loop
-            Occ_Set(A,Interm,I,A(J),V);
-            Occ_Set(Interm,Result,J,A(I),V);
+            Occ_Set(Init,Interm,I,Init(J),V);
+            Occ_Set(Interm,A,J,Init(I),V);
             pragma Loop_Invariant
               (for all F in T'First .. V =>
-                 Occ(Result,F) = Occ(A,F));
+                 Occ(Init,F) = Occ(A,F));
          end loop;
       end Prove_Perm;
       
    begin
-      Result(I) := Result(J);
-      Interm := Result; -- ghost
+      A(I) := A(J);
+      Interm := A; -- ghost
       
-      pragma Assert(Is_Set(A,I,A(J),Result));
+      pragma Assert(Is_Set(Init,I,Init(J),Interm));
 
-      Result(J) := Temp;
+      A(J) := Temp;
       
-      pragma Assert(Is_Set(Interm,J,A(I),Result));
+      pragma Assert(Is_Set(Interm,J,Init(I),A));
       Prove_Perm; --ghost
-      return Result;
    end Swap_Array;
 #+END_SRC
 
@@ -298,7 +292,7 @@ procedure Random_Shuffle (A : in out T_Arr) is
       for I in A'Range loop
 	 J := Random_Number(A'First, I);
      
-	A:= Swap_Array(A,I,J);
+	Swap_Array(A,I,J);
 	pragma Loop_Invariant(Multiset_Unchanged(A,A'Loop_Entry));
 
       end loop;
