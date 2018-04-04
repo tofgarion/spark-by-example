@@ -2,8 +2,7 @@ with Types; use Types;
 with Heap_Predicates; use Heap_Predicates;
 with Multiset_Predicates; use Multiset_Predicates;
 with Upper_Bound_P; use Upper_Bound_P;
-with Shuffle_Lemmas; use Shuffle_Lemmas;
-with Occ_P; use Occ_P;
+with Swap_Array_P; use Swap_Array_P;
 
 package Pop_Heap_P with
   SPARK_Mode
