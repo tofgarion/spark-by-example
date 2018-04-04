@@ -23,12 +23,12 @@
     #+BEGIN_SRC ada
       function Has_Equal_Neighbors
         (A : T_Arr) return Boolean is
-        (if (A'Length = 0 or else A'Length = 1) then False
+        (if (A'Length = 0) then False
          else (for some I in A'First .. A'Last - 1 => A (I) = A (I + 1)));
     #+END_SRC
 
-    Notice that we must take care of two boundary cases, i.e., when
-    ~A~ is empty or has only one element.
+    Notice that we must take care of one boundary case, i.e., when ~A~
+    is empty.
 
 *** Specification of Adjacent_Find
 
