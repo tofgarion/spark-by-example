@@ -5,7 +5,7 @@
   It also modifies an argument which will be the last index
   at which the second array has been modified.
   Its signature reads:
-  ~procedure Remove_Copy (A : T_Arr; B : in out T_Arr; Val : T; K : out Natural)~
+  ~procedure Remove_Copy (A : T_Arr; B : in out T_Arr; Val : T; K : in out Natural)~
 
 ** The predicates used
 *** The Multiset_Retain_Rest predicate
@@ -33,7 +33,6 @@
      (A   : T_Arr;
       Val : T) return Natural is
      (A'Length - Occ (A, Val))  with
-      Pre  => A'Length > 0,
       Post => Remove_Count'Result in 0 .. A'Length ;
     #+END_SRC
 
@@ -71,20 +70,11 @@
    The contract cases express the fact that:
    - if ~A~ is empty then nothing has changed.
    - if ~A~ is not empty then:
-     1. ~K~ is in ~B'First - 1 .. B'Last~. It corresponds with
-	the last index at which ~B~ has been modified. If ~K~
-	is equal to ~B'First - 1~, it means that ~B~ has not
-	been changed.
-     2. The range in which ~B~ has been modified has a length
-	equal to the number of values different from ~Val~ in
-	~A~.
-     3. In the sub-array of ~B~ that has been modified, every
-	value is different from ~Val~.
-     4. in the sub-array of ~B~ that has not been modified,
-	each value has not changed.
-     5. if ~B~ has been modified, then ~A~ and the modified
-	sub-array of ~B~ have the same occurences of each value
-	except for ~Val~.
+     1. ~K~ is in ~B'First - 1 .. B'Last~. It corresponds with the last index at which ~B~ has been modified. If ~K~ is equal to ~B'First - 1~, it means that ~B~ has not been changed.
+     2. The range in which ~B~ has been modified has a length equal to the number of values different from ~Val~ in ~A~.
+     3. In the sub-array of ~B~ that has been modified, every value is different from ~Val~.
+     4. in the sub-array of ~B~ that has not been modified, each value has not changed.
+     5. if ~B~ has been modified, then ~A~ and the modified sub-array of ~B~ have the same occurences of each value except for ~Val~.
 
 ** Implementations of Remove_Copy
 
@@ -151,7 +141,7 @@
 
 **** First Lemma
 
-     A first lemma will be defined. It states that each value 
+     A first lemma will be defined. It states that if each value 
      of an array ~A~ is equal to ~Val~, then for a value ~E~
      different from ~Val~, ~Occ(A,E) = 0~. Given the fact that
      GNAT does not yet use inductive reasoning, we need to
@@ -187,8 +177,7 @@
 **** The Make_Prove_Multiset procedure
 
      The ~Make_Prove_Multiset~ procedure is here to help the prover
-     to prove some properties by guiding him. We specify the income
-     properties and the outcomes properties in the .ads file:
+     to prove some properties by guiding him. We specify the hypothesis (preconditions) and results of the proof (postconditions) in the .ads file:
 
      #+BEGIN_SRC ada
      procedure Make_Prove_Multiset (A : T_Arr; B : T_Arr; Val : T) with
@@ -210,7 +199,7 @@
      The precondition expresses two different cases:
      - if ~B~ has only one element, then all elements of ~Remove_Last(A)~
        are equal to ~Val~.
-      - if not, then the ~Multiset_Retain_Rest~ is verified with the two arrays
+     - if not, then the ~Multiset_Retain_Rest~ is verified with the two arrays
        without their last value.
        
      The postcondition expresses the fact that the ~Multiset_Retain_Rest~
