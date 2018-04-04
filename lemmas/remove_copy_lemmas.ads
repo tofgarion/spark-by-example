@@ -15,7 +15,12 @@ package Remove_Copy_Lemmas with
       Ghost,
 
       Pre  => A = B,
-      Post => Occ (A, E) = Occ (B, E);
+     Post => Occ (A, E) = Occ (B, E);
+
+   procedure Lemma_3 (A : T_arr; Val : T) with
+     Ghost,
+     Pre => (for all L in A'range => A (L) /= Val),
+     Post => Occ(a,Val) = 0;
 
    procedure No_Changes (A, B, C : T_Arr; Val : T) with
       Ghost,
