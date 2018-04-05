@@ -63,7 +63,7 @@
 
     #+BEGIN_SRC ada
       function Mismatch (A : T_Arr; B : T_Arr) return Option with
-         Pre            => A'Length <= B'Length,
+         Pre            => A'Length = B'Length,
          Contract_Cases =>
          (Equal_Ranges (A, B (B'First .. B'First - 1 + A'Length)) =>
             not Mismatch'Result.Exists,
@@ -79,8 +79,9 @@
                Equal_Ranges (A, B, Mismatch'Result.Value - 1)));
     #+END_SRC
 
-    Notice that we must add a precondition specifying that ~A~ is
-    smaller than ~B~.
+    Notice that we must add a precondition specifying that ~A~ has the
+    same length than ~B~ to mimic ACSL by Example specification and to
+    avoid possible overflows in the implementation of the algorithm.
 
 *** Implementation of Mismatch
 

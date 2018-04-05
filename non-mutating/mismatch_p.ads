@@ -7,7 +7,7 @@ with Equal_Ranges_P; use Equal_Ranges_P;
 package Mismatch_P with
      Spark_Mode is
    function Mismatch (A : T_Arr; B : T_Arr) return Option with
-      Pre            => A'Length <= B'Length,
+      Pre            => A'Length = B'Length,
       Contract_Cases =>
       (Equal_Ranges (A, B (B'First .. B'First - 1 + A'Length)) =>
          not Mismatch'Result.Exists,
