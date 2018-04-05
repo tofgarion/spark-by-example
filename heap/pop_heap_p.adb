@@ -3,7 +3,7 @@ package body Pop_Heap_P with
 is
    
    
-   function Maximum_Heap_Child(H : Heap; P : Positive) return Positive
+   function Maximum_Heap_Child(H : Heap; P : Positive) return Option
    is
       Right, Left : Positive;
    begin
@@ -25,7 +25,7 @@ is
    is
       V : T := H.A(1);
       Hole : Positive := 1;
-      Child : Positive;
+      Child : Option;
       Interm : T_Arr(H.A'Range) := H.A;
       Init : T_Arr(H.A'Range) := H.A with Ghost;
    begin
@@ -33,29 +33,29 @@ is
 	 pragma Assert(H.Size >=2);
 	 Child := Maximum_Heap_Child(H,Hole);
 	 
-	 while Child < H.Size and then H.A(H.Size) < H.A(Child) loop
-            H.A(Hole) := H.A(Child);
-            pragma assert(Child in (
-            pragma assert(Hole in Interm'Range and then Child in Interm'Range);
-	    Swap_Array(Interm,Hole,Child);
-            --pragma Loop_Invariant(H.A'Length = Init'Length);
+         while Child.Exists and then Child.Value < H.Size and then  H.A(H.Size) < H.A(Child.Value) loop
+            H.A(Hole) := H.A(Child.Value);
+            pragma assert(Hole in Interm'Range and then Child.Value in Interm'Range);
+            Swap_Array(Interm,Hole,Child.Value);
+            
             pragma Assert(H.A'Last >= H.Size);
             pragma Assert(H.Size >=2);
-            pragma Assert(Child in H.A'Range);
+            pragma Assert(Child.Value in H.A'Range);
+            pragma Loop_Invariant(Child.Exists);
+            pragma Loop_Invariant(Child.Value < H.Size);
             pragma Loop_Invariant(H.Size = H'Loop_Entry.Size);
 	    pragma Loop_Invariant(Hole in 1 .. H.Size-1);
-	    pragma Loop_Invariant(Hole < Child);
-	    --pragma Loop_Invariant(Is_Heap_Def(H));
+	    pragma Loop_Invariant(Hole < Child.Value);
 	    pragma Loop_Invariant(if Hole /=1 then H.A(H.Size) < H.A(Heap_Parent(Hole)));
-	    pragma Loop_Invariant(if Child < H.Size then Hole = Heap_Parent(Child));
-	    --pragma Loop_Invariant(Heap_Maximum_Child(H,Hole,Child));
+	    pragma Loop_Invariant(if Child.Value < H.Size then Hole = Heap_Parent(Child.Value));
+	    --pragma Loop_Invariant(Heap_Maximum_Child.Value(H,Hole,Child.Value));
 	    --pragma Loop_Invariant(Upper_Bound(H.A(1 .. H.Size),V));
             pragma Loop_Invariant(Multiset_Unchanged(Init,Interm));
-            pragma Loop_Invariant(Is_Set(H.A,Child,V,Interm));
+            pragma Loop_Invariant(Is_Set(H.A,Child.Value,V,Interm));
+            pragma Loop_Invariant(Is_Heap_Def(H));
             pragma Loop_Variant(Decreases => H.Size-Hole);
             
-	    Hole := Child;
-	    pragma Assert(Child < H.Size);
+	    Hole := Child.Value;
 	    pragma Assert(Hole < H.Size);
 	    Child := Maximum_Heap_Child(H,Hole);
 	    end loop;

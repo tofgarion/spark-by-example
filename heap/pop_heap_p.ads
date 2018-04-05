@@ -15,20 +15,20 @@ is
        and then P in 1 .. H.Size-1
        and then Is_Heap_Def(H),
      Contract_Cases =>
-       ((H.Size-1)/2 < P => not Maximum_Heap_Child'Result.exists,
+       (H.Size/2 < P => not Maximum_Heap_Child'Result.exists,
         Others => Maximum_Heap_Child'Result.Exists 
         and then Heap_Maximum_Child(H,P,Maximum_Heap_Child'Result.Value)
         and then Maximum_Heap_Child'Result.Value in P + 1 .. H.Size
-        and then P = Heap_Parent(Maximum_Heap_Child'Result'Value));
+        and then P = Heap_Parent(Maximum_Heap_Child'Result.Value));
    
      procedure Pop_Heap(H : in out Heap) with
      Pre => H.Size >=1
      and then H.A'Length >=1
      and then Is_Heap_Def(H),
-     Post => Is_Heap_Def(H) 
+     Post => Multiset_Unchanged(H.A,H'Old.A)
+     and then Is_Heap_Def(H) 
      and then H'Old.Size = H.Size+1
      and then H.A(H.Size+1) = H'Old.A(1)
-     and then Max_Element_Def(H.A(1 .. H.Size+1),H.Size+1)
-     and then Multiset_Unchanged(H.A,H'Old.A);
+     and then Max_Element_Def(H.A(1 .. H.Size+1),H.Size+1);
    
 end Pop_Heap_P;
