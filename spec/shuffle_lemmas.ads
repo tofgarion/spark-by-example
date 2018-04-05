@@ -8,6 +8,11 @@ package Shuffle_Lemmas with
   SPARK_Mode, 
   Ghost is
    
+   
+   procedure Occ_Eq(A : T_Arr; B : T_Arr; E : T) with
+     Pre => A = B,
+     Post => Occ(A,E) = Occ(B,E);
+   
    function Is_Set(A : T_Arr; I : Positive; V : T; B : T_Arr) return Boolean 
    is
      (A'First = B'First and then A'Last = B'Last
