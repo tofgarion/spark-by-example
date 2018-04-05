@@ -6,6 +6,13 @@ package body Push_Heap_P with
       Parent : Natural;
       A_Save : T_Arr := H.A;
       V_Save : T;
+      
+      procedure Make_Prove (
+      
+      
+      
+      
+      
    begin
       if 1 < H.Size then
          Hole := Heap_Parent (H.Size);
@@ -16,14 +23,15 @@ package body Push_Heap_P with
                Parent := Heap_Parent (Hole);
 	       pragma Assert(Hole > 1);
                while 1 < Hole and then H.A (Parent) < V loop
+                  
                   if H.A (Hole) < H.A (Parent) then
                      H.A (Hole) := H.A (Parent);
+                     
                   end if;
                   Hole := Parent;
                   if (1 < Hole) then
                      Parent := Heap_Parent (Hole);
                   end if;
-		  
 	          pragma Loop_Invariant(Hole in 1 .. H. Size);
 		  pragma Loop_Invariant(Is_Heap(H));
 		 pragma Loop_Invariant(if 1 < Hole then Parent = Heap_Parent(Hole));
