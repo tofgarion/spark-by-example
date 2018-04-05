@@ -2,9 +2,6 @@ package body Shuffle_Lemmas with
   SPARK_Mode is
    
    
-   procedure Occ_Eq(A : T_Arr; B : T_Arr; E : T) with
-     Pre => A = B,
-     Post => Occ(A,E) = Occ(B,E);
    
    procedure Occ_Eq(A: T_Arr; B : T_Arr; E : T) is
    begin
