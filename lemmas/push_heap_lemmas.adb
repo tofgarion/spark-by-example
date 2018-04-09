@@ -36,7 +36,7 @@ package body Push_Heap_Lemmas with
       end if;
    end Occ_Set;
 
-   procedure No_Changes (A_Old, A, A_Save : T_Arr; V, V_Old : T) is
+   procedure No_Changes (A_Old, A, A_Save : T_Arr; V, V_Old : T; Hole : Positive) is
    begin
       for E in T loop
          Occ_Eq (A, A_Save, E);
@@ -79,5 +79,20 @@ package body Push_Heap_Lemmas with
       end loop;
 
    end Make_Prove_Loop;
+
+   procedure Make_Prove_Epilogue
+     (A, A_Save, A_Old : T_Arr;
+      V : T;
+      Hole : Positive) is
+   begin
+      for E in T loop
+
+         Occ_Set (A_Save, A, Hole, V, E);
+
+         pragma Loop_Invariant
+           (for all F in T'First .. E =>
+              Occ (A, F) = Occ (A_Old, F));
+      end loop;
+   end Make_Prove_Epilogue;
 
 end Push_Heap_Lemmas;

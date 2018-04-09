@@ -30,14 +30,12 @@ package Multiset_Predicates with
       B   : T_Arr;
       Val : T) return Boolean is
      (Occ (B, Val) = Occ (A, Val) + 1) with
-   Pre => A'first = B'First and then A'Last = B'Last
-   and then A'Last < Positive'Last;
+   Pre => A'Length < Positive'Last;
 
    function Multiset_Minus
      (A   : T_Arr;
       B   : T_Arr;
      Val : T) return Boolean is
-    (Occ (B, Val) = Occ (A, Val) - 1) with
-      Pre => A'first = B'First and then A'Last = B'Last;
+    (Occ (B, Val) = Occ (A, Val) - 1);
 
 end Multiset_Predicates;
