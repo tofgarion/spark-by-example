@@ -7,6 +7,9 @@ SPARK_Mode,
   Ghost
 is
 
+   pragma warnings
+     (off, "postcondition does not check the outcome of calling");
+
    procedure Heap_Set( H1 : Heap; H2 : Heap; P : Positive; C : Positive) with
      Pre => H1.Size = H2.Size
      and then C in 2 .. H1.Size
