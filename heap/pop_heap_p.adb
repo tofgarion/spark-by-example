@@ -69,6 +69,9 @@ is
             Upper_Bound_Heap(H,V);   -- guide to upper_bound verification
             pragma assert(H.Size <= H.A'Last);
             
+
+            pragma Loop_Invariant(if Sizes /= H.A'Last then (for all J in H.Size +1 .. H.A'Last => H.A(J) = H'Loop_Entry.A(J)));
+
             pragma Loop_Invariant(H.A(1) = H'Loop_Entry.A(C1));
             pragma Loop_Invariant(Child.Exists);
             pragma Loop_Invariant(Child.Value < H.Size);
@@ -113,6 +116,10 @@ is
          H.A(H.Size) := V;
          Swap_Array(Interm,Hole,H.Size);
 	 
+
+         pragma assert(if Sizes /= H.A'Last then (for all J in H.Size +1 .. H.A'Last => H.A(J) = Init(J)));
+         
+
       else 
          pragma assert(H.A(H.Size) = H.A(1));  -- if nothing was done we verify that the last element and first element of the heap are equal (should be since the array is constant)
       end if;

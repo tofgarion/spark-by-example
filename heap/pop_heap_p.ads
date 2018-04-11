@@ -31,6 +31,7 @@ is
      and then H'Old.Size = H.Size+1
      and then Is_Heap_Def(H) 
      and then H.A(H.Size+1) = H'Old.A(1)
+     and then (if H'Old.Size /= H'Old.A'Last then (for all J in H'Old.Size + 1 .. H.A'Last => H.A(J) = H'Old.A(J)))
      and then Max_Element_Def(H.A(1 .. H.Size+1),H.Size+1);
    
 end Pop_Heap_P;
