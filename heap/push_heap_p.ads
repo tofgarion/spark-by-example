@@ -11,5 +11,5 @@ package Push_Heap_P with
    procedure Push_Heap (H : in out Heap) with
       Pre => H.Size in 1 .. MAX_SIZE
       and then Is_Heap ((A => H.A, Size => H.Size - 1)),
-      Post => Is_Heap (H) and then Multiset_Unchanged (H'Old.A(1 .. H.Size) , H.A(1 .. H.Size));
+      Post => Is_Heap (H) and then Multiset_Unchanged (H'Old.A(1 .. H.Size) , H.A(1 .. H.Size)) and then H.size = H'Old.size;
 end Push_Heap_P;

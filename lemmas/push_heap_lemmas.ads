@@ -78,28 +78,45 @@ package Push_Heap_Lemmas with
       and then Multiset_Minus (A_Old, A_Save, V)
       and then Multiset_Retain_Rest_Double (A_Old, A_Save, V_Old, V)
       and then Is_Set (A_Save, Hole, A (Hole), A)
-    -- and then Hole > 1
-       ,
+      -- and then Hole > 1
+      ,
       Post => Multiset_Add (A_Old, A, A (Hole))
       and then Multiset_Minus (A_Old, A, V)
-     and then Multiset_Retain_Rest_Double (A_Old, A, A (Hole), V);
+      and then Multiset_Retain_Rest_Double (A_Old, A, A (Hole), V);
 
    procedure Make_Prove_Epilogue
      (A, A_Save, A_Old : T_Arr;
-      V : T;
-      Hole : Positive) with
-     Ghost,
-       Pre => A'Last < Positive'Last
+      V                : T;
+      Hole             : Positive) with
+      Ghost,
+      Pre => A'Last < Positive'Last
       and then A'First = A_Save'First
       and then A'First = A_Old'First
       and then A'Last = A_Save'Last
       and then A'Last = A_Old'Last
       and then Hole in A'Range
       and then A (Hole) = V
-      and then Multiset_Add (A_Old, A_Save, A_Save(Hole))
+      and then Multiset_Add (A_Old, A_Save, A_Save (Hole))
       and then Multiset_Minus (A_Old, A_Save, V)
-      and then Multiset_Retain_Rest_Double (A_Old, A_Save, A_Save(Hole), V)
+      and then Multiset_Retain_Rest_Double (A_Old, A_Save, A_Save (Hole), V)
       and then Is_Set (A_Save, Hole, V, A),
-       Post => Multiset_Unchanged(A,A_Old);
+      Post => Multiset_Unchanged (A, A_Old);
+
+   procedure New_Element (A, B : T_Arr) with
+      Ghost,
+      Pre => A'Length > 0
+      and then B'Length = A'Length
+      and then Multiset_Unchanged (Remove_Last (A), Remove_Last (B))
+      and then A (A'Last) = B (B'Last),
+      Post => Multiset_Unchanged (A, B);
+
+   procedure Unchanged_Transitivity (A, B, C : T_Arr) with
+      Ghost,
+     Pre => A'Length > 0 and then
+       B'Length = A'Length
+      and then C'Length = B'Length
+      and then Multiset_Unchanged (A, B)
+      and then (Multiset_Unchanged (B, C) or else B=C),
+      Post => Multiset_Unchanged (A, C);
 
 end Push_Heap_Lemmas;
