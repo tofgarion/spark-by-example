@@ -11,10 +11,8 @@ package body Sort_Heap_P with
       pragma assert(Interm.Size <= N);
       For J in  reverse 1 .. N loop
          Interm := H;
-         --pragma assert(if J /= N then H.A(J +1)>= H.A(1));
 
          Pop_Heap(H);
-
 
          pragma assert(H.Size+1 <= N);
          pragma Loop_Invariant(H.A(J) >= H.A(1));
