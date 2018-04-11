@@ -1,6 +1,6 @@
 ** The Replace_Copy algorithm
 
-The ~Replace_Copy~ algorithm takes an array as an input and substitues all the elements equal to a given value by antoher given value, and copies the result in antoher array. Its signature reads:
+The ~Replace_Copy~ algorithm takes an array as an input and substitues all the elements equal to a given value by antoher given value, and copies the result in another array. Its signature reads:
 
 #+BEGIN_SRC ada
 procedure Replace_Copy (A : T_Arr, B : in out T_Arr; V : T; W : T)
@@ -26,7 +26,7 @@ function Is_Replaced
 
 This function requires that both arrays are of same length, and returns ~True~ if ~B~ is equal to ~A~ to the exception
 of the indexes ~K~ of ~A~ where ~A(K) = V~, in that case, the element at the matching index of ~B~ should be equal to ~W~.
-In a less formal way, ~B~ is equal to a copy of ~A~ where all the ~V~s were replaced by ~W~s.
+In a less formal way, ~B~ is equal to a copy of ~A~ where all the ~V~ s were replaced by ~W~ s.
 
 *** Specification of Replace_Copy
 
@@ -43,7 +43,7 @@ The only precondition is that both arrays should be of same length; the postcond
 
 *** Implementation of Replace_Copy
 
-~Replace_Copy~ can be implemented in the folowing way:
+~Replace_Copy~ can be implemented in the following way:
 
 #+BEGIN_SRC ada
 procedure Replace_Copy (A : T_Arr; B : in out T_Arr; V : T; W : T) is

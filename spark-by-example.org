@@ -170,9 +170,9 @@ Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
    :END:
 ** Swap_Ranges
    :PROPERTIES:
-   :Status:      Not started yet
-   :Level:
-   :Assigned_To:
+   :Status:  Finished
+   :Level: 1
+   :Assigned_To: Joffrey
    :END:
 ** Copy
    :PROPERTIES:
