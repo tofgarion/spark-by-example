@@ -5,7 +5,7 @@ package Types is
    
    type T_Arr is array (Positive range <>) of T;
 
-   MAX_SIZE : constant Positive := 1000;
+   MAX_SIZE : constant := 1000;
 
    type Option (Exists : Boolean := False) is record
       case Exists is
@@ -27,7 +27,7 @@ package Types is
    end record;
    
    type Heap  is record
-      A : T_Arr(1 .. MAX_SIZE);
+      A : T_Arr(1 .. MAX_SIZE) := (others => 0);
       Size : Natural := 0;
    end record;
    

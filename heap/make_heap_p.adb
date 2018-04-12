@@ -1,20 +1,48 @@
 package body Make_Heap_P with
-SPARK_Mode
-is
-   function Make_Heap (A : T_arr) return Heap is
+     Spark_Mode is
+   function Make_Heap (A : T_Arr) return Heap is
       Result : Heap;
+      A_Save : T_Arr := Result.A;
    begin
+      Result.Size := 0;
       if A'Length > 0 then
 
-         for J in 0 .. A'Length - 1 loop
-            Result.A (1 + J) := A (A'First + J);
-            Result.Size := Result.Size + 1;
-            Push_Heap(Result);
+         Result.A (1) := A (A'First);
+         Result.Size := 1;
 
-            pragma Loop_Invariant(Result.Size = 1 + J);
+         pragma Assert (Multiset_Unchanged(A(A'First .. A'First), Result.A(1 .. 1)));
+
+         for J in A'First + 1 .. A'Last loop
+            pragma Assert (Multiset_Unchanged(A(A'First .. J - 1), Result.A(1 .. J - A'First)));
+            Result.Size := Result.Size+1;
+            A_Save      := Result.A;
+
+              Unchanged_Transitivity
+                (A (A'First .. J - 1),
+                 Result.A (1 .. J - A'First),
+                 A_Save (1 .. J - A'First));
+
+
+            Result.A (J - A'First + 1) := A (J);
+
+
+            Unchanged_Transitivity (A (A'First .. J - 1), A_Save (1 .. J - A'First),Result.A (1 .. J - A'First));
+
+
+            New_Element (A (A'First .. J), Result.A (1 .. J - A'First + 1));
+            Push_Heap (Result);
+           -- Unchanged_Transitivity(A(A'First .. J), A_Save(1 .. J - A'First + 1), Result.A(1 .. J - A'First + 1));
+
+            pragma Loop_Invariant (Result.Size = J - A'First + 1);
+            pragma Loop_Invariant (J - A'First + 1 in 2 .. MAX_SIZE);
             pragma Loop_Invariant (Is_Heap (Result));
-            pragma Loop_Invariant (Multiset_Unchanged (Result.A (1 .. Result.Size), A (A'First .. A'First + J)));
+            pragma Loop_Invariant
+              (Multiset_Unchanged
+                 (A (A'First .. J),
+                  Result.A(1 .. J - A'First + 1)));
+
          end loop;
+
       end if;
       return Result;
    end Make_Heap;

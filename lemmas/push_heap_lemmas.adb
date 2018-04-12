@@ -36,6 +36,8 @@ package body Push_Heap_Lemmas with
       end if;
    end Occ_Set;
 
+   -- procedure Push_Heap
+
    procedure No_Changes (A_Old, A, A_Save : T_Arr; V, V_Old : T; Hole : Positive) is
    begin
       for E in T loop
@@ -94,5 +96,35 @@ package body Push_Heap_Lemmas with
               Occ (A, F) = Occ (A_Old, F));
       end loop;
    end Make_Prove_Epilogue;
+
+   -- end procedure Push_Heap
+
+   -- function Make_Heap
+
+   procedure New_Element (A, B : T_arr) is
+   begin
+      for E in T loop
+       pragma Assert(Occ(Remove_Last(A),E) = Occ(Remove_Last(B),E));
+
+         pragma Loop_Invariant (for all F in T'First .. E =>
+                                  Occ (A, F) = Occ (B, F));
+      end loop;
+   end New_Element;
+
+   procedure Unchanged_Transitivity (A, B, C : T_Arr) is
+   begin
+      for E in T loop
+         if B = C then
+            Occ_Eq (B, C, E);
+         end if;
+
+         pragma Loop_Invariant (for all F in T'First .. E =>
+                                  Occ (A, F) = Occ (C, F));
+      end loop;
+   end Unchanged_Transitivity;
+
+
+
+   -- end function Make_Heap
 
 end Push_Heap_Lemmas;
