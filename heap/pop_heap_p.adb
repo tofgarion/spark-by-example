@@ -24,16 +24,16 @@ is
    procedure Pop_Heap(H : in out Heap) 
    is
       V : T := H.A(1);
-      C1 : Positive;
+      C1 : Positive with Ghost;
       Hole : Positive := 1;
-      Sizes : constant Integer := H.Size;
+      Sizes : constant Integer := H.Size with Ghost;
       Child : Option;
       Interm : T_Arr(H.A'Range) := H.A;  -- should be ghost, but there are a few opperations done this variables.
       Init : T_Arr(H.A'Range) := H.A with Ghost; -- initial array
       Save : Heap := H with Ghost;  -- intermediary ghost heap.
    begin
       pragma assert(V = Init(1));
-      if H.A(H.Size) < V then  --nothing to be done otherwise (array is "constant")
+      if H.A(H.Size) < V then  --nothing to be done otherwise (H.A is "constant")
 	 pragma Assert(H.Size >=2);
          Child := Maximum_Heap_Child(H,Hole);
          if Child.Exists then

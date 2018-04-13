@@ -1,0 +1,351 @@
+** The Pop_Heap algorithm
+
+The ~Pop_Heap~ procedure will remove the root (and greatest) element of the heap, and rearange the other elements to preserve the heap structure.
+Its signature reads:
+
+#+BEGIN_SRC ada 
+procedure Pop_Heap(H : in out Heap)
+#+END_SRC
+
+*** Specififcation of Pop_Heap
+
+We now give a more precise definition of what this procedure should do. ~Pop_Heap~ will remove the first element of the heap,
+rearange the ~H.Size-1~ remaining elements so that the heap structure is preserved on those elements, which will then occupy the ~H.Size-1~ indexes of the array.
+The procedure will then reinsert the removed element at index ~H.Size~, which was no longer used. 
+
+With these considerations in mind, one specification for ~Pop_Heap~ is:
+
+#+BEGIN_SRC ada
+procedure Pop_Heap(H : in out Heap) with
+     Pre => H.Size >=1
+     and then Is_Heap_Def(H),
+     Post => Multiset_Unchanged(H.A,H'Old.A)
+     and then H'Old.Size = H.Size+1
+     and then Is_Heap_Def(H) 
+     and then H.A(H.Size+1) = H'Old.A(1)
+     and then (if H'Old.Size /= H'Old.A'Last then (for all J in H'Old.Size + 1 .. H.A'Last => H.A(J) = H'Old.A(J)))
+     and then Max_Element_Def(H.A(1 .. H.Size+1),H.Size+1);
+#+END_SRC
+
+The preconditions state that in order to remove an element from the heap, thisone must not be empty, and the record of type ~Heap~ 
+we will be working on must represent a heap data structure.
+the postconditions express that:
+- The number of occurences of each element of ~T~ in ~H~ will not have change when calling the procedure
+- The size of the elements in the heap data structure will be one less than when entering the procedure
+- ~H~ will still represent a heap data structure containing the remaining elements.
+- The first element of ~H.A~ will be place at index ~H.Size+1~, bearing in mind that ~H.Size~ has been decreased by one during the procedure.
+- The elementas found at indexes greater than ~H'Old.Size~ will remain unchanged.
+- The element found at index ~H.Size+1~ after the procedure will be the greatest element amond the ~H.Size+1~ first elements of ~H~.
+
+*** Predicates and lemmas used
+
+In order to correctly specify and implement ~Pop_Heap~ we need to write a few lemmas and predicates.
+
+**** The Max_Element_Def predicate
+
+This predicate defines if a given index corrrespnds to the maximum element of a given array:
+
+#+BEGIN_SRC ada
+function Max_Element_Def(A : T_Arr; Max : Natural) return Boolean
+      is
+	 (Max in A'Range and then Upper_Bound(A,A(Max)));
+#+END_SRC
+
+**** The predicate Heap_Maximum_Child
+
+#+BEGIN_SRC ada
+function Heap_Maximum_Child(H : Heap; P : Positive; C : Positive) return Boolean
+   is (Is_Heap_Def(H)
+      and then H.Size in 2 .. Positive'Last-1
+       and then P in 1 .. H.Size/2
+       and then C in 2 .. H.Size
+       and then  P = Heap_Parent(C)
+       and then (if Heap_Left(P) <= H.Size then H.A(Heap_Left(P))<=H.A(C))
+       and then (if Heap_Right(P) <= H.Size then H.A(Heap_Right(P)) <= H.A(C)));
+#+END_SRC
+
+
+This predicates verifies for a given ~Heap~ record and two indexes ~P~ and ~C~ that:
+- ~H~ represents a heap data structure
+- There are at least two elements in the heap represented by ~H~
+- ~P~ can be a parent, i.e. is in the correct range, and cannot be the last element of the heap,
+- at least one of the children of ~P~ is in the heap (~P <= H.Size/2~) , and then ~C~ must be a child of ~P~, and the value at index ~C~ must be the greatest of the two values found at the indexes of the children of ~P~
+
+**** The Maximum_Heap_Child function
+
+This function returns an option containing, for a given heap ~H~ and a given index ~P~, the child of P for which the associated value is the greatest if it exists in the heap.
+
+Its specification is as follows:
+
+#+BEGIN_SRC ada
+function Maximum_Heap_Child(H : Heap; P : Positive) return Option with
+     Pre =>
+       H.Size  in 2 .. Positive'Last-1
+       and then P in 1 .. H.Size-1
+       and then Is_Heap_Def(H),
+     Contract_Cases =>
+       (H.Size/2 < P => not Maximum_Heap_Child'Result.exists,
+        Others => Maximum_Heap_Child'Result.Exists 
+        and then Heap_Maximum_Child(H,P,Maximum_Heap_Child'Result.Value)
+        and then Maximum_Heap_Child'Result.Value in P + 1 .. H.Size
+        and then P = Heap_Parent(Maximum_Heap_Child'Result.Value));
+#+END_SRC
+
+The preconditions express that ~H~ represents a heap data structure, the heap represented by ~H~ has at least two elements and that ~P~ is a valid parent index.
+The postconditions are expressed through contract cases:
+- if the children of ~P~ are not represented in ~H~, then there is nothing returned
+- Otherwise the returned value complies with the definitions of the maximum child, given by the previous predicate.
+
+
+This function can be implemented in the following way:
+
+#+BEGIN_SRC ada
+function Maximum_Heap_Child(H : Heap; P : Positive) return Option
+   is
+      Right, Left : Positive;  -- storage for the two childs.
+   begin
+      if P <= H.Size/2 then
+	 Right := 2*P+1;
+	 Left := Right -1;
+	 if Right <= H.Size then
+	    return (Exists => True, Value =>(if H.A(Right) <= H.A(Left) then Left else Right));
+	 else
+	       return (Exists => True, Value =>Left);
+	 end if;
+      else
+	 return (Exists => False);
+      end if;
+	 
+   end Maximum_Heap_Child;
+#+END_SRC
+
+The implementation is quite strainghtforward, as there are no loops or calls to other function, the program does not need annotations to be proved.
+
+**** Heap lemmas
+
+We present here two lemmas concerning the properties of heap when modifying an element or concerning the order of the elements.
+
+#+BEGIN_SRC ada
+procedure Heap_Set( H1 : Heap; H2 : Heap; P : Positive; C : Positive) with
+     Pre => H1.Size = H2.Size
+     and then C in 2 .. H1.Size
+     and then P in 1 .. C
+     and then P = Heap_Parent(C)
+     and then Heap_Maximum_Child(H1,P,C)
+     and then Is_Heap_Def(H1)
+     and then Is_Set(H1.A, P, H1.A(C), H2.A),
+     Post => Is_Heap_Def(H2);
+#+END_SRC
+
+In this lemma we prove that replacing the value at index ~P~ in a heap by the value found at the maximum child of ~P~ does not change the heap properties.
+More specificaly here the preconditions, which act as hyposthesis ewpress that:
+- Our two heaps must be of same size,
+- ~C~ is the child of greatest value of ~P~
+- ~H1~ verifies all the properties of a heap
+- ~H2~ is equal to ~H1~ to the exception of the index ~P~ which is equal to ~H1.A(C)~.
+
+The postcondition express the fact that if these hypothesis are respected then ~H2~ also respect the properties defining a heap.
+
+The body of the procedure only consists of the instruction ~null;~, as guiding Spark by giving him the rigth hypothesis to work with is enough for him to prove the lemma.
+
+#+BEGIN_SRC ada
+procedure Upper_Bound_Heap(H : Heap; V : T) with
+     Pre => H.Size >=1
+     and then Is_Heap_Def(H)
+     and then V >= H.A(1),
+     Post => (for all J in 1 .. H.Size => V >= H.A(J));
+#+END_SRC
+
+This lemma is here to make the solvers aware that if ~H~ respects the heap properties, and if ~V~ is 
+greater than the first element of ~H~ then ~V~ is greater than all the others elements of ~H~. This can be proved by induction
+with the relations betwen parents and children, but spark can prove this lemma automatically, so the body of the procedure only consits of the ~null;~ instruction.
+
+When proving ~Upper_Bound_Heap~ spark issues a warning:
+
+#+BEGIN_SRC ada
+heap_lemmas.ads:27:06: warning: postcondition does not check the outcome of calling "Upper_Bound_Heap"
+#+END_SRC
+
+This is a know issue of the developpers of Spark, we will supress this warning the same way it is done in the [[https://github.com/AdaCore/spark2014/blob/master/include/spark-constrained_array_lemmas.ads][SPARK Lemma Library]], by adding the following instruction in the package containing the lemmas:
+
+#+BEGIN_SRC ada
+pragma warnings
+     (off, "postcondition does not check the outcome of calling");
+#+END_SRC
+
+*** Implementation of Pop_Heap
+
+With all these lemmas and predicates we can give an implementation for ~Pop_Heap~
+
+#+BEGIN_SRC ada -n 6
+procedure Pop_Heap(H : in out Heap) 
+   is
+      V : T := H.A(1);
+      C1 : Positive with Ghost;
+      Hole : Positive := 1;
+      Sizes : constant Integer := H.Size with Ghost;
+      Child : Option;
+      Interm : T_Arr(H.A'Range) := H.A;  -- should be ghost, but there are a few opperations done this variables.
+      Init : T_Arr(H.A'Range) := H.A with Ghost; -- initial array
+      Save : Heap := H with Ghost;  -- intermediary ghost heap.
+   begin
+      pragma assert(V = Init(1));
+      if H.A(H.Size) < V then  --nothing to be done otherwise (H.A is "constant")
+	 pragma Assert(H.Size >=2);
+         Child := Maximum_Heap_Child(H,Hole);
+         if Child.Exists then
+            C1 := Child.Value;
+         else
+            C1 := H.Size+1;
+         end if;
+         
+         pragma Assert(Is_Heap_Def(H));
+         while Child.Exists and then Child.Value < H.Size and then  H.A(H.Size) < H.A(Child.Value) loop
+            
+            Save := H;
+            
+            pragma assert(Hole in Interm'Range and then Child.Value in Interm'Range); -- precondition checking
+            
+            Swap_Array(Interm,Hole,Child.Value); -- permutation approach : preserves multiset but not heap structure
+            
+            pragma assert(Is_Heap_Def(Save));
+            pragma assert(H.A(Hole) >= H.A(Child.Value));
+            
+            H.A(Hole) := H.A(Child.Value);  -- moving "hole" approcach : preserves heap structure but not multiset structure.
+            
+            pragma assert(Child.Exists);
+            pragma assert(C1<=H.Size);
+            pragma assert(C1 >= 2 and then 1 = Heap_Parent(C1));
+            pragma assert(H.A(1) = Init(C1));
+            pragma Assert(Is_Set(Save.A,Hole,Save.A(Child.Value),H.A));
+            Heap_Set(Save,H,Hole,Child.Value); -- guide to automatic solvers, helps them keep track of the modifications.
+            
+            pragma Assert(H.Size >=2);
+            pragma Assert(Child.Value in H.A'Range);
+            pragma assert(V >= H.A(1));
+            Upper_Bound_Heap(H,V);   -- guide to upper_bound verification
+            pragma assert(H.Size <= H.A'Last);
+            
+
+            pragma Loop_Invariant(if Sizes /= H.A'Last then (for all J in H.Size +1 .. H.A'Last => H.A(J) = H'Loop_Entry.A(J)));
+
+            pragma Loop_Invariant(H.A(1) = H'Loop_Entry.A(C1));
+            pragma Loop_Invariant(Child.Exists);
+            pragma Loop_Invariant(Child.Value < H.Size);
+            pragma Loop_Invariant(H.Size = H'Loop_Entry.Size);
+	    pragma Loop_Invariant(Hole in 1 .. H.Size-1);
+	    pragma Loop_Invariant(Hole < Child.Value);
+	    pragma Loop_Invariant(if Hole /=1 then H.A(H.Size) < H.A(Heap_Parent(Hole)));
+            pragma Loop_Invariant(if Child.Value < H.Size then Hole = Heap_Parent(Child.Value));
+            pragma Loop_Invariant(Heap_Maximum_Child(H,Hole,Child.Value));
+            pragma Loop_Invariant(H.Size in H.A'Range);
+            pragma Loop_Invariant(Upper_Bound(H.A(1 .. Sizes),V));
+            pragma Loop_Invariant(Multiset_Unchanged(Init,Interm));
+            pragma Loop_Invariant(Is_Set(H.A,Child.Value,V,Interm));
+            pragma Loop_Invariant(Is_Heap_Def(H));
+            pragma Loop_Invariant(H.A(Hole) > H.A(H.Size));
+            pragma Loop_Variant(Decreases => H.Size-Hole);
+            
+	    Hole := Child.Value;
+	    pragma Assert(Hole < H.Size);
+            Child := Maximum_Heap_Child(H,Hole);
+            
+         end loop;
+         
+         Save := H;
+         pragma assert(if Child.Exists and then Child.value <H.Size then H.A(H.Size) >= H.A(Child.Value));  -- checks to helps to prove the conservation of heap structure
+         pragma assert(Is_Heap_Def(H));
+         pragma assert(if Child.Exists and then Child.Value < H.Size and then Hole /=1 then Heap_Maximum_Child(H,Hole,Child.Value) and then H.A(H.Size) < H.A(Heap_Parent(Hole)));
+         
+         
+         H.A(Hole) := H.A(H.Size);
+         
+         
+         pragma assert(Is_Set(Save.A,Hole,Save.A(H.Size),H.A));  -- checks to help prove heap structure.
+         if Child.Exists and then Child.Value = H.Size then 
+            Heap_Set(Save,H,Hole,H.Size);
+         elsif Child.Exists and then Child.Value < H.Size then
+            null;
+         end if;
+         
+         pragma assert(Is_Heap_Def(h));
+         
+         H.A(H.Size) := V;
+         Swap_Array(Interm,Hole,H.Size);
+	 
+
+         pragma assert(if Sizes /= H.A'Last then (for all J in H.Size +1 .. H.A'Last => H.A(J) = Init(J)));
+         
+
+      else 
+         pragma assert(H.A(H.Size) = H.A(1));  -- if nothing was done we verify that the last element and first element of the heap are equal (should be since the array is constant)
+      end if;
+      
+      pragma Assert(Interm = H.A);  -- verify that swap approach and hole approcach give same result
+      for V in T loop
+         Occ_Eq(Interm,H.A,V);
+         pragma Loop_Invariant(for all F in T'First .. V => Occ(Interm,F) = Occ(H.A,F));  --verify that Interm and H.A represent same the same set of values
+      end loop;
+      pragma Assert(Multiset_Unchanged(Interm,H.A));
+      pragma Assert(Multiset_Unchanged(Init, H.A));
+      
+      pragma assert(V = H.A(H.Size));
+      H.Size := H.Size-1;
+      pragma assert(V = H.A(H.Size +1));
+      
+      pragma Assert(H.A'Length >= H.Size+1);
+      if H.Size >=1 then
+         Upper_Bound_Heap(H,H.A(H.Size+1));
+      end if;
+      
+      pragma Assert(Upper_Bound(H.A(1 .. H.Size+1),H.A(H.Size+1)));
+   end Pop_Heap;
+#+END_SRC
+
+The code with all the annotations is quite difficult to read, it might be better to look at the code without annotations to understand the working principle of this algorithm:
+
+#+BEGIN_SRC ada
+procedure Pop_Heap(H : in out Heap) 
+   is
+      V : T := H.A(1);
+      Hole : Positive := 1;
+      Child : Option;
+   begin
+      if H.A(H.Size) < V then  --nothing to be done otherwise (array is "constant")
+         Child := Maximum_Heap_Child(H,Hole);
+         if Child.Exists then
+            C1 := Child.Value;
+         else
+            C1 := H.Size+1;
+         end if;
+
+         while Child.Exists and then Child.Value < H.Size and then  H.A(H.Size) < H.A(Child.Value) loop
+            
+            H.A(Hole) := H.A(Child.Value); 
+	    Hole := Child.Value;
+            Child := Maximum_Heap_Child(H,Hole);
+            
+         end loop;
+         
+         H.A(Hole) := H.A(H.Size);
+         H.A(H.Size) := V;
+      
+      end if;
+      H.Size := H.Size-1;
+      
+   end Pop_Heap;
+#+END_SRC
+
+Here the procedure is as follows: 
+1. We store the first value of the heap (which will be removed). We now consider that there is a "Hole" in the heap, that needs to go down, while preserving the heap structure.
+2. we find the child of maximum value of the hole, and we exchange them. This guarantees that the heap structure is preserved. This step is repeated as many times as needed, until the value of the next child is less than the value of the last element
+3. when exiting the loop, the hole is replaced by the last element of the heap. We then consider that the heap has only ~H.Size-1~ elements, and the element removed at the begining of the algorithm is placed at the index ~H.Size~.
+
+As for the annotations to help SPARK prove the program, we will first need a few ghost variables:
+- ~C1~, which will hold the maximum Child of the first element. It will come in handy when proving that the first element of H remains constant through the loop
+- ~Sizes~ which will simply hold the size of ~H~. It will be used to fix ann issue of array index check.
+- ~Interm~ This variable will be used to compare the approcah of swapping the elements at indexes ~Hole~ and ~Child.Value~, which acts as a permutation, instead of simply replacing the value of the hole by the one of it's child, which preserves the heap structure.
+- ~Init~ which as it's name suggests holds the state of ~H~ before the execution of the algorithm
+- ~Save~ which will be used as a temporary save to compare the state of the heap between various points of the Algorithm.
+
+

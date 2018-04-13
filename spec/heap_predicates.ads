@@ -28,14 +28,12 @@ package Heap_Predicates with
       
    function Heap_Maximum_Child(H : Heap; P : Positive; C : Positive) return Boolean
    is (Is_Heap_Def(H)
-      and then H.Size in 2 .. Positive'Last-1
-       and then P in 1 .. H.Size -1
-       and then (if P > H.Size/2 
-                 then C = H.Size +1 
-                 else (C in 2 .. H.Size
-                       and then  P = Heap_Parent(C)
-                       and then (if Heap_Left(P) <= H.Size then H.A(Heap_Left(P))<=H.A(C))
-                       and then (if Heap_Right(P) <= H.Size then H.A(Heap_Right(P)) <= H.A(C)))));
+	 and then H.Size in 2 .. Positive'Last-1
+	 and then P in 1 .. H.Size/2
+	 and then C in 2 .. H.Size
+	 and then  P = Heap_Parent(C)
+	 and then (if Heap_Left(P) <= H.Size then H.A(Heap_Left(P))<=H.A(C))
+         and then (if Heap_Right(P) <= H.Size then H.A(Heap_Right(P)) <= H.A(C)));
    
       
 end Heap_Predicates;
