@@ -71,13 +71,13 @@ is
             
 
             pragma Loop_Invariant(if Sizes /= H.A'Last then (for all J in H.Size +1 .. H.A'Last => H.A(J) = H'Loop_Entry.A(J)));
-
             pragma Loop_Invariant(H.A(1) = H'Loop_Entry.A(C1));
             pragma Loop_Invariant(Child.Exists);
             pragma Loop_Invariant(Child.Value < H.Size);
             pragma Loop_Invariant(H.Size = H'Loop_Entry.Size);
 	    pragma Loop_Invariant(Hole in 1 .. H.Size-1);
 	    pragma Loop_Invariant(Hole < Child.Value);
+	    pragma Loop_Invariant(H.A(Hole) > H.A(H.Size));
 	    pragma Loop_Invariant(if Hole /=1 then H.A(H.Size) < H.A(Heap_Parent(Hole)));
             pragma Loop_Invariant(if Child.Value < H.Size then Hole = Heap_Parent(Child.Value));
             pragma Loop_Invariant(Heap_Maximum_Child(H,Hole,Child.Value));
@@ -86,7 +86,6 @@ is
             pragma Loop_Invariant(Multiset_Unchanged(Init,Interm));
             pragma Loop_Invariant(Is_Set(H.A,Child.Value,V,Interm));
             pragma Loop_Invariant(Is_Heap_Def(H));
-            pragma Loop_Invariant(H.A(Hole) > H.A(H.Size));
             pragma Loop_Variant(Decreases => H.Size-Hole);
             
 	    Hole := Child.Value;

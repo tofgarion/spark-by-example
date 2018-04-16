@@ -177,7 +177,7 @@ pragma warnings
 
 With all these lemmas and predicates we can give an implementation for ~Pop_Heap~
 
-#+BEGIN_SRC ada -n 6
+#+BEGIN_SRC ada -n 6 -r
 procedure Pop_Heap(H : in out Heap) 
    is
       V : T := H.A(1);
@@ -218,32 +218,31 @@ procedure Pop_Heap(H : in out Heap)
             pragma assert(C1 >= 2 and then 1 = Heap_Parent(C1));
             pragma assert(H.A(1) = Init(C1));
             pragma Assert(Is_Set(Save.A,Hole,Save.A(Child.Value),H.A));
-            Heap_Set(Save,H,Hole,Child.Value); -- guide to automatic solvers, helps them keep track of the modifications.
+            Heap_Set(Save,H,Hole,Child.Value); -- guide to automatic solvers, helps them keep track of the modifications. (ref:heap_set)
             
             pragma Assert(H.Size >=2);
             pragma Assert(Child.Value in H.A'Range);
             pragma assert(V >= H.A(1));
-            Upper_Bound_Heap(H,V);   -- guide to upper_bound verification
+            Upper_Bound_Heap(H,V);   -- guide to upper_bound verification  (ref:Upper_Bound_Heap)
             pragma assert(H.Size <= H.A'Last);
             
 
             pragma Loop_Invariant(if Sizes /= H.A'Last then (for all J in H.Size +1 .. H.A'Last => H.A(J) = H'Loop_Entry.A(J)));
-
             pragma Loop_Invariant(H.A(1) = H'Loop_Entry.A(C1));
-            pragma Loop_Invariant(Child.Exists);
+            pragma Loop_Invariant(Child.Exists);  (ref:invstart)
             pragma Loop_Invariant(Child.Value < H.Size);
             pragma Loop_Invariant(H.Size = H'Loop_Entry.Size);
 	    pragma Loop_Invariant(Hole in 1 .. H.Size-1);
 	    pragma Loop_Invariant(Hole < Child.Value);
+            pragma Loop_Invariant(H.A(Hole) > H.A(H.Size));
 	    pragma Loop_Invariant(if Hole /=1 then H.A(H.Size) < H.A(Heap_Parent(Hole)));
             pragma Loop_Invariant(if Child.Value < H.Size then Hole = Heap_Parent(Child.Value));
             pragma Loop_Invariant(Heap_Maximum_Child(H,Hole,Child.Value));
-            pragma Loop_Invariant(H.Size in H.A'Range);
+            pragma Loop_Invariant(H.Size in H.A'Range); (ref:invstop)
             pragma Loop_Invariant(Upper_Bound(H.A(1 .. Sizes),V));
             pragma Loop_Invariant(Multiset_Unchanged(Init,Interm));
             pragma Loop_Invariant(Is_Set(H.A,Child.Value,V,Interm));
             pragma Loop_Invariant(Is_Heap_Def(H));
-            pragma Loop_Invariant(H.A(Hole) > H.A(H.Size));
             pragma Loop_Variant(Decreases => H.Size-Hole);
             
 	    Hole := Child.Value;
@@ -336,7 +335,7 @@ procedure Pop_Heap(H : in out Heap)
    end Pop_Heap;
 #+END_SRC
 
-Here the procedure is as follows: 
+Here the idea behing the procedure is to remove the first element, thus creating a "hole" in the heap. We then proceed to move the hole down the heap wile taking care to preserve the heap structure, until it reaches the en of the heap, where we reinsert the removed value. More specificaly the procedure is as follows:
 1. We store the first value of the heap (which will be removed). We now consider that there is a "Hole" in the heap, that needs to go down, while preserving the heap structure.
 2. we find the child of maximum value of the hole, and we exchange them. This guarantees that the heap structure is preserved. This step is repeated as many times as needed, until the value of the next child is less than the value of the last element
 3. when exiting the loop, the hole is replaced by the last element of the heap. We then consider that the heap has only ~H.Size-1~ elements, and the element removed at the begining of the algorithm is placed at the index ~H.Size~.
@@ -349,3 +348,31 @@ As for the annotations to help SPARK prove the program, we will first need a few
 - ~Save~ which will be used as a temporary save to compare the state of the heap between various points of the Algorithm.
 
 
+The implementation is rich in asssertions, most of them help verify the preconditions to the lemmas and predicates we will use. The following section will nevertheless explain the thought process
+behind the annotation of the program:
+
+The first thing to notice is that the working principle of the algorithm is quite similar to [[Push_Heap.org][Push_Heap]], so we could have taken the same approach
+to prove the postcondition ~Multiset_Unchanged(H'Old.A,A)~ with the help of the predicates ~Multiset_Add~ and ~Multiset_Minus~. This approach was necessary because when moving the "hole" around the number of occurences
+varies but the structure of heap is preserved. Here to prove this postcondition we will duplicate the array at the begining, and at each iteration we will swap the values found at indexes ~Child.Value~ and ~Hole~. This approach does not preserve the structure of heap, but verifies that
+only permutations are applied to the array. 
+
+Let's take a look at the ~while~ loop. We first save the state of ~H~ in order to be able to help the solvers assess the changes that will occur during the loop. We then swap the values at indexes ~Hole~ and ~Child.Value~ for ~Interm~
+and replace the value found at index ~Hole~ by the one found at ~Child.Value~. As mentionned before, the "swap" approach aims to prove the ~multiset_unchanged~ postcondition. The ~swap prcedure ensures this through it's postconditions, so there is no need to annotate this part of the code.
+On the other hand when simply replacing the value found at the index ~Hole~, SPARK does not manage to prove that the heap structure is preserved. That is why we then proced to call the lemma ~Heap_Set~, line [[(heap_set)]]. All the preceeding assertions are hrer to verify the hypothesis to the lemma. Now that
+we know that ~H~ is still a heap, we can use the order properties of the heap data structure in order to proove that the element removed at the begining of the procedure is an upper bound for the heap. This is done by calling the lemma ~Upper_Bound_Heap~ line [[(Upper_Bound_Heap)]]. With these two lemmas 
+instanciated we have everything we need in order to prove the loop invariants.
+
+The loop invariants (in order of appearance) ensure that: 
+1) All the values found at indexes greater than ~H.Size~ remain unchanged
+2) The first element of the heap remains constant after the first swap. This is useful to prove that the element we removed is greater than all the elements left in hte heap
+3) The loop invariants from line [[(invstart)]] to line [[(invstop)]] check that various preconditions to the predicates used later hold true *at this point* in the loop
+4) ~V~ is an upperbound for the remaining elements in the Heap
+5) ~Interm~ is a permutation of the initial array
+6) ~Interm~ is equal to ~H.A~ to the exception of index ~Child.Value~, which is equal to ~V~. This loop_Invariant helps the solvers keep track of the differences between ~Interm~ and ~H.A~
+7) ~H~ has a heap structure
+
+The only remaining thing left in the loop is the update of ~Child~ and of ~Hole~. Since we use a ~while~ loop we need to specify that ~Child.Value~ decreases as a loop variant.
+
+After exiting the loop, we are left with three variable assignments, and yet without annotating them the proof of the postconditions is impossible. The reason behind this issue is that there are multiple causes for exiting the wile loop,
+and the exit conditions have non trivial implications on the values of ~Hole~, ~Child~ and the state of the heap. We will detail what the exit conditions are, what they implicate and the annotations that were added to help the solvers understand
+what is going on. 
