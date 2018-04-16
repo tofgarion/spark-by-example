@@ -25,7 +25,6 @@ is
    
      procedure Pop_Heap(H : in out Heap) with
      Pre => H.Size >=1
-     and then H.A'Length >=1
      and then Is_Heap_Def(H),
      Post => Multiset_Unchanged(H.A,H'Old.A)
      and then H'Old.Size = H.Size+1
