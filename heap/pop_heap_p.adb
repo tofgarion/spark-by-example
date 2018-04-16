@@ -106,8 +106,8 @@ is
          pragma assert(Is_Set(Save.A,Hole,Save.A(H.Size),H.A));  -- checks to help prove heap structure.
          if Child.Exists and then Child.Value = H.Size then 
             Heap_Set(Save,H,Hole,H.Size);
-         elsif Child.Exists and then Child.Value < H.Size then
-            null;
+         --elsif Child.Exists and then Child.Value < H.Size then
+           -- null;
          end if;
          
          pragma assert(Is_Heap_Def(h));
