@@ -352,7 +352,7 @@ The loop invariants (in order of appearance) ensure that:
 1) All the values found at indexes greater than ~H.Size~ remain unchanged
 2) The first element of the heap remains constant after the first swap. This is useful to prove that the element we removed is greater than all the elements left in the heap
 3) The loop invariants from line [[(invstart)]] to line [[(invstop)]] check that various preconditions to the predicates used later hold true *at this point* in the loop
-4) ~V~ is an upperbound for the remaining elements in the Heap
+4) ~V~ is an upperbound for the remaining elements in the Heap. It should be noted that in the call to ~Upper_Bound~ we use ~Sizes~ and not ~H.Size~ (which are equal in value throughout the loop) to avoid an an ~range check might fail~ error from gnatprove.
 5) ~Interm~ is a permutation of the initial array
 6) ~Interm~ is equal to ~H.A~ to the exception of index ~Child.Value~, which is equal to ~V~. This loop invariant helps the solvers keep track of the differences between ~Interm~ and ~H.A~
 7) ~H~ has a heap structure
