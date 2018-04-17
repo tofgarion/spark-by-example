@@ -77,9 +77,7 @@ package Push_Heap_Lemmas with
       and then Multiset_Add (A_Old, A_Save, V_Old)
       and then Multiset_Minus (A_Old, A_Save, V)
       and then Multiset_Retain_Rest_Double (A_Old, A_Save, V_Old, V)
-      and then Is_Set (A_Save, Hole, A (Hole), A)
-      -- and then Hole > 1
-      ,
+      and then Is_Set (A_Save, Hole, A (Hole), A),
       Post => Multiset_Add (A_Old, A, A (Hole))
       and then Multiset_Minus (A_Old, A, V)
       and then Multiset_Retain_Rest_Double (A_Old, A, A (Hole), V);
