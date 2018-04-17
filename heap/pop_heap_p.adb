@@ -95,30 +95,19 @@ is
          end loop;
          
          Save := H;
-         pragma assert(if Child.Exists and then Child.value <H.Size then H.A(H.Size) >= H.A(Child.Value));  -- checks to helps to prove the conservation of heap structure
-         pragma assert(Is_Heap_Def(H));
-         pragma assert(if Child.Exists and then Child.Value < H.Size and then Hole /=1 then Heap_Maximum_Child(H,Hole,Child.Value) and then H.A(H.Size) < H.A(Heap_Parent(Hole)));
-         
+
+         pragma assert(if Child.Exists and then Child.Value < H.Size and then Hole /=1 then H.A(H.Size) < H.A(Heap_Parent(Hole)));
          
          H.A(Hole) := H.A(H.Size);
          
-         
          pragma assert(Is_Set(Save.A,Hole,Save.A(H.Size),H.A));  -- checks to help prove heap structure.
-         if Child.Exists and then Child.Value = H.Size then 
-            Heap_Set(Save,H,Hole,H.Size);
-         --elsif Child.Exists and then Child.Value < H.Size then
-           -- null;
-         end if;
-         
          pragma assert(Is_Heap_Def(h));
          
          H.A(H.Size) := V;
          Swap_Array(Interm,Hole,H.Size);
-	 
-
+         
          pragma assert(if Sizes /= H.A'Last then (for all J in H.Size +1 .. H.A'Last => H.A(J) = Init(J)));
          
-
       else 
          pragma assert(H.A(H.Size) = H.A(1));  -- if nothing was done we verify that the last element and first element of the heap are equal (should be since the array is constant)
       end if;
@@ -129,18 +118,14 @@ is
          pragma Loop_Invariant(for all F in T'First .. V => Occ(Interm,F) = Occ(H.A,F));  --verify that Interm and H.A represent same the same set of values
       end loop;
       pragma Assert(Multiset_Unchanged(Interm,H.A));
-      pragma Assert(Multiset_Unchanged(Init, H.A));
       
       pragma assert(V = H.A(H.Size));
       H.Size := H.Size-1;
-      pragma assert(V = H.A(H.Size +1));
       
       pragma Assert(H.A'Length >= H.Size+1);
       if H.Size >=1 then
          Upper_Bound_Heap(H,H.A(H.Size+1));
       end if;
-      
-      pragma Assert(Upper_Bound(H.A(1 .. H.Size+1),H.A(H.Size+1)));
 
-	 end Pop_Heap;
+   end Pop_Heap;
 end Pop_Heap_P;

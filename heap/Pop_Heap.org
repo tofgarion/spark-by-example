@@ -252,32 +252,21 @@ procedure Pop_Heap(H : in out Heap)
          end loop;
          
          Save := H;
-         pragma assert(if Child.Exists and then Child.value <H.Size then H.A(H.Size) >= H.A(Child.Value));  -- checks to helps to prove the conservation of heap structure
-         pragma assert(Is_Heap_Def(H));
-         pragma assert(if Child.Exists and then Child.Value < H.Size and then Hole /=1 then Heap_Maximum_Child(H,Hole,Child.Value) and then H.A(H.Size) < H.A(Heap_Parent(Hole)));
-         
+
+         pragma assert(if Child.Exists and then Child.Value < H.Size and then Hole /=1 then H.A(H.Size) < H.A(Heap_Parent(Hole))); (ref:exit)
          
          H.A(Hole) := H.A(H.Size);
          
-         
          pragma assert(Is_Set(Save.A,Hole,Save.A(H.Size),H.A));  -- checks to help prove heap structure.
-         if Child.Exists and then Child.Value = H.Size then 
-            Heap_Set(Save,H,Hole,H.Size);
-         elsif Child.Exists and then Child.Value < H.Size then
-            null;
-         end if;
-         
          pragma assert(Is_Heap_Def(h));
          
          H.A(H.Size) := V;
          Swap_Array(Interm,Hole,H.Size);
 	 
-
          pragma assert(if Sizes /= H.A'Last then (for all J in H.Size +1 .. H.A'Last => H.A(J) = Init(J)));
          
-
       else 
-         pragma assert(H.A(H.Size) = H.A(1));  -- if nothing was done we verify that the last element and first element of the heap are equal (should be since the array is constant)
+         pragma assert(H.A(H.Size) = H.A(1));  -- if nothing was done we verify that the last element and first element of the heap are equal (should be since the array is constant) (ref:constant)
       end if;
       
       pragma Assert(Interm = H.A);  -- verify that swap approach and hole approcach give same result
@@ -286,18 +275,15 @@ procedure Pop_Heap(H : in out Heap)
          pragma Loop_Invariant(for all F in T'First .. V => Occ(Interm,F) = Occ(H.A,F));  --verify that Interm and H.A represent same the same set of values
       end loop;
       pragma Assert(Multiset_Unchanged(Interm,H.A));
-      pragma Assert(Multiset_Unchanged(Init, H.A));
       
       pragma assert(V = H.A(H.Size));
       H.Size := H.Size-1;
-      pragma assert(V = H.A(H.Size +1));
       
       pragma Assert(H.A'Length >= H.Size+1);
       if H.Size >=1 then
          Upper_Bound_Heap(H,H.A(H.Size+1));
       end if;
-      
-      pragma Assert(Upper_Bound(H.A(1 .. H.Size+1),H.A(H.Size+1)));
+
    end Pop_Heap;
 #+END_SRC
 
@@ -375,5 +361,17 @@ The only remaining thing left in the loop is the update of ~Child~ and of ~Hole~
 
 After exiting the loop, we are left with three variable assignments, and yet without annotating them the proof of the postconditions is impossible. The reason behind this issue is that there are multiple causes for exiting the wile loop,
 and the exit conditions have non trivial implications on the values of ~Hole~, ~Child~ and the state of the heap. We will detail what the exit conditions are, what they implicate and the annotations that were added to help the solvers understand
-what is going on. When exiting the loop, ~Child~ is the ~Maximum_Heap_Child~ of ~Hole~. If ~Child.Exists~ is false when exiting the loop, then ~Hole~ has no children. In that case, we know that the value found at the index ~Hole~ (if it exists) is strictly greater than the value found at index ~H.Size~,
-otherwise we would have exited the loop at the previous iteration. This ensures that when executing ~H.A(Hole) := H.A(H.Size)~ the heap structure is preserved. 
+what is going on. When exiting the loop, ~Child~ is the ~Maximum_Heap_Child~ of ~Hole~. One thing that is alwas true when exiting the loop is that ~H.A(Hole) > H.A(H.Size)~ (otherwise, the loop would have exited in the previous iteration). This ensures that when executing ~H.A(Hole) := H.A(H.Size)~ the heap structure is preserved.
+The case when we exit the loop with ~Child.Exists~ equal to ~False~ corresponds to the case where the "hole" has no children. The solvers can keep track of what is happening, so there is no need to add any assertions. When we exit the loop with ~Child.Exists = True~ and ~Child.Value = H.Size~ then
+the affectation acts as if we did one more iteration of the loop, so there is nothing to add here, but when we exit the loop with
+~Child.Exists = True~, ~Child.Value < H.Size~, then ~H.A(Child.Value) <= H.A(H.Size)~. In that case the solvers need a bit of guidance to understand that replacing the value found at ~Hole~ by the one found at ~H.Size~ will preserve the heap structure. This is due to the fact that the automatic proof does not remember that in the
+previous iteration, the parent of ~Hole~ had a value strictly greater than the value found at ~H.Size~. This is corrected with the assertion line [[(exit)]].
+
+We then proceed to replace the value found at index ~Hole~, the two following assertions help prove the conservation of the heap structure. We then proceed to replace the value found at index ~H.Size~ by the value saved at the begining of the algorithm, and to swap the values found at indexes ~Hole~ and ~H.Size~ in ~Interm~, which is equivalent to the two previous affectations donne in ~H.A~.
+We check that the other indexes were not modified, and this concludes the modifications that will be donne to the arrays. 
+
+The line [[(constant)]] verifies that if we do not have ~H.A(1) > H.A(H.Size)~ at the begining of the algorithm, then ~H.A(1) = H.A(H.Size))~. (This is true, because wi the properties of a heap we can demonstrate that the array is constant)
+
+What is left to check is that our two approaches (swaping and replacing) give the same end result, and with a similar technique used in the proof of [[../mutating/Random_Shuffle.org][Swap_Array]] we prove the ~multiset_unchaged~ postcondition. The last few annotations verify the ~Max_Element~ postcondition.
+
+This concludes our implementation of ~Pop_Heap~. This implementation is completly proved by ~gnatprove~, but requires the use of a high level of proof (level 4) and requires 5 minutes of pooving time, due to the amout of verification conditions being generated by gnatprove.
