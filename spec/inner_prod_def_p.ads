@@ -15,8 +15,7 @@ package Inner_Prod_Def_P with
       else
         A (A'Last) * B (B'Last) +
         Inner_Prod_Def (Remove_Last (A), Remove_Last (B), Init)) with
-	  Pre => A'Length = B'Length,
-	  Post => Inner_Prod_Def'Result in T;
+   Pre => A'Length = B'Length;
    pragma Annotate (Gnatprove, Terminating, Inner_Prod_Def);
 
 end Inner_Prod_Def_P;

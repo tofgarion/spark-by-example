@@ -3,7 +3,7 @@ project Numeric_Algorithms is
   for Source_Dirs use (".", "../spec");
 
   package Compiler is
-    for Default_Switches ("Ada") use ("-gnat12", "-gnato13");
+    for Default_Switches ("Ada") use ("-gnat12", "-gnato13","-gnato33");
   end Compiler;
 
   package Prove is
