@@ -14,7 +14,6 @@ package body Sort_Heap_P with
 
          Pop_Heap(H);
 
-         pragma assert(H.Size+1 <= N);
          pragma Loop_Invariant(H.A(J) >= H.A(1));
          pragma Loop_Invariant(H.Size = J-1);
          pragma Loop_Invariant(Is_Heap_Def(H));
