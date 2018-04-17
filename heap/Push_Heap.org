@@ -274,3 +274,128 @@ if 1 < Hole then
 
 **** The Make_Prove_Loop lemma
 
+     This lemma will help proving the multiset predicates between ~A~ and ~A_Old~
+     considering those between ~A_Old~ and ~A_Save~ and between ~A~ and ~A_Save~.
+     As we did before, we specify the hypothesis and conclusions in the
+     specification, and the conclusions in the implementation.
+     Its specification is:
+     #+BEGIN_SRC ada
+     procedure Make_Prove_Loop
+     (A, A_Save, A_Old : T_Arr;
+      V_Old, V         : T;
+      Hole             : Positive) with
+      Ghost,
+      Pre => A'Last < Positive'Last
+      and then A'First = A_Save'First
+      and then A'First = A_Old'First
+      and then A'Last = A_Save'Last
+      and then A'Last = A_Old'Last
+      and then Hole in A'Range
+      and then A_Save (Hole) = V_Old
+      and then A (Hole) /= V
+      and then Multiset_Add (A_Old, A_Save, V_Old)
+      and then Multiset_Minus (A_Old, A_Save, V)
+      and then Multiset_Retain_Rest_Double (A_Old, A_Save, V_Old, V)
+      and then Is_Set (A_Save, Hole, A (Hole), A),
+      Post => Multiset_Add (A_Old, A, A (Hole))
+      and then Multiset_Minus (A_Old, A, V)
+      and then Multiset_Retain_Rest_Double (A_Old, A, A (Hole), V);
+     #+END_SRC
+
+     Its implementation is:
+     #+BEGIN_SRC ada
+     procedure Make_Prove_Loop
+     (A, A_Save, A_Old : T_Arr;
+      V_Old, V      : T;
+      Hole          : Positive)
+   is
+   begin
+
+      for E in T loop
+
+         Occ_Set (A_Save, A, Hole, A (Hole), E);
+
+         pragma Loop_Invariant
+           (for all F in T'First .. E =>
+              (if F = A (Hole) then Occ (A, F) = Occ (A_Old, F) + 1
+               elsif F = V then Occ (A, F) = Occ (A_Old, F) - 1
+               else Occ (A, F) = Occ (A_Old, F)));
+      end loop;
+
+   end Make_Prove_Loop;
+     #+END_SRC
+
+     The only thing to do during the loop is to calculate the number of occurences of the values
+     in ~A~, considering the number of occurences in ~A_Save~ (only one value differs in ~A~
+     and ~A_Save~.
+
+     Using the lemmas, ~gnatprove~ manages to prove the main act.
+
+*** Epilogue
+
+**** Implementation of Epilogue
+
+     Now that we found the final index where ~V~ can be, we have to insert
+     it in the array. The implementation is:
+     #+BEGIN_SRC ada
+            A_Save := H.A (1 .. Size);
+            V_Old  := H.A (Hole);
+            No_Changes (A_Old, H.A (1 .. Size), A_Save, V, H.A (Hole), Hole);
+            H.A (Hole) := V;
+            Make_Prove_Epilogue
+              (H.A (1 .. Size),
+               A_Save,
+               A_Old,
+               V,
+               Hole);
+         end if;
+      end if;
+
+end Push_Heap;
+     #+END_SRC
+
+     We need to make a final save of our array, to prove the ~Multiset_Unchanged~ predicate
+     between ~A~ and ~A_Old~.
+
+**** The Make_Prove_Epilogue lemma
+
+     This lemma is very similar to the others. Its specification is:
+     #+BEGIN_SRC ada
+     procedure Make_Prove_Epilogue
+     (A, A_Save, A_Old : T_Arr;
+      V                : T;
+      Hole             : Positive) with
+      Ghost,
+      Pre => A'Last < Positive'Last
+      and then A'First = A_Save'First
+      and then A'First = A_Old'First
+      and then A'Last = A_Save'Last
+      and then A'Last = A_Old'Last
+      and then Hole in A'Range
+      and then A (Hole) = V
+      and then Multiset_Add (A_Old, A_Save, A_Save (Hole))
+      and then Multiset_Minus (A_Old, A_Save, V)
+      and then Multiset_Retain_Rest_Double (A_Old, A_Save, A_Save (Hole), V)
+      and then Is_Set (A_Save, Hole, V, A),
+      Post => Multiset_Unchanged (A, A_Old);
+     #+END_SRC
+
+     Its implementation is:
+     #+BEGIN_SRC ada
+        procedure Make_Prove_Epilogue
+     (A, A_Save, A_Old : T_Arr;
+      V : T;
+      Hole : Positive) is
+   begin
+      for E in T loop
+
+         Occ_Set (A_Save, A, Hole, V, E);
+
+         pragma Loop_Invariant
+           (for all F in T'First .. E =>
+              Occ (A, F) = Occ (A_Old, F));
+      end loop;
+   end Make_Prove_Epilogue;
+     #+END_SRC
+
+Using ~gnatprove~, the implementations and the specifications, everything is now proved.

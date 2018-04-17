@@ -62,8 +62,7 @@ package body Push_Heap_Lemmas with
 
 
    procedure Make_Prove_Loop
-     (
-      A, A_Save, A_Old : T_Arr;
+     (A, A_Save, A_Old : T_Arr;
       V_Old, V      : T;
       Hole          : Positive)
    is
