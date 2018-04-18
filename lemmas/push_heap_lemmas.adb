@@ -104,8 +104,7 @@ package body Push_Heap_Lemmas with
    procedure New_Element (A, B : T_arr) is
    begin
       for E in T loop
-       pragma Assert(Occ(Remove_Last(A),E) = Occ(Remove_Last(B),E));
-
+null;
          pragma Loop_Invariant (for all F in T'First .. E =>
                                   Occ (A, F) = Occ (B, F));
       end loop;
