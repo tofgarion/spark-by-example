@@ -11,7 +11,7 @@ package Acc_Def_P with
      (case A'Length is
         when 0      => Init,
         when others =>
-       Acc_Def_Rec (A (A'First .. A'Last - 1), Init) + A (A'Last));
+       Acc_Def_Rec (A (A'First .. A'Last - 1), Init) + A (A'Last)); -- this sum should be "mathematical", used to specify that there are no overflows.
           pragma Annotate (Gnatprove, Terminating, Acc_Def_Rec);
 
    function Acc_Def (A : T_Arr; Init : T) return T is (Acc_Def_Rec (A, Init));
