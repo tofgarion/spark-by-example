@@ -5,14 +5,12 @@ package body Accumulate_P with
       Result : T := Init;
    begin
       for I in A'Range loop
-	 
-	 pragma Assert(Acc_Def(A(A'First .. I-1),Init) in T);
-	 pragma Assert(Acc_Def(A(A'First .. I),Init) in T);
+	 pragma Assert(Acc_Def(A,A'First,I,Init).OK);
 	 Result := Result + A(I);
-	 pragma Loop_Invariant(Result in T);
-	 pragma Loop_Invariant(Result = Acc_Def(A(A'First .. I),Init)); 
+	 pragma Loop_Invariant(Result = Acc_Def(A, A'First, I,Init).Value); 
 	 
       end loop;
+      
       return Result;
    end Accumulate;
 end Accumulate_P;
