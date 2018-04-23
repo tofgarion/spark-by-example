@@ -1,19 +1,35 @@
-with Types; use Types;
+with Types;    use Types;
+with Overflow; use Overflow;
 
 package Acc_Def_P with
      Spark_Mode,
      Ghost is
 
+   -- Thanks to Claire Dross from Adacore for the help and the solutions provided to prove this
+   -- program, in particular concerning the handeling of overflows.
+
    function Acc_Def_Rec
      (A    : T_Arr;
-      Init : T) return T is
-     (case A'Length is
-        when 0      => Init,
-        when others =>
-       Acc_Def_Rec (A (A'First .. A'Last - 1), Init) + A (A'Last));
-          pragma Annotate (Gnatprove, Terminating, Acc_Def_Rec);
+      F, L : Integer;
+      Init : T) return T_Option is
+     (if L < F then (True, Init)
+      else
+        (if
+           Acc_Def_Rec (A, F, L - 1, Init).OK
+           and then Add_No_Overflow
+             (Acc_Def_Rec (A, F, L - 1, Init).Value,
+              A (L))
+         then
+           (True, Acc_Def_Rec (A, F, L - 1, Init).Value + A (L))
+         else (OK => False))) with
+      Pre => (if L >= F then L in A'Range and F in A'Range);
+   pragma Annotate (Gnatprove, Terminating, Acc_Def_Rec);
 
-   function Acc_Def (A : T_Arr; Init : T) return T is (Acc_Def_Rec (A, Init));
-
+   function Acc_Def
+     (A    : T_Arr;
+      F, L : Integer;
+      Init : T) return T_Option is
+     (Acc_Def_Rec (A, F, L, Init)) with
+      Pre => (if L >= F then L in A'Range and F in A'Range);
 
 end Acc_Def_P;
