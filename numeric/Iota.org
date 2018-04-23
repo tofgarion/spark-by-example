@@ -1,0 +1,54 @@
+** The Iota algorithm
+
+The ~iota~ algorithm assign increasing values to an array, where the initial
+value is specified by the user. Its signature reads:
+~procedure Iota(A : in out T_Arr ; Val : T)~
+
+*** The predicate Is_Iota
+
+The predicate ~Is_Iota~ will be used to verify the fact that an array
+has increasing values starting at a certain value.
+It is defined as follows:
+#+BEGIN_SRC ada
+function Is_Iota
+     (A   : T_Arr;
+      Val : T) return Boolean is
+     (for all I in A'Range => A (I) = Val + T (I - A'First)) with
+      Pre => Val + T (A'Length) <= T'Last;
+#+END_SRC
+
+Notice that the precondition ensures that no overflow will happen.
+
+*** Specification of Iota
+
+The specification of ~iota~ is rather simple:
+#+BEGIN_SRC ada
+procedure Iota (A : in out T_Arr; Val : T) with
+      Pre  => Val + T (A'Length) <= T'Last,
+      Post => Is_Iota (A, Val);
+#+END_SRC
+
+The precondition is necessary to prevent possible overflows.
+
+*** Implementation of Iota
+
+The implementation of ~iota~ is the following.
+
+#+BEGIN_SRC ada
+procedure Iota (A : in out T_Arr; Val : T) is
+      Count : T := Val;
+   begin
+      for I in A'Range loop
+         A (I) := Count;
+         Count := Count + 1;
+         pragma Loop_Invariant (Count = Val + T (I - A'First + 1));
+         pragma Loop_Invariant (Is_Iota (A (A'First .. I), Val));
+      end loop;
+   end Iota;
+#+END_SRC
+
+The loop invariants specify the fact that:
+   - ~count~ is indeed a counter starting at ~Val~ and has the right value
+   - the predicate ~Is_Iota~ is verified for the sliced array ~A(A'First .. I)~.
+
+Using ~gnatprove~, everything is proved.
