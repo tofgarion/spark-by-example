@@ -6,12 +6,12 @@ package body Partial_Sum_P with
       if A'Length > 0 then
 	 B(B'First) := A(A'First);
 	 
-	 for I in 1 .. A'Length-1  loop
-	    pragma Assert(Acc_Def(A(A'First .. A'First + I),0) in T'First .. T'Last);
-	    B(B'First + I) := B(B'First + (I-1)) + A(A'First + I);
+	 for J in 1 .. A'Length-1  loop
 	    
-	    pragma Loop_Invariant(B(B'First + I) = Acc_Def(A(A'First .. A'First+I),0));
-	    pragma Loop_Invariant(Partial_Sum_Def(A(A'First .. A'First+I),B(B'First .. B'First +I)));
+	    pragma Assert(Add_No_Overflow(A(A'First + J), B(B'First + (J-1))));
+	    B(B'First + J) := B(B'First + (J-1)) + A(A'First + J);
+	    
+	    pragma Loop_Invariant(for all K in 0 .. J => B(B'First+K) = Acc_Def(A,A'First, A'First+K,0).Value);
 	    
 	 end loop;
       end if;
