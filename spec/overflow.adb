@@ -2,7 +2,7 @@ package body Overflow with
 SPARK_Mode
 is
 
-   -- Thanks to Claire Dross from AdaCore for the help and the solution to prove the Multiply_No_Overflow function below.
+   -- Thanks to Claire Dross from AdaCore for the help and the solution provided to prove the Multiply_No_Overflow function below.
 
    function Multiply_No_Overflow
      (X, Y : T) return Boolean
