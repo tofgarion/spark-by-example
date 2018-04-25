@@ -8,6 +8,7 @@ package body Partial_Sum_P with
 	 
 	 for J in 1 .. A'Length-1  loop
 	    
+	    pragma Assert(Acc_Def(A,A'First,A'First+J,0).OK);
 	    pragma Assert(Add_No_Overflow(A(A'First + J), B(B'First + (J-1))));
 	    B(B'First + J) := B(B'First + (J-1)) + A(A'First + J);
 	    
