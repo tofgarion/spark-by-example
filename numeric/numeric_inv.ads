@@ -2,6 +2,7 @@ with Types; use Types;
 with Partial_Sum_P; use Partial_Sum_P;
 with Adjacent_Difference_P; use Adjacent_Difference_P;
 with Acc_Def_P; use Acc_Def_P;
+with Overflow; use Overflow;
 
 package Numeric_Inv with
   SPARK_Mode is
