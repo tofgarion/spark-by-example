@@ -10,6 +10,7 @@ package Find_P with
       Contract_Cases =>
       (Has_Value (A, Val) =>
          (Find'Result.Exists = True)
+             and then Find'Result.Value in A'First .. A'Last
          and then (A (Find'Result.Value) = Val)
          and then (not Has_Value (A (A'First .. Find'Result.Value - 1), Val)),
        others => Find'Result.Exists = False);
