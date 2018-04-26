@@ -9,14 +9,17 @@ is
       if A'Length > 0 then
 	 B(B'First) := A(A'First);
 	 
-	 for J in 1 .. A'Length-1 loop
+         if A'Length = 1 then
+            return;
+         end if;
+         for J in A'First+1 .. A'Last loop
 	    
-	    pragma Assert(Minus_No_Overflow(A(A'First+J),A(A'First+J-1)));
+	    pragma Assert(Minus_No_Overflow(A(J),A(J-1)));
+            
+            B(J-A'First+B'First) := A(J) - A(J- 1);
 	    
-	    B(B'First+J) := A(A'First + J) - A(A'First + J- 1);
-	    
-	    pragma Loop_Invariant(for all K in 1 .. J =>
-				    B(B'First+K) = A(A'First+K)-A(A'First+K-1));
+	    pragma Loop_Invariant(for all K in A'First+1 .. J =>
+				    B(B'First+K-A'First) = A(+K)-A(K-1));
 	    pragma Loop_Invariant(B(B'First) = A(A'First));
 	    
 	 end loop;
