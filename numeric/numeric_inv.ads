@@ -8,13 +8,13 @@ package Numeric_Inv with
   SPARK_Mode is
    
    procedure Partial_Sum_Inv
-     (A : in out T_Arr; B : in out T_Arr) with
+     (A,B : in out T_Arr) with
      Pre => A'Length = B'Length
      and then (for all J in A'Range => Acc_Def(A,A'First,J,0).OK),
      Post => A = A'Old;
    
    procedure Adjacent_Difference_Inv
-     (A : in out T_Arr; B : in out T_Arr) with
+     (A,B : in out T_Arr) with
      Pre => A'Length = B'Length
      and then (for all J in A'First+1 .. A'Last => Minus_No_Overflow(A(J),A(J-1))),
      Post => A = A'Old;
