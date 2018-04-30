@@ -10,4 +10,25 @@ is
          end loop;
       end Weakly_To_Sorted;
 
+
+   procedure Prove_Partition (A : T_Arr; Mid : Positive) is
+   begin
+      null;
+   end Prove_Partition;
+
+   procedure Test (A : T_Arr; V : T) is
+   begin
+      if A'Length = 1 then
+         return;
+      end if;
+      if A (A'Last) = V then
+         return;
+      else
+         Test (Remove_Last (A), V);
+      end if;
+
+   end Test;
+
+
+
 end Sorting_Lemmas;

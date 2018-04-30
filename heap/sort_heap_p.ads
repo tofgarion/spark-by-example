@@ -1,4 +1,4 @@
-with Types; use Types;
+ with Types; use Types;
 with Pop_Heap_P; use Pop_Heap_P;
 with Multiset_Unchanged_P; use Multiset_Unchanged_P;
 with Sorted_P; use Sorted_P;

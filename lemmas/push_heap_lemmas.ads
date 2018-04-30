@@ -98,7 +98,15 @@ package Push_Heap_Lemmas with
       and then Multiset_Minus (A_Old, A_Save, V)
       and then Multiset_Retain_Rest_Double (A_Old, A_Save, A_Save (Hole), V)
       and then Is_Set (A_Save, Hole, V, A),
-      Post => Multiset_Unchanged (A, A_Old);
+     Post => Multiset_Unchanged (A, A_Old);
+
+--     procedure Make_Prove_Final_Unchanged
+--       (H_A, A, H_A_Old, A_Old : T_Arr; Size : Positive) with
+--       Pre => (if Size < MAX_SIZE then H_A (Size + 1 .. MAX_SIZE) = H_A_Old (Size + 1 .. MAX_SIZE))
+--       and then Multiset_Unchanged (A, A_Old)
+--       and then H_A (1 .. Size) = A
+--       and then H_A_Old (1 .. Size) = A_Old,
+--       Post => Multiset_Unchanged(H_A,H_A_Old);
 
    procedure New_Element (A, B : T_Arr) with
       Ghost,

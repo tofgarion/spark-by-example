@@ -96,6 +96,7 @@ package body Push_Heap_Lemmas with
       end loop;
    end Make_Prove_Epilogue;
 
+
    -- end procedure Push_Heap
 
    -- function Make_Heap
