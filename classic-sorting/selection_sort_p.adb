@@ -11,10 +11,13 @@ is
       end if;
 
       for J in A'Range loop
-	 Sel  := Min_Element(A).Value;
+	 
+	 Sel  := Min_Element(A(J .. A'Last)).Value;
 	 Swap_Array(A,J,Sel);
 	 
-	 pragma Loop_Invariant(Multiset_Unchanged(A,A'Loop_Entry));	 
+	 pragma Loop_Invariant(Lower_Bound(A(J .. A'Last),A(J)));
+	 pragma Loop_Invariant(Multiset_Unchanged(A,A'Loop_Entry));
+	 pragma Loop_Invariant(Sorted(A(A'First .. J)));
       end loop;
    end Selection_Sort;
    
