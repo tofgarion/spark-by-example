@@ -1,0 +1,50 @@
+** The Swap_Ranges algorithm
+
+   The ~swap_ranges~ algorithm exchanges the contents of two arrays.
+   Its signature reads:
+   
+   ~procedure Swap_Ranges(A : in out T_Arr; B: in out T_Arr)~
+   
+*** Specification of Swap_Ranges
+
+    The specification of ~swap_ranges~ is the following:
+
+    #+BEGIN_SRC ada
+    procedure Swap_Ranges(A : in out T_Arr; B: in out T_Arr) with
+     Pre => A'Length = B'Length,
+     Post => A'Old = B and then B'Old = A;
+    #+END_SRC
+
+    The precondition expresses the fact that ~A~ and ~B~ must have the same length.
+    The postcondition expresses the fact that the values in ~A~ and ~B~ have actually
+    been exchanged.
+
+*** Implementation of Swap_Ranges
+
+    #+BEGIN_SRC ada
+     procedure Swap_Ranges (A : in out T_Arr; B : in out T_Arr) is
+   begin
+
+       for J in 0 .. A'Length - 1 loop
+         Swap (A (A'First + J), B (B'First + J));
+
+         pragma Loop_Invariant
+           (B'Loop_Entry (B'First .. B'First + J)= A(A'First .. A'First + J));
+         pragma Loop_Invariant
+           (A'Loop_Entry (A'First .. A'First + J) =
+	      B (B'First .. B'First + J));
+	 pragma Loop_Invariant (if B'First + J < B'Last then
+	   B'Loop_Entry (B'First +J + 1 .. B'Last) = B (B'First +J + 1 .. B'Last));
+	 pragma Loop_Invariant (if A'First + J < A'Last then
+	   A'Loop_Entry (A'First + J +1 .. A'Last) = A(A'First + J +1 .. A'Last));
+	 
+      end loop;
+   end Swap_Ranges;
+    #+END_SRC
+
+    The loop invariants specify that :
+      - the ~J~ first values of the arrays have been exchanged.
+      - the next values are still the same and they can be exchanged in the next
+	entry in loop.
+
+     Using ~gnatprove~, everything is proved.

@@ -1,0 +1,42 @@
+** The Rotate algorithm
+
+The ~Rotate~ Algorithm aims to achieve the same goal as the [[Rotate_Copy.org][Rotate_Copy]] algorithm, but instead of storing the result in another array,
+it does so in-place. Its signature reads:
+
+#+BEGIN_SRC ada
+procedure Rotate(A : in out T_Arr, N : Positive)
+#+END_SRC
+
+*** Specification of Rotate
+
+Since ~Rotate~ is quite similar to ~Rotate_Copy~, their specifications do not differ greatly. 
+~Rotate~ can be specified as follows:
+
+#+BEGIN_SRC ada
+ procedure Rotate
+     (A : in out T_Arr;
+      N : Positive) with
+     Pre => N < A'Length,
+     Post => A'Old(A'First .. A'First + (N-1)) = A(A'Last -(N-1) .. A'Last)
+     and then A'Old(A'First + N .. A'Last) = A(A'First .. A'Last - N);
+#+END_SRC
+
+The postcondition expresses that the first ~N~ elments of ~A~ before the procedure become the last
+~N~ elements after the call, and the ~A'Length - N~ last elements of ~A~ before the procedure becomme the first after the procedure.
+
+*** Implementation of Rotate
+
+Rotate is implemented in a way to benefit from the [[Reverse_In_Place.org][Reverse_In_Place]] procedure, making the procedure easy and compact:
+
+#+BEGIN_SRC ada
+ procedure Rotate
+     (A : in out T_Arr;
+      N : Positive) is
+   begin
+      Reverse_In_Place(A(A'First .. A'First + (N-1)));
+      Reverse_In_Place(A(A'First + N .. A'Last));
+      Reverse_In_Place(A);
+   end Rotate;
+#+END_SRC
+
+~gnatprove~ doesn't need any additional annotations in order to prove everything.
