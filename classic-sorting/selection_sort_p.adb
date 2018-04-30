@@ -6,7 +6,7 @@ is
    is
       Sel : Integer;
    begin
-      if A'Length = 0 then
+      if A'Length = 0 then  -- nothing to do and to prove.
 	 return;
       end if;
 

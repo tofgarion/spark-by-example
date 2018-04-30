@@ -1,0 +1,59 @@
+** The Selection_Sort algorithm
+
+The ~Selection_Sort~ algorithm sorts an array in ascending order. The working principle of the
+algorithm is to each iteration select the lowest value in the part of the array that has not yet 
+been sorted, and swap it with the value right next to the last sorted index. Its signature reads:
+
+#+BEGIN_SRC ada
+ procedure Selection_Sort(A : in out T_Arr)
+#+END_SRC
+
+*** Specification of Selection_Sort
+
+With all the predicates already coded in the previous chapters we have everything needed to specify
+the ~Selection_Sort~ algorithm:
+
+#+BEGIN_SRC ada
+procedure Selection_Sort(A : in out T_Arr) with
+     Post => Sorted(A)
+     and then Multiset_Unchanged(A,A'Old);
+#+END_SRC
+
+The algorithm has no preconditions, and the postcondition simply specify that the array must be sorted
+in ascending order, and that the resulting array is a permutation of the original array.
+
+
+*** Implementation of Selection_Sort
+
+Selection sort can easily be implemented with the functions already coded and proved in previous chapters.
+Its implementation is as follows:
+
+#+BEGIN_SRC ada
+procedure Selection_Sort(A : in out T_Arr)
+   is
+      Sel : Integer;
+   begin
+      if A'Length = 0 then --nothing to do and to prove.
+	 return;
+      end if;
+
+      for J in A'Range loop
+	 
+	 Sel  := Min_Element(A(J .. A'Last)).Value;
+	 Swap_Array(A,J,Sel);
+	 
+	 pragma Loop_Invariant(Lower_Bound(A(J .. A'Last),A(J)));
+	 pragma Loop_Invariant(Multiset_Unchanged(A,A'Loop_Entry));
+	 pragma Loop_Invariant(Sorted(A(A'First .. J)));
+      end loop;
+   end Selection_Sort;
+#+END_SRC
+
+The algorithm itself is quite simple, for each iteration of the loop we find the minimum value of
+the array, among the indexes that haven't been sorted yet, and we swap it with the value following the last sorted index.
+
+The loop invariant verify that the value found at index ~J~ is a lower bound for the unsorted indexes,
+that we've only applied permutations to our array, and that the first ~J-A'First~ indexes are sorted.
+
+
+With this specification and implementation everything is proved.
