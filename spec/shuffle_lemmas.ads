@@ -3,6 +3,12 @@ with Multiset_Unchanged_P; use Multiset_Unchanged_P;
 with Occ_P; use Occ_P;
 with Occ_Def_P; use Occ_Def_P;
 
+------------------------------------------------
+-- The specification and implementation of these functions is largely inspired
+-- from the SPARK 2014 user guide:
+-- https://docs.adacore.com/spark2014-docs/html/ug/gnatprove_by_example/manual_proof.html
+
+
 
 package Shuffle_Lemmas with
   SPARK_Mode, 
