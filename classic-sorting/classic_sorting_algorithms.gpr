@@ -1,0 +1,16 @@
+project Classic_Sorting_Algorithms is
+
+  for Source_Dirs use (".", "../spec", "../lemmas","../heap","../mutating","../maxmin","../binary-search");
+
+  package Compiler is
+    for Default_Switches ("Ada") use ("-gnat12", "-gnato13");
+  end Compiler;
+
+  package Prove is
+    for Switches use ("--mode=prove",
+                      "--report=statistics",
+                      "--proof=per_path",
+                      "--warnings=continue");
+  end Prove;
+
+end Classic_Sorting_Algorithms;
