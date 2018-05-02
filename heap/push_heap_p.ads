@@ -12,10 +12,8 @@ package Push_Heap_P with
       and then Is_Heap_Def ((A => H.A, Size => H.Size - 1)),
       Post => Is_Heap_Def (H)
      and then Multiset_Unchanged (H'Old.A, H.A)
-   --  and then Multiset_Unchanged (H'Old.A (1 .. H.Size), H.A (1 .. H.Size))
        and then (if H.Size < MAX_SIZE then H'Old.A (H.Size + 1 .. MAX_SIZE) = H.A( H.Size + 1 .. MAX_SIZE))
      and then H.Size = H'Old.Size
---     and then (for some K in 1 .. H.Size => H.A (1) = H'Old.A (K))
    ;
 
 end Push_Heap_P;

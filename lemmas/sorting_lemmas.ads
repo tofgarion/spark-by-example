@@ -7,6 +7,7 @@ with Has_Value_P;         use Has_Value_P;
 with Occ_P;               use Occ_P;
 with Occ_Def_P;           use Occ_Def_P;
 with Multiset_Predicates; use Multiset_Predicates;
+with Classic_Lemmas; use Classic_Lemmas;
 
 package Sorting_Lemmas with
      Spark_Mode is
@@ -21,38 +22,8 @@ package Sorting_Lemmas with
       and then Lower_Bound (A (Mid .. Size), A (A'First)),
       Post => Partition (A, Mid,Size);
 
-   procedure Occ_To_Has_Value (A : T_Arr; V : T) with
-      Ghost,
-      Pre  => A'Length >= 1 and then Occ (A, V) >= 1,
-      Post => Has_Value (A, V);
 
-   procedure Has_Value_To_Occ (A : T_Arr; V : T) with
-      Ghost,
-      Pre  => A'Length >= 1 and then Has_Value (A, V),
-      Post => Occ (A, V) >= 1;
 
-   procedure Partial_Eq (A, B : T_Arr; Eq : Positive; E : T) with
-      Ghost,
-      Pre => A'Length = B'Length
-      and then A'Length >= 1
-      and then Eq in A'First + 1 .. A'Last
-      and then (for all J in Eq .. A'Last => A (J) = B (J - A'First + B'First))
-      and then Occ (A, E) = Occ (B, E),
-      Post => Occ (A (A'First .. Eq - 1), E) =
-      Occ (B (B'First .. Eq - A'First + B'First - 1), E);
-
-   procedure Multiset_With_Eq (A, B : T_Arr; Eq : Positive) with
-      Ghost,
-      Pre => A'Length = B'Length
-      and then B'Last < Positive'Last
-      and then A'Length >= 1
-      and then Eq in A'First + 1 .. A'Last
-      and then Multiset_Unchanged (A, B)
-      and then
-      (for all J in Eq .. A'Last => A (J) = B (J - A'First + B'First)),
-      Post => Multiset_Unchanged
-        (A (A'First .. Eq - 1),
-         B (B'First .. Eq - A'First + B'First - 1));
 
    procedure Prove_Lower_Bound (A, A_Save : T_Arr; M, J : Positive) with
       Ghost,

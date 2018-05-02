@@ -2,29 +2,11 @@ with Types;               use Types;
 with Multiset_Predicates; use Multiset_Predicates;
 with Occ_P;               use Occ_P;
 with Occ_Def_P;           use Occ_Def_P;
+with Classic_Lemmas; use Classic_Lemmas;
 
 package Push_Heap_Lemmas with
      Spark_Mode is
-   function Is_Set
-     (A : T_Arr;
-      I : Positive;
-      V : T;
-      B : T_Arr) return Boolean is
-     (A'First = B'First
-      and then A'Last = B'Last
-      and then B (I) = V
-      and then (for all J in A'Range => (if I /= J then B (J) = A (J)))) with
-      Ghost,
-      Pre => I in A'Range;
 
-   procedure Occ_Set (A : T_Arr; B : T_Arr; I : Positive; V, E : T) with
-      Ghost,
-      Pre  => I in A'Range and then Is_Set (A, I, V, B),
-      Post =>
-      (if V = A (I) then Occ (B, E) = Occ (A, E)
-       elsif V = E then Occ (B, E) = Occ (A, E) + 1
-       elsif A (I) = E then Occ (B, E) = Occ (A, E) - 1
-       else Occ (B, E) = Occ (A, E));
 
    procedure No_Changes
      (A_Old, A, A_Save : T_Arr;
@@ -99,30 +81,5 @@ package Push_Heap_Lemmas with
       and then Multiset_Retain_Rest_Double (A_Old, A_Save, A_Save (Hole), V)
       and then Is_Set (A_Save, Hole, V, A),
      Post => Multiset_Unchanged (A, A_Old);
-
---     procedure Make_Prove_Final_Unchanged
---       (H_A, A, H_A_Old, A_Old : T_Arr; Size : Positive) with
---       Pre => (if Size < MAX_SIZE then H_A (Size + 1 .. MAX_SIZE) = H_A_Old (Size + 1 .. MAX_SIZE))
---       and then Multiset_Unchanged (A, A_Old)
---       and then H_A (1 .. Size) = A
---       and then H_A_Old (1 .. Size) = A_Old,
---       Post => Multiset_Unchanged(H_A,H_A_Old);
-
-   procedure New_Element (A, B : T_Arr) with
-      Ghost,
-      Pre => A'Length > 0
-      and then B'Length = A'Length
-      and then Multiset_Unchanged (Remove_Last (A), Remove_Last (B))
-      and then A (A'Last) = B (B'Last),
-      Post => Multiset_Unchanged (A, B);
-
-   procedure Unchanged_Transitivity (A, B, C : T_Arr) with
-      Ghost,
-     Pre => A'Length > 0 and then
-       B'Length = A'Length
-      and then C'Length = B'Length
-      and then Multiset_Unchanged (A, B)
-      and then (Multiset_Unchanged (B, C) or else B=C),
-      Post => Multiset_Unchanged (A, C);
 
 end Push_Heap_Lemmas;
