@@ -1,0 +1,68 @@
+** The Replace_Copy algorithm
+
+The ~Replace_Copy~ algorithm takes an array as an input and substitues all the elements equal to a given value by antoher given value, and copies the result in another array. Its signature reads:
+
+#+BEGIN_SRC ada
+procedure Replace_Copy (A : T_Arr, B : in out T_Arr; V : T; W : T)
+#+END_SRC
+
+The algorithm copies the elements of ~A~ into ~B~, substituting each occurence of ~V~ by ~W~.
+
+*** The Is_Replaced predicate
+
+In order to write more concise specification and loop invariants we write a ~Is_Replaced~ predicate defined as follows:
+
+#+BEGIN_SRC ada
+function Is_Replaced
+     (A : T_Arr;
+      B : T_Arr;
+      V : T;
+      W : T) return Boolean is
+     (for all K in A'Range =>
+        (if A (K) = V then B (B'First + (K - A'First)) = W
+         else A (K) = B (B'First + (K - A'First)))) with
+      Pre => A'Length = B'Length;
+#+END_SRC
+
+This function requires that both arrays are of same length, and returns ~True~ if ~B~ is equal to ~A~ to the exception
+of the indexes ~K~ of ~A~ where ~A(K) = V~, in that case, the element at the matching index of ~B~ should be equal to ~W~.
+In a less formal way, ~B~ is equal to a copy of ~A~ where all the ~V~ s were replaced by ~W~ s.
+
+*** Specification of Replace_Copy
+
+~Replace_Copy~ can be specified as follows:
+
+#+BEGIN_SRC ada
+procedure Replace_Copy (A : T_Arr; B : in out T_Arr; V : T; W : T) with
+      Pre  => A'Length = B'Length,
+      Post => Is_Replaced (A, B, V, W);
+#+END_SRC
+
+The only precondition is that both arrays should be of same length; the postcondition expresses that
+~B~ is indeed a copy of ~A~ where all occurences of ~V~ have been replace by ~W~.
+
+*** Implementation of Replace_Copy
+
+~Replace_Copy~ can be implemented in the following way:
+
+#+BEGIN_SRC ada
+procedure Replace_Copy (A : T_Arr; B : in out T_Arr; V : T; W : T) is
+   begin
+      for I in A'Range loop
+         B (B'First + (I - A'First)) := (if A (I) = V then W else A (I));
+
+         pragma Loop_Invariant
+           (Is_Replaced
+              (A (A'First .. I),
+               B (B'First .. B'First + (I - A'First)),
+               V,
+               W));
+
+      end loop;
+   end Replace_Copy;
+#+END_SRC
+
+The loop invariant simply specifies that the sub-array of ~B~ created from the indexes already covered 
+by the algorithm verifies the condition of being equal to ~A~ with all occurences of ~V~ replaced by ~W~.
+
+With this specification and implementation, ~gnatprove~ manages to prove everything.

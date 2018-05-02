@@ -89,8 +89,10 @@ function Search_Lower_Bound
    end Search_Lower_Bound;
 #+END_SRC
 
-At aech iteration, the range that contains the sought-after result is narrowed down. Note
+
+At each iteration, the range that contains the sought-after result is narrowed down. Note
 that the ~middle~ is calculated so as to avoid potential overflows.
+
 
 Here the loop variant is ~Right - Result.Value~ which decreases at each step.
 The loop invariants express :

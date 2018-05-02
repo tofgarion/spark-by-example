@@ -1,0 +1,53 @@
+** The Copy Algorithm
+
+The ~Copy~ procedure copies the content of an array into another array. Its signature is :
+
+#+BEGIN_SRC ada
+procedure Copy(A : T_Arr; B : in out T_Arr)
+#+END_SRC
+
+The usefulness of this procedure could be doubted in ADA, since the simple commande ~A := B~ achieves 
+the same goal for arrays of same length. Our procedure only works with arrays of same length, since copying 
+part of an array into another can be achived through slicing.
+
+The purpose of this document being to prove classicals algorithms, and compare what can be done in ADA
+ with what was done in C++ in *ACSL by Example*, where this procedure makes sense.
+
+*** Specification of Copy
+
+~Copy~ specification is:
+
+#+BEGIN_SRC ada 
+procedure Copy
+     (A : T_Arr;
+      B : in out T_Arr) with
+     Pre => A'Length = B'Length,
+     Post => B = A;
+#+END_SRC
+
+The precondition expresses the fact that ~A~ and ~B~ should be of the same size.
+The post condition expresses that ~A~ and ~B~ are equal element-wise.
+
+*** Implementation of Copy
+
+One implementation for Copy is:
+
+#+BEGIN_SRC ada 
+ procedure Copy
+     (A : T_Arr;
+      B : in out T_Arr) is
+   begin 
+      for I in A'Range loop
+	 B(B'First + (I - A'First)) := A(I);
+	 
+	 pragma Loop_Variant(Increases => I);
+	 pragma Loop_Invariant(A(A'First .. I) = B(B'First .. B'First + (I - A'First))); 
+	 
+      end loop;
+   end Copy;
+#+END_SRC
+
+Here the loop variant is classicaly ~I~, and the loop invariant specifies that for all indexes ~K~ lesser
+than ~I~, then ~A(K) = B(B'First +(K - A'First))~, i.e. we have a partial copy of the first ~I-A'First~ indexes of ~A~ in ~B~.
+
+With this specification and implementation, when using ~gnatprove~ everything is poved.
