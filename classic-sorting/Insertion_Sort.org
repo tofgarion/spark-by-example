@@ -50,7 +50,7 @@ This approach, while being concise makes the proof quite difficult since the spe
 ~Rotate~ only specifies equality of ranges, and we would need to deduce from these equalites that
 the multiset represented by ~A~ has not changed, and that the order of the elements of ~A~ remained
 relatively stable. To make our proof easier we will take another approach, where we emulate the effects
-of ~Rotate~ with a loop of [[../mutating/Swap_Array.org][Swap_Array]], which we can annotate to our needs:
+of ~Rotate~ with a loop of [[../mutating/Random_Shuffle.org#the-swap_array-procedure][Swap_Array]], which we can annotate to our needs:
 
 #+BEGIN_SRC ada
 procedure Insertion_Sort(A : in out T_Arr)
