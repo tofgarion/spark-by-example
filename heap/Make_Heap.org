@@ -1,0 +1,174 @@
+* The Make_Heap algorithm
+
+  The ~Make_Heap~ algorithm will take an array and return a heap
+  with the same values. Its signature reads:
+  #+BEGIN_SRC ada
+  function Make_Heap (A : T_Arr) return Heap
+  #+END_SRC
+
+** Specification of Make_Heap
+
+   The specification of ~Make_Heap~ is the following:
+   #+BEGIN_SRC ada
+      function Make_Heap (A : T_Arr) return Heap with
+     Pre => A'Length <= MAX_SIZE and A'Last < Positive'Last,
+     Contract_Cases => (A'Length > 0 => Make_Heap'Result.Size = A'Length
+                        and then  Is_Heap (Make_Heap'Result)
+                        and then Multiset_Unchanged (Make_Heap'Result.A (1 .. Make_Heap'Result.Size), A),
+                        others => Make_Heap'Result = (A => (others => 0), Size => 0));
+   #+END_SRC
+
+   The function takes in entry an array with its length less than the maximum size
+   of a heap. 
+   - If this array is empty, the returned heap will be also empty.
+   - If this array is not empty, the returned heap will have the same size from
+     the array and its array will be a permutation of the entry array.
+
+** Implementation of Make_Heap
+
+*** First implementation
+
+   The implementation of ~Make_Heap~ is the following:
+
+   #+BEGIN_SRC ada
+      function Make_Heap (A : T_Arr) return Heap is
+      Result : Heap;
+   begin
+      if A'Length > 0 then
+
+         Result.A (1) := A (A'First);
+         Result.Size := 1;
+
+
+         for J in A'First + 1 .. A'Last loop
+
+            Result.Size := Result.Size+1;
+            Result.A (J - A'First + 1) := A (J);
+            Push_Heap (Result);
+
+            pragma Loop_Invariant (Result.Size = J - A'First + 1);
+            pragma Loop_Invariant (Is_Heap (Result));
+            pragma Loop_Invariant
+              (Multiset_Unchanged
+                 (A (A'First .. J),
+                  Result.A(1 .. J - A'First + 1)));
+
+         end loop;
+
+      end if;
+      return Result;
+   #+END_SRC
+
+   The loop invariants specify the fact that:
+     - The size is increasing at each loop.
+     - The heap verifies the properties of a heap.
+     - The partial array of the heap is a permutation of the partial entry array.
+
+   As usual, we need to help the prover with some lemmas to prove the multiset predicate.
+
+*** The Unchanged_Transitivity lemma
+
+    This lemma helps proving the transitivity property of ~Multiset_Unchanged~.
+    Its specification is:
+    #+BEGIN_SRC ada
+    procedure Unchanged_Transitivity (A, B, C : T_Arr) with
+      Ghost,
+     Pre => A'Length > 0 and then
+       B'Length = A'Length
+      and then C'Length = B'Length
+      and then Multiset_Unchanged (A, B)
+      and then (Multiset_Unchanged (B, C) or else B=C),
+      Post => Multiset_Unchanged (A, C);
+    #+END_SRC
+
+    Its implementation is:
+    #+BEGIN_SRC ada
+    procedure Unchanged_Transitivity (A, B, C : T_Arr) is
+   begin
+      for E in T loop
+         if B = C then
+            Occ_Eq (B, C, E);
+         end if;
+
+         pragma Loop_Invariant (for all F in T'First .. E =>
+                                  Occ (A, F) = Occ (C, F));
+      end loop;
+   end Unchanged_Transitivity;
+    #+END_SRC
+
+    We use the predicate ~Occ_Eq~ already defined in the case where ~B=C~.
+
+*** The New_Element lemma
+
+    This lemma is used when we add the ~I~ th element of ~A~ at the end of the array of the heap.
+    The two partial arrays, when their last element is removed, are permutations of each other.
+    This lemma helps proving that when adding the same element at the end, the arrays are
+    still permutations.
+
+    Its specification is:
+    #+BEGIN_SRC ada
+    procedure New_Element (A, B : T_Arr) with
+      Ghost,
+      Pre => A'Length > 0
+      and then B'Length = A'Length
+      and then Multiset_Unchanged (Remove_Last (A), Remove_Last (B))
+      and then A (A'Last) = B (B'Last),
+      Post => Multiset_Unchanged (A, B);
+    #+END_SRC
+
+    Its implementation is:
+    #+BEGIN_SRC ada
+       procedure New_Element (A, B : T_arr) is
+   begin
+      for E in T loop
+         null;
+         pragma Loop_Invariant (for all F in T'First .. E =>
+                                  Occ (A, F) = Occ (B, F));
+      end loop;
+   end New_Element;
+    #+END_SRC
+ 
+*** Final implementation of Make_Heap
+
+    This final implementation is:
+    #+BEGIN_SRC ada
+    function Make_Heap (A : T_Arr) return Heap is
+      Result : Heap;
+      A_Save : T_Arr := Result.A with Ghost;
+   begin
+      if A'Length > 0 then
+
+         Result.A (1) := A (A'First);
+         Result.Size := 1;
+
+         pragma Assert (Multiset_Unchanged(A(A'First .. A'First), Result.A(1 .. 1)));
+
+         for J in A'First + 1 .. A'Last loop
+            Result.Size := Result.Size+1;
+            A_Save      := Result.A;
+
+              Unchanged_Transitivity
+                (A (A'First .. J - 1),
+                 Result.A (1 .. J - A'First),
+                 A_Save (1 .. J - A'First));
+
+            Result.A (J - A'First + 1) := A (J);
+
+            Unchanged_Transitivity (A (A'First .. J - 1), A_Save (1 .. J - A'First),Result.A (1 .. J - A'First));
+            New_Element (A (A'First .. J), Result.A (1 .. J - A'First + 1));
+            Push_Heap (Result);
+
+            pragma Loop_Invariant (Result.Size = J - A'First + 1);
+            pragma Loop_Invariant (Is_Heap (Result));
+            pragma Loop_Invariant
+              (Multiset_Unchanged
+                 (A (A'First .. J),
+                  Result.A(1 .. J - A'First + 1)));
+
+         end loop;
+
+      end if;
+      return Result;
+    #+END_SRC
+
+    Using ~gnatprove~, this implementation and the specification above, everything is proved.

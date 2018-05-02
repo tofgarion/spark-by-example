@@ -1,6 +1,7 @@
-project Mutating_Algorithms is
+project Heap_Algorithms is
 
-  for Source_Dirs use (".", "../spec", "../non-mutating", "../lemmas");
+   for Source_Dirs use (".", "../spec","../maxmin","../non-mutating","../lemmas","../mutating");
+
 
   package Compiler is
     for Default_Switches ("Ada") use ("-gnat12", "-gnato13");
@@ -13,4 +14,4 @@ project Mutating_Algorithms is
                       "--warnings=continue");
   end Prove;
 
-end Mutating_Algorithms;
+end Heap_Algorithms;
