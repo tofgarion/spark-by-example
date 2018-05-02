@@ -1,6 +1,6 @@
 project Sorting_Algorithms is
 
-  for Source_Dirs use (".", "../spec", "../lemmas");
+  for Source_Dirs use (".", "../spec", "../lemmas", "../heap", "../mutating");
 
   package Compiler is
     for Default_Switches ("Ada") use ("-gnat12", "-gnato13");
