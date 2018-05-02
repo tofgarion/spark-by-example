@@ -14,5 +14,4 @@ SPARK_Mode is
      Post => Multiset_Unchanged(H.A,H.A'Old)
      and then Sorted (H.A (1 .. H'Old.Size))
    and then (if H'Old.Size < MAX_SIZE then H.A(H'Old.Size + 1 .. MAX_SIZE) = H'Old.A(H'Old.Size + 1 .. MAX_SIZE));
-
 end Sort_Heap_P;

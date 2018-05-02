@@ -12,18 +12,15 @@ with Classic_Lemmas; use Classic_Lemmas;
 package Sorting_Lemmas with
      Spark_Mode is
 
-   procedure Weakly_To_Sorted (A : T_Arr) with
+   procedure Weakly_To_Sorted (A : T_Arr) with Ghost,
       Pre  => Weakly_Sorted (A),
       Post => Sorted (A);
 
-   procedure Prove_Partition (A : T_Arr; Mid , Size: Positive) with
+   procedure Prove_Partition (A : T_Arr; Mid , Size: Positive) with Ghost,
       Pre => Mid in A'First + 1 .. Size and then Size in A'Range
       and then Upper_Bound (A (A'First .. Mid - 1), A (A'First))
       and then Lower_Bound (A (Mid .. Size), A (A'First)),
       Post => Partition (A, Mid,Size);
-
-
-
 
    procedure Prove_Lower_Bound (A, A_Save : T_Arr; M, J : Positive) with
       Ghost,
