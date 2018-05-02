@@ -154,9 +154,9 @@ Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
    :END:
 ** Binary_Search
    :PROPERTIES:
-   :Status:      Not started yet
-   :Level:
-   :Assigned_To:
+   :Status: Finished
+   :Level: 0
+   :Assigned_To: Joffrey
    :END:
 
 * Mutating algorithms
