@@ -6,8 +6,8 @@ package Occ_Def_P with
    function Remove_Last
      (A : T_Arr) return T_Arr is
      (A (A'First .. A'Last - 1)) with
-      Pre => A'Length > 0,
-      Ghost;
+   Pre => A'Length > 0,
+   Ghost;
 
    function Occ_Def
      (A   : T_Arr;

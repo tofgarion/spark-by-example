@@ -11,7 +11,7 @@ with Heap_Predicates;     use Heap_Predicates;
 with Partition_P;         use Partition_P;
 with Sorted_P;            use Sorted_P;
 with Heap_Lemmas;         use Heap_Lemmas;
-with Sorting_Lemmas;      use Sorting_Lemmas;
+with Partial_Sort_Lemmas;      use Partial_Sort_Lemmas;
 with Occ_P;               use Occ_P;
 with Has_Value_P;         use Has_Value_P;
 with Is_Sorted_P;         use Is_Sorted_P;

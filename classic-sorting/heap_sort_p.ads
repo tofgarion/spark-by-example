@@ -1,5 +1,5 @@
 with Types; use Types;
-with Sorting_Lemmas, Push_Heap_Lemmas; use Sorting_Lemmas, Push_Heap_Lemmas;
+with Classic_Lemmas; use Classic_Lemmas;
 with Make_Heap_P, Sort_Heap_P; use Make_Heap_P, Sort_Heap_P;
 with Sorted_P; use Sorted_P;
 with Multiset_Predicates; use Multiset_Predicates;

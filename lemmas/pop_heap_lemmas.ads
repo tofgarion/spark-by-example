@@ -1,5 +1,5 @@
 with Types; use Types;
-with Shuffle_Lemmas; use Shuffle_Lemmas;
+with Classic_Lemmas; use Classic_Lemmas;
 with Heap_Predicates; use Heap_Predicates;
 
 package Heap_Lemmas with

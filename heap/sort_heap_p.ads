@@ -1,6 +1,6 @@
- with Types; use Types;
+with Types; use Types;
 with Pop_Heap_P; use Pop_Heap_P;
-with Multiset_Unchanged_P; use Multiset_Unchanged_P;
+with Multiset_Predicates; use Multiset_Predicates;
 with Sorted_P; use Sorted_P;
 with Heap_Predicates; use Heap_Predicates;
 with Lower_Bound_p; use Lower_Bound_P;

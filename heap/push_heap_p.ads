@@ -3,7 +3,6 @@ with Is_Heap_P;           use Is_Heap_P;
 with Multiset_Predicates; use Multiset_Predicates;
 with Heap_Predicates;     use Heap_Predicates;
 with Push_Heap_Lemmas;    use Push_Heap_Lemmas;
---with Occ_P; use Occ_P;
 
 package Push_Heap_P with
      Spark_Mode is

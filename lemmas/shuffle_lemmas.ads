@@ -1,5 +1,5 @@
 with Types; use Types;
-with Multiset_Unchanged_P; use Multiset_Unchanged_P;
+with Multiset_Predicates; use Multiset_Predicates;
 with Occ_P; use Occ_P;
 with Occ_Def_P; use Occ_Def_P;
 
