@@ -12,6 +12,7 @@ SPARK_Mode is
    procedure Sort_Heap(H : in out Heap) with
      Pre => Is_Heap_Def(H),
      Post => Multiset_Unchanged(H.A,H.A'Old)
-     and then Sorted(H.A(1 .. H'Old.Size));
+     and then Sorted (H.A (1 .. H'Old.Size))
+   and then (if H'Old.Size < MAX_SIZE then H.A(H'Old.Size + 1 .. MAX_SIZE) = H'Old.A(H'Old.Size + 1 .. MAX_SIZE));
 
 end Sort_Heap_P;

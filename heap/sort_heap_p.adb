@@ -4,6 +4,7 @@ package body Sort_Heap_P with
 
    procedure Sort_Heap(H : in out Heap)
    is
+      Size : constant Natural := H.Size;
       Interm : Heap := H with ghost;
       N : constant Integer := H.Size;
    begin
@@ -19,7 +20,8 @@ package body Sort_Heap_P with
          pragma Loop_Invariant(Is_Heap_Def(H));
          pragma Loop_Invariant(Multiset_Unchanged(H.A,H'Loop_Entry.A));
          pragma Loop_Invariant(Lower_Bound(H.A(J .. N), H.A(J)));
-         pragma Loop_Invariant(Sorted(H.A(J .. N)));
+         pragma Loop_Invariant (Sorted (H.A (J .. N)));
+         pragma Loop_Invariant (if Size < MAX_SIZE then H.A(Size + 1 .. MAX_SIZE) = H'Loop_Entry.A(Size + 1 .. MAX_SIZE));
       end loop;
    end Sort_Heap;
 

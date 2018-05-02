@@ -4,6 +4,7 @@ with Push_Heap_P; use Push_Heap_P;
 with Occ_P; use Occ_P;
 with Multiset_Predicates; use Multiset_Predicates;
 with Push_Heap_Lemmas; use Push_Heap_Lemmas;
+with Sorting_Lemmas; use Sorting_Lemmas;
 
 package Make_Heap_P with
 SPARK_Mode
