@@ -14,9 +14,9 @@ with Heap_Lemmas;         use Heap_Lemmas;
 with Sorting_Lemmas;      use Sorting_Lemmas;
 with Occ_P;               use Occ_P;
 with Has_Value_P;         use Has_Value_P;
-with Push_Heap_Lemmas;    use Push_Heap_Lemmas;
 with Is_Sorted_P;         use Is_Sorted_P;
 with Occ_Def_P;           use Occ_Def_P;
+with Classic_Lemmas; use Classic_Lemmas;
 
 package Partial_Sort_P with
      Spark_Mode is
