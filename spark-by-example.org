@@ -127,10 +127,12 @@ Algorithms from ACSL by Example Sulfur edition. We use SPARK Discovery
    :END:
 
    :PROPERTIES:
-   :Status:      Not started yet
-   :Level:
-   :Assigned_To:
+   :Status:      Finished
+   :Level:       0
+   :Assigned_To: Léo
    :END:
+   Level 0 : Everything is proved.
+   
 * Binary search algorithms
 ** Lower_Bound
    :PROPERTIES:
