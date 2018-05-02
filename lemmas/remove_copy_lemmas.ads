@@ -1,7 +1,8 @@
 with Types;                  use Types;
 with Occ_P;                  use Occ_P;
 with Occ_Def_P;              use Occ_Def_P;
-with Multiset_Retain_Rest_P; use Multiset_Retain_Rest_P;
+with Multiset_Predicates; use Multiset_Predicates;
+with Classic_Lemmas; use Classic_Lemmas;
 
 package Remove_Copy_Lemmas with
      Spark_Mode is
@@ -10,12 +11,6 @@ package Remove_Copy_Lemmas with
 
       Pre => (for all L in A'First .. A'Last => A (L) = Val) and then E /= Val,
       Post => Occ (A, E) = 0;
-
-   procedure Lemma_2 (A : T_Arr; B : T_Arr; E : T) with
-      Ghost,
-
-      Pre  => A = B,
-     Post => Occ (A, E) = Occ (B, E);
 
    procedure Lemma_3 (A : T_arr; Val : T) with
      Ghost,

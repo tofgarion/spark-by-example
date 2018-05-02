@@ -1,6 +1,6 @@
 with Types; use Types;
-with Multiset_Unchanged_P; use Multiset_Unchanged_P;
-with Shuffle_Lemmas; use Shuffle_Lemmas;
+with Multiset_Predicates; use Multiset_Predicates;
+with Classic_Lemmas; use Classic_Lemmas;
 with Occ_P; use Occ_P;
 
 package Swap_Array_P with

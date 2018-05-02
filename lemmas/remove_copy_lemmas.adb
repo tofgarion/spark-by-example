@@ -9,21 +9,6 @@ package body Remove_Copy_Lemmas with
       Lemma_1 (Remove_Last (A), E, Val);
    end Lemma_1;
 
-   procedure Lemma_2 (A : T_Arr; B : T_Arr; E : T) is
-   begin
-      if A'Length = 0 then
-         return;
-      end if;
-
-      if A (A'Last) = E then
-         pragma Assert (B (B'Last) = E);
-      else
-         pragma Assert (B (B'Last) /= E);
-      end if;
-
-      Lemma_2 (Remove_Last (A), Remove_Last (B), E);
-   end Lemma_2;
-
    procedure Lemma_3 (A : T_arr; Val : T) is
    begin
       if A'Length = 0 then
@@ -38,7 +23,7 @@ package body Remove_Copy_Lemmas with
    begin
       for E in T loop
          if E /= Val then
-            Lemma_2 (B, C, E);
+            Occ_Eq (B, C, E);
             pragma Assert (Occ (A, E) = Occ (C, E));
          end if;
          pragma Loop_Invariant
