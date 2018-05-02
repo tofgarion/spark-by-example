@@ -13,10 +13,6 @@ is
       for J in A'Range loop
 	 K :=(if J = A'First then A'First else Search_Upper_Bound(A(A'First .. J-1),A(J)).Value);
 	 
-	 pragma Assert(for all L in K .. J => A(L)>= A(J));
-	 pragma Assert(for all L in A'First .. K-1 => A(L) <= A(J));
-	 pragma Assert(Sorted(A(A'First .. K-1))); 
-	 
 	 for L in reverse K .. J-1 loop
 	       
 	    Swap_Array(A,L,L+1);
@@ -27,7 +23,7 @@ is
 	    pragma Loop_Invariant(Sorted(A(A'First .. L-1)));
 	    pragma Loop_Invariant(for all M in A'First .. K-1 => A(M) <= A(L));
 	    pragma Loop_Invariant(for all M in K .. J => A(M) >= A(L));
-	    pragma Loop_Invariant(for all M in L .. J => (for all N in L .. M => A(M) >= A(N)));
+	    pragma Loop_Invariant(Sorted(A(L .. J)));
 	 end loop;
 	 
 	 pragma Loop_Invariant(Sorted(A(A'First .. J)));
