@@ -1,0 +1,13 @@
+with Types; use Types;
+with Sorting_Lemmas, Push_Heap_Lemmas; use Sorting_Lemmas, Push_Heap_Lemmas;
+with Make_Heap_P, Sort_Heap_P; use Make_Heap_P, Sort_Heap_P;
+with Sorted_P; use Sorted_P;
+with Multiset_Predicates; use Multiset_Predicates;
+
+package Heap_Sort_P with
+SPARK_Mode
+is
+   procedure Heap_Sort ( A : in out T_Arr ) with
+     Pre => A'Length <= MAX_SIZE and then A'Last < Positive'Last,
+     Post => Sorted (A);
+end Heap_Sort_P;
