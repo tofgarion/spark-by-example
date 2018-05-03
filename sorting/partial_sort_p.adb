@@ -1,8 +1,12 @@
 package body Partial_Sort_P with
      Spark_Mode is
 
+   procedure Upper_Bound_Heap (H : Heap; V : T) is
+   begin
+      null;
+   end Upper_Bound_Heap;
+
    procedure Partial_Sort_Aux (H : in out Heap; M : Positive) is
-      Old_V    : T;
       Old_Size : constant Natural := H.Size;
       Size     : constant Natural := M - 1;
       A_Save   : T_Arr            := H.A with
@@ -43,11 +47,13 @@ package body Partial_Sort_P with
 
    procedure Partial_Sort (A : in out T_Arr; M : Positive) is
       H      : Heap;
-      A_Save : T_Arr            := H.A;
-      A_Old  : constant T_Arr   := A;
-      Size   : constant Natural := A'Length;
+      A_Save : T_Arr := H.A with
+         Ghost;
+      A_Old : constant T_Arr := A with
+         Ghost;
+      Size : constant Natural := A'Length;
    begin
-      if Size > 0 then
+      if Size > 0 and then M > A'First then
          H := Make_Heap (A (A'First .. M - 1));
          for J in M .. A'Last loop
             pragma Assert (Is_Heap_Def ((A => H.A, Size => M - A'First)));
@@ -57,7 +63,7 @@ package body Partial_Sort_P with
               (A_Old (A'First .. J - 1),
                H.A (1 .. J - A'First),
                A_Save (1 .. J - A'First));
-            H.A (J - A'First + 1) := A_Old (J);
+            H.A (J - A'First + 1) := A (J);
             Unchanged_Transitivity
               (A_Old (A'First .. J - 1),
                A_Save (1 .. J - A'First),

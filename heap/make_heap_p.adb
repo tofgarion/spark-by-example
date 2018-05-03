@@ -34,16 +34,22 @@ package body Make_Heap_P with
                   Result.A (1 .. Size - 1));
                New_Element (A (A'First .. J), Result.A (1 .. Size));
                A_Save := Result.A;
-               Unchanged_Transitivity(A (A'First .. J), Result.A(1 .. Size), A_Save(1 .. Size));
+               Unchanged_Transitivity
+                 (A (A'First .. J),
+                  Result.A (1 .. Size),
+                  A_Save (1 .. Size));
                Push_Heap (Result);
-               if Size < MAX_SIZe then
+               if Size < MAX_SIZE then
                   Multiset_With_Eq (A_Save, Result.A, Size + 1);
                end if;
-               Unchanged_Transitivity(A(A'First .. J), A_Save(1 .. Size), Result.A(1 .. Size));
+               Unchanged_Transitivity
+                 (A (A'First .. J),
+                  A_Save (1 .. Size),
+                  Result.A (1 .. Size));
 
                pragma Loop_Invariant
                  (Result.Size = J - A'First + 1 and Result.Size = Size);
-               pragma Loop_Invariant (Is_Heap (Result));
+               pragma Loop_Invariant (Is_Heap_Def (Result));
                pragma Loop_Invariant
                  (Multiset_Unchanged (A (A'First .. J), Result.A (1 .. Size)));
             end;

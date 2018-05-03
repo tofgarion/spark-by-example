@@ -1,8 +1,7 @@
 package body Classic_Lemmas with
-SPARK_Mode
-is
+     Spark_Mode is
 
-    procedure Occ_Eq (A : T_Arr; B : T_Arr; E : T) is
+   procedure Occ_Eq (A : T_Arr; B : T_Arr; E : T) is
    begin
       if A'Length = 0 then
          return;
@@ -33,14 +32,12 @@ is
       end if;
    end Occ_Set;
 
-
-
-   procedure New_Element (A, B : T_arr) is
+   procedure New_Element (A, B : T_Arr) is
    begin
       for E in T loop
-null;
-         pragma Loop_Invariant (for all F in T'First .. E =>
-                                  Occ (A, F) = Occ (B, F));
+         null;
+         pragma Loop_Invariant
+           (for all F in T'First .. E => Occ (A, F) = Occ (B, F));
       end loop;
    end New_Element;
 
@@ -51,8 +48,8 @@ null;
             Occ_Eq (B, C, E);
          end if;
 
-         pragma Loop_Invariant (for all F in T'First .. E =>
-                                  Occ (A, F) = Occ (C, F));
+         pragma Loop_Invariant
+           (for all F in T'First .. E => Occ (A, F) = Occ (C, F));
       end loop;
    end Unchanged_Transitivity;
 
@@ -64,7 +61,7 @@ null;
       if A (A'Last) = V then
          return;
       else
-         Occ_To_Has_Value  (Remove_Last (A), V);
+         Occ_To_Has_Value (Remove_Last (A), V);
       end if;
 
    end Occ_To_Has_Value;
@@ -81,11 +78,11 @@ null;
          pragma Assert (Occ (A, V) >= 1);
          return;
       else
-         Has_Value_To_Occ(Remove_Last (A), V);
+         Has_Value_To_Occ (Remove_Last (A), V);
       end if;
    end Has_Value_To_Occ;
 
-    procedure Partial_Eq (A, B : T_Arr; Eq : Positive; E : T) is
+   procedure Partial_Eq (A, B : T_Arr; Eq : Positive; E : T) is
    begin
       if A'Last = Eq then
          return;

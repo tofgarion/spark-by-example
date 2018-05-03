@@ -1,17 +1,16 @@
-with Types; use Types;
+with Types;               use Types;
 with Multiset_Predicates; use Multiset_Predicates;
-with Occ_Def_P; use Occ_Def_P;
-with Occ_P; use Occ_P;
-with Has_Value_P; use Has_Value_P;
+with Occ_Def_P;           use Occ_Def_P;
+with Occ_P;               use Occ_P;
+with Has_Value_P;         use Has_Value_P;
 
 package Classic_Lemmas with
-SPARK_Mode
-is
+     Spark_Mode is
 
-      procedure Occ_Eq (A : T_Arr; B : T_Arr; E : T) with
+   procedure Occ_Eq (A : T_Arr; B : T_Arr; E : T) with
       Ghost,
       Pre  => A = B,
-     Post => Occ (A, E) = Occ (B, E);
+      Post => Occ (A, E) = Occ (B, E);
 
    function Is_Set
      (A : T_Arr;
@@ -32,7 +31,7 @@ is
       (if V = A (I) then Occ (B, E) = Occ (A, E)
        elsif V = E then Occ (B, E) = Occ (A, E) + 1
        elsif A (I) = E then Occ (B, E) = Occ (A, E) - 1
-             else Occ (B, E) = Occ (A, E));
+       else Occ (B, E) = Occ (A, E));
 
    procedure New_Element (A, B : T_Arr) with
       Ghost,
@@ -44,12 +43,12 @@ is
 
    procedure Unchanged_Transitivity (A, B, C : T_Arr) with
       Ghost,
-     Pre => A'Length > 0 and then
-       B'Length = A'Length
+      Pre => A'Length > 0
+      and then B'Length = A'Length
       and then C'Length = B'Length
       and then Multiset_Unchanged (A, B)
-      and then (Multiset_Unchanged (B, C) or else B=C),
-     Post => Multiset_Unchanged (A, C);
+      and then (Multiset_Unchanged (B, C) or else B = C),
+      Post => Multiset_Unchanged (A, C);
 
    procedure Occ_To_Has_Value (A : T_Arr; V : T) with
       Ghost,
@@ -83,6 +82,5 @@ is
       Post => Multiset_Unchanged
         (A (A'First .. Eq - 1),
          B (B'First .. Eq - A'First + B'First - 1));
-
 
 end Classic_Lemmas;
