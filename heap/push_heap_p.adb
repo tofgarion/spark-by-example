@@ -1,13 +1,17 @@
 package body Push_Heap_P with
      Spark_Mode is
    procedure Push_Heap (H : in out Heap) is
-      V : T := H.A (H.Size);
-      Size : constant Positive := H.Size;
-      Hole    : Natural;
-      Parent  : Natural;
-      A_Old   : constant T_Arr := H.A;
-      A_Save  : T_Arr          := H.A;
-      V_Old   : T;
+      V    : T                 := H.A (H.Size);
+      Size : constant Positive := H.Size with
+         Ghost;
+      Hole   : Natural;
+      Parent : Natural;
+      A_Old  : constant T_Arr := H.A with
+         Ghost;
+      A_Save : T_Arr := H.A with
+         Ghost;
+      V_Old : T with
+         Ghost;
 
    begin
       if 1 < H.Size then
@@ -42,9 +46,14 @@ package body Push_Heap_P with
                      Parent := Heap_Parent (Hole);
                   end if;
 
-                  pragma Loop_Invariant (if Size < MAX_SIZE then A_Old(Size + 1 .. MAX_SIZE) = H.A(Size + 1 .. MAX_SIZE));
+                  pragma Loop_Invariant
+                    (if
+                       Size < MAX_SIZE
+                     then
+                       A_Old (Size + 1 .. MAX_SIZE) =
+                       H.A (Size + 1 .. MAX_SIZE));
                   pragma Loop_Invariant (Hole in 1 .. H.Size);
-                  pragma Loop_Invariant (Is_Heap (H));
+                  pragma Loop_Invariant (Is_Heap_Def (H));
                   pragma Loop_Invariant
                     (if 1 < Hole then Parent = Heap_Parent (Hole));
                   pragma Loop_Invariant (H.A (Hole) < V);

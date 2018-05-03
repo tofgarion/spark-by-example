@@ -9,7 +9,7 @@ package body Remove_Copy_Lemmas with
       Lemma_1 (Remove_Last (A), E, Val);
    end Lemma_1;
 
-   procedure Lemma_3 (A : T_arr; Val : T) is
+   procedure Lemma_3 (A : T_Arr; Val : T) is
    begin
       if A'Length = 0 then
          return;
@@ -17,7 +17,6 @@ package body Remove_Copy_Lemmas with
 
       Lemma_3 (Remove_Last (A), Val);
    end Lemma_3;
-
 
    procedure No_Changes (A, B, C : T_Arr; Val : T) is
    begin
@@ -40,14 +39,14 @@ package body Remove_Copy_Lemmas with
             if B'Length = 1 then
                Lemma_1 (Remove_Last (A), E, Val);
             end if;
-              if E /= V then
-                 pragma Assert (Occ (Remove_Last (A), E) = Occ (A, E));
-                 pragma Assert (Occ (Remove_Last (B), E) = Occ (B, E));
-              else
-                 pragma Assert (Occ (A, E) = Occ (Remove_Last (A), E) + 1);
-                 pragma Assert (Occ (B, E) = Occ (Remove_Last (B), E) + 1);
-              end if;
-           end if;
+            if E /= V then
+               pragma Assert (Occ (Remove_Last (A), E) = Occ (A, E));
+               pragma Assert (Occ (Remove_Last (B), E) = Occ (B, E));
+            else
+               pragma Assert (Occ (A, E) = Occ (Remove_Last (A), E) + 1);
+               pragma Assert (Occ (B, E) = Occ (Remove_Last (B), E) + 1);
+            end if;
+         end if;
          pragma Loop_Invariant
            (for all F in T'First .. E =>
               (if F /= Val then Occ (A, F) = Occ (B, F)));

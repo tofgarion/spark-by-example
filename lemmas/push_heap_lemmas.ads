@@ -2,11 +2,10 @@ with Types;               use Types;
 with Multiset_Predicates; use Multiset_Predicates;
 with Occ_P;               use Occ_P;
 with Occ_Def_P;           use Occ_Def_P;
-with Classic_Lemmas; use Classic_Lemmas;
+with Classic_Lemmas;      use Classic_Lemmas;
 
 package Push_Heap_Lemmas with
      Spark_Mode is
-
 
    procedure No_Changes
      (A_Old, A, A_Save : T_Arr;
@@ -32,6 +31,7 @@ package Push_Heap_Lemmas with
      (A, A_Old : T_Arr;
       V        : T;
       Hole     : Positive) with
+      Ghost,
       Pre => A'First = A_Old'First
       and then A'Last = A_Old'Last
       and then Hole in A'Range
@@ -80,6 +80,6 @@ package Push_Heap_Lemmas with
       and then Multiset_Minus (A_Old, A_Save, V)
       and then Multiset_Retain_Rest_Double (A_Old, A_Save, A_Save (Hole), V)
       and then Is_Set (A_Save, Hole, V, A),
-     Post => Multiset_Unchanged (A, A_Old);
+      Post => Multiset_Unchanged (A, A_Old);
 
 end Push_Heap_Lemmas;

@@ -1,6 +1,6 @@
-project Spark_By_Example is
+project Lemmas is
 
-  for Source_Dirs use (".");
+  for Source_Dirs use (".", "../spec");
 
   package Compiler is
     for Default_Switches ("Ada") use ("-gnat12", "-gnato13");
@@ -13,4 +13,4 @@ project Spark_By_Example is
                       "--warnings=continue");
   end Prove;
 
-end Spark_By_Example;
+end Lemmas;
