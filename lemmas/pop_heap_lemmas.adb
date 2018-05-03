@@ -1,4 +1,4 @@
-package body Heap_Lemmas with
+package body Pop_Heap_Lemmas with
 SPARK_Mode
 is
 
@@ -19,4 +19,4 @@ is
 
 
 
-end Heap_Lemmas;
+end Pop_Heap_Lemmas;

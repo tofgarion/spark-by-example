@@ -2,7 +2,7 @@ with Types; use Types;
 with Classic_Lemmas; use Classic_Lemmas;
 with Heap_Predicates; use Heap_Predicates;
 
-package Heap_Lemmas with
+package Pop_Heap_Lemmas with
 SPARK_Mode,
   Ghost
 is
@@ -27,4 +27,4 @@ is
      Post => (for all J in 1 .. H.Size => V >= H.A(J));
 
 
-end Heap_Lemmas;
+end Pop_Heap_Lemmas;
