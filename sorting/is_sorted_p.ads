@@ -1,6 +1,5 @@
 with Types;    use Types;
 with Sorted_P; use Sorted_P;
---with Is_Sorted_Lemma; use Sorting_Lemmas;
 
 package Is_Sorted_P with
      Spark_Mode is
