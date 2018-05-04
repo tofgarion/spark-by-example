@@ -37,7 +37,8 @@
 ** The Partial_Sort_Aux procedure
 
     This function will be used in our algorithm and do the same thing
-    on a heap when it is alreasy a heap between ~1~ and ~M-1~.
+    on a ~Heap~ representing a heap data structure ~H~ between indexes
+    ~1~ and ~M-1~ instead of an array ~A~.
 
 *** Specification of Partial_Sort_Aux
 
