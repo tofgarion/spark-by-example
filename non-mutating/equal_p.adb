@@ -7,5 +7,5 @@ package body Equal_P with
    function Equal
      (A : T_Arr;
       B : T_Arr) return Boolean is
-     (not Mismatch (A, B).Exists);
+     (not Mismatch (A, B (B'First .. B'First - 1 + A'Length)).Exists);
 end Equal_P;

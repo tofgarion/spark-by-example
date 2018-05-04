@@ -34,9 +34,9 @@
 
    The preconditions avoid possible overflows.
 
-   Then, we define a ~Has_Constant_Subrange~ ghost function to express
-   that an array has a subrange containing only a given value (the
-   precondition avoids a possible overflow too):
+   Then, a ~Has_Constant_Subrange~ ghost function is defined to
+   express that an array has a subrange containing only a given value
+   (the precondition avoids a possible overflow too):
 
    #+BEGIN_SRC ada
       function Has_Constant_Subrange (A : T_Arr;
