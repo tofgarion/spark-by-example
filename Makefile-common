@@ -32,3 +32,7 @@ prove:
 
 prove-coq:
 	gnatprove --prover=coq $(_PROJECT) -f $(_PARALLEL) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(FILE)
+
+# Local Variables:
+# mode: makefile
+# End:
