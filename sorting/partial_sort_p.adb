@@ -12,7 +12,6 @@ package body Partial_Sort_P with
       A_Save   : T_Arr            := H.A with
          Ghost;
    begin
-      if M > 1 then
          H.Size := Size;
          for J in M .. Old_Size loop
             if H.A (J) < H.A (1) then
@@ -37,12 +36,10 @@ package body Partial_Sort_P with
                  H.A (J + 1 .. MAX_SIZE) = H'Loop_Entry.A (J + 1 .. MAX_SIZE));
          end loop;
          A_Save := H.A;
-         Prove_Partition (H.A, M, Old_Size);
          Sort_Heap (H);
 
          H.Size := Old_Size;
-         Prove_Partition_After_Sort (H.A, A_Save, M, Old_Size);
-      end if;
+         Prove_Partition (H.A, A_Save, M, Old_Size);
    end Partial_Sort_Aux;
 
    procedure Partial_Sort (A : in out T_Arr; M : Positive) is

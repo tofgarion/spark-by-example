@@ -24,7 +24,7 @@ package Partial_Sort_P with
 
    procedure Partial_Sort_Aux (H : in out Heap; M : Positive) with
       Pre => H.Size > 0
-      and then M in 1 .. H.Size
+      and then M in 2 .. H.Size
       and then H.Size <= MAX_SIZE
       and then (if M > 1 then Is_Heap_Def ((A => H.A, Size => M - 1))),
       Post => Sorted (H.A (1 .. M - 1))
