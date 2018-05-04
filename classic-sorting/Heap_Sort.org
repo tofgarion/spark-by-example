@@ -1,0 +1,76 @@
+** The Heap_Sort algorithm
+
+The ~Heap_Sort~ algorithm is an efficient sorting algorithm which makes use of the previously developped
+heap data structure and the corresponding algorithms, which can be found in [[../heap/README.org][chapter 8]]. Its signature reads:
+
+#+BEGIN_SRC ada
+ procedure Heap_Sort (A : in out T_Arr)
+#+END_SRC
+
+*** Specification of Heap_Sort
+
+~Heap_Sort~ is a sorting algorithm, and as such its specification is quite similar to the one of 
+[[Selection_Sort.org][Selection_Sort]] or [[Insertion_Sort.org][Insertion_Sort]]:
+
+#+BEGIN_SRC ada
+procedure Heap_Sort (A : in out T_Arr) with
+      Pre  => A'Length <= MAX_SIZE and then A'Last < Positive'Last,
+      Post => Sorted (A) and then Multiset_Unchanged (A, A'Old);
+#+END_SRC
+
+The postconditions are identical to those of the previously mentionned sorting algorithms, but there
+are some preconditions, due to the fact that the array will be converted to a heap.
+
+*** Implementation of Heap_Sort
+
+~Heap_Sort~ will be implemented by simply calling [[../heap/Make_Heap.org][Make_Heap]] and [[../heap/Sort_Heap.org][Sort_Heap]] consecutively:
+
+#+BEGIN_SRC ada
+ procedure Heap_Sort (A : in out T_Arr) is
+      H      : Heap;
+      A_Save : T_Arr := H.A with
+         Ghost;
+      A_Old : constant T_Arr := A with
+         Ghost;
+      Size : constant Natural := A'Length;
+   begin
+      if Size > 0 then
+         H      := Make_Heap (A);
+         A_Save := H.A;
+         Sort_Heap (H);
+
+         if Size < MAX_SIZE then
+            Multiset_With_Eq (A_Save, H.A, Size + 1);
+         end if;
+
+         Unchanged_Transitivity (A, A_Save (1 .. Size), H.A (1 .. Size));
+         Unchanged_Transitivity (H.A (1 .. Size), A, A_Old);
+         A := H.A (1 .. Size);
+         Unchanged_Transitivity (A_Old, H.A (1 .. Size), A);
+      end if;
+   end Heap_Sort;
+#+END_SRC
+
+
+As mentioned above, the only two instructions that are not opperation on ghost variables, or annotations are 
+the call to ~Make_Heap~ and ~Sort_Heap~.
+
+The variables used in this program are:
+- ~H~, a ~Heap~ used to store the array and efficiently sort it
+- ~A_Save~ is a ghost variable used to store the array after the elements are rearranged in a heap data structure.
+- ~A_Old~ is a ghost variable to store the original state of ~A~
+- ~Size~ is a constant equal to the length of ~A~, it's used to avoid array index check errors in the loop invariants
+with the slices.
+
+The annotation are as follows:
+
+We verify that after sorting the heap then the array made of the first ~Size~ indexes of ~H.A~ can be obtained
+by permutations of the elements of ~A_Save~. This is done with the healp of the lemma [[../sorting/Partial_Sort.org][Multiset_With_Eq]].
+We the then verify that ~H.A(1 .. Size)~ is a permutation of ~A_Old~ with the help of [[../heap/Make_Heap.org#the-unchanged_transitivity-lemma][Unchanged_Transitivity]] 
+lemma, which established the transitivity of ~Multiset_Unchanged~ when the automatic solvers cannot do it on their own.
+Finnaly we copy back ~H.A~ in ~A~ and re_prove the transitivity of ~Multiset_Unchanged~ on ~A~. This
+proves the last postcondition, the first simply being given by the postcondition of ~Sort_Heap~.
+
+When using gnatprove with this specification and implementation everything is proved.
+
+

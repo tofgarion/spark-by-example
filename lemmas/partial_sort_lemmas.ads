@@ -27,15 +27,7 @@ package Partial_Sort_Lemmas with
       and then (for all K in M .. MAX_SIZE => A (K) = A_Save (K)),
       Post => Lower_Bound (A (M .. J), A (1));
 
-   procedure Prove_Partition (A : T_Arr; Mid, Size : Positive) with
-      Ghost,
-      Pre => Mid in A'First + 1 .. Size
-      and then Size in A'Range
-      and then Upper_Bound (A (A'First .. Mid - 1), A (A'First))
-      and then Lower_Bound (A (Mid .. Size), A (A'First)),
-      Post => Partition (A, Mid, Size);
-
-   procedure Prove_Partition_After_Sort
+   procedure Prove_Partition
      (A, A_Save : T_Arr;
       M, Size   : Positive) with
       Ghost,
