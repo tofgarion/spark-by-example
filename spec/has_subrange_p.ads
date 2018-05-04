@@ -26,7 +26,7 @@ package Has_Subrange_P with
       and then A'Last < Positive'Last
       and then Last <= A'Last + 1 - B'Length;
 
-   function Has_Not_Subrange_In_Prefix
+   function Has_Not_Subrange_In_Range
      (A     : T_Arr;
       Start : Positive;
       Last  : Positive;

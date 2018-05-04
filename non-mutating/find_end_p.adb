@@ -27,7 +27,7 @@ package body Find_End_P with
               (if
                  Result.Value < I
                then
-                 (Has_Not_Subrange_In_Prefix (A, Result.Value + 1, I, B))
+                 (Has_Not_Subrange_In_Range (A, Result.Value + 1, I, B))
                else True)
             else not Has_Subrange_In_Prefix (A, I, B));
 
