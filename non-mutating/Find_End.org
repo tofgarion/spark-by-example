@@ -160,7 +160,6 @@
 
     Using ~gnatprove~ on ~Find_End~, all the assertions are proved.
 
-
 # Local Variables:
 # ispell-dictionary : "english"
 # End:

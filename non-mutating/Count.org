@@ -10,13 +10,15 @@
 *** The predicate Occ
 
     We want to define a ghost function ~Occ~ returning the number of
-    occurences of a given value in an array. A classic way to define
-    such a predicate is to define it recursively on the length of the
+    occurences of a given value in an array. This ghost function will
+    serve as a mathematical specification for ~Count~.
+
+    ~Occ~ can classically be defined recursively on the length of the
     array (see [[http://docs.adacore.com/spark2014-docs/html/ug/gnatprove_by_example/manual_proof.html#manual-proof-using-ghost-code][SPARK 2014 user guide chapter on manual proof with
     ghost code]] for a similar and more detailed example). We first
     define a recursive function ~Occ_Def~ which will be used in ~Occ~
-    as gnatprove only introduces axioms for postconditions of
-    non-recursive functions.
+    as *~gnatprove~ only introduces axioms for postconditions of
+    non-recursive functions*.
 
     #+BEGIN_SRC ada
       function Remove_Last
@@ -37,17 +39,18 @@
 
     The line ~pragma Annotate (Gnatprove, Terminating, Occ_Def);~ is
     very important here. It states that the function ~Occ_Def~
-    terminates.  Without this annotation, the tool would not be able
-    to prove some loop invariants. In return, ~gnatprove~ may print
+    terminates. Without this annotation, the tool would not be able to
+    prove some loop invariants. In return, ~gnatprove~ prints
     ~medium: subprogram "Occ_Def" might not terminate, terminating
-    annotation could be incorrect~.
+    annotation could be incorrect~ indicating that the user should
+    verify by other means that ~Occ_Def~ really terminates.
 
     After having defined ~Occ_def~, the definition of ~Occ~ is rather
     easy:
 
     #+BEGIN_SRC ada
-    function Occ (A : T_Arr; Val : T) return Natural is (Occ_Def (A, Val)) with
-      Post => Occ'Result <= A'Length;
+      function Occ (A : T_Arr; Val : T) return Natural is (Occ_Def (A, Val)) with
+        Post => Occ'Result <= A'Length;
     #+END_SRC
 
     The postcondition is necessary to prove loop invariants in
@@ -67,7 +70,7 @@
 
     The postconditions express
       - that the number returned is correct (it is not less than 0 nor
-        is it more than ~A'Length~.
+        is it more than ~A'Length~).
       - that the number returned is equal to the number of occurrences
         of ~Val~ in the array ~A~.
 
