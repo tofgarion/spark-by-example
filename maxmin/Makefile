@@ -3,7 +3,7 @@ PROJECT=max_min_algorithms.gpr
 MAX_MIN_DEFAULT_TIMEOUT = "TIMEOUT=5"
 
 #All proof target
-ALL_PROOF_TARGET = max_element
+ALL_PROOF_TARGET = max_element max_element_with_ghost max_seq min_element
 
 #specification dependencies for each function
 SPEC_TYPES       		= ../spec/types.ads
@@ -33,5 +33,5 @@ max_seq: $(call GENERATE_DEP, max_seq) $(SPEC_MAX_SEQ)
 min_element: $(call GENERATE_DEP,min_element) $(SPEC_MIN_ELEMENT)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_MIN_ELEMENT) $(MAX_MIN_DEFAULT_TIMEOUT)
 
-
+all: $(ALL_PROOF_TARGET)
 
