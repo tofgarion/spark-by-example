@@ -27,7 +27,7 @@
       procedure Partial_Sort (A : in out T_Arr; M : Positive) with
       Pre  => M in A'First .. A'Last and then A'Length < MAX_SIZE,
       Post => Multiset_Unchanged (A'Old, A)
-      and then Is_Sorted (A (A'First .. M - 1))
+      and then Sorted (A (A'First .. M - 1))
       and then Partition (A, M, A'Last);
    #+END_SRC
 
