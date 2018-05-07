@@ -1,90 +1,90 @@
-** The Find_First_Of algorithm
+# Created 2018-05-07 Mon 13:46
+#+OPTIONS: author:nil title:nil toc:nil
+#+EXPORT_FILE_NAME: ../../../non-mutating/Find_First_Of.org
 
-   The ~Find_First_Of~ algorithm is related to ~Find~: given an array
-   ~A~ and an array ~B~, it will return the least valid index of ~A~
-   such that the element at this position also occurs in ~B~. We will
-   again use the ~Option~ type to encapsulate the result.
+* The Find_First_Of algorithm
 
-   Its signature is the following:
+The ~Find_First_Of~ algorithm is related to ~Find~: given an array
+~A~ and an array ~B~, it will return the least valid index of ~A~
+such that the element at this position also occurs in ~B~. We will
+again use the ~Option~ type to encapsulate the result.
 
-   #+BEGIN_SRC ada
-     function Find_First_Of (A : T_Arr; B : T_Arr) return Option
-   #+END_SRC
+Its signature is the following:
 
-*** The predicate Has_Value_Of
+#+BEGIN_SRC ada
+  function Find_First_Of (A : T_Arr; B : T_Arr) return Option
+#+END_SRC
 
-   In order to specify ~Find_First_Of~, we will first define the
-   ~Has_Value_Of~ predicate using our previously defined ~Has_Value~
-   predicate:
+** The predicate Has_Value_Of
 
-   #+BEGIN_SRC ada
-     function Has_Value_Of
-       (A : T_Arr;
-        B : T_Arr) return Boolean is
-       (for some I in A'Range => Has_Value (B, A (I)));
-   #+END_SRC
+In order to specify ~Find_First_Of~, we will first define the
+~Has_Value_Of~ predicate using our previously defined ~Has_Value~
+predicate:
 
-   Again, ~Has_Value_Of~ is defined in a package with the ~Ghost~
-   aspect, so ~Has_Value_Of~ can only be used in specification. Notice
-   that defining ~Has_Value_Of~ with ~Has_Value~ is easy:
-   ~Has_Value_Of(A, B)~ is true if some value in ~A~ occurs in ~B~.
+#+BEGIN_SRC ada
+  function Has_Value_Of
+    (A : T_Arr;
+     B : T_Arr) return Boolean is
+    (for some I in A'Range => Has_Value (B, A (I)));
+#+END_SRC
 
-*** Specification of Find_First_Of
+Again, ~Has_Value_Of~ is defined in a package with the ~Ghost~
+aspect, so ~Has_Value_Of~ can only be used in specification. Notice
+that defining ~Has_Value_Of~ with ~Has_Value~ is easy:
+~Has_Value_Of(A, B)~ is true if some value in ~A~ occurs in ~B~.
 
-    Using ~Has_Value~ and ~Has_Value_Of~, the specification of
-    ~Find_First_Of~ can be written as
+** Specification of Find_First_Of
 
-    #+BEGIN_SRC ada
-      function Find_First_Of (A : T_Arr; B : T_Arr) return Option with
-         Contract_Cases =>
-         (Has_Value_Of (A, B) =>
-            (Find_First_Of'Result.Exists = True)
-            and then (Has_Value (B, A (Find_First_Of'Result.Value)))
-            and then
-            (not Has_Value_Of (A (A'First .. Find_First_Of'Result.Value - 1), B)),
-          others => Find_First_Of'Result.Exists = False);
-    #+END_SRC
+Using ~Has_Value~ and ~Has_Value_Of~, the specification of
+~Find_First_Of~ can be written as
 
-    There are two behaviors for ~Find_First_Of~ (defined here by two
-    contract cases):
+#+BEGIN_SRC ada
+  function Find_First_Of (A : T_Arr; B : T_Arr) return Option with
+     Contract_Cases =>
+     (Has_Value_Of (A, B) =>
+        (Find_First_Of'Result.Exists = True)
+        and then (Has_Value (B, A (Find_First_Of'Result.Value)))
+        and then
+        (not Has_Value_Of (A (A'First .. Find_First_Of'Result.Value - 1), B)),
+      others => Find_First_Of'Result.Exists = False);
+#+END_SRC
 
-    - if there is a value of ~A~ occurring in ~B~, then the returned
-      ~Option~ contains a valid index of ~A~ and this index is such
-      that the element of ~A~ at this position occurs in ~B~ and all
-      the elements of ~A~ up to the index do not occur in ~B~
-    - otherwise the returned ~Option~ does not contain a valid index
-      of ~A~
+There are two behaviors for ~Find_First_Of~ (defined here by two
+contract cases):
 
-*** Implementation of Find_First_Of
+- if there is a value of ~A~ occurring in ~B~, then the returned
+  ~Option~ contains a valid index of ~A~ and this index is such
+  that the element of ~A~ at this position occurs in ~B~ and all
+  the elements of ~A~ up to the index do not occur in ~B~
+- otherwise the returned ~Option~ does not contain a valid index
+  of ~A~
 
-    The implementation of Find_First_Of is the following:
+** Implementation of Find_First_Of
 
-    #+BEGIN_SRC ada
-      function Find_First_Of (A : T_Arr; B : T_Arr) return Option is
-         Result : Option := (Exists => False);
-      begin
-         for I in A'Range loop
-            if Find (B, A (I)).Exists then
-               Result := (Exists => True, Value => I);
+The implementation of Find_First_Of is the following:
 
-               return Result;
-            end if;
+#+BEGIN_SRC ada
+  function Find_First_Of (A : T_Arr; B : T_Arr) return Option is
+     Result : Option := (Exists => False);
+  begin
+     for I in A'Range loop
+        if Find (B, A (I)).Exists then
+  	 Result := (Exists => True, Value => I);
+  
+  	 return Result;
+        end if;
+  
+        pragma Loop_Invariant (not Has_Value_Of (A (A'First .. I), B));
+        pragma Loop_Invariant (not Result.Exists);
+     end loop;
+  
+     return Result;
+  end Find_First_Of;
+#+END_SRC
 
-            pragma Loop_Invariant (not Has_Value_Of (A (A'First .. I), B));
-            pragma Loop_Invariant (not Result.Exists);
-         end loop;
-
-         return Result;
-      end Find_First_Of;
-    #+END_SRC
-
-    We use the ~Find~ algorithm on each element of ~A~ to check if it
-    is present in ~B~. The invariants and the variant are rather
-    straightforward. Notice that we could have "inlined" ~Find~ inside
-    ~Find_First_Of~, but this would leads to write more
-    invariants. Like ACSL by Example, we emphasize here reuse over
-    efficiency.
-
-# Local Variables:
-# ispell-dictionary: "english"
-# End:
+We use the ~Find~ algorithm on each element of ~A~ to check if it
+is present in ~B~. The invariants and the variant are rather
+straightforward. Notice that we could have "inlined" ~Find~ inside
+~Find_First_Of~, but this would leads to write more
+invariants. Like ACSL by Example, we emphasize here reuse over
+efficiency.

@@ -1,6 +1,5 @@
-# _NON_MUTATING_ORG_FILES = Adjacent_Find.org Count.org Equal_Mismatch.org \
-# 	Find_End.org Find_First_Of.org Find.org README.org Search_N.org Search.org
-_NON_MUTATING_ORG_FILES = Find.org README.org
+_NON_MUTATING_ORG_FILES = Adjacent_Find.org Count.org Equal_Mismatch.org \
+	Find_End.org Find_First_Of.org Find.org README.org Search_N.org Search.org
 
 NON_MUTATING_ORG_FILES = $(patsubst %, ../non-mutating/%, $(_NON_MUTATING_ORG_FILES))
 

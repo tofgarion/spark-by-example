@@ -1,165 +1,165 @@
-** The Find_End algorithm
+# Created 2018-05-07 Mon 13:45
+#+OPTIONS: author:nil title:nil toc:nil
+#+EXPORT_FILE_NAME: ../../../non-mutating/Find_End.org
 
-   The ~Find_End~ algorithm finds the last occurence of a given
-   subsquence in a given array. Its signature can be expressed as:
+* The Find_End algorithm
 
-   #+BEGIN_SRC ada
-     function Find_End (A : T_Arr; B : T_Arr) return Option
-   #+END_SRC
+The ~Find_End~ algorithm finds the last occurence of a given
+subsquence in a given array. Its signature can be expressed as:
 
-   ~Find_End~ will return an option containing the *last valid* index
-   ~I~ of ~A~ such that ~A (I .. I + B'Length -1 ) = B~ if it exists.
+#+BEGIN_SRC ada
+  function Find_End (A : T_Arr; B : T_Arr) return Option
+#+END_SRC
 
-*** The predicate Has_Subrange_In_Postfix
+~Find_End~ will return an option containing the *last valid* index
+~I~ of ~A~ such that ~A (I .. I + B'Length -1 ) = B~ if it exists.
 
-    The ~Find_End~ function is quite similar to the [[Search.org][Search]] function,
-    since they both have to find the same thing, the main difference
-    being that ~Search~ stops at the first occurence of the
-    subsequence, whereas ~Find_End~ will continue looking until
-    finding the last occurence. For this reason, the specification of
-    ~Find_End~ will re-use many of the ghost functions defined for the
-    specification of ~Search~. We still need to add two new ghost
-    function: ~Has_Subrange_In_Postfix~ and
-    ~Has_Not_Subrange_In_Prefix~.
+** The predicate Has_Subrange_In_Postfix
 
-    ~Has_Subrange_In_Postfix~ checks if the if the subsequence
-    represented by the array ~B~ can be found in the array ~A~
-    starting after the index ~J~ and is defined as:
+The ~Find_End~ function is quite similar to the [[Search.org][Search]] function,
+since they both have to find the same thing, the main difference
+being that ~Search~ stops at the first occurence of the
+subsequence, whereas ~Find_End~ will continue looking until
+finding the last occurence. For this reason, the specification of
+~Find_End~ will re-use many of the ghost functions defined for the
+specification of ~Search~. We still need to add two new ghost
+function: ~Has_Subrange_In_Postfix~ and
+~Has_Not_Subrange_In_Prefix~.
 
-    #+BEGIN_SRC ada
-     function Has_Subrange_In_Postfix
-       (A     : T_Arr;
-	Index : Integer;
-	B     : T_Arr) return Boolean is
-	(for some J in Index .. A'Last-B'Length+1 => Equal_Subrange(A, J, B)) with
-	Pre => A'Length >=B'Length
-	and then A'Last<Positive'Last
-	and then Index <= A'Last - B'Length + 1
-	and then Index >=A'First;
-    #+END_SRC
+~Has_Subrange_In_Postfix~ checks if the if the subsequence
+represented by the array ~B~ can be found in the array ~A~
+starting after the index ~J~ and is defined as:
 
-    ~Has_Not_Subrange_In_Prefix~ checks if a subsequence represented
-    by an array ~B~ does *not* appears in array ~A~. Subsequences of
-    ~A~ to be checked will start in a certain range of indices ~Start
+#+BEGIN_SRC ada
+  function Has_Subrange_In_Postfix
+    (A     : T_Arr;
+     Index : Integer;
+     B     : T_Arr) return Boolean is
+     (for some J in Index .. A'Last-B'Length+1 => Equal_Subrange(A, J, B)) with
+     Pre => A'Length >=B'Length
+     and then A'Last<Positive'Last
+     and then Index <= A'Last - B'Length + 1
+     and then Index >=A'First;
+#+END_SRC
+
+~Has_Not_Subrange_In_Prefix~ checks if a subsequence represented
+by an array ~B~ does *not* appears in array ~A~. Subsequences of
+~A~ to be checked will start in a certain range of indices ~Start
     .. Last~:
 
-    #+BEGIN_SRC ada
-      function Has_Not_Subrange_In_Prefix
-        (A     : T_Arr;
-         Start : Positive;
-         Last  : Positive;
-         B     : T_Arr) return Boolean is
-        (for all J in Start .. Last => not Equal_Subrange (A, J, B)) with
-         Pre => A'Length >= B'Length
-         and then A'Last < Positive'Last
-         and then Last <= A'Last + 1 - B'Length
-         and then Start in A'First .. Last;
-    #+END_SRC
+#+BEGIN_SRC ada
+  function Has_Not_Subrange_In_Prefix
+    (A     : T_Arr;
+     Start : Positive;
+     Last  : Positive;
+     B     : T_Arr) return Boolean is
+    (for all J in Start .. Last => not Equal_Subrange (A, J, B)) with
+     Pre => A'Length >= B'Length
+     and then A'Last < Positive'Last
+     and then Last <= A'Last + 1 - B'Length
+     and then Start in A'First .. Last;
+#+END_SRC
 
-    ~Has_Not_Subrange_In_Prefix~ will be mainly used to hide
-    quantifiers for the provers as already done for [[./Search.org][Search]].
+~Has_Not_Subrange_In_Prefix~ will be mainly used to hide
+quantifiers for the provers as already done for [[file:./Search.org][Search]].
 
-*** Specification of Find_End
+** Specification of Find_End
 
-    The specification of ~Find_End~ is as follows:
+The specification of ~Find_End~ is as follows:
 
-    #+BEGIN_SRC ada
-      Function Find_End (A : T_Arr; B: T_arr) return Option with
-           Pre            =>A'Last < Positive'Last and then B'First <= B'Last,
-           Contract_Cases =>
-           (B'Length = 0 => not Find_End'Result.Exists,
-            A'Length < B'Length => not Find_End'Result.Exists,
-            A'Length >=B'Length and then Has_Subrange(A,B) =>
-              Find_End'Result.Exists
-              and then Equal_Subrange(A, Find_End'Result.Value , B)
-              and then
-              (if
-                 Find_End'Result.Value < A'Last-B'Length+1
-                 then
-                   (not Has_Subrange_In_Postfix(A, Find_End'Result.Value+1,B))),
-             others  => not Find_End'Result.Exists);
-    #+END_SRC
+#+BEGIN_SRC ada
+  Function Find_End (A : T_Arr; B: T_arr) return Option with
+       Pre            =>A'Last < Positive'Last and then B'First <= B'Last,
+       Contract_Cases =>
+       (B'Length = 0 => not Find_End'Result.Exists,
+        A'Length < B'Length => not Find_End'Result.Exists,
+        A'Length >=B'Length and then Has_Subrange(A,B) =>
+  	Find_End'Result.Exists
+  	and then Equal_Subrange(A, Find_End'Result.Value , B)
+  	and then
+  	(if
+  	   Find_End'Result.Value < A'Last-B'Length+1
+  	   then
+  	     (not Has_Subrange_In_Postfix(A, Find_End'Result.Value+1,B))),
+         others  => not Find_End'Result.Exists);
+#+END_SRC
 
-    - the precondition expresses
-      - the fact that the last index of ~A~ is less than the last ~Positive~
-        value, as in the ghost functions we will use ~A'Last+1~.
-      - the fact that ~B'First~ is less than ~B'Last~. This precondition is
-        necessary, otherwise the contract cases can neither be proved,
-        nor their disjointedness.
-    - the postconditions are expressed through 4 contract cases:
-      1. if ~B~ is empty, then there is no index returned
-      2. if ~A~ is shorter than ~B~, then there is again no index
-         returned
-      3. if ~A~ is longer than ~B~ and there is a subsequence in ~A~
-         equal to ~B~, then
-         - a valid index will be returned
-         - the subsequence of ~A~ starting at this index and of length
-           ~B'Length~ will be equal to ~B~
-         - if the returned index is not ~A'Last - B'Length + 1~ (the
-           last index where a subsequence of ~A~ can be equal to ~B~),
-           then for all indexes K of ~A~ greater than the returned
-           index, the subsequence of length ~B'Length~ starting at
-           index K is not equal to ~B~.
-      4. otherwise there is no index returned.
+- the precondition expresses
+  - the fact that the last index of ~A~ is less than the last ~Positive~
+    value, as in the ghost functions we will use ~A'Last+1~.
+  - the fact that ~B'First~ is less than ~B'Last~. This precondition is
+    necessary, otherwise the contract cases can neither be proved,
+    nor their disjointedness.
+- the postconditions are expressed through 4 contract cases:
+  1. if ~B~ is empty, then there is no index returned
+  2. if ~A~ is shorter than ~B~, then there is again no index
+     returned
+  3. if ~A~ is longer than ~B~ and there is a subsequence in ~A~
+     equal to ~B~, then
+     - a valid index will be returned
+     - the subsequence of ~A~ starting at this index and of length
+       ~B'Length~ will be equal to ~B~
+     - if the returned index is not ~A'Last - B'Length + 1~ (the
+       last index where a subsequence of ~A~ can be equal to ~B~),
+       then for all indexes K of ~A~ greater than the returned
+       index, the subsequence of length ~B'Length~ starting at
+       index K is not equal to ~B~.
+  4. otherwise there is no index returned.
 
-*** Implementation of Find_End
+** Implementation of Find_End
 
-    #+BEGIN_SRC ada
-      function Find_End (A : T_Arr; B : T_Arr) return Option is
-         Result : Option := (Exists => False);
-      begin
-         if (A'Length < B'Length or else B'Length = 0) then
-            return Result;
-         end if;
+#+BEGIN_SRC ada
+  function Find_End (A : T_Arr; B : T_Arr) return Option is
+     Result : Option := (Exists => False);
+  begin
+     if (A'Length < B'Length or else B'Length = 0) then
+        return Result;
+     end if;
+  
+     for I in A'First .. A'Last - B'Length + 1 loop
+        if A (I .. I - 1 + B'Length) = B then
+  	 Result := (Exists => True, Value => I);
+  
+        end if;
+  
+        pragma Loop_Invariant
+  	(if
+  	   Result.Exists
+  	 then
+  	   Equal_Subrange (A, Result.Value, B)
+  	     and then Result.Value in A'First .. A'Last - B'Length + 1
+  	     and then Result.Value <= I
+  	     and then
+  	     (if
+  		Result.Value < I
+  	      then
+  		(Has_Not_Subrange_In_Prefix (A, Result.Value + 1, I, B))
+  	      else True)
+  	 else not Has_Subrange_In_Prefix (A, I, B));
+  
+     end loop;
+  
+     return Result;
+  
+  end Find_End;
+#+END_SRC
 
-         for I in A'First .. A'Last - B'Length + 1 loop
-            if A (I .. I - 1 + B'Length) = B then
-               Result := (Exists => True, Value => I);
+- the implementation is rather simple: we range over ~A~ indexes
+  trying to find a subsequence equal to ~B~, each time we do find
+  one we save the current index ~I~ in ~Result.Value~. Contrary to
+  ~Search~, we do not return at the first match since we want to
+  find the last subsequence of ~A~ equal to ~B~. We look instead
+  at the entire range of indexes.
+- the loop invariant specifies that:
+  1. either a matching subsequence of ~A~ has been found (as
+     indicated by ~Result.Exists~) and then:
+     - it starts at ~Result.Value~
+     - ~Result.Value~ is in the range ~A'First
+                  .. A'Last - B'Length + 1~
+     - If ~Result.Value~ is different from ~I~ then for all ~K~ in
+       ~Result'Value+1 .. I~ there is no subrange of ~A~ starting
+       at index ~K~ of length ~B'Length~ equal to ~B~
+  2. or no matching subsequence of ~A~ starting at an index
+     lower than ~I~ has been found.
 
-            end if;
-
-            pragma Loop_Invariant
-              (if
-                 Result.Exists
-               then
-                 Equal_Subrange (A, Result.Value, B)
-                   and then Result.Value in A'First .. A'Last - B'Length + 1
-                   and then Result.Value <= I
-                   and then
-                   (if
-                      Result.Value < I
-                    then
-                      (Has_Not_Subrange_In_Prefix (A, Result.Value + 1, I, B))
-                    else True)
-               else not Has_Subrange_In_Prefix (A, I, B));
-
-         end loop;
-
-         return Result;
-
-      end Find_End;
-    #+END_SRC
-
-    - the implementation is rather simple: we range over ~A~ indexes
-      trying to find a subsequence equal to ~B~, each time we do find
-      one we save the current index ~I~ in ~Result.Value~. Contrary to
-      ~Search~, we do not return at the first match since we want to
-      find the last subsequence of ~A~ equal to ~B~. We look instead
-      at the entire range of indexes.
-    - the loop invariant specifies that:
-      1. either a matching subsequence of ~A~ has been found (as
-         indicated by ~Result.Exists~) and then:
-         - it starts at ~Result.Value~
-         - ~Result.Value~ is in the range ~A'First
-           .. A'Last - B'Length + 1~
-         - If ~Result.Value~ is different from ~I~ then for all ~K~ in
-           ~Result'Value+1 .. I~ there is no subrange of ~A~ starting
-           at index ~K~ of length ~B'Length~ equal to ~B~
-      2. or no matching subsequence of ~A~ starting at an index
-         lower than ~I~ has been found.
-
-    Using ~gnatprove~ on ~Find_End~, all the assertions are proved.
-
-# Local Variables:
-# ispell-dictionary : "english"
-# End:
+Using ~gnatprove~ on ~Find_End~, all the assertions are proved.
