@@ -1,6 +1,6 @@
-# Created 2018-05-07 Mon 13:08
+# Created 2018-05-07 Mon 13:40
 #+OPTIONS: author:nil title:nil toc:nil
-#+EXPORT_FILE_NAME: ../../non-mutating/Find.org
+#+EXPORT_FILE_NAME: ../../../non-mutating/Find.org
 
 * The Find algorithm
 
