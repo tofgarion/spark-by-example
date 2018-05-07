@@ -1,4 +1,4 @@
-# Created 2018-05-07 Mon 13:45
+# Created 2018-05-07 Mon 14:18
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Find_End.org
 
@@ -31,15 +31,7 @@ represented by the array ~B~ can be found in the array ~A~
 starting after the index ~J~ and is defined as:
 
 #+BEGIN_SRC ada
-  function Has_Subrange_In_Postfix
-    (A     : T_Arr;
-     Index : Integer;
-     B     : T_Arr) return Boolean is
-     (for some J in Index .. A'Last-B'Length+1 => Equal_Subrange(A, J, B)) with
-     Pre => A'Length >=B'Length
-     and then A'Last<Positive'Last
-     and then Index <= A'Last - B'Length + 1
-     and then Index >=A'First;
+  
 #+END_SRC
 
 ~Has_Not_Subrange_In_Prefix~ checks if a subsequence represented
@@ -48,16 +40,14 @@ by an array ~B~ does *not* appears in array ~A~. Subsequences of
     .. Last~:
 
 #+BEGIN_SRC ada
-  function Has_Not_Subrange_In_Prefix
-    (A     : T_Arr;
-     Start : Positive;
-     Last  : Positive;
-     B     : T_Arr) return Boolean is
-    (for all J in Start .. Last => not Equal_Subrange (A, J, B)) with
+  function Has_Subrange_In_Prefix
+    (A    : T_Arr;
+     Last : Positive;
+     B    : T_Arr) return Boolean is
+    (for some J in A'First .. Last => Equal_Subrange (A, J, B)) with
      Pre => A'Length >= B'Length
      and then A'Last < Positive'Last
-     and then Last <= A'Last + 1 - B'Length
-     and then Start in A'First .. Last;
+     and then Last <= A'Last + 1 - B'Length;
 #+END_SRC
 
 ~Has_Not_Subrange_In_Prefix~ will be mainly used to hide
@@ -68,20 +58,20 @@ quantifiers for the provers as already done for [[file:./Search.org][Search]].
 The specification of ~Find_End~ is as follows:
 
 #+BEGIN_SRC ada
-  Function Find_End (A : T_Arr; B: T_arr) return Option with
-       Pre            =>A'Last < Positive'Last and then B'First <= B'Last,
-       Contract_Cases =>
-       (B'Length = 0 => not Find_End'Result.Exists,
-        A'Length < B'Length => not Find_End'Result.Exists,
-        A'Length >=B'Length and then Has_Subrange(A,B) =>
-  	Find_End'Result.Exists
-  	and then Equal_Subrange(A, Find_End'Result.Value , B)
-  	and then
-  	(if
-  	   Find_End'Result.Value < A'Last-B'Length+1
-  	   then
-  	     (not Has_Subrange_In_Postfix(A, Find_End'Result.Value+1,B))),
-         others  => not Find_End'Result.Exists);
+  function Find_End (A : T_Arr; B : T_Arr) return Option with
+     Pre            => A'Last < Positive'Last and then B'First <= B'Last,
+     Contract_Cases =>
+     (B'Length = 0 => not Find_End'Result.Exists,
+      A'Length < B'Length => not Find_End'Result.Exists,
+      A'Length >= B'Length and then Has_Subrange (A, B) =>
+        Find_End'Result.Exists
+        and then Equal_Subrange (A, Find_End'Result.Value, B)
+        and then
+        (if
+  	 Find_End'Result.Value < A'Last - B'Length + 1
+         then
+  	 (not Has_Subrange_In_Postfix (A, Find_End'Result.Value + 1, B))),
+      others => not Find_End'Result.Exists);
 #+END_SRC
 
 - the precondition expresses
@@ -127,14 +117,14 @@ The specification of ~Find_End~ is as follows:
   	   Result.Exists
   	 then
   	   Equal_Subrange (A, Result.Value, B)
-  	     and then Result.Value in A'First .. A'Last - B'Length + 1
-  	     and then Result.Value <= I
-  	     and then
-  	     (if
-  		Result.Value < I
-  	      then
-  		(Has_Not_Subrange_In_Prefix (A, Result.Value + 1, I, B))
-  	      else True)
+  	   and then Result.Value in A'First .. A'Last - B'Length + 1
+  	   and then Result.Value <= I
+  	   and then
+  	   (if
+  	      Result.Value < I
+  	    then
+  	      (Has_Not_Subrange_In_Range (A, Result.Value + 1, I, B))
+  	    else True)
   	 else not Has_Subrange_In_Prefix (A, I, B));
   
      end loop;

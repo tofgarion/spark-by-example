@@ -1,4 +1,4 @@
-# Created 2018-05-07 Mon 13:46
+# Created 2018-05-07 Mon 14:18
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Search_N.org
 
@@ -25,15 +25,15 @@ express that an array contains a constant subrange of length
 
 #+BEGIN_SRC ada
   function Constant_Range_From_Location
-       (A      : T_Arr;
-        Val    : T;
-        Loc    : Positive;
-        Length : Positive) return Boolean is
-       (Loc - 1 + Length <= A'Last
-        and then (for all I in Loc .. Loc - 1 + Length => A (I) = Val)) with
-        Pre => Loc >= A'First
-        and then Loc <= A'Last - Length + 1
-        and then Loc - 1 + Length <= Positive'Last;
+    (A      : T_Arr;
+     Val    : T;
+     Loc    : Positive;
+     Length : Positive) return Boolean is
+    (Loc - 1 + Length <= A'Last
+     and then (for all I in Loc .. Loc - 1 + Length => A (I) = Val)) with
+     Pre => Loc >= A'First
+     and then Loc <= A'Last - Length + 1
+     and then Loc - 1 + Length <= Positive'Last;
 #+END_SRC
 
 The preconditions avoid possible overflows.
@@ -43,12 +43,13 @@ express that an array has a subrange containing only a given value
 (the precondition avoids a possible overflow too):
 
 #+BEGIN_SRC ada
-   function Has_Constant_Subrange (A : T_Arr;
-  				 Val : T;
-   N   : Positive) return Boolean is
-  (for some I in A'First .. A'Last - N + 1 =>
-     Constant_Range_From_Location (A, Val, I, N)) with
-   Pre => A'First <= A'Last;
+  function Has_Constant_Subrange
+    (A   : T_Arr;
+     Val : T;
+     N   : Positive) return Boolean is
+    (for some I in A'First .. A'Last - N + 1 =>
+       Constant_Range_From_Location (A, Val, I, N)) with
+     Pre => A'First <= A'Last;
 #+END_SRC
 
 ** Specification of Search_N
@@ -57,12 +58,11 @@ The specification of ~Search_N~ is rather easy to express:
 
 #+BEGIN_SRC ada
   function Search_N (A : T_Arr; Val : T; N : Positive) return Option with
-     Pre  => A'First <= A'Last and then A'Last < Positive'Last,
-     Post =>
-     (if
+     Pre            => A'First <= A'Last and then A'Last < Positive'Last,
+     Contract_Cases =>
+     (Has_Constant_Subrange (A, Val, N) =>
         Search_N'Result.Exists
-      then
-        Search_N'Result.Value >= A'First
+        and then Search_N'Result.Value >= A'First
         and then Search_N'Result.Value <= A'Last - N + 1
         and then Constant_Range_From_Location
   	(A,
@@ -76,8 +76,8 @@ The specification of ~Search_N~ is rather easy to express:
   	 not Has_Constant_Subrange
   	   (A (A'First .. Search_N'Result.Value - 1),
   	    Val,
-  	    N))
-      else not Has_Constant_Subrange (A, Val, N));
+  	    N)),
+      others => not Search_N'Result.Exists);
 #+END_SRC
 
 - the preconditions express

@@ -23,12 +23,7 @@
     specification. ~Has_Equal_Neigbors (A)~ is true if the array ~A~
     has two consecutive elements that are equal:
 
-    #+BEGIN_SRC ada
-      function Has_Equal_Neighbors
-        (A : T_Arr) return Boolean is
-        (if (A'Length = 0) then False
-         else (for some I in A'First .. A'Last - 1 => A (I) = A (I + 1)));
-    #+END_SRC
+    #+INCLUDE: ../../../spec/has_equal_neighbors_p.ads :src ada :lines "9-13"
 
     Notice that we must take care of one boundary case, i.e., when ~A~
     is empty, otherwise as ~A'Last~ can be negative when ~A'Length =
@@ -47,47 +42,14 @@
     - otherwise ~Adjacent_Find~ must return an ~Option~ specifying
       that such an index does not exist
 
-    #+BEGIN_SRC ada
-      function Adjacent_Find (A : T_Arr) return Option with
-         Contract_Cases =>
-         (Has_Equal_Neighbors (A) =>
-            (Adjacent_Find'Result.Exists = True)
-            and then
-            (A (Adjacent_Find'Result.Value) = A (Adjacent_Find'Result.Value + 1))
-            and then
-            (not Has_Equal_Neighbors
-               (A (A'First .. Adjacent_Find'Result.Value - 1))),
-          others => Adjacent_Find'Result.Exists = False);
-    #+END_SRC
+    #+INCLUDE: ../../../non-mutating/adjacent_find_p.ads :src ada :lines "8-18"
 
 *** Implementation of Adjacent_Find
 
     The implementation of ~Adjacent_Find~ goes through ~A~, searching
     for two consecutive elements that are equal:
 
-    #+BEGIN_SRC ada
-      function Adjacent_Find (A : T_Arr) return Option is
-         Result : Option := (Exists => False);
-      begin
-         if A'Length <= 1 then
-            return Result;
-         end if;
-
-         for I in A'First .. A'Last - 1 loop
-            if A (I) = A (I + 1) then
-               Result := (Exists => True, Value => I);
-
-               return Result;
-            end if;
-
-            pragma Loop_Invariant
-              (not Has_Equal_Neighbors (A (A'First .. I + 1)));
-            pragma Loop_Invariant (not Result.Exists);
-         end loop;
-
-         return Result;
-      end Adjacent_Find;
-    #+END_SRC
+    #+INCLUDE: ../../../non-mutating/adjacent_find_p.adb :src ada :lines "6-27"
 
     The invariants needed to prove the function are the following:
 

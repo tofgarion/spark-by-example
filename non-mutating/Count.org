@@ -1,4 +1,4 @@
-# Created 2018-05-07 Mon 13:45
+# Created 2018-05-07 Mon 14:18
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Count.org
 
@@ -54,6 +54,11 @@ easy:
 
 #+BEGIN_SRC ada
   function Occ (A : T_Arr; Val : T) return Natural is (Occ_Def (A, Val)) with
+     Post => Occ'Result <= A'Length;
+#+END_SRC
+
+#+BEGIN_SRC ada
+  function Occ (A : T_Arr; Val : T) return Natural is (Occ_Def (A, Val)) with
     Post => Occ'Result <= A'Length;
 #+END_SRC
 
@@ -66,10 +71,10 @@ The specification of ~Count~ is the following:
 
 #+BEGIN_SRC ada
   function Count (A : T_Arr; Val : T) return Natural with
-        Post =>
-        (Count'Result <= A'Length
-         and then 0 <= Count'Result
-         and then Count'Result = Occ (A, Val));
+     Post =>
+     (Count'Result <= A'Length
+      and then Count'Result in 0 .. A'Length
+      and then Count'Result = Occ (A, Val));
 #+END_SRC
 
 The postconditions express
@@ -84,19 +89,19 @@ The implementation of ~Count~ is the following:
 
 #+BEGIN_SRC ada
   function Count (A : T_Arr; Val : T) return Natural is
-        Result : Natural := 0;
-     begin
-        for I in A'Range loop
-  	 if A (I) = Val then
-  	    Result := Result + 1;
-  	 end if;
+     Result : Natural := 0;
+  begin
+     for I in A'Range loop
+        if A (I) = Val then
+  	 Result := Result + 1;
+        end if;
   
-  	 pragma Loop_Invariant (Result <= A'Length);
-  	 pragma Loop_Invariant (Result = Occ (A (A'First .. I), Val));
-        end loop;
+        pragma Loop_Invariant (Result <= A'Length);
+        pragma Loop_Invariant (Result = Occ (A (A'First .. I), Val));
+     end loop;
   
-        return Result;
-     end Count;
+     return Result;
+  end Count;
 #+END_SRC
 
 The first invariant states that ~Result~ always stays in a correct

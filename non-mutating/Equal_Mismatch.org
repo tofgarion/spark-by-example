@@ -1,4 +1,4 @@
-# Created 2018-05-07 Mon 13:45
+# Created 2018-05-07 Mon 14:18
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Equal_Mismatch.org
 
@@ -39,6 +39,15 @@ the writing of ~Mismatch~ specification.
 We will also define an overloaded version of ~Equal_Ranges~ using
 an offset (this is just syntactic sugar as slices can also be
 used):
+
+#+BEGIN_SRC ada
+  function Occ_Def
+    (A   : T_Arr;
+     Val : T) return Natural is
+    (if A'Length = 0 then 0
+     elsif A (A'Last) = Val then Occ_Def (Remove_Last (A), Val) + 1
+     else Occ_Def (Remove_Last (A), Val)) with
+#+END_SRC
 
 #+BEGIN_SRC ada
   function Equal_Ranges
@@ -97,7 +106,7 @@ The implementation of ~Mismatch~ is the following:
   begin
      for I in 0 .. A'Length - 1 loop
         if A (A'First + I) /= B (B'First + I) then
-  	 Result := (Exists =>True, Value => I);
+  	 Result := (Exists => True, Value => I);
   
   	 return Result;
         end if;
@@ -135,7 +144,7 @@ the first ~A'Length~ elements of ~B~ with the ones of ~A~.
   function Equal
     (A : T_Arr;
      B : T_Arr) return Boolean is
-    (not Mismatch (A, B).Exists);
+    (not Mismatch (A, B (B'First .. B'First - 1 + A'Length)).Exists);
 #+END_SRC
 
 Notice that as ~Equal~ is defined with an expression, we could
@@ -147,6 +156,15 @@ We can "reverse" the specification and the implementation of
 ~Equal~ by implementing ~Equal~ using equality on arrays and
 specifying as a postcondition that arrays ~A~ and ~B~ do not
 mismatch:
+
+#+BEGIN_SRC ada
+  function Equal
+    (A : T_Arr;
+     B : T_Arr) return Boolean is
+    (A = B (B'First .. B'First - 1 + A'Length)) with
+     Pre  => A'Length <= B'Length,
+     Post => Equal'Result = (not Mismatch (A, B (B'First .. B'First - 1 + A'Length)).Exists);
+#+END_SRC
 
 #+BEGIN_SRC ada
   function Equal

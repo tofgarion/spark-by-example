@@ -22,18 +22,7 @@
    express that an array contains a constant subrange of length
    ~Length~ from location ~Loc~:
 
-   #+BEGIN_SRC ada
-     function Constant_Range_From_Location
-          (A      : T_Arr;
-           Val    : T;
-           Loc    : Positive;
-           Length : Positive) return Boolean is
-          (Loc - 1 + Length <= A'Last
-           and then (for all I in Loc .. Loc - 1 + Length => A (I) = Val)) with
-           Pre => Loc >= A'First
-           and then Loc <= A'Last - Length + 1
-           and then Loc - 1 + Length <= Positive'Last;
-   #+END_SRC
+   #+INCLUDE: ../../../spec/has_constant_subrange_p.ads :src ada :lines "7-17"
 
    The preconditions avoid possible overflows.
 
@@ -41,43 +30,13 @@
    express that an array has a subrange containing only a given value
    (the precondition avoids a possible overflow too):
 
-   #+BEGIN_SRC ada
-      function Has_Constant_Subrange (A : T_Arr;
-                                      Val : T;
-      N   : Positive) return Boolean is
-     (for some I in A'First .. A'Last - N + 1 =>
-        Constant_Range_From_Location (A, Val, I, N)) with
-      Pre => A'First <= A'Last;
-   #+END_SRC
+   #+INCLUDE: ../../../spec/has_constant_subrange_p.ads :src ada :lines "18-25"
 
 ** Specification of Search_N
 
    The specification of ~Search_N~ is rather easy to express:
 
-   #+BEGIN_SRC ada
-   function Search_N (A : T_Arr; Val : T; N : Positive) return Option with
-      Pre  => A'First <= A'Last and then A'Last < Positive'Last,
-      Post =>
-      (if
-         Search_N'Result.Exists
-       then
-         Search_N'Result.Value >= A'First
-         and then Search_N'Result.Value <= A'Last - N + 1
-         and then Constant_Range_From_Location
-           (A,
-            Val,
-            Search_N'Result.Value,
-            N)
-         and then
-         (if
-            Search_N'Result.Value > A'First
-          then
-            not Has_Constant_Subrange
-              (A (A'First .. Search_N'Result.Value - 1),
-               Val,
-               N))
-       else not Has_Constant_Subrange (A, Val, N));
-   #+END_SRC
+   #+INCLUDE: ../../../non-mutating/search_n_p.ads :src ada :lines "9-30"
 
    - the preconditions express
      - the fact that the last index of ~A~ is less than the last
@@ -99,40 +58,7 @@
 
    The implementation of ~Search_N~ is the following:
 
-   #+BEGIN_SRC ada
-   function Search_N (A : T_Arr; Val : T; N : Positive) return Option is
-      Result : Option   := (Exists => False);
-      Start  : Positive := A'First;
-   begin
-      if A'Length < N then
-         return Result;
-      end if;
-
-      for I in A'Range loop
-         if A (I) /= Val then
-            Start := I + 1;
-         elsif I + 1 - Start = N then
-            Result := (Exists => True, Value => Start);
-
-            return Result;
-         end if;
-
-         pragma Loop_Invariant (not Result.Exists);
-         pragma Loop_Invariant (Start in A'First .. I + 1);
-         pragma Loop_Invariant
-           (if
-              Start <= I
-            then
-              Constant_Range_From_Location (A, Val, Start, I + 1 - Start));
-         pragma Loop_Invariant
-           (not Has_Constant_Subrange (A (A'First .. I), Val, N));
-         pragma Loop_Invariant (if Start > A'First then A (Start - 1) /= Val);
-      end loop;
-
-      return Result;
-
-   end Search_N;
-   #+END_SRC
+   #+INCLUDE: ../../../non-mutating/search_n_p.adb :src ada :lines "6-38"
 
    The loop invariants specify that:
      - no subsequence of ~N~ times the value ~Value~ has been found
