@@ -1,0 +1,77 @@
+#+EXPORT_FILE_NAME: ../../../non-mutating/Count.org
+#+OPTIONS: author:nil title:nil toc:nil
+
+** The Count algorithm
+
+   The ~Count~ algorithm counts the number of occurrences of a value
+   ~Val~ in an array ~A~. Its signature can be expressed as:
+
+   #+BEGIN_SRC ada
+     function Count (A : T_Arr; Val : T) return Natural
+   #+END_SRC
+
+*** The predicate Occ
+
+    We want to define a ghost function ~Occ~ returning the number of
+    occurences of a given value in an array. This ghost function will
+    serve as a mathematical specification for ~Count~.
+
+    ~Occ~ can classically be defined recursively on the length of the
+    array (see [[http://docs.adacore.com/spark2014-docs/html/ug/gnatprove_by_example/manual_proof.html#manual-proof-using-ghost-code][SPARK 2014 user guide chapter on manual proof with
+    ghost code]] for a similar and more detailed example). We first
+    define a recursive function ~Occ_Def~ which will be used in ~Occ~
+    as *~gnatprove~ only introduces axioms for postconditions of
+    non-recursive functions*.
+
+    #+INCLUDE: ../../../spec/occ_def_p.ads :src ada :lines "6-20"
+
+    The line ~pragma Annotate (Gnatprove, Terminating, Occ_Def);~ is
+    very important here. It states that the function ~Occ_Def~
+    terminates. Without this annotation, the tool would not be able to
+    prove some loop invariants. In return, ~gnatprove~ prints
+    ~medium: subprogram "Occ_Def" might not terminate, terminating
+    annotation could be incorrect~ indicating that the user should
+    verify by other means that ~Occ_Def~ really terminates.
+
+    After having defined ~Occ_def~, the definition of ~Occ~ is rather
+    easy:
+
+    #+INCLUDE: ../../../spec/occ_p.ads :src ada :lines "7-9"
+
+    #+BEGIN_SRC ada
+      function Occ (A : T_Arr; Val : T) return Natural is (Occ_Def (A, Val)) with
+        Post => Occ'Result <= A'Length;
+    #+END_SRC
+
+    The postcondition is necessary to prove loop invariants in
+    ~Count~.
+
+*** Specification of Count
+
+    The specification of ~Count~ is the following:
+
+    #+INCLUDE: ../../../non-mutating/count_p.ads :src ada :lines "7-12"
+
+    The postconditions express
+      - that the number returned is correct (it is not less than 0 nor
+        is it more than ~A'Length~).
+      - that the number returned is equal to the number of occurrences
+        of ~Val~ in the array ~A~.
+
+*** Implementation of Count
+
+    The implementation of ~Count~ is the following:
+
+    #+INCLUDE: ../../../non-mutating/count_p.adb :src ada :lines "6-20"
+
+    The first invariant states that ~Result~ always stays in a correct
+    range. The second one states that at each loop iteration, we can
+    assert that ~Result~ is equal to the number of occurrences of
+    ~Val~ in the slice of the array that has currently been traversed.
+
+    When using ~gnatprove~ on ~Count~ everything is proved (except the
+    termination of ~Occ_Def~).
+
+# Local Variables:
+# ispell-dictionary : "english"
+# End:

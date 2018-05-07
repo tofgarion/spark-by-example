@@ -1,98 +1,98 @@
-** The Adjacent_Find algorithm
+# Created 2018-05-07 Mon 14:17
+#+OPTIONS: author:nil title:nil toc:nil
+#+EXPORT_FILE_NAME: ../../../non-mutating/Adjacent_Find.org
 
-   The ~Adjacent_Find~ algorithm is another finding algorithm. Its
-   signature is the following:
+* The Adjacent_Find algorithm
 
-   #+BEGIN_SRC ada
-     function Adjacent_Find (A : T_Arr) return Option
-   #+END_SRC
+The ~Adjacent_Find~ algorithm is another finding algorithm. Its
+signature is the following:
 
-   Given an array ~A~, ~Adjacent_Find~ will either return:
+#+BEGIN_SRC ada
+  function Adjacent_Find (A : T_Arr) return Option
+#+END_SRC
 
-   - an ~Option~ whose value is a valid index ~I~ of ~A~ such that ~A
-     (I) = A (I + 1)~ and ~I~ is the smallest index verifying this
-     property
-   - an option with ~Result~ equal to ~False~ if no such index exists
+Given an array ~A~, ~Adjacent_Find~ will either return:
 
-*** The predicate Has_Equal_Neighbors
+- an ~Option~ whose value is a valid index ~I~ of ~A~ such that ~A
+       (I) = A (I + 1)~ and ~I~ is the smallest index verifying this
+  property
+- an option with ~Result~ equal to ~False~ if no such index exists
 
-    As usual, we will first define a predicate to help us write the
-    specification. ~Has_Equal_Neigbors (A)~ is true if the array ~A~
-    has two consecutive elements that are equal:
+** The predicate Has_Equal_Neighbors
 
-    #+BEGIN_SRC ada
-      function Has_Equal_Neighbors
-        (A : T_Arr) return Boolean is
-        (if (A'Length = 0) then False
-         else (for some I in A'First .. A'Last - 1 => A (I) = A (I + 1)));
-    #+END_SRC
+As usual, we will first define a predicate to help us write the
+specification. ~Has_Equal_Neigbors (A)~ is true if the array ~A~
+has two consecutive elements that are equal:
 
-    Notice that we must take care of one boundary case, i.e., when ~A~
-    is empty, otherwise as ~A'Last~ can be negative when ~A'Length =
+#+BEGIN_SRC ada
+  function Has_Equal_Neighbors
+    (A : T_Arr) return Boolean is
+    (if (A'Length = 0) then False
+     else (for some I in A'First .. A'Last - 1 => A (I) = A (I + 1)));
+#+END_SRC
+
+Notice that we must take care of one boundary case, i.e., when ~A~
+is empty, otherwise as ~A'Last~ can be negative when ~A'Length =
     0~, it could take ~Integer'First~ as a value and an overflow would
-    occur due to ~A'Last - 1~.
+occur due to ~A'Last - 1~.
 
-*** Specification of Adjacent_Find
+** Specification of Adjacent_Find
 
-    The specification of ~Adjacent_Find~ will use the following
-    contract cases:
+The specification of ~Adjacent_Find~ will use the following
+contract cases:
 
-    - either there is two adjacent elements in ~A~ that are equal and
-      in this case, ~Adjacent_Find~ must return an ~Option~ with a
-      valid index ~I~ such that ~A (I) = A (I + 1)~ and there is no
-      adjacent equal elements in ~A~ up to ~I~
-    - otherwise ~Adjacent_Find~ must return an ~Option~ specifying
-      that such an index does not exist
+- either there is two adjacent elements in ~A~ that are equal and
+  in this case, ~Adjacent_Find~ must return an ~Option~ with a
+  valid index ~I~ such that ~A (I) = A (I + 1)~ and there is no
+  adjacent equal elements in ~A~ up to ~I~
+- otherwise ~Adjacent_Find~ must return an ~Option~ specifying
+  that such an index does not exist
 
-    #+BEGIN_SRC ada
-      function Adjacent_Find (A : T_Arr) return Option with
-         Contract_Cases =>
-         (Has_Equal_Neighbors (A) =>
-            (Adjacent_Find'Result.Exists = True)
-            and then
-            (A (Adjacent_Find'Result.Value) = A (Adjacent_Find'Result.Value + 1))
-            and then
-            (not Has_Equal_Neighbors
-               (A (A'First .. Adjacent_Find'Result.Value - 1))),
-          others => Adjacent_Find'Result.Exists = False);
-    #+END_SRC
+#+BEGIN_SRC ada
+  function Adjacent_Find (A : T_Arr) return Option with
+     Contract_Cases =>
+     (Has_Equal_Neighbors (A) =>
+        (Adjacent_Find'Result.Exists = True)
+        and then
+        (A (Adjacent_Find'Result.Value) = A (Adjacent_Find'Result.Value + 1))
+        and then
+        (not Has_Equal_Neighbors
+  	 (A (A'First .. Adjacent_Find'Result.Value - 1))),
+      others => Adjacent_Find'Result.Exists = False);
+#+END_SRC
 
-*** Implementation of Adjacent_Find
+** Implementation of Adjacent_Find
 
-    The implementation of ~Adjacent_Find~ goes through ~A~, searching
-    for two consecutive elements that are equal:
+The implementation of ~Adjacent_Find~ goes through ~A~, searching
+for two consecutive elements that are equal:
 
-    #+BEGIN_SRC ada
-      function Adjacent_Find (A : T_Arr) return Option is
-         Result : Option := (Exists => False);
-      begin
-         if A'Length <= 1 then
-            return Result;
-         end if;
+#+BEGIN_SRC ada
+  function Adjacent_Find (A : T_Arr) return Option is
+     Result : Option := (Exists => False);
+  begin
+     if A'Length <= 1 then
+        return Result;
+     end if;
+  
+     for I in A'First .. A'Last - 1 loop
+        if A (I) = A (I + 1) then
+  	 Result := (Exists => True, Value => I);
+  
+  	 return Result;
+        end if;
+  
+        pragma Loop_Invariant
+  	(not Has_Equal_Neighbors (A (A'First .. I + 1)));
+        pragma Loop_Invariant (not Result.Exists);
+     end loop;
+  
+     return Result;
+  end Adjacent_Find;
+#+END_SRC
 
-         for I in A'First .. A'Last - 1 loop
-            if A (I) = A (I + 1) then
-               Result := (Exists => True, Value => I);
+The invariants needed to prove the function are the following:
 
-               return Result;
-            end if;
-
-            pragma Loop_Invariant
-              (not Has_Equal_Neighbors (A (A'First .. I + 1)));
-            pragma Loop_Invariant (not Result.Exists);
-         end loop;
-
-         return Result;
-      end Adjacent_Find;
-    #+END_SRC
-
-    The invariants needed to prove the function are the following:
-
-    - two consecutive and equal elements have not been found yet in
-      ~A~
-    - the result specifies that there is no index respecting the
-      expected property
-
-# Local Variables:
-# ispell-dictionary: "english"
-# End:
+- two consecutive and equal elements have not been found yet in
+  ~A~
+- the result specifies that there is no index respecting the
+  expected property

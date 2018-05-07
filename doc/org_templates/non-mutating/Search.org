@@ -1,0 +1,158 @@
+#+EXPORT_FILE_NAME: ../../../non-mutating/Search.org
+#+OPTIONS: author:nil title:nil toc:nil
+
+** The Search algorithm
+
+   The ~Search~ algorithm finds a subsequence in an array identical
+   to a given sequence. Its signature can be defined as:
+
+   #+BEGIN_SRC ada
+     function Search (A : T_Arr; B : T_Arr) return Option
+   #+END_SRC
+
+   ~Search~ will return an option containing the *first valid* index
+   ~I~ of ~A~ such that ~A (I .. I + B'Length - 1) = B~ if it exists.
+
+*** A first version of Search without ghost functions for specification
+
+    We will first specify and implement ~Search~ without using ghost
+    functions: we will see in the next sections that using ghost
+    functions to factorize specification as usual is not trivial in
+    this case (this is mainly due to limitations of the SMT solvers).
+
+**** Specification of Search without ghost functions
+
+     A first specification of ~Search~ can be the following:
+
+     #+INCLUDE: ../../../non-mutating/search_wo_ghost_p.ads :src ada :lines "6-26"
+
+     - the precondition expresses
+       - the fact that the last index of ~A~ is less than the last
+         ~Positive~ value, as we will use ~A'Last + 1~ in the
+         implementation.
+       - the fact that ~B'First~ is less than ~B'Last~. This
+         precondition is necessary, otherwise the contract cases can
+         neither be proved nor their disjointedness
+     - the postconditions are expressed through 4 contract cases:
+       1. if ~B~ is empty, then there is no index returned
+       2. if ~A~ is shorter than ~B~, then there is again no index
+          returned
+       3. if ~A~ is longer than ~B~ and there is a subsequence in ~A~
+          equal to ~B~ then
+          - a valid index will be returned
+          - the subsequence of ~A~ starting at this index is equal to
+            ~B~
+          - if the returned index is not the first index of ~A~, then
+            for all indexes ~K~ of ~A~ less than the returned index, the
+            subsequence of length ~B'Length~ starting at ~K~ is not
+            equal to ~B~
+       4. otherwise there is no index returned
+
+**** Implementation of Search
+
+     #+INCLUDE: ../../../non-mutating/search_wo_ghost_p.adb :src ada :lines "6-27"
+
+     - the implementation is (again) classic: we range over ~A~ indexes trying
+       to find a subsequence equal to ~B~
+     - the loop invariants specify that the subsequence has not been
+       found starting from the previously tried indexes and that the
+       ~Option~ result does not contain a valid index
+     - the loop variant is again ~I~
+
+     When using ~gnatprove~ on ~Search~, all the assertions are
+     proved. Notice that proving the invariant preservation VC and the
+     contract case VC is difficult and takes some time.
+
+*** A version of Search with ghost functions: first try
+
+    We will now try to define a predicate to represent the main
+    property, i.e., the fact that ~B~ is a subsequence of ~A~. We will
+    see in the following that using this ghost function does not
+    permit to prove ~Search~ with the SMT solvers used in the project.
+
+**** The predicate Has_Subrange
+
+     We will define the ghost function ~Has_Subrange~ to represent
+     the fact that ~B~ is a subsequence of ~A~:
+
+     #+INCLUDE: ../../../non-mutating/search_with_ghost_p.ads :src ada :lines "6-13"
+
+     We equip the function with preconditions specifying that ~A~ is
+     longer than ~B~ and that the last index of ~A~ is not the last
+     ~Positive~ value. The function is defined by an expression
+     directly specifying the expected property: there is a slice of
+     ~A~ that is equal to ~B~.
+
+     Notice that the function is equivalent to the quantified
+     expression previously used in the specification of ~Search~.
+
+**** Specification of Search
+
+     The specification of ~Search~ using ~Has_Subrange~ is now:
+
+     #+INCLUDE: ../../../non-mutating/search_with_ghost_p.ads :src ada :lines "14-32"
+
+**** Implementation of Search
+
+     The implementation of ~Search~ is the same as previous excepting
+     the use of ~Has_Subrange~:
+
+     #+INCLUDE: ../../../non-mutating/search_with_ghost_p.adb :src ada :lines "6-27"
+
+     Using this specification and this implementation, ~gnatprove~
+     cannot prove contract cases. This is mainly due to the way SMT
+     provers (CVC4, Z3 and Alt-Ergo in our case) handle functions with
+     quantifiers and how they instanciate these quantifiers.
+
+*** A correct version of Search with ghost functions
+
+    An usual trick to solve the previous problem is to hide the
+    unnecessary quantifiers in auxiliary subprograms (this has been
+    suggested by Yannick Moy of Adacore).
+
+**** A new definition for Has_Subrange
+
+     In order to help the solvers, ~Has_Subrange~ will be defined in
+     three steps:
+
+     1. first, a function ~Equal_Subrange~ is defined. This function
+        expresses the fact that there is a subrange in ~A~ equal to
+        ~B~ starting at index ~J~. This function contains the
+        necessary slice for ~A~.
+
+        #+INCLUDE: ../../../spec/has_subrange_p.ads :src ada :lines "11-19"
+
+     2. a function ~Has_Subrange_In_Prefix~ is then defined. It
+        expresses the fact that a subrange of ~A~ is equal to ~B~ and
+        that the index of ~A~ at which the subrange starts is less
+        than ~J~.
+
+        #+INCLUDE: ../../../spec/has_subrange_p.ads :src ada :lines "20-28"
+
+     3. finally ~Has_Subrange~ is defined using
+        ~Has_Subrange_In_Prefix~ and does not contain directly
+        quantifiers or slices.
+
+        #+INCLUDE: ../../../spec/has_subrange_p.ads :src ada :lines "40-47"
+
+**** Specification of Search
+
+     The specification of ~Search~ is now the following:
+
+     #+INCLUDE: ../../../non-mutating/search_p.ads :src ada :lines "7-21"
+
+     The previously defined functions are now used in the
+     specification. Notice that slices or quantifiers do not appear
+     directly in the specification.
+
+**** Implementation of Search
+
+     The implementation of ~Search~ is the following:
+
+     #+INCLUDE: ../../../non-mutating/search_p.adb :src ada :lines "6-26"
+
+     Everything is now proved by ~gnatprove~ (using a timeout of 30s).
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

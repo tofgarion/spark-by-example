@@ -1,0 +1,83 @@
+#+EXPORT_FILE_NAME: ../../../non-mutating/Search_N.org
+#+OPTIONS: author:nil title:nil toc:nil
+
+* The Search_N algorithm
+
+  The Search_N algorithm finds the first index in an array at which a
+  value occurs a given number of times. Its signature is the
+  following:
+
+  #+BEGIN_SRC ada
+    function Search_N (A : T_Arr; Val : Integer; N : Positive) return Option;
+  #+END_SRC
+
+  As usual, we will use an ~Option~ to encapsulate the result.
+
+** The Constant_Range and Has_Constant_Subrange predicates
+
+   Like usual, we define predicates to express more easily the
+   specification of ~Search_N~.
+
+   First, we define a ~Constant_Range_From_Location~ ghost function to
+   express that an array contains a constant subrange of length
+   ~Length~ from location ~Loc~:
+
+   #+INCLUDE: ../../../spec/has_constant_subrange_p.ads :src ada :lines "7-17"
+
+   The preconditions avoid possible overflows.
+
+   Then, a ~Has_Constant_Subrange~ ghost function is defined to
+   express that an array has a subrange containing only a given value
+   (the precondition avoids a possible overflow too):
+
+   #+INCLUDE: ../../../spec/has_constant_subrange_p.ads :src ada :lines "18-25"
+
+** Specification of Search_N
+
+   The specification of ~Search_N~ is rather easy to express:
+
+   #+INCLUDE: ../../../non-mutating/search_n_p.ads :src ada :lines "9-30"
+
+   - the preconditions express
+     - the fact that the last index of ~A~ is less than the last
+       ~Positive~ value, as we will use ~A'Last + 1~ in the
+       implementation.
+     - the fact that ~A~ is not empty.
+   - the postconditions express
+     - the fact that if ~Option.Exists~ is true, then
+       1. a valid index will be returned.
+       2. ~Val~ occurs ~N~ times starting at the returned index.
+       3. if the returned index is not the first index of ~A~, then
+          for all indexes ~K~ of ~A~ less than the returned index,
+          there aren't ~N~ occurrences of ~Val~ starting at the index
+          ~K~.
+     - the fact that if ~Option.Exists~ is false, then there are no
+       subsequence with ~Val~ repeated ~N~ times in the array ~A~.
+
+** Implementation of Search_N
+
+   The implementation of ~Search_N~ is the following:
+
+   #+INCLUDE: ../../../non-mutating/search_n_p.adb :src ada :lines "6-38"
+
+   The loop invariants specify that:
+     - no subsequence of ~N~ times the value ~Value~ has been found
+       yet.
+     - ~Start~ is a valid index (except for the case ~I + 1~ which
+       means that the subsequence does not exist).
+     - if ~Start~ is less than ~I~, then there is a constant range of
+       ~Val~ starting at ~Start~ of length ~I + 1 - Start~.
+     - there is no subsequence of ~N~ times the value ~Val~ in the
+       range ~A'First .. I~ of the array.
+     - if ~A'First~ is less than ~Start~, then the value at index
+       ~Start - 1~ is different from ~Val~. This allows to prove the
+       previous invariant. Indeed, there could be a subsequence of
+       length ~N~ if the values before ~A(Start)~ were equal to
+       ~Val~. This invariant states that ~Start~ *is* the first index
+       of the constant range.
+
+    Everything is proved by ~gnatprove~.
+
+# Local Variables:
+# ispell-dictionary : "english"
+# End:
