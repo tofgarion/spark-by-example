@@ -1,0 +1,412 @@
+* The Partial_Sort algorithm
+
+  The ~Partial_Sort~ algorithm sorts one part of an array and
+  ensures that every element at the left is less than every element
+  at the right. Its signature reads:
+  ~procedure Partial_Sort (A : in out T_Arr; M : Positive)~
+
+  This algorithm uses a lot of algorithms described above and also
+  a lot of techniques used before to help the provers.
+
+** The Partition predicate
+
+   The ~Partition~ predicate is the following:
+   #+BEGIN_SRC ada
+      function Partition
+     (A       : T_Arr;
+      M, Size : Positive) return Boolean is
+     (for all J in A'First .. M - 1 =>
+        (for all K in M .. Size => A (J) <= A (K))) with
+      Pre => M in A'First .. Size and then Size in A'Range;
+   #+END_SRC
+
+** Specification of Partial_Sort
+
+   The specification of ~Partial_Sort~ is simple:
+   #+BEGIN_SRC ada
+      procedure Partial_Sort (A : in out T_Arr; M : Positive) with
+      Pre  => M in A'First .. A'Last and then A'Length < MAX_SIZE,
+      Post => Multiset_Unchanged (A'Old, A)
+      and then Is_Sorted (A (A'First .. M - 1))
+      and then Partition (A, M, A'Last);
+   #+END_SRC
+
+   The length of ~A~ has to be less than the maximum size of a heap
+   because a heap will be used in the implementation.
+
+** The Partial_Sort_Aux procedure
+
+    This function will be used in our algorithm and do the same thing
+    on a ~Heap~ representing a heap data structure ~H~ between indexes
+    ~1~ and ~M-1~ instead of an array ~A~.
+
+*** Specification of Partial_Sort_Aux
+
+     The specification of our auxiliary function is:
+     #+BEGIN_SRC ada
+     procedure Partial_Sort_Aux (H : in out Heap; M : Positive) with
+      Pre => H.Size > 0
+      and then M in 2 .. H.Size
+      and then H.Size <= MAX_SIZE
+      and then (if M > 1 then Is_Heap_Def ((A => H.A, Size => M - 1))),
+      Post => Sorted (H.A (1 .. M - 1))
+      and then Partition (H.A, M, H.Size)
+      and then Multiset_Unchanged (H.A'Old, H.A)
+      and then H.Size = H'Old.Size
+      and then
+      (if
+         H.Size < MAX_SIZE
+       then
+         H'Old.A (H.Size + 1 .. MAX_SIZE) = H.A (H.Size + 1 .. MAX_SIZE));
+     #+END_SRC
+
+     We will call this function only if ~M > A'First~, that's why
+     ~M~ is in range ~2 .. H.Size~. At the end of the function,
+     the ~Size~ attribute will be the same, and also the rest of
+     array in the heap.
+
+*** Implementation of Partial_Sort_Aux
+
+    The implementation of ~Partial_Sort_Aux~ is the following:
+    #+BEGIN_SRC ada
+       procedure Partial_Sort_Aux (H : in out Heap; M : Positive) is
+      Old_Size : constant Natural := H.Size;
+      Size     : constant Natural := M - 1;
+      A_Save   : T_Arr            := H.A with
+         Ghost;
+   begin
+         H.Size := Size;
+         for J in M .. Old_Size loop
+            if H.A (J) < H.A (1) then
+               Pop_Heap (H);
+               Swap_Array (H.A, M - 1, J);
+               H.Size := Size;
+               A_Save := H.A;
+               Push_Heap (H);
+               Prove_Lower_Bound (H.A, A_Save, M, J);
+
+            end if;
+            Upper_Bound_Heap (H, H.A (1));
+            pragma Loop_Invariant (H.Size = Size);
+            pragma Loop_Invariant (Is_Heap_Def (H));
+            pragma Loop_Invariant (Upper_Bound (H.A (1 .. M - 1), H.A (1)));
+            pragma Loop_Invariant (Lower_Bound (H.A (M .. J), H.A (1)));
+            pragma Loop_Invariant (Multiset_Unchanged (H.A, H'Loop_Entry.A));
+            pragma Loop_Invariant
+              (if
+                 J < MAX_SIZE
+               then
+                 H.A (J + 1 .. MAX_SIZE) = H'Loop_Entry.A (J + 1 .. MAX_SIZE));
+         end loop;
+         A_Save := H.A;
+         Sort_Heap (H);
+
+         H.Size := Old_Size;
+         Prove_Partition (H.A, A_Save, M, Old_Size);
+   end Partial_Sort_Aux;
+    #+END_SRC
+
+    The ~Size~ constant is equal to the size of the actual heap.
+    ~Old_Size~ is equal to ~A'Length~ (~A~ input in the real
+    function).
+    At each iteration, the first element of the array is (of
+    course) greater than the heap (we use the same lemma as
+    in [[../heap/Pop_Heap.org][Pop_Heap]], ~Upper_Bound_Heap~), and is less than every
+    element encountered between ~M~ and ~J~. If the ~J+1~ th
+    element is less than the ~1~ st, we pop it, swap it with
+    the ~J+1~ th and then we push the heap. 
+    The ~Prove_Lower_Bound~ lemma is used to prove the loop
+    invariant with ~Lower_Bound~. ~Prove_Partition~ will help
+    proving that after sorting the heap, the array remains a
+    partition.
+
+** The lemmas
+
+*** New classic lemmas
+
+    For the future lemmas, we need to write some useful lemmas first.
+
+    The first lemma will prove that if ~Occ(A,V)~ is greater or equal
+     to ~1~, then ~Has_Value(A,V)~ is true. We also implemented
+     the other way around, if ~Has_Value(A,V)~ is true, then
+     ~Occ(A,V)~ is greater or equal to ~1~.
+
+     Their specification is:
+     #+BEGIN_SRC ada
+   procedure Occ_To_Has_Value (A : T_Arr; V : T) with
+      Ghost,
+      Pre  => A'Length >= 1 and then Occ (A, V) >= 1,
+      Post => Has_Value (A, V);
+
+   procedure Has_Value_To_Occ (A : T_Arr; V : T) with
+      Ghost,
+      Pre  => A'Length >= 1 and then Has_Value (A, V),
+      Post => Occ (A, V) >= 1;
+     #+END_SRC
+
+     Their implementation is:
+     #+BEGIN_SRC ada
+   procedure Occ_To_Has_Value (A : T_Arr; V : T) is
+   begin
+      if A'Length = 1 then
+         return;
+      end if;
+      if A (A'Last) = V then
+         return;
+      else
+         Occ_To_Has_Value (Remove_Last (A), V);
+      end if;
+
+   end Occ_To_Has_Value;
+
+   procedure Has_Value_To_Occ (A : T_Arr; V : T) is
+   begin
+      if A'Length = 1 then
+         pragma Assert (A (A'First) = V);
+         return;
+      end if;
+
+      if A (A'Last) = V then
+         pragma Assert (Occ (Remove_Last (A), V) >= 0);
+         pragma Assert (Occ (A, V) >= 1);
+         return;
+      else
+         Has_Value_To_Occ (Remove_Last (A), V);
+      end if;
+   end Has_Value_To_Occ;
+     #+END_SRC
+     
+     For further details about the implementation, we already
+     explained it in function such as [[../mutating/Remove_Copy.org][Remove_Copy]] or
+     [[../mutating/Random_Shuffle.org][Random_Shuffle]].
+     
+     We also implemented a lemma to prove a ~Multiset_Unchanged~ predicate.
+     When ~Multiset_Unchanged(A,B)~ is verified and
+     ~A(Eq .. A'Last) = B (Eq - A'First + B'First .. B'Last)~,
+     it proves ~Multiset_Unchanged(A (A'First .. Eq - 1), B (B'First .. Eq - A'First + B'First - 1))~.
+     We use an auxiliary function is this lemma, ~Partial_Eq~.
+
+     The specifications are:
+     #+BEGIN_SRC ada
+        procedure Partial_Eq (A, B : T_Arr; Eq : Positive; E : T) with
+      Ghost,
+      Pre => A'Length = B'Length
+      and then A'Length >= 1
+      and then Eq in A'First + 1 .. A'Last
+      and then (for all J in Eq .. A'Last => A (J) = B (J - A'First + B'First))
+      and then Occ (A, E) = Occ (B, E),
+      Post => Occ (A (A'First .. Eq - 1), E) =
+      Occ (B (B'First .. Eq - A'First + B'First - 1), E);
+
+   procedure Multiset_With_Eq (A, B : T_Arr; Eq : Positive) with
+      Ghost,
+      Pre => A'Length = B'Length
+      and then B'Last < Positive'Last
+      and then A'Length >= 1
+      and then Eq in A'First + 1 .. A'Last
+      and then Multiset_Unchanged (A, B)
+      and then
+      (for all J in Eq .. A'Last => A (J) = B (J - A'First + B'First)),
+      Post => Multiset_Unchanged
+        (A (A'First .. Eq - 1),
+         B (B'First .. Eq - A'First + B'First - 1));
+     #+END_SRC
+
+     The implementations are:
+     #+BEGIN_SRC ada
+        procedure Partial_Eq (A, B : T_Arr; Eq : Positive; E : T) is
+   begin
+      if A'Last = Eq then
+         return;
+      end if;
+
+      if A (A'Last) = E then
+         pragma Assert (B (B'Last) = E);
+      else
+         pragma Assert (B (B'Last) /= E);
+      end if;
+
+      Partial_Eq (Remove_Last (A), Remove_Last (B), Eq, E);
+   end Partial_Eq;
+
+   procedure Multiset_With_Eq (A, B : T_Arr; Eq : Positive) is
+      Eq_B : constant Positive := Eq - A'First + B'First;
+   begin
+      for E in T loop
+         Partial_Eq (A, B, Eq, E);
+         pragma Loop_Invariant
+           (for all F in T'First .. E =>
+              Occ (A (A'First .. Eq - 1), F) =
+              Occ (B (B'First .. Eq_B - 1), F));
+      end loop;
+
+   end Multiset_With_Eq;
+     #+END_SRC
+
+     It may seem very difficult but we just adapt the lemma
+     for the cases where ~A~ and ~B~ does not have the same
+     first index, to allow user to use it outside of our
+     function.
+
+*** The Prove_Lower_Bound lemma
+
+    This lemma will help proving the ~Lower_Bound~ loop invariant.
+    Before the command ~Push_Heap(H)~ in ~Partial_Sort_Aux~, the
+    assertion ~Lower_Bound (H.A (M .. J), H.A (K))~ for all ~K in 1 .. M - 1~ is proved.
+    After the command, it is not proved any more. We need to
+    make a save of ~H.A~ before pushing the heap, and then
+    we use this lemma.
+
+    Its specification is:
+    #+BEGIN_SRC ada
+    procedure Prove_Lower_Bound (A, A_Save : T_Arr; M, J : Positive) with
+      Ghost,
+      Pre => A'Length > 0
+      and then M in A'First + 1 .. A'Last
+      and then J in A'Range
+      and then A_Save'First = A'First
+      and then A_Save'Last = A'Last
+      and then A'First = 1
+      and then A'Last = MAX_SIZE
+      and then
+      (for all K in 1 .. M - 1 => Lower_Bound (A_Save (M .. J), A_Save (K)))
+      and then Multiset_Unchanged (A, A_Save)
+      and then (for all K in M .. MAX_SIZE => A (K) = A_Save (K)),
+      Post => Lower_Bound (A (M .. J), A (1));  
+    #+END_SRC
+    
+    The method used is:
+     - we have ~Multiset_Unchanged (A, A_Save)~ and
+       ~for all K in M .. MAX_SIZE => A (K) = A_Save (K)~,
+       then we have ~Multiset_Unchanged(A (1 .. Eq - 1), A_Save (1 .. Eq - 1))~.
+     - ~Has_Value(A(1 .. Eq - 1),A(1))~ is true then ~Occ(A (1 .. Eq - 1),A(1)) >= 1~.
+     - ~Multiset_Unchanged(A (1 .. Eq - 1), A_Save (1 .. Eq - 1))~
+       is true then ~Occ(A (1 .. Eq - 1),A(1)) = Occ(A_Save (1 .. Eq - 1),A(1))~ then
+       ~Occ(A_Save(1 .. Eq - 1), A(1)) >= 1~.
+     - ~Occ(A_Save(1 .. Eq - 1), A(1)) >= 1~ then ~Has_Value(A_Save (1 .. Eq - 1),A(1))~.
+     - ~for all K in 1 .. M - 1 => Lower_Bound (A_Save (M .. J), A_Save (K))~
+       then for the specific index where ~A(1)~ is, it's true too.
+
+       This implementation is:
+       #+BEGIN_SRC ada
+   procedure Prove_Lower_Bound (A, A_Save : T_Arr; M, J : Positive) is
+   begin
+      Multiset_With_Eq (A, A_Save, M);
+      Has_Value_To_Occ (A (1 .. M - 1), A (1));
+      Occ_To_Has_Value (A_Save (1 .. M - 1), A (1));
+
+   end Prove_Lower_Bound;
+       #+END_SRC
+
+*** The Prove_Partition lemma
+
+    This lemma will help proving that the array with
+    the ~Partition~ property on the ~M~ th value will
+    keep verifying the property if we sort it before
+    ~M~.
+    The specification is:
+    #+BEGIN_SRC ada
+ procedure Prove_Partition
+     (A, A_Save : T_Arr;
+      M, Size   : Positive) with
+      Ghost,
+      Pre => A'Length > 0
+      and then M in A'First + 1 .. Size
+      and then Size in A'Range
+      and then A_Save'First = A'First
+      and then A_Save'Last = A'Last
+      and then A'First = 1
+      and then A'Last = MAX_SIZE
+      and then Partition (A_Save, M, Size)
+      and then Multiset_Unchanged (A, A_Save)
+      and then (for all K in M .. MAX_SIZE => A (K) = A_Save (K)),
+      Post => Partition (A, M, Size);
+    #+END_SRC
+
+    The implementation is similar to the previous one,
+    except for the fact that we want to prove the 
+    ~Partition~ predicate for all ~K~ in a certain range.
+    The implementation is the following:
+    #+BEGIN_SRC ada
+   procedure Prove_Partition
+     (A, A_Save : T_Arr;
+      M, Size   : Positive)
+   is
+   begin
+      Multiset_With_Eq (A, A_Save, M);
+      for J in A'First .. M - 1 loop
+         Has_Value_To_Occ (A (1 .. M - 1), A (J));
+         Occ_To_Has_Value (A_Save (1 .. M - 1), A (J));
+
+         pragma Loop_Invariant
+           (for all K in 1 .. J => (for all L in M .. Size => A (K) <= A (L)));
+      end loop;
+   end Prove_Partition;
+    #+END_SRC
+
+    Using ~gnatprove~, the lemmas, the implementation
+    and specification, the auxiliary function is proved.
+
+** Implementation of ~Partial_Sort~
+
+The point here is to prepare a ~Heap~ to apply our
+auxiliary function on it. We first make a heap with
+the ~M-1~ first elements, and we add the following
+one by one, preserving the ~Multiset_Unchanged~
+predicate using the ~New_Element~ lemma described in
+[[../heap/Make_Heap.org][Make_Heap]]. We apply the auxiliary function to our heap.
+The only thing remaining is playing with a save of ~A~
+to prove the ~Multiset_Unchanged~ preservation.
+
+#+BEGIN_SRC ada
+   procedure Partial_Sort (A : in out T_Arr; M : Positive) is
+      H      : Heap;
+      A_Save : T_Arr := H.A with
+         Ghost;
+      A_Old : constant T_Arr := A with
+         Ghost;
+      Size : constant Natural := A'Length;
+   begin
+      if Size > 0 and then M > A'First then
+         H := Make_Heap (A (A'First .. M - 1));
+         for J in M .. A'Last loop
+            pragma Assert (Is_Heap_Def ((A => H.A, Size => M - A'First)));
+            A_Save := H.A;
+
+            Unchanged_Transitivity
+              (A_Old (A'First .. J - 1),
+               H.A (1 .. J - A'First),
+               A_Save (1 .. J - A'First));
+            H.A (J - A'First + 1) := A (J);
+            Unchanged_Transitivity
+              (A_Old (A'First .. J - 1),
+               A_Save (1 .. J - A'First),
+               H.A (1 .. J - A'First));
+            New_Element (A_Old (A'First .. J), H.A (1 .. J - A'First + 1));
+
+            pragma Loop_Invariant
+              (Multiset_Unchanged
+                 (A_Old (A'First .. J),
+                  H.A (1 .. J - A'First + 1)));
+            pragma Loop_Invariant
+              (Is_Heap_Def ((A => H.A, Size => M - A'First)));
+         end loop;
+
+         A_Save := H.A;
+         Unchanged_Transitivity (A_Old, H.A (1 .. Size), A_Save (1 .. Size));
+         H.Size := Size;
+
+         Partial_Sort_Aux (H, M - A'First + 1);
+         if Size < MAX_SIZE then
+            Multiset_With_Eq (H.A, A_Save, Size + 1);
+         end if;
+         Unchanged_Transitivity (A_Old, A_Save (1 .. Size), H.A (1 .. Size));
+         A := H.A (1 .. Size);
+         Unchanged_Transitivity (A_Old, H.A (1 .. Size), A);
+      end if;
+
+   end Partial_Sort;
+#+END_SRC
+
+Using this implementation and specification, ~gnatprove~
+proves the ~Partial_Sort~ algorithm.

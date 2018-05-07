@@ -10,12 +10,7 @@ package body Partial_Sort_Lemmas with
 
    end Prove_Lower_Bound;
 
-   procedure Prove_Partition (A : T_Arr; Mid, Size : Positive) is
-   begin
-      null;
-   end Prove_Partition;
-
-   procedure Prove_Partition_After_Sort
+   procedure Prove_Partition
      (A, A_Save : T_Arr;
       M, Size   : Positive)
    is
@@ -28,6 +23,6 @@ package body Partial_Sort_Lemmas with
          pragma Loop_Invariant
            (for all K in 1 .. J => (for all L in M .. Size => A (K) <= A (L)));
       end loop;
-   end Prove_Partition_After_Sort;
+   end Prove_Partition;
 
 end Partial_Sort_Lemmas;
