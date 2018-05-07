@@ -1,0 +1,243 @@
+# Created 2018-05-07 Mon 11:45
+#+OPTIONS: author:nil title:nil toc:nil
+#+EXPORT_FILE_NAME: ../org/Find.org
+
+* The Find algorithm
+
+The ~Find~ algorithm is a classic sequential search in an array.
+The array will be represented by the following types:
+
+#+BEGIN_SRC ada
+  type T is new Integer;
+  
+  type T_Arr is array (Positive range <>) of T;
+#+END_SRC
+
+~T_Arr~ is an array of integers, with indexes ranging the positive
+integers. We will use this type in the functions needing an array.
+
+Mimicking the C++ standard library, the signature of ~Find~ can be
+defined as follows:
+
+#+BEGIN_SRC ada
+  function Find (A : T_Arr; Val : T) return Positive
+#+END_SRC
+
+~Find~ will return the *least valid* index ~I~ of ~A~ such that ~A
+   (I) = Val~. If no such index exists, ~Find~ returns the length of
+~A~.
+
+** A first (naive) version of Find
+
+*** Specification of Find
+
+A first specification of ~Find~ can be the following:
+
+#+BEGIN_SRC ada
+  function Find (A : T_Arr; Val : T) return Positive with
+     Post =>
+     (Find'Result <= A'Last + 1
+      and then (for all I in A'First .. Find'Result - 1 => A (I) /= Val)),
+     Contract_Cases =>
+     ((for some I in A'Range => A (I) = Val) =>
+        Find'Result <= A'Last and then A (Find'Result) = Val,
+      others => Find'Result = A'Last + 1);
+#+END_SRC
+
+- the [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#postconditions][postcondition]] indicates that the result of ~Find~ is always
+  less or equal than ~A'Last + 1~ and that for every index ~I~ in
+  ~A~ less than the result of ~Find~, ~A (I)~ differs from ~Val~.
+- we can divide the specification of ~Find~ into two
+  [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#contract-cases][contract cases]]:
+
+  - the first case specifies the behavior of the function when
+    there is some ~I~ in ~A~ range such that ~A (I)~ is equal to
+    ~Val~. In this case, the result of ~Find~ should be less or
+    equal than ~A'Last~ (i.e. it should be a valid index of ~A~)
+    and the returned index ~I~ is such that ~A (I) = Val~.
+  - the second case is specified with ~others~, as we will
+    consider the cases for which there is no element of ~A~ equal
+    to ~Val~. In this case, the value returned by ~Find~ should
+    be equal to ~A'Last + 1~ (and is not a valid index of the
+    array).
+  Notice that ~gnatprove~ verifies the completeness and the
+  disjointedness of contract cases. For instance, consider the
+  following specification for ~Find~:
+
+  #+BEGIN_SRC ada
+    function Find (A : T_Arr; Val : T) return Positive with
+       Post =>
+       (Find'Result <= A'Last + 1
+        and then (for all I in A'First .. Find'Result - 1 => A (I) /= Val)),
+       Contract_Cases =>
+       ((for some I in A'Range => A (I) = Val) =>
+          Find'Result <= A'Last and then A (Find'Result) = Val,
+        (for some I in A'Range => A (I) /= Val) => Find'Result = A'Last + 1);
+  #+END_SRC
+
+  In this case, ~gnatprove~ emits two errors:
+
+  #+BEGIN_SRC shell
+    medium: contract cases might not be complete (e.g. when A = (others => 0) and A'First = 1 and A'Last = 0 and Val = 0)
+    medium: contract cases might not be disjoint (e.g. when A = (1 => 1, others => 0) and A'First = 1 and A'Last = 2 and Val = 0)
+  #+END_SRC
+
+  The first one is a *completeness* error: the two cases do not
+  cover all possible cases. The second one is a *disjointedness*
+  error: it may be the case that an array verifies both cases.
+
+*** Implementation of Find
+
+The implementation of ~Find~ is straightforward:
+
+#+BEGIN_SRC ada
+  function Find (A : T_Arr; Val : T) return Positive is
+  begin
+     for I in A'Range loop
+        if A (I) = Val then
+  	 return I;
+        end if;
+  
+        pragma Loop_Invariant (for all J in A'First .. I => A (J) /= Val);
+     end loop;
+  
+     return A'Last + 1;
+  end Find;
+#+END_SRC
+
+- the implementation is classic: we range over ~A~ indexes trying
+  to find an element equal to ~Val~. If we find such an element,
+  we return its index, which guarantees that this will be the
+  least valid index.
+- in order to prove the postconditions of ~Find~, we must add a
+  *loop invariant*. In each loop turn, after the conditional we
+  can assert that every traversed element differs from
+  ~Val~. This will be useful to prove that the returned value is
+  the least valid index of ~A~ such that the corresponding
+  element is equal to ~A~ and this is the invariant we have
+  chosen.
+
+  You can try to remove the invariant: in this case, some
+  postconditions cannot be proved.
+- a *variant* should be necessary to prove the termination of the
+  function with the following pragma:
+
+  #+BEGIN_SRC ada
+    pragma Loop_Variant (Increases => I);
+  #+END_SRC
+
+  As in SPARK every ~for~ loop terminates, *such a variant is not
+  needed here* (but it would be necessary with a ~while~ loop or
+  a plain loop).
+
+Using ~gnatprove~ on the body of ~Find~, the contract is proved,
+but a range check and an overflow check performed by SPARK are
+not verified. These checks are done for the expression ~A'Last +
+     1~: it may be the case that ~A'Last~ is ~Positive'Last~ and in
+this case, an overflow occurs.
+
+** A less naive version of Find
+
+We can provide a less naive version of ~Find~ by
+
+- factorizing specification in a *ghost* function ~Has_Value~ that
+  specifies that a value occurs in an array and that can be reused
+  in other specifications. [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/specification_features.html#ghost-code][Ghost functions]] are functions that are
+  discared during compilation but can be used for
+  specification. They can be used like *predicates* in ACSL.
+- solving the range and overflow errors by encapsulating the
+  result of the function in an "option" type
+- using slices with arrays in order to make the specification more
+  readable.
+
+*** The predicate Has_Value
+
+Defining the ~Has_Value~ predicate is rather straightforward:
+
+#+BEGIN_SRC ada
+  function Has_Value
+    (A   : T_Arr;
+     Val : T) return Boolean is
+    (for some I in A'Range => A (I) = Val);
+#+END_SRC
+
+Notice that ~Has_Value~ is defined in a package with the ~Ghost~
+aspect: it is not necessary to add the aspect to the
+function. Like many predicates that we will define, ~Has_Value~
+can be defined with a [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/specification_features.html#quantified-expressions][quantified expression]]. In this case, there
+is an implicit postcondition for the function that corresponds to
+the expression.
+
+Defining an "option" type for holding the result of ~Find~ can be
+done using a [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/type_contracts.html?highlight=variant%20record#record-discriminants][variant record]]:
+
+#+BEGIN_SRC ada
+  type Option (Exists : Boolean := False) is record
+     case Exists is
+        when True =>
+  	 Value : Integer;
+        when False =>
+  	 null;
+     end case;
+#+END_SRC
+
+Given a value of type ~Option~, you should first check if
+~Exists~ is true: in this case, it means that ~Value~ has a
+meaning, otherwise there is no acceptable value for the
+request. We will say that the ~Option~ is false or does not hold
+a valid index if the corresponding field ~Exists~ is ~False~.
+
+For ~Find~, if the value is not found in the array, then ~Exists~
+will be false, otherwise ~Value~ will hold the index of the array
+at which the element is equal to the value.
+
+*** Specification of Find
+
+The specification of ~Find~ is now:
+
+#+BEGIN_SRC ada
+  function Find (A : T_Arr; Val : T) return Option with
+     Contract_Cases =>
+     (Has_Value (A, Val) =>
+        (Find'Result.Exists = True)
+        and then Find'Result.Value in A'First .. A'Last
+        and then (A (Find'Result.Value) = Val)
+        and then (not Has_Value (A (A'First .. Find'Result.Value - 1), Val)),
+      others => Find'Result.Exists = False);
+#+END_SRC
+
+Using ~Option~ overloads the function specification but is
+cleaner for dealing with the case when ~Val~ is not in ~A~. Using
+~Has_Value~ and slices on ~A~ makes the specification more
+readable: ~not Has_Value (A (A'First .. Find'Result.Value - 1),
+     Val)~ means that ~Val~ does not occur in the array resulting from
+slicing ~A~ up to ~Find'Result.Value~.
+
+*** Implementation of Find
+
+The implementation of ~Find~ is the same as previous except the
+use of the ~Option~ type:
+
+#+BEGIN_SRC ada
+  function Find (A : T_Arr; Val : T) return Option is
+     Result : Option := (Exists => False);
+  begin
+     for I in A'Range loop
+        if A (I) = Val then
+  	 Result := (Exists => True, Value => I);
+  
+  	 return Result;
+        end if;
+  
+        pragma Loop_Invariant (not Has_Value (A (A'First .. I), Val));
+        pragma Loop_Invariant (not Result.Exists);
+     end loop;
+  
+     return Result;
+  end Find;
+#+END_SRC
+
+Notice that a slice is also used for the loop invariant and that
+another invariant has to be specified to ensure that
+~Result.Exists~ is false in the loop (meaning that ~Val~ has not
+been found yet).
