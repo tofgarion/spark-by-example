@@ -1,4 +1,7 @@
 language: c
+env:
+  - WHYCONF=$PWD/.why3.conf
+
 install:
   - ./scripts/install-dependencies.sh
   - export PATH=$PWD/z3-4.6.0-x64-ubuntu-14.04/bin:$PATH
