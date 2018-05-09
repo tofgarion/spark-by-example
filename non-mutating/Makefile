@@ -42,6 +42,9 @@ ALL_PROOF_TARGETS = naive_find naive_find_contract_pb find find_first_of adjacen
 		mismatch equal equal_rev search_wo_ghost search_with_ghost search \
 		search_n find_end count
 
+ALL_PROOF_TARGETS_TRAVIS = find find_first_of adjacent_find mismatch equal equal_rev search \
+		search_n find_end count
+
 include ../Makefile-common
 
 .PHONY:
@@ -98,3 +101,4 @@ count: $(call GENERATE_DEP,count) $(SPEC_COUNT)
 
 # All proofs
 all: $(ALL_PROOF_TARGETS)
+all-travis: $(ALL_PROOF_TARGETS_TRAVIS)

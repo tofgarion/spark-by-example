@@ -32,3 +32,6 @@ prove:
 
 prove-coq:
 	gnatprove --prover=coq $(_PROJECT) -f $(_PARALLEL) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(FILE)
+
+all-travis:
+	make -C non-mutating all-travis

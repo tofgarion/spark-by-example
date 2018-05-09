@@ -1,0 +1,9 @@
+before_script:
+  - ./scripts/install-dependencies.sh
+  - export PATH=$PWD/z3-4.6.0-x64-ubuntu-14.04/bin:$PATH
+  - export PATH=$PWD:$PATH
+  - export PATH=$PWD/spark-discovery-gpl-2017-x86_64-linux-bin/bin:$PATH
+  - $PWD/spark-discovery-gpl-2017-x86_64-linux-bin/libexec/spark/bin/why3config --detect-provers
+
+script:
+  - make all-travis
