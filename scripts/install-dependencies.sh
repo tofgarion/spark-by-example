@@ -9,5 +9,5 @@ wget http://cvc4.cs.stanford.edu/downloads/builds/x86_64-linux-opt/cvc4-1.5-x86_
 ln -sf cvc4-1.5-x86_64-linux-opt cvc4
 
 # install SPARK Discovery
-wget http://mirrors.cdn.adacore.com/art/592c5299c7a447388d5c991d
+wget http://mirrors.cdn.adacore.com/art/592c5299c7a447388d5c991d -O spark-discovery-gpl-2017-x86_64-linux-bin.tar.gz
 tar zxvf spark-discovery-gpl-2017-x86_64-linux-bin.tar.gz
