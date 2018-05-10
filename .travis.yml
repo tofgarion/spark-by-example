@@ -13,3 +13,4 @@ install:
 
 script:
   - make all-travis
+  - cat $PWD/gnatprove/gnatprove.out
