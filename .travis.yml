@@ -9,6 +9,7 @@ install:
   - export PATH=$PWD/spark-discovery-gpl-2017-x86_64-linux-bin/bin:$PATH
   - $PWD/spark-discovery-gpl-2017-x86_64-linux-bin/libexec/spark/bin/why3config --detect-provers
   - cvc4 --version
+  - cat .why3.conf
 
 script:
   - make all-travis

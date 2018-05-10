@@ -35,4 +35,4 @@ prove-coq:
 
 all-travis:
 	# make -C non-mutating find WHYCONF=/home/travis/.why3.conf
-	cd non-mutating; gnatprove -P non_mutating_algorithms.gpr -f --prover=cvc4 --timeout=5 --why3-conf=/home/travis/.why3.conf
+	cd non-mutating; gnatprove -P non_mutating_algorithms.gpr -f --prover=cvc4 --timeout=15 --why3-conf=/home/travis/.why3.conf find_p.adb
