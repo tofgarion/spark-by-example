@@ -10,7 +10,7 @@ install:
   - $PWD/spark-discovery-gpl-2017-x86_64-linux-bin/libexec/spark/bin/why3config --detect-provers
   - cvc4 --version
   - cat /home/travis/.why3.conf
-  - cp /home/travais/.why3.conf $PWS
+  - cp /home/travis/.why3.conf $PWD
   - pwd
   - ls -l
 
