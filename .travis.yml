@@ -12,5 +12,6 @@ install:
   - cat /home/travis/.why3.conf
 
 script:
-  - make all-travis
-  - cat $PWD/non-mutating/gnatprove/gnatprove.out
+  # - make all-travis
+  # - cat $PWD/non-mutating/gnatprove/gnatprove.out
+  - cd non-mutating; gnatprove -P non_mutating_algorithms.gpr -f  --output-header --prover=cvc4 --timeout=15 --why3-conf=/home/travis/.why3.conf find_p.adb
