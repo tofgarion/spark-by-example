@@ -11,10 +11,11 @@ install:
   - cvc4 --version
   - cat /home/travis/.why3.conf
   - cp /home/travis/.why3.conf $PWD
+  - echo $PATH
   - pwd
   - ls -al
 
 script:
   # - make all-travis
-  - cd non-mutating; gnatprove -P non_mutating_algorithms.gpr -f  --output-header --prover=CVC4 --timeout=15 --why3-conf=/home/travis/build/tofgarion/spark-by-example/.why3.conf find_p.adb
+  - cd non-mutating; gnatprove -P non_mutating_algorithms.gpr -f  --output-header --prover=cvc4 --timeout=15 --why3-conf=/home/travis/build/tofgarion/spark-by-example/.why3.conf find_p.adb
   - cat $PWD/gnatprove/gnatprove.out
