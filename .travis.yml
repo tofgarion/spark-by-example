@@ -20,4 +20,5 @@ script:
   # - make all-travis
   - cd non-mutating; gnatprove -P non_mutating_algorithms.gpr -f  --output-header --prover=cvc4 --timeout=15 --why3-conf=/home/travis/build/tofgarion/spark-by-example/.why3.conf find_p.adb
   - cat $PWD/gnatprove/gnatprove.out
-  - cvc4 gnatprove/find_p.adb_16_33_loop_invariant_preserv.smt2
+  - ls -l $PWD/gnatprove
+  - cvc4 $PWD/gnatprove/find_p.adb_16_33_loop_invariant_preserv.smt2
