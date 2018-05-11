@@ -12,6 +12,7 @@ install:
   - cat /home/travis/.why3.conf
   - cp /home/travis/.why3.conf $PWD
   - echo $PATH
+  - which cvc4
   - pwd
   - ls -al
 
