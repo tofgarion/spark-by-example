@@ -1,3 +1,6 @@
+(package-initialize)
+(require 'ox-org)
+
 (defun generate-org-from-org (org-file)
   "Generate Org file from Org file template."
   (interactive "f")
