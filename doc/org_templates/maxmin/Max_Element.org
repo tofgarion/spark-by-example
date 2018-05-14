@@ -1,0 +1,85 @@
+#+OPTIONS: author:nil title:nil toc:nil
+#+EXPORT_FILE_NAME: ../../../maxmin/Max_Element.org
+
+* The Max_Element algorithm
+
+   The ~Max_Element~ algorithm finds the index of the maximum value
+   of an array. Its signature can be expressed as :
+
+   #+BEGIN_SRC ada
+   function Max_Element (A : T_Arr) return Option
+   #+END_SRC
+
+   ~Max_Element~ will return the first index where the maximum is located
+   if the array is not empty.
+
+** A first version of Max_Element without ghost functions for specification
+
+    We will first specify and implement ~Max_Element~ without using ghost
+    function. Here, there will be minor changes between the functions
+    with and without ghost functions for specification (and loop invariants).
+
+*** Specification of Max_Element without ghost functions
+
+    #+INCLUDE: ../../../maxmin/max_element_p.ads :src ada :lines "6-17"
+
+    The postconditions are expressed through the contract cases:
+      - if the array is empty, then there is no index returned.
+      - if the array is not empty, then:
+              1. the result is in range ~A'First .. A'Last~.
+              2. all the elements of the array are less or equal than the value located at the returned index.
+              3. all the elements of the array located before the index returned are less than the value located at the index returned. This postcondition state that the index returned is the first index containing the maximum value of the array.
+
+*** Implementation of Max_Element
+
+     The implementation is classic : we range over ~A~ indexes, trying
+     to find an element greater than ~A(Result.Value)~. If we find such an element,
+     we replace ~Result.Value~ by its index.
+
+    #+INCLUDE: ../../../maxmin/max_element_p.adb :src ada :lines "4-27"
+
+     The loop invariants specify that :
+     1. the ~Result.Value~ value is in range ~A'First .. A'Last~.
+     2. every traversed elements is less or equal than the value at index ~Result.Value~.
+     3. every element before index ~Result.Value~ are less than the value at index ~Result.Value~.
+
+     When using ~gnatprove~ on the body of ~Max_Element~, everything is proved.
+     
+** A version of Max_Element with ghost functions
+
+    We will now define two predicates to represent the main
+    properties, i.e., the fact that all elements of the array
+    are less or equal than the value located at the index returned,
+    and the fact that every element before the returned index is
+    less than the maximum value.
+
+*** Predicates Upper_Bound and Strict_Upper_Bound
+
+    #+INCLUDE ../../../spec/upper_bound_p.ads :src ada :lines "6-14"
+     
+     The two functions are the same as in the specification
+     of the specification of ~Max_Element~ previously 
+     showed, except for the fact that we check for the entire
+     array given in entry.
+
+*** Specification of Max_Element
+
+     With the previously defined predicates, the specification of Max_Element is:
+
+     #+INCLUDE ../../../maxmin/max_element_with_ghost_p.ads :src ada :lines "7-17"
+     
+     Because in the predicates we check for the entire array, we split the array ~A~ 
+     to write the postconditions.
+
+*** Implementation of Max_Element 
+
+     The implementation is almost the same as before:
+
+     #+INCLUDE ../../../maxmin/max_element_with_ghost_p.adb :src ada :lines "4-31"
+
+     The last predicate has been modified : we check first if ~A'First~
+     is less than ~Result.Value~. If we didn't we would face a ~range check might fail~
+     exception (in the case ~A'First = A'Last~, we can't split the array ~A~ with
+     ~A (A'First .. A'Last - 1)~).
+
+     With this implementation, using ~gnatprove~ everything is proved.

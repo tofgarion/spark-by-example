@@ -1,0 +1,53 @@
+#+OPTIONS: author:nil title:nil toc:nil
+#+EXPORT_FILE_NAME: ../../../maxmin/Min_Element.org
+
+** The Min_Element algorithm
+
+The ~Min_Element~ algorith searches the minimum in a general sequence.
+Its signature can be expressed as:
+
+#+BEGIN_SRC ada
+function Min_Element(A : T_arr) return Option
+#+END_SRC
+
+~Min_Element~ will return an option containing the first index ~I~ of ~A~ such as for all ~K~ in ~A'First .. A'Last~, ~A(I) <= A(K)~.
+
+*** Used predicates
+
+**** The Lower_Bound predicate
+
+The ~Lower_Bound~ predicate will be used to assert that our return value is a lower bound for the values of ~A(A'First .. N)~, where ~N~ is given:
+
+	#+INCLUDE: ../../../spec/lower_bound_p.ads :src ada :lines "7-10"
+
+**** The Strict_Lower_Bound predicate
+
+The ~Strict_Lower_Bound~ predicate will be used to confirm that the value we return is the *first* valid index for a minimum. It expresses the fact that all the values of ~A~ before index ~N~ are strictly lesser than ~V~:
+
+	#+INCLUDE: ../../../spec/lower_bound_p.ads :src ada :lines "12-15"
+
+*** The Specification of Min_Element
+
+The specification of ~Min_Element~ can be expressed such as follows:
+
+	#+INCLUDE: ../../../maxmin/min_element_p.ads :src ada :lines "7-21"
+
+Here the post conditions are expressed through 2 contract cases :
+- if ~A~ is empty then there is no index returned
+- else there is a valid index returned and:
+  1. the result is a lower bound for the values in ~A~
+  2. for all value ~V~ of ~A~ found at an index stricly lower than ~Result.Value~ then ~V > A(Result.Value)~. This expresses the fact that our result is indeed the first index of the minimum of A.
+
+
+*** Implementation of Min_Element
+
+	#+INCLUDE: ../../../maxmin/min_element_p.adb :src ada :lines "4-35"
+
+The implementation is quite similar to the one of [[Max_Element.org][Max_Element]] with predicates. Here:
+- The loop variant is classicaly equal to ~I~
+- the loop invariants specify that:
+  1. the result is in a valid range
+  2. the current result is a minimum for all the values already examined (from ~A'First~ to ~I~)
+  3. the current minimum is the first of A (i.e. all previous values of A are striclty greater)
+
+When using ~gnatprove~ on this specification and implementation, everything is proved.

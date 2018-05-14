@@ -1,0 +1,56 @@
+# Created 2018-05-14 lun. 11:55
+#+OPTIONS: author:nil title:nil toc:nil
+#+EXPORT_FILE_NAME: ../../../binary-search/Search_Lower_Bound.org
+
+* The Search_Lower_Bound algorithm
+
+The ~Search_Lower_Bound~ algorithm searches for the lowest index at which a value can be found in a sorted array.
+Its signature can be expressed as:
+#+BEGIN_SRC ada
+  function Search_Lower_Bound(A : T_arr; V : T) return Option
+#+END_SRC
+
+** TODO Working principle
+
+The ~Search_Lower_Bound~ algorithm searches for a given value ~V~ the index ~Lb~ of a given array ~A~ 
+so that if ~A'First <= K < Lb~ then ~A[K] < V~, and if ~Lb <= K <= A'Last~ then ~V < A[K]~. It should
+be noted that ~Lb~ satisfies the inequality ~A'First <= Lb <= A'Last +1~.
+
+##########################################
+add example here, such as the one in ACSL.
+##########################################
+
+** Specification of Search_Lower_Bound
+
+The ~Search_Lower_Bound~ algorithm can be specified as follow:
+
+#+INCLUDE ../../../binary-search/search_lower_bound_p.ads :src ada :lines "9-22"
+
+It uses the predicates ~Lower_Bound~ and ~Strict_Upper_Bound~ defined in chapter 4.
+
+The specification contains two precondition :
+- ~A~ should be sorted.
+- ~A'Last~ must be less than Positive'Last since the result can be ~A'Last+1~.
+The postconditions are expressed with contract cases:
+- if ~A~ is empty, there is no index returned
+- otherwise, there is an index returned in range ~A'First .. A'Last +1~ and
+  1. For all ~K~ in ~A'First .. Result.Value -1,  A[K] < V~ (this range can be empty)
+  2. For all ~K~ in ~Result.Value .. A'Last, V <= A[K]~ (this range can also be empty)
+
+** The implementation of Search_Lower_Bound
+
+The implementation of ~Search_Lower_Bound~ is as follows:
+
+#+INCLUDE ../../../binary-search/search_lower_bound_p.ads :src ada :lines "4-44"
+
+At each iteration, the range that contains the sought-after result is narrowed down. Note
+that the ~middle~ is calculated so as to avoid potential overflows.
+
+
+Here the loop variant is ~Right - Result.Value~ which decreases at each step.
+The loop invariants express :
+- that ~Result.Value~ and ~Right~ are in the correct range and corectly postitionned with regard to eachother,
+- that all indexes stricly lower than ~Result.value~ contain value sctrictly lower than ~V~
+- that all indexes greater than ~Right~ contain values greater than ~V~
+
+With this specification and implementation, when using ~gnatprove~, everything is proved.
