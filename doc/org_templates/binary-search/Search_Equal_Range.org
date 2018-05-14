@@ -12,17 +12,8 @@ Its signature can be expressed as :
 
 This function returns an ~Option_Pair~ defined by:
 
-#+BEGIN_SRC ada
-type Option_Pair (Exists : Boolean := False) is record
-      case Exists is
-         when True =>
-            Lower : Integer;
-            Upper : Integer;
-         when False =>
-            null;
-      end case;
-   end record;
-#+END_SRC
+#+INCLUDE: ../../../spec/types.ads :src ada :lines "29-37"
+
 
 If ~Result~ is of type ~Option_Pair~, and equal to the result of ~Search_Equal_Range(A,V)~,
  then these inequalities are verified, provided that ~Result.Exists~ is true:
@@ -38,7 +29,7 @@ properties of the returned ~Option_Pair~ can be easily infered from those of the
 
 This algorithm can be specified as follows:
 
-#+INCLUDE: search_equal_range_p.ads :src ada :lines "12-37"
+#+INCLUDE: /search_equal_range_p.ads :src ada :lines "12-37"
 
 In this specification there are two preconditions:
 - ~A~ should be sorted, as with all binary search algorithms 
@@ -60,7 +51,7 @@ We will present two implementations of this algorithm, both using the same speci
 
 The ~Search_Equal_Range~ can be easily implemented using the two previous functions, as they directly provide the desired pair of indexes:
 
-#+INCLUDE: search_equal_range_p.adb :src ada :lines "4-21"
+#+INCLUDE: ../../../binary-search/search_equal_range_p.adb :src ada :lines "4-21"
 
 ~gnatprove~ doesn't need any annotations other than the specification of the function itself to prove this implementation.
 
@@ -69,7 +60,7 @@ The ~Search_Equal_Range~ can be easily implemented using the two previous functi
 The first version, while being easy to implement, undestand and prove, does some work two times. This is why another implementation is proposed in the C++ standard library, 
 which in ADA translates to:
 
-#+INCLUDE: search_equal_range2_p.adb :src ada :lines "4-65"
+#+INCLUDE: ../../../binary-search/search_equal_range2_p.adb :src ada :lines "4-65"
 	
 
 The working principle of this code is to narrow down at the same time the ranges where ~Search_Lower_Bound~ 
