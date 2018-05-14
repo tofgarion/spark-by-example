@@ -22,7 +22,7 @@ add example here, such as the one in ACSL.
 
 The ~Search_Upper_Bound~ algorithm can be specified as follow:
 
-#+INCLUDE: ../../../binary-search/search_upper_bound_p.ads :src ada :lines "8-21"
+#+INCLUDE: ../../../binary-search/search_upper_bound_p.ads :src ada :lines "8-22"
 
 
 It uses the predicates ~Upper_Bound~ and ~Strict_Lower_Bound~ defined in chapter 4.
@@ -40,7 +40,7 @@ The postconditions are expressed with contract cases:
 
 The implementation of ~Search_Upper_Bound~ is as follows:
 
-#+INCLUDE: ../../../binary-search/search_upper_bound_p.adb :src ada :lines "3-38"
+#+INCLUDE: ../../../binary-search/search_upper_bound_p.adb :src ada :lines "3-39"
 	
 
 At each iteration, the range that contains the sought-after result is narrowed down.
