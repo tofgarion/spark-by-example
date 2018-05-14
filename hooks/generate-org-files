@@ -1,4 +1,4 @@
 #!/bin/bash
 
-make -C $GIT_DIR/../spark-by-example/doc generate-org-files
-git add $GIT_DIR/../spark-by-example/*/*.org
+make -C $GIT_DIR/../doc generate-org-files
+git add $GIT_DIR/../*/*.org
