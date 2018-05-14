@@ -1,0 +1,41 @@
+# Created 2018-05-14 Mon 13:29
+#+OPTIONS: author:nil title:nil toc:nil
+#+EXPORT_FILE_NAME: ../../../maxmin/Max_Seq.org
+
+* The Max_Seq algorithm
+
+The ~Max_Seq~ algorithm returns the maximum value contained in an array.
+
+Its signature can be defined as:
+
+#+BEGIN_SRC ada
+  function Max_Seq (A : T_Arr) return T
+#+END_SRC
+
+This algorithm will be based on the previous ~Max_Element~ algorithm, therefore it
+will be very easy to write.
+
+** Specification of Max_Seq
+
+#+BEGIN_SRC ada
+  function Max_Seq (A : T_Arr) return T with
+     Pre  => A'Length > 0,
+     Post => (Has_Value (A, Max_Seq'Result))
+#+END_SRC
+
+Because we are going to use the function ~Max_Element_With_Ghost~ on A
+and we want to use the ~Value~ of option, we forbid the case ~A'Length = 0~.
+The postconditions express the fact that:
+- the value in contained in the array.
+- is more or equal than the others values contained in the array.
+
+** Implementation of Max_Seq
+
+#+BEGIN_SRC ada
+  function Max_Seq (A : T_Arr) return T is
+  begin
+     return A (Max_Element_With_Ghost (A).Value);
+#+END_SRC
+
+All the postconditions of ~Max_Element~ are sufficient to prove the
+~Max_Seq~ algorithm with ~gnatprove~.
