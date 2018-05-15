@@ -1,0 +1,43 @@
+#+EXPORT_FILE_NAME: ../../../sorting/Is_Sorted.org
+#+OPTIONS: author:nil title:nil toc:nil
+
+** The Is_Sorted algorithm
+
+   The ~Is_Sorted~ algorithm states if an array is sorted or not.
+   Its signature reads:
+   ~ function Is_Sorted (A : T_Arr) return Boolean ~
+
+*** Specification of Is_Sorted
+
+    The specification is simple to write:
+
+	#+INCLUDE: ../../../sorting/is_sorted_p.ads :src ada :lines "12-16"
+
+*** The Weakly_Sorted predicate and its lemma
+
+    The ~Weakly_Sorted~ predicate checks only the fact that
+    each element (except for the last one) is less than
+    the element just after it. It can be expressed:
+
+	#+INCLUDE: ../../../spec/sorted_p.ads :src ada :lines "7-13"
+
+    The ~Weakly_Sorted~ predicate implies the ~Sorted~ predicate,
+    but the prover cannot prove it on its own.
+    We have to write a lemma to prove it:
+
+	#+INCLUDE: ../../../sorting/is_sorted_p.ads :src ada :lines "7-11"
+
+    Its implementation is as simple:
+
+	#+INCLUDE: ../../../sorting/is_sorted_p.adb :src ada :lines "4-11"
+
+*** Implementation of Is_Sorted
+
+    The implementation will check whether the array is
+    weakly sorted or not. If it is, we will apply our
+    previous lemma and return ~True~:
+
+	#+INCLUDE: ../../../sorting/is_sorted_p.adb :src ada :lines "12-27"
+
+    Using this implementation and specification,
+    ~gnatprove~ proves the function.

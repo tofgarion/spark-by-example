@@ -1,0 +1,171 @@
+#+EXPORT_FILE_NAME: ../../../sorting/Partial_Sort.org
+#+OPTIONS: author:nil title:nil toc:nil
+
+* The Partial_Sort algorithm
+
+  The ~Partial_Sort~ algorithm sorts one part of an array and
+  ensures that every element at the left is less than every element
+  at the right. Its signature reads:
+  ~procedure Partial_Sort (A : in out T_Arr; M : Positive)~
+
+  This algorithm uses a lot of algorithms described above and also
+  a lot of techniques used before to help the provers.
+
+** The Partition predicate
+
+   The ~Partition~ predicate is the following:
+
+	#+INCLUDE: ../../../spec/partition_p.ads :src ada :lines "7-13"
+
+** Specification of Partial_Sort
+
+   The specification of ~Partial_Sort~ is simple:
+
+	#+INCLUDE: ../../../sorting/partial_sort_p.ads :src ada :lines "39-44"
+
+   The length of ~A~ has to be less than the maximum size of a heap
+   because a heap will be used in the implementation.
+
+** The Partial_Sort_Aux procedure
+
+    This function will be used in our algorithm and do the same thing
+    on a ~Heap~ representing a heap data structure ~H~ between indexes
+    ~1~ and ~M-1~ instead of an array ~A~.
+
+*** Specification of Partial_Sort_Aux
+
+     The specification of our auxiliary function is:
+
+	#+INCLUDE: ../../../sorting/partial_sort_p.ads :src ada :lines "24-38"
+
+     We will call this function only if ~M > A'First~, that's why
+     ~M~ is in range ~2 .. H.Size~. At the end of the function,
+     the ~Size~ attribute will be the same, and also the rest of
+     array in the heap.
+
+*** Implementation of Partial_Sort_Aux
+
+    The implementation of ~Partial_Sort_Aux~ is the following:
+
+	#+INCLUDE: ../../../sorting/partial_sort_p.adb :src ada :lines "9-44"
+
+    The ~Size~ constant is equal to the size of the actual heap.
+    ~Old_Size~ is equal to ~A'Length~ (~A~ input in the real
+    function).
+    At each iteration, the first element of the array is (of
+    course) greater than the heap (we use the same lemma as
+    in [[../heap/Pop_Heap.org][Pop_Heap]], ~Upper_Bound_Heap~), and is less than every
+    element encountered between ~M~ and ~J~. If the ~J+1~ th
+    element is less than the ~1~ st, we pop it, swap it with
+    the ~J+1~ th and then we push the heap. 
+    The ~Prove_Lower_Bound~ lemma is used to prove the loop
+    invariant with ~Lower_Bound~. ~Prove_Partition~ will help
+    proving that after sorting the heap, the array remains a
+    partition.
+
+** The lemmas
+
+*** New classic lemmas
+
+    For the future lemmas, we need to write some useful lemmas first.
+
+    The first lemma will prove that if ~Occ(A,V)~ is greater or equal
+     to ~1~, then ~Has_Value(A,V)~ is true. We also implemented
+     the other way around, if ~Has_Value(A,V)~ is true, then
+     ~Occ(A,V)~ is greater or equal to ~1~.
+
+     Their specification is:
+
+	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :lines "53-62"
+
+     Their implementation is:
+
+	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :lines "56-84"
+     
+     For further details about the implementation, we already
+     explained it in function such as [[../mutating/Remove_Copy.org][Remove_Copy]] or
+     [[../mutating/Random_Shuffle.org][Random_Shuffle]].
+     
+     We also implemented a lemma to prove a ~Multiset_Unchanged~ predicate.
+     When ~Multiset_Unchanged(A,B)~ is verified and
+     ~A(Eq .. A'Last) = B (Eq - A'First + B'First .. B'Last)~,
+     it proves ~Multiset_Unchanged(A (A'First .. Eq - 1), B (B'First .. Eq - A'First + B'First - 1))~.
+     We use an auxiliary function is this lemma, ~Partial_Eq~.
+
+     The specifications are:
+
+	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :lines "63-85"
+
+     The implementations are:
+
+	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :lines "85-112"
+
+     It may seem very difficult but we just adapt the lemma
+     for the cases where ~A~ and ~B~ does not have the same
+     first index, to allow user to use it outside of our
+     function.
+
+*** The Prove_Lower_Bound lemma
+
+    This lemma will help proving the ~Lower_Bound~ loop invariant.
+    Before the command ~Push_Heap(H)~ in ~Partial_Sort_Aux~, the
+    assertion ~Lower_Bound (H.A (M .. J), H.A (K))~ for all ~K in 1 .. M - 1~ is proved.
+    After the command, it is not proved any more. We need to
+    make a save of ~H.A~ before pushing the heap, and then
+    we use this lemma.
+
+    Its specification is:
+
+	#+INCLUDE: ../../../lemmas/partial_sort_lemmas.ads :src ada :lines "15-29"
+    
+    The method used is:
+     - we have ~Multiset_Unchanged (A, A_Save)~ and
+       ~for all K in M .. MAX_SIZE => A (K) = A_Save (K)~,
+       then we have ~Multiset_Unchanged(A (1 .. Eq - 1), A_Save (1 .. Eq - 1))~.
+     - ~Has_Value(A(1 .. Eq - 1),A(1))~ is true then ~Occ(A (1 .. Eq - 1),A(1)) >= 1~.
+     - ~Multiset_Unchanged(A (1 .. Eq - 1), A_Save (1 .. Eq - 1))~
+       is true then ~Occ(A (1 .. Eq - 1),A(1)) = Occ(A_Save (1 .. Eq - 1),A(1))~ then
+       ~Occ(A_Save(1 .. Eq - 1), A(1)) >= 1~.
+     - ~Occ(A_Save(1 .. Eq - 1), A(1)) >= 1~ then ~Has_Value(A_Save (1 .. Eq - 1),A(1))~.
+     - ~for all K in 1 .. M - 1 => Lower_Bound (A_Save (M .. J), A_Save (K))~
+       then for the specific index where ~A(1)~ is, it's true too.
+
+       This implementation is:
+
+	#+INCLUDE: ../../../lemmas/partial_sort_lemmas.adb :src ada :lines "5-12"
+
+*** The Prove_Partition lemma
+
+    This lemma will help proving that the array with
+    the ~Partition~ property on the ~M~ th value will
+    keep verifying the property if we sort it before
+    ~M~.
+    The specification is:
+
+	#+INCLUDE: ../../../lemmas/partial_sort_lemmas.ads :src ada :lines "30-45"
+
+    The implementation is similar to the previous one,
+    except for the fact that we want to prove the 
+    ~Partition~ predicate for all ~K~ in a certain range.
+    The implementation is the following:
+
+	#+INCLUDE: ../../../lemmas/partial_sort_lemmas.adb :src ada :lines "13-27"
+
+    Using ~gnatprove~, the lemmas, the implementation
+    and specification, the auxiliary function is proved.
+
+** Implementation of ~Partial_Sort~
+
+The point here is to prepare a ~Heap~ to apply our
+auxiliary function on it. We first make a heap with
+the ~M-1~ first elements, and we add the following
+one by one, preserving the ~Multiset_Unchanged~
+predicate using the ~New_Element~ lemma described in
+[[../heap/Make_Heap.org][Make_Heap]]. We apply the auxiliary function to our heap.
+The only thing remaining is playing with a save of ~A~
+to prove the ~Multiset_Unchanged~ preservation.
+
+	#+INCLUDE: ../../../sorting/partial_sort_p.adb :src ada :lines "45-92"
+
+Using this implementation and specification, ~gnatprove~
+proves the ~Partial_Sort~ algorithm.

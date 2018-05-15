@@ -1,77 +1,85 @@
-** The Is_Sorted algorithm
+# Created 2018-05-15 Tue 16:50
+#+OPTIONS: author:nil title:nil toc:nil
+#+EXPORT_FILE_NAME: ../../../sorting/Is_Sorted.org
 
-   The ~Is_Sorted~ algorithm states if an array is sorted or not.
-   Its signature reads:
-   ~ function Is_Sorted (A : T_Arr) return Boolean ~
+* The Is_Sorted algorithm
 
-*** Specification of Is_Sorted
+The ~Is_Sorted~ algorithm states if an array is sorted or not.
+Its signature reads:
+~ function Is_Sorted (A : T_Arr) return Boolean ~
 
-    The specification is simple to write:
-    #+BEGIN_SRC ada
-   function Is_Sorted (A : T_Arr) return Boolean with
-      Contract_Cases =>
-      (Sorted (A) => Is_Sorted'Result = True,
-       others     => Is_Sorted'Result = False);
-    #+END_SRC
+** Specification of Is_Sorted
 
-*** The Weakly_Sorted predicate and its lemma
+The specification is simple to write:
 
-    The ~Weakly_Sorted~ predicate checks only the fact that
-    each element (except for the last one) is less than
-    the element just after it. It can be expressed:
-    #+BEGIN_SRC ada
-       function Weakly_Sorted
-     (A : T_Arr) return Boolean is
-     (if
-        A'Length > 0
-      then
-        (for all J in A'First .. A'Last - 1 => A (J) <= A (J + 1)));
-    #+END_SRC
+#+BEGIN_SRC ada
+  function Is_Sorted (A : T_Arr) return Boolean with
+     Contract_Cases =>
+     (Sorted (A) => Is_Sorted'Result = True,
+      others     => Is_Sorted'Result = False);
+#+END_SRC
 
-    The ~Weakly_Sorted~ predicate implies the ~Sorted~ predicate,
-    but the prover cannot prove it on its own.
-    We have to write a lemma to prove it:
-    #+BEGIN_SRC ada
-       procedure Weakly_To_Sorted (A : T_Arr) with
-      Ghost,
-      Pre  => Weakly_Sorted (A),
-      Post => Sorted (A);
-    #+END_SRC
+** The Weakly_Sorted predicate and its lemma
 
-    Its implementation is as simple:
-    #+BEGIN_SRC ada
-      procedure Weakly_To_Sorted (A : T_Arr) is
-   begin
-      for J in A'Range loop
-         null;
-         pragma Loop_Invariant (Sorted (A (A'First .. J)));
-      end loop;
-   end Weakly_To_Sorted; 
-    #+END_SRC
+The ~Weakly_Sorted~ predicate checks only the fact that
+each element (except for the last one) is less than
+the element just after it. It can be expressed:
 
-*** Implementation of Is_Sorted
+#+BEGIN_SRC ada
+  function Weakly_Sorted
+    (A : T_Arr) return Boolean is
+    (if
+       A'Length > 0
+     then
+       (for all J in A'First .. A'Last - 1 => A (J) <= A (J + 1)));
+#+END_SRC
 
-    The implementation will check whether the array is
-    weakly sorted or not. If it is, we will apply our
-    previous lemma and return ~True~:
+The ~Weakly_Sorted~ predicate implies the ~Sorted~ predicate,
+but the prover cannot prove it on its own.
+We have to write a lemma to prove it:
 
-    #+BEGIN_SRC ada
-   function Is_Sorted (A : T_Arr) return Boolean is
-   begin
-      if A'Length > 0 then
-         for J in A'First .. A'Last - 1 loop
-            if A (J) > A (J + 1) then
-               return False;
-            end if;
+#+BEGIN_SRC ada
+  procedure Weakly_To_Sorted (A : T_Arr) with
+     Ghost,
+     Pre  => Weakly_Sorted (A),
+     Post => Sorted (A);
+#+END_SRC
 
-            pragma Loop_Invariant (Weakly_Sorted (A (A'First .. J + 1)));
+Its implementation is as simple:
 
-         end loop;
-      end if;
-      Weakly_To_Sorted (A);
-      return True;
-   end Is_Sorted;
-    #+END_SRC
+#+BEGIN_SRC ada
+  procedure Weakly_To_Sorted (A : T_Arr) is
+  begin
+     for J in A'Range loop
+        null;
+        pragma Loop_Invariant (Sorted (A (A'First .. J)));
+     end loop;
+  end Weakly_To_Sorted;
+#+END_SRC
 
-    Using this implementation and specification,
-    ~gnatprove~ proves the function.
+** Implementation of Is_Sorted
+
+The implementation will check whether the array is
+weakly sorted or not. If it is, we will apply our
+previous lemma and return ~True~:
+
+#+BEGIN_SRC ada
+  function Is_Sorted (A : T_Arr) return Boolean is
+  begin
+     if A'Length > 0 then
+        for J in A'First .. A'Last - 1 loop
+  	 if A (J) > A (J + 1) then
+  	    return False;
+  	 end if;
+  
+  	 pragma Loop_Invariant (Weakly_Sorted (A (A'First .. J + 1)));
+  
+        end loop;
+     end if;
+     Weakly_To_Sorted (A);
+     return True;
+  end Is_Sorted;
+#+END_SRC
+
+Using this implementation and specification,
+~gnatprove~ proves the function.
