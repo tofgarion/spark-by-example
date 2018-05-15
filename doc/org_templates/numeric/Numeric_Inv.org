@@ -1,3 +1,5 @@
+#+EXPORT_FILE_NAME: ../../../numeric/Numeric_Inv.org
+#+OPTIONS: author:nil title:nil toc:nil
 ** Inverting Partial_Sum and Adjacent_Difference
 
 With our specifications for [[Partial_Sum.org][Partial_Sum]] and [[Adjacent_Difference.org][Adjacent_Difference]] we can easily show that
@@ -33,13 +35,7 @@ Partial_Sum_Inv(A,B : in out T_Arr);
 
 ~Partial_Sum_Inv~ can be specified in the following way:
 
-#+BEGIN_SRC ada
-procedure Partial_Sum_Inv
-     (A,B : in out T_Arr) with
-     Pre => A'Length = B'Length
-     and then (for all J in A'Range => Acc_Def(A,A'First,J,0).OK),
-     Post => A = A'Old;
-#+END_SRC
+#+INCLUDE: ../../../numeric/numeric_inv.ads :src ada :lines "10-14"
 
 The precondition express the preconditions of Partial_Sum, the postcondition the fact that ~A~ should
 remain unchanged.
@@ -48,20 +44,7 @@ remain unchanged.
 
 Our implementation of ~Partial_Sum_Inv~ is as follows:
 
-#+BEGIN_SRC ada
-procedure Partial_Sum_Inv
-     (A,B : in out T_Arr)
-   is
-   begin
-      if A'Length = 0 then
-         return;
-      end if;
-      
-      Partial_Sum(A,B);
-      pragma Assert(for all J in B'First+1 .. B'Last => Minus_No_Overflow(B(J),B(J-1)));
-      Adjacent_Difference(B,A);
-   end Partial_Sum_Inv;
-#+END_SRC
+#+INCLUDE: ../../../numeric/numeric_inv.adb :src ada :lines "4-16"
 
 Here we simply verify that if the length of ~A~ is greater or equal to one (nothing needs to be proven
 otherwise) then after calling ~Partial_Sum~ the preconditions of ~Adjacent_Difference~ are respected.
@@ -81,13 +64,7 @@ procedure Adjacent_Difference_Inv(A,B : in out T_Arr)
 
 ~Adjacent_Difference_Inv~ can be specified in the following way:
 
-#+BEGIN_SRC ada
-procedure Adjacent_Difference_Inv
-     (A,B : in out T_Arr) with
-     Pre => A'Length = B'Length
-     and then (for all J in A'First+1 .. A'Last => Minus_No_Overflow(A(J),A(J-1))),
-     Post => A = A'Old;
-#+END_SRC
+#+INCLUDE: ../../../numeric/numeric_inv.ads :src ada :lines "15-21"
 
 The preconditions are those of ~Adjacent_Difference~; The postcondition once again ensures that ~A~ remains unmodified.
 
@@ -95,39 +72,7 @@ The preconditions are those of ~Adjacent_Difference~; The postcondition once aga
 
 The implementation of ~Adjacent_Difference_Inv~ is as follows:
 
-#+BEGIN_SRC ada
-procedure Adjacent_Difference_Inv
-     (A,B : in out T_Arr)
-   is
-      Tmp : T with Ghost;
-   begin
-
-      if A'Length = 0 then
-	 return;
-      end if;
-      Tmp := A(A'First);
-
-      Adjacent_Difference(A,B);
-
-      pragma Assert(Acc_Def(B,B'First,B'First,0).OK and then Acc_Def(B,B'First,B'First,0).Value=Tmp);
-      
-      if A'Length > 1 then
-	 for J in A'First+1 .. A'Last loop
-	    
-	    pragma Assert(B(J-A'First+B'FIrst) = A(J)-Tmp);
-	    
-	    Tmp := Tmp+B(J-A'First+B'First);
-	    
-	    pragma Loop_Invariant(Tmp=A(J));
-	    pragma Loop_Invariant(for all K in A'First .. J => Acc_Def(B,B'First,K-A'First+B'First,0).OK and then Acc_Def(B,B'First,K-A'First+B'First,0).Value = A(K));
-	    pragma Loop_Invariant(for all K in B'First .. J-A'First+B'First=>Acc_Def(B,B'First,K,0).OK);
-	 end loop;
-      end if;
-
-      Partial_Sum(B,A);
-      
-   end Adjacent_Difference_Inv;
-#+END_SRC
+#+INCLUDE: ../../../numeric/numeric_inv.adb :src ada :lines "17-52"
 
 There are more things to annotate in this function, because the preconditions of ~Partial_Sum~ are 
 more constraining than the ones of ~Adjacent difference~.

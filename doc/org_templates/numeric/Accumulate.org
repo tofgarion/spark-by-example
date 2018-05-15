@@ -1,3 +1,5 @@
+#+EXPORT_FILE_NAME: ../../../numeric/Accumulate.org
+#+OPTIONS: author:nil title:nil toc:nil
 ** The Accumulate algorithm
 
 The ~Accumulate~ algorithm will compute the sum of the elements of an array. Its signature reads:
@@ -20,38 +22,13 @@ which deals with overflow proof correctly.
 To be able to write the preconditions and postconditions of ~accumulate we first need to write a 
 predicate defining what the result of our function should be:
 
-#+BEGIN_SRC ada
-function Acc_Def_Rec
-     (A    : T_Arr;
-      Init : T) return T is
-     (case A'Length is
-        when 0      => Init,
-        when others =>
-       Acc_Def_Rec (A (A'First .. A'Last - 1), Init) + A (A'Last));
-          
-pragma Annotate (Gnatprove, Terminating, Acc_Def_Rec);
-
-function Acc_Def (A : T_Arr; Init : T) return T is (Acc_Def_Rec (A, Init));
-#+END_SRC
+#+INCLUDE: ../../../spec/acc_def_naive.ads :src ada :lines "7-18"
 
 **** Specification of Accumulate
 
 With the given predicates we can write a specification for ~Accumulate~:
 
-#+BEGIN_SRC ada
-with Types; use Types;
-with Acc_Def_Naive; use Acc_Def_Naive;
-
-package Accumulate_Naive with
-  SPARK_Mode is
-   
-   function Accumulate_Naive(A : T_Arr; Init : T) return T with
-     Pre => (for all I in A'Range => Acc_Def(A(A'First ..I),Init) in T),
-     Post => Accumulate_Naive'Result = Acc_Def(A,Init);
-   
-end Accumulate_Naive;
-
-#+END_SRC
+#+INCLUDE: ../../../numeric/accumulate_naive.ads :src ada :lines "7-10"
 
 Here the precondition expresses that all the intermediary sums we are going to
 evaluate should not overflow. The postcondition expresses that our algorithm 
@@ -61,21 +38,8 @@ returns the correct value.
 
 One implementation satifying our specification is:
 
-#+BEGIN_SRC ada
-function Accumulate_Naive(A : T_Arr; Init : T) return T is
-      Result : T := Init;
-   begin
-      for I in A'Range loop
-	 
-	 pragma Assert(Acc_Def(A(A'First .. I),Init) in T);
-	 Result := Result + A(I);
-	 pragma Loop_Invariant(Result = Acc_Def(A(A'First .. I),Init)); 
-	 
-      end loop;
-      return Result;
-      
-   end Accumulate_Naive;
-#+END_SRC
+#+INCLUDE: ../../../numeric/accumulate_naive.adb :src ada :lines "4-17"
+
 
 Here the assertion in the loop verifies that there won't be any overflows during the sum, and the loop
 invariant ensures that we have donne the correct calculations.
@@ -101,28 +65,13 @@ The solution proposed here was proposed by Claire Dross from Adacore.
 
 To be able to specify that the sums we will compute do not generate any overflow we will first introduce a new option type:
 
-#+BEGIN_SRC ada
-type T_Option (OK : Boolean) is record
-      case OK is
-	 when True =>
-	    Value : T;
-	 when False =>
-	    null;
-      end case;
-   end record;
-#+END_SRC
+#+INCLUDE: ../../../spec/types.ads :src ada :lines "9-17"
 
 The working principle is the same as the ~Option~ type defined in [[../non-mutating/README.org][Chapter 3]].
 
 The next function may be the most important of our new version, as it will enable us to verify that no overflow occur:
 
-#+BEGIN_SRC ada
-function Add_No_Overflow
-     (X, Y : T) return Boolean is
-     (Y = 0
-      or else (Y > 0 and then T'Last - Y >= X)
-      or else (Y < 0 and then T'First - Y <= X));
-#+END_SRC
+#+INCLUDE: ../../../spec/overflow.ads :src ada :lines "7-12"
 
 In this function we verify that the sum of ~X~ and ~Y~ will not generate an overflow. We cannot check directly the result
 of ~X+Y~, so in order to make the verification we only make operations we know that the won't overflow. That is why we separate 
@@ -132,31 +81,7 @@ verifying that ~X <= T'Last-Y~. This last comparison only contains expressions t
 We now have a function that will check wether there will be an overflow or not, so with our new type and our new function we give the folowing 
 rewrite of ~Acc_Def_Rec~:
 
-#+BEGIN_SRC ada
-function Acc_Def_Rec
-     (A    : T_Arr;
-      F, L : Integer;
-      Init : T) return T_Option is
-     (if L < F then (True, Init)
-      else
-        (if
-           Acc_Def_Rec (A, F, L - 1, Init).OK
-           and then Add_No_Overflow
-             (Acc_Def_Rec (A, F, L - 1, Init).Value,
-              A (L))
-         then
-           (True, Acc_Def_Rec (A, F, L - 1, Init).Value + A (L))
-         else (OK => False))) with
-      Pre => (if L >= F then L in A'Range and F in A'Range);
-   pragma Annotate (Gnatprove, Terminating, Acc_Def_Rec);
-
-function Acc_Def
-     (A    : T_Arr;
-      F, L : Integer;
-      Init : T) return T_Option is
-     (Acc_Def_Rec (A, F, L, Init)) with
-      Pre => (if L >= F then L in A'Range and F in A'Range);
-#+END_SRC
+#+INCLUDE: ../../../spec/acc_def_p.ads :src ada :lines "11-34"
 
 ~Acc_Def_Rec~ has been updated to return a ~T_Option~ whith ~Value~ containing the sum of the elements 
 of ~A~ from index ~F~ to index ~L~, if no overflow happened during the calculation, or will be empty otherwise.
@@ -168,11 +93,8 @@ previous calculations, and that the sum of the result of ~Acc_Def_Rec(A,F,L-1,In
 
 We can now rewrite the specification for ~Accumulate~:
 
-#+BEGIN_SRC ada
-function Accumulate (A : T_Arr; Init : T) return T with
-      Pre  => (for all J in A'Range => Acc_Def (A, A'First, J, Init).OK),
-      Post => Accumulate'Result = Acc_Def (A, A'First, A'Last, Init).Value;
-#+END_SRC
+#+INCLUDE: ../../../numeric/accumulate_p.ads :src ada :lines "7-10"
+
 
 The precondition and postcondition are virtually the same, the simply make use of the new return type
 of ~Acc_Def_Rec~. We do not need to check that ~Acc_Def(A,A'First,A'Last,Init).Value~ exists in the precondition, since this is already ensured by the precondition.
@@ -181,20 +103,7 @@ of ~Acc_Def_Rec~. We do not need to check that ~Acc_Def(A,A'First,A'Last,Init).V
 
 An implementation deriving from the previous specification can be:
 
-#+BEGIN_SRC ada
-function Accumulate (A : T_Arr; Init : T) return T is
-      Result : T := Init;
-   begin
-      for J in A'Range loop
-         pragma Assert (Acc_Def (A, A'First, J, Init).OK);
-         Result := Result + A (J);
-         pragma Loop_Invariant (Result = Acc_Def (A, A'First, J, Init).Value);
-
-      end loop;
-
-      return Result;
-   end Accumulate;
-#+END_SRC
+#+INCLUDE: ../../../numeric/accumulate_p.adb :src ada :lines "4-16"
 
 The assertion here checks that there are no overflow when adding ~A(J)~ to the intermediary result.
 The loop invariant ensures we are doing the right calculations.

@@ -1,3 +1,5 @@
+#+EXPORT_FILE_NAME: ../../../numeric/Adjacent_Difference.org
+#+OPTIONS: author:nil title:nil toc:nil
 ** The Adjacent_Difference algorithm
 
 The ~Adjacent_Difference~ algorithm will compute for each index ~J~ of an array,
@@ -17,29 +19,14 @@ executing ~-Y~ triggers and overflow, since there is one more negative Integer t
 
 We then write a new function ~Minus_No_Overflow~:
 
-#+BEGIN_SRC ada
-function Minus_No_Overflow
-    (X,Y : T) return Boolean 
-    is
-    (Y = 0
-    or else (Y < 0 and then T'Last + Y >= X)
-    or else (Y > 0 and then T'First + Y <= X));
-#+END_SRC
+#+INCLUDE: ../../../spec/overflow.ads :src ada :lines "13-18"
+
 
 The working principle of this function is the same than the one of ~Add_No_Overflow~.
 
 We can now give a specification for ~Adjacent_Difference~:
 
-#+BEGIN_SRC ada
- procedure Adjacent_Difference
-     (A : T_Arr; B : in out T_Arr)
-     with 
-     Pre => (if A'Length > 0 then 
-     (for all J in A'First+1 .. A'Last => Minus_No_Overflow(A(J),A(J-1))))
-     and then B'Length = A'Length,
-     Post => (if A'Length > 0 then B(B'First) = A(A'First) 
-     and then (for all J in A'First+1 .. A'Last => B(B'First+J-A'First) = A(J)-A(J-1)));
-#+END_SRC
+#+INCLUDE: ../../../numeric/adjacent_difference_p.ads :src ada :lines "7-23"
 
 The precondition state that there should be no overflow when substracting any value to the one following,
 and that both arrays should be of same length.
@@ -51,32 +38,7 @@ is the result of the substraction of the corresponding element and the previous 
 
 with this specification we can write an implementation for the procedure:
 
-#+BEGIN_SRC ada
-procedure Adjacent_Difference
-     (A : T_Arr; B : in out T_Arr)
-   is
-   begin
-       if A'Length > 0 then
-	 B(B'First) := A(A'First);
-	 
-         if A'Length = 1 then
-            return;
-         end if;
-         for J in A'First+1 .. A'Last loop
-	    
-	    pragma Assert(Minus_No_Overflow(A(J),A(J-1)));
-            
-            B(J-A'First+B'First) := A(J) - A(J- 1);
-	    
-	    pragma Loop_Invariant(for all K in A'First+1 .. J =>
-				    B(B'First+K-A'First) = A(+K)-A(K-1));
-	    pragma Loop_Invariant(B(B'First) = A(A'First));
-	    	    
-	 end loop;
-	 
-      end if;
-   end Adjacent_Difference;
-#+END_SRC
+#+INCLUDE: ../../../numeric/adjacent_difference_p.adb :src ada :lines "4-27"
 
 The algorithm is really simple, the only annotations are the assertion, which checks that our computation
 won't generate any overflow, and the loop invariants verify that we are doing the correct calculation, and that the first index 

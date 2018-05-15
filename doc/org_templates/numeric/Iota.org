@@ -1,3 +1,5 @@
+#+EXPORT_FILE_NAME: ../../../numeric/Iota.org
+#+OPTIONS: author:nil title:nil toc:nil
 ** The Iota algorithm
 
 The ~iota~ algorithm assign increasing values to an array, where the initial
@@ -9,24 +11,16 @@ value is specified by the user. Its signature reads:
 The predicate ~Is_Iota~ will be used to verify the fact that an array
 has increasing values starting at a certain value.
 It is defined as follows:
-#+BEGIN_SRC ada
-function Is_Iota
-     (A   : T_Arr;
-      Val : T) return Boolean is
-     (for all I in A'Range => A (I) = Val + T (I - A'First)) with
-      Pre => Val + T (A'Length) <= T'Last;
-#+END_SRC
+
+#+INCLUDE: ../../../spec/is_iota_p.ads :src ada :lines "6-11"
+
 
 Notice that the precondition ensures that no overflow will happen.
 
 *** Specification of Iota
 
 The specification of ~iota~ is rather simple:
-#+BEGIN_SRC ada
-procedure Iota (A : in out T_Arr; Val : T) with
-      Pre  => Val + T (A'Length) <= T'Last,
-      Post => Is_Iota (A, Val);
-#+END_SRC
+#+INCLUDE: ../../../numeric.iota_p.ads :src ada :lines "6-10"
 
 The precondition is necessary to prevent possible overflows.
 
@@ -34,18 +28,7 @@ The precondition is necessary to prevent possible overflows.
 
 The implementation of ~iota~ is the following.
 
-#+BEGIN_SRC ada
-procedure Iota (A : in out T_Arr; Val : T) is
-      Count : T := Val;
-   begin
-      for I in A'Range loop
-         A (I) := Count;
-         Count := Count + 1;
-         pragma Loop_Invariant (Count = Val + T (I - A'First + 1));
-         pragma Loop_Invariant (Is_Iota (A (A'First .. I), Val));
-      end loop;
-   end Iota;
-#+END_SRC
+#+INCLUDE: ../../../numeric/iota_p.adb :src ada :lines "3-13"
 
 The loop invariants specify the fact that:
    - ~count~ is indeed a counter starting at ~Val~ and has the right value
