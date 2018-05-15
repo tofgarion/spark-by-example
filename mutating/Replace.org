@@ -1,0 +1,54 @@
+# Created 2018-05-15 Tue 14:07
+#+OPTIONS: author:nil title:nil toc:nil
+#+EXPORT_FILE_NAME: ../../../mutating/Replace.org
+
+* The Replace algorithm
+
+The ~replace~ algorithm replaces all the occurences of a value ~V~ with another value ~W~.
+It is the same as [[Replace_Copy.org][Replace_Copy]] except for the fact that it does it in the same array.
+Its signature reads:
+~procedure Replace ( A : in out T_Arr; Val : T ; Rep : T)~
+
+** Specification of Replace
+
+We will use the function ~Is_Replaced~ defined in the previous algorithm.
+The specification of the ~replace~ algorithm can be expressed as:
+
+#+BEGIN_SRC ada
+  procedure Replace (A : in out T_Arr; Val : T; Rep : T) with
+     Post => Is_Replaced (A'Old, A, Val, Rep);
+#+END_SRC
+
+** Implementation of Replace
+
+The implementation of ~replace~ is:
+
+#+BEGIN_SRC ada
+  procedure Replace (A : in out T_Arr; Val : T; Rep : T) is
+  begin
+     for I in A'Range loop
+        if A (I) = Val then
+  	 A (I) := Rep;
+        end if;
+  
+        pragma Loop_Invariant
+  	(Is_Replaced
+  	   (A'Loop_Entry (A'First .. I),
+  	    A (A'First .. I),
+  	    Val,
+  	    Rep));
+        pragma Loop_Invariant
+  	(if
+  	   I < A'Last
+  	 then
+  	   A'Loop_Entry (I + 1 .. A'Last) = A (I + 1 .. A'Last));
+     end loop;
+  end Replace;
+#+END_SRC
+
+The first loop invariant specifies the same thing as the loop invariant in ~replace_copy~.
+The second is necessary because we have an ~out~ parameter, meaning that the values after ~I~
+could be changed in the loop. We specify in this loop invariant that ~A~ has not been changed
+after index ~I~.
+
+Using ~gnatprove~, everything is proved.

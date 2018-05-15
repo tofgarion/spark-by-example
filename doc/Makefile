@@ -23,7 +23,7 @@ _MUTATING_ORG_FILES = Copy.org Fill.org Random_Shuffle.org Remove_Copy.org \
 
 MUTATING_ORG_FILES = $(patsubst %, ../mutating/%, $(_MUTATING_ORG_FILES))
 
-../mutating/%.org: org_templates/maxmin/%.org
+../mutating/%.org: org_templates/mutating/%.org
 	echo "$^" | emacs --batch -l ./generate-org.el -f generate-org-from-org
 
 generate-org-files: $(MUTATING_ORG_FILES)
