@@ -1,3 +1,5 @@
+#+EXPORT_FILE_NAME: ../../../binary-search/Search_Upper_Bound.org
+#+OPTIONS: author: nil title: nil toc: nil
 **  The Search_Upper_Bound algorithm
 
 The ~Search_Upper_Bound~ algorithm searches for the greatest index at which a value can be found in a sorted array.
@@ -20,22 +22,8 @@ add example here, such as the one in ACSL.
 
 The ~Search_Upper_Bound~ algorithm can be specified as follow:
 
-#+BEGIN_SRC ada 
-function Search_Upper_Bound (A : T_Arr; Val : T) return Option with
-      Pre            => Sorted (A) and then A'Last < Positive'Last,
-      Contract_Cases =>
-      (A'Length = 0 => not Search_Upper_Bound'Result.Exists,
-       A'Length > 0 =>
-         Search_Upper_Bound'Result.Exists
-         and then A'First <= Search_Upper_Bound'Result.Value
-         and then Search_Upper_Bound'Result.Value <= A'Last + 1
-         and then Upper_Bound
-           (A (A'First .. Search_Upper_Bound'Result.Value - 1),
-            Val)
-         and then Strict_Lower_Bound
-           (A (Search_Upper_Bound'Result.Value .. A'Last),
-            Val));
-#+END_SRC
+#+INCLUDE: ../../../binary-search/search_upper_bound_p.ads :src ada :lines "8-22"
+
 
 It uses the predicates ~Upper_Bound~ and ~Strict_Lower_Bound~ defined in chapter 4.
 
@@ -52,44 +40,8 @@ The postconditions are expressed with contract cases:
 
 The implementation of ~Search_Upper_Bound~ is as follows:
 
-#+BEGIN_SRC ada 
-function Search_Upper_Bound (A : T_Arr; Val : T) return Option is
-      Left   : Integer := A'First;
-      Middle : Integer := A'First;
-      Result : Option  := (Exists => False);
-   begin
-      if A'Length = 0 then
-         return Result;
-      else
-         Result := (Exists => True, Value => A'Last + 1);
-         while (Left < Result.Value) loop
-            Middle := Left + (Result.Value - Left) / 2;
-            if A (Middle) <= Val then
-               Left := Middle + 1;
-            else
-               Result.Value := Middle;
-            end if;
-
-            pragma Loop_Invariant (A'First <= Left);
-            pragma Loop_Invariant (Left <= Result.Value);
-            pragma Loop_Invariant (Result.Value <= A'Last + 1);
-            pragma Loop_Invariant
-              (if
-                 Left /= A'First
-               then
-                 Upper_Bound (A (A'First .. Left - 1), Val));
-            pragma Loop_Invariant
-              (if
-                 Result.Value /= A'Last + 1
-               then
-                 Strict_Lower_Bound (A (Result.Value .. A'Last), Val));
-            pragma Loop_Variant (Decreases => Result.Value - Left);
-         end loop;
-         return Result;
-      end if;
-
-   end Search_Upper_Bound;
-#+END_SRC
+#+INCLUDE: ../../../binary-search/search_upper_bound_p.adb :src ada :lines "3-39"
+	
 
 At each iteration, the range that contains the sought-after result is narrowed down.
  Note that the ~middle~ is calculated so as to avoid potential overflows.
@@ -101,3 +53,7 @@ The loop invariants express :
 - that all indexes greater than ~Result.Value~ contain values strictly greater than ~V~
 
 With this specification and implementation, when using ~gnatprove~, everything is proved.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

@@ -1,4 +1,4 @@
-# Created 2018-05-07 Mon 13:40
+# Created 2018-05-15 mar. 09:23
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Find.org
 
@@ -60,6 +60,7 @@ A first specification of ~Find~ can be the following:
     to ~Val~. In this case, the value returned by ~Find~ should
     be equal to ~A'Last + 1~ (and is not a valid index of the
     array).
+
   Notice that ~gnatprove~ verifies the completeness and the
   disjointedness of contract cases. For instance, consider the
   following specification for ~Find~:

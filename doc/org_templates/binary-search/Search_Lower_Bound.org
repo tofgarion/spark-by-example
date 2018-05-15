@@ -1,16 +1,15 @@
-# Created 2018-05-14 lun. 11:55
-#+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Lower_Bound.org
+#+OPTIONS: author:nil title:nil toc:nil
 
-* The Search_Lower_Bound algorithm
+**  The Search_Lower_Bound algorithm
 
 The ~Search_Lower_Bound~ algorithm searches for the lowest index at which a value can be found in a sorted array.
 Its signature can be expressed as:
-#+BEGIN_SRC ada
-  function Search_Lower_Bound(A : T_arr; V : T) return Option
+#+BEGIN_SRC ada 
+ function Search_Lower_Bound(A : T_arr; V : T) return Option
 #+END_SRC
 
-** TODO Working principle
+*** TODO Working principle 
 
 The ~Search_Lower_Bound~ algorithm searches for a given value ~V~ the index ~Lb~ of a given array ~A~ 
 so that if ~A'First <= K < Lb~ then ~A[K] < V~, and if ~Lb <= K <= A'Last~ then ~V < A[K]~. It should
@@ -20,7 +19,7 @@ be noted that ~Lb~ satisfies the inequality ~A'First <= Lb <= A'Last +1~.
 add example here, such as the one in ACSL.
 ##########################################
 
-** Specification of Search_Lower_Bound
+*** Specification of Search_Lower_Bound
 
 The ~Search_Lower_Bound~ algorithm can be specified as follow:
 
@@ -36,8 +35,8 @@ The postconditions are expressed with contract cases:
 - otherwise, there is an index returned in range ~A'First .. A'Last +1~ and
   1. For all ~K~ in ~A'First .. Result.Value -1,  A[K] < V~ (this range can be empty)
   2. For all ~K~ in ~Result.Value .. A'Last, V <= A[K]~ (this range can also be empty)
-
-** The implementation of Search_Lower_Bound
+     
+*** The implementation of Search_Lower_Bound
 
 The implementation of ~Search_Lower_Bound~ is as follows:
 
