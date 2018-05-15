@@ -1,4 +1,4 @@
-# Created 2018-05-14 Mon 13:29
+# Created 2018-05-15 Tue 14:39
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Min_Element.org
 
@@ -23,6 +23,7 @@ The ~Lower_Bound~ predicate will be used to assert that our return value is a lo
   function Lower_Bound
     (A : T_Arr;
      V : T) return Boolean is
+    (for all I in A'First .. A'Last => A (I) >= V);
 #+END_SRC
 
 *** The Strict_Lower_Bound predicate
@@ -33,6 +34,7 @@ The ~Strict_Lower_Bound~ predicate will be used to confirm that the value we ret
   function Strict_Lower_Bound
     (A : T_Arr;
      V : T) return Boolean is
+    (for all I in A'First .. A'Last => A (I) > V);
 #+END_SRC
 
 ** The Specification of Min_Element
@@ -54,6 +56,7 @@ The specification of ~Min_Element~ can be expressed such as follows:
          then
   	 Strict_Lower_Bound
   	   (A (A'First .. Min_Element'Result.Value - 1),
+  	    A (Min_Element'Result.Value))));
 #+END_SRC
 
 Here the post conditions are expressed through 2 contract cases :
@@ -96,6 +99,8 @@ Here the post conditions are expressed through 2 contract cases :
         return Result;
   
      end if;
+  
+  end Min_Element;
 #+END_SRC
 
 The implementation is quite similar to the one of [[Max_Element.org][Max_Element]] with predicates. Here:
