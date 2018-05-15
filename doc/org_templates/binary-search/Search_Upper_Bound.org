@@ -53,3 +53,7 @@ The loop invariants express :
 - that all indexes greater than ~Result.Value~ contain values strictly greater than ~V~
 
 With this specification and implementation, when using ~gnatprove~, everything is proved.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

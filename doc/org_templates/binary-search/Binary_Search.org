@@ -20,9 +20,14 @@ has a logarithmic complexity.
 *** Implementation of Binary_Search
 
     The implementation of ~Binary_Search~ can be:
+    
     #+INCLUDE: ../../../binary-search/binary_search_p.adb :src ada :lines "3-14"
 
     Note that if ~Low.Exists = True~, ~Val <= A(Low.Value)~ is always true. This
     is why we only check for ~A (I) <= Val~ to be true.
 
     Using ~gnatprove~, the function is proved.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:
