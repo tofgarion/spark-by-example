@@ -6,17 +6,12 @@ with Classic_Lemmas;      use Classic_Lemmas;
 
 package Remove_Copy_Lemmas with
      Spark_Mode is
-   procedure Lemma_1 (A : T_Arr; E, Val : T) with
+   procedure Lemma (A : T_Arr; E, Val : T) with
       Ghost,
 
       Pre => (for all L in A'First .. A'Last => A (L) = Val) and then E /= Val,
-      Post => Occ (A, E) = 0;
-
-   procedure Lemma_3 (A : T_Arr; Val : T) with
-      Ghost,
-      Pre  => (for all L in A'Range => A (L) /= Val),
-      Post => Occ (A, Val) = 0;
-
+     Post => Occ (A, E) = 0;
+   
    procedure No_Changes (A, B, C : T_Arr; Val : T) with
       Ghost,
       Pre => A'Length > 0

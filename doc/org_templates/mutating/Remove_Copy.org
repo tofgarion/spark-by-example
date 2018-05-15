@@ -1,0 +1,187 @@
+#+EXPORT_FILE_NAME: ../../../mutating/Remove_Copy.org
+#+OPTIONS: author:nil title:nil toc:nil
+
+* The Remove_Copy algorithm
+
+  The ~remove_copy~ algorithm copies the values of an array in
+  another array but deletes every occurence of a given value.
+  It also modifies an argument which will be the last index
+  at which the second array has been modified.
+  Its signature reads:
+  ~procedure Remove_Copy (A : T_Arr; B : in out T_Arr; Val : T; K : in out Natural)~
+
+** The predicates used
+*** The Multiset_Retain_Rest predicate
+
+   First, we need to define a predicate to check if two arrays have
+   the same number of occurences of each value, except for one.
+   It can be expressed as:
+
+	#+INCLUDE: ../../../spec/multiset_predicates.ads :src ada :lines "8-13"
+
+   The predicate will return true if and only if for each value in
+   ~T~ different from ~Val~, the number of occurences of this value
+   in the two arrays is the same.
+
+*** The Remove_Count predicate
+
+    The ~remove_count~ predicate is quite simple:
+
+	#+INCLUDE: ../../../spec/remove_count_p.ads :src ada :lines "7-13"
+
+    This predicate returns the number of values different from a given
+    value in an array.
+    
+** Specification of Remove_Copy
+
+   The specification of ~remove_copy~ is the following:
+
+	#+INCLUDE: ../../../mutating/remove_copy_p.ads :src ada :lines "11-29"
+
+   The preconditions express the fact that ~A~ and ~B~ are the
+   same length, and ~B'Last~ is strictly less than ~Positive'Last~
+   because during the execution ~K~ could be equal to ~B'Last + 1~.
+   
+   The contract cases express the fact that:
+   - if ~A~ is empty then nothing has changed.
+   - if ~A~ is not empty then:
+     1. ~K~ is in ~B'First - 1 .. B'Last~. It corresponds with the last index at which ~B~ has been modified. If ~K~ is equal to ~B'First - 1~, it means that ~B~ has not been changed.
+     2. The range in which ~B~ has been modified has a length equal to the number of values different from ~Val~ in ~A~.
+     3. In the sub-array of ~B~ that has been modified, every value is different from ~Val~.
+     4. in the sub-array of ~B~ that has not been modified, each value has not changed.
+     5. if ~B~ has been modified, then ~A~ and the modified sub-array of ~B~ have the same occurences of each value except for ~Val~.
+
+** Implementations of Remove_Copy
+
+*** A first implementation
+
+   A first implementation of ~Remove_Copy~ could be:
+
+	#+INCLUDE: ../../../mutating/remove_copy_first_p.adb :src ada :lines "4-42"
+
+   The loop invariants specify that:
+   - ~K~ is equal to ~B'First~ plus the number of values different from
+     ~Val~ encountered until now.
+   - if ~K~ has not been increased, then each value of ~A~ at index
+     less or equal than ~J~ is equal to ~Val~.
+   - if ~K~ has been increased, then the predicate ~Multiset_Retain_Rest~
+     is verified for the sub-arrays given.
+   - each value of ~B~ that has been modified is different from ~Val~.
+   - each value of ~B~ that has not been modified is the same as before.
+
+     With this specification and implementation, ~gnatprove~ cannot prove
+     the loop invariant with ~Multiset_Retain_Rest~. Indeed, the predicate
+     checks a recursive property for each value of ~T~. We will need to
+     help the prover to manage to prove the function.
+
+*** The Make_Prove_Multiset procedure and its lemma
+
+**** First Lemma
+
+     A first lemma will be defined. It states that if each value 
+     of an array ~A~ is equal to ~Val~, then for a value ~E~
+     different from ~Val~, ~Occ(A,E) = 0~. Given the fact that
+     GNAT does not yet use inductive reasoning, we need to
+     help it prove the lemma.
+
+     Its specification is:
+
+	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.ads :src ada :lines "9-14"
+
+     Its implementation is:
+
+	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.adb :src ada :lines "4-11"
+
+     First, we specify the stop condition, which is when ~A~ is empty.
+     Then, we use the lemma on the same array without its last value.
+     It will prove the property for ~Remove_Last(A)~ and with the
+     definition of ~Occ_Def~ (~if A(A'Last) /= E then
+     Result = Occ_Def(Remove_Last(A),E)~, and the prover just calculated
+     ~Occ_Def(Remove_Last(A),E)~), it will prove the lemma for ~A~.
+
+**** The Make_Prove_Multiset procedure
+
+     The ~Make_Prove_Multiset~ procedure is here to help the prover
+     to prove some properties by guiding him. We specify the hypothesis (preconditions) and results of the proof (postconditions) in the .ads file:
+
+ 	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.ads :src ada :lines "22-31"
+
+     ~A~ and ~B~ must not be empty and their last value is the same.
+     The precondition expresses two different cases:
+     - if ~B~ has only one element, then all elements of ~Remove_Last(A)~
+       are equal to ~Val~.
+     - if not, then the ~Multiset_Retain_Rest~ is verified with the two arrays
+       without their last value.
+       
+     The postcondition expresses the fact that the ~Multiset_Retain_Rest~
+     predicate will be verified with the two complete arrays.
+
+     Its implementation is:
+
+	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.adb :src ada :lines "25-39"
+
+     To verify the predicate, we need to guide the prover to prove the assertion
+     for each value. Writing the ~Make_Prove_Multiset~, we noted that the prover had a problem
+     when the first values of ~A~ were ~Val~. The prover couldn't prove that
+     for all ~E~ different from ~Val~, ~Occ(A,E) = 0~ at this point. This
+     is why we implemented the lemma.
+
+** A second implementation
+
+   The second implementation of ~Remove_Copy~ is:
+
+   	#+INCLUDE: ../../../mutating/remove_copy_second_p.adb :src ada :lines "4-45"
+
+   Using ~gnatprove~ with this implementation, a ~precondition might fail~ appears.
+   With the help of some assertions, we see that the precondition that is not verified
+   is the ~Multiset_Retain_Rest~ one. Indeed, the prover may consider that after the
+   line with the affectation, the state of ~B~ has changed. Therefore, even though the
+   predicate is about the values in range ~B'First .. K - 1~ and we changed the ~K~th
+   value of ~B~, the prover does not consider ~Multiset_Retain_Rest (A (A'First .. J),
+   B (B'First .. K - 1), Val))~ to be true.
+   We need to create a ~Ghost~ variable to save the state of ~B~ before the affectation
+   and prove ~Multiset_Retain_Rest (A (A'First .. J), B (B'First .. K - 1), Val))~ with
+   this ~Ghost~ variable.
+
+*** The No_Changes procedure and its lemma
+
+**** Second lemma
+
+     The second lemma will be called ~Occ_Eq~ because we are going to use it a lot
+     in the next algorithms. It takes two equal arrays ~A, B~ and a value ~E~, and proves
+     that ~Occ(A,E) = Occ(B,E)~.
+     Its specification is:
+
+	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :lines "10-14"
+
+     The implementation is:
+
+	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :lines "4-18"
+
+     The implementation looks like the previous one, except for the fact that we
+     guide the prover with the assertions.
+
+**** The No_Changes procedure
+
+     The procedure will take in entry one array ~A~ and two equal arrays ~B~ and ~C~ when
+     ~Multiset_Retain_Rest (A,B,Val)~ is verified. The procedure will prove that
+     ~Multiset_Retain_Rest (A,C,Val)~ is verified. The specification of ~No_Changes~ is:
+
+	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.ads :src ada :lines "15-21"
+
+     The implementation is:
+
+	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.adb :src ada :lines "12-24"
+
+     As in the previous procedure, we want to prove the predicate for each value.
+     
+*** A third (and last for now) implementation
+
+    The final implementation for ~Remove_Copy~ is the following:
+
+	#+INCLUDE: ../../../mutating/remove_copy_p.adb :src ada :lines "4-56"
+
+    Now, we use the ~No_Changes~ procedure when ~K > B'First~ which means that one
+    or more values have been changed in ~B~.
+
+    Using ~gnatprove~ with this implementation, everything is finally proved.

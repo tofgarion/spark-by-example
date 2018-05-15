@@ -1,0 +1,37 @@
+#+EXPORT_FILE_NAME: ../../../mutating/Swap_Ranges.org
+#+OPTIONS: author:nil title:nil toc:nil
+
+** The Swap_Ranges algorithm
+
+   The ~swap_ranges~ algorithm exchanges the contents of two arrays.
+   Its signature reads:
+   
+   ~procedure Swap_Ranges(A : in out T_Arr; B: in out T_Arr)~
+   
+*** Specification of Swap_Ranges
+
+    The specification of ~swap_ranges~ is the following:
+
+	#+INCLUDE: ../../../mutating/swap_ranges_p.ads :src ada :lines "6-9"
+
+    The precondition expresses the fact that ~A~ and ~B~ must have the same length.
+    The postcondition expresses the fact that the values in ~A~ and ~B~ have actually
+    been exchanged.
+
+*** Implementation of Swap_Ranges
+
+	#+INCLUDE: ../../../mutating/swap_ranges_p.adb :src ada :lines "3-33"
+
+    ~SPARK~ encounters a few problems using sliced arrays in the loop invariants.
+    ~range check~ exceptions might appear if you use variables as boundaries
+    for the sliced arrays. To workaround these issues, you can used local
+    constants, with the ~declare~ - ~begin~ - ~end;~ syntax, to create
+    local constant in your loop and therefore, slice you arrays with them.
+
+    The loop invariants specify that :
+      - the two local constants have the right value.
+      - the ~J~ first values of the arrays have been exchanged.
+      - the next values are still the same and they can be exchanged in the next
+	entry in loop.
+
+     Using ~gnatprove~, everything is proved.

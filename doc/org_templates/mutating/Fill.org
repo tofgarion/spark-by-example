@@ -1,0 +1,28 @@
+#+EXPORT_FILE_NAME: ../../../mutating/Fill.org
+#+OPTIONS: author:nil title:nil toc:nil
+
+** The Fill algorithm
+
+   The ~Fill~ algorithm initializes an array with a particular value.
+   Its signature reads:
+   ~procedure Fill (A : in out T_Arr; Val : T)~
+
+   ~A~ needs to be passed as an ~in~ parameter because we are going to
+   use the function ~Constant_Range_From_Location~ on ~A~. (see Implementation)
+
+*** Specification of Fill
+
+    The specification of ~fill~ is very simple.
+
+	#+INCLUDE: ../../../mutating/fill_p.ads :src ada :lines "6-9"
+
+*** Implementation of Fill
+
+    The implementation of ~Fill~ is the following:
+
+	#+INCLUDE: ../../../mutating/fill_p.adb :src ada :lines "3-12"
+
+    The loop invariant specify that there is a constant range of ~Val~
+    starting at index ~A'First~ with length ~I - A'First + 1~.
+
+    Using ~gnatprove~, everything is proved.

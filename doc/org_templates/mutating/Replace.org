@@ -1,0 +1,29 @@
+#+EXPORT_FILE_NAME: ../../../mutating/Replace.org
+#+OPTIONS: author:nil title:nil toc:nil
+
+** The Replace algorithm
+
+   The ~replace~ algorithm replaces all the occurences of a value ~V~ with another value ~W~.
+   It is the same as [[Replace_Copy.org][Replace_Copy]] except for the fact that it does it in the same array.
+   Its signature reads:
+   ~procedure Replace ( A : in out T_Arr; Val : T ; Rep : T)~
+
+*** Specification of Replace
+
+    We will use the function ~Is_Replaced~ defined in the previous algorithm.
+    The specification of the ~replace~ algorithm can be expressed as:
+
+	#+INCLUDE: ../../../mutating/replace_p.ads :src ada :lines "6-8"
+
+*** Implementation of Replace
+
+    The implementation of ~replace~ is:
+
+	#+INCLUDE: ../../../mutating/replace_p.adb :src ada :lines "3-23"
+
+    The first loop invariant specifies the same thing as the loop invariant in ~replace_copy~.
+    The second is necessary because we have an ~out~ parameter, meaning that the values after ~I~
+    could be changed in the loop. We specify in this loop invariant that ~A~ has not been changed
+    after index ~I~.
+
+    Using ~gnatprove~, everything is proved.
