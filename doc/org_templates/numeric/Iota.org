@@ -20,7 +20,7 @@ Notice that the precondition ensures that no overflow will happen.
 *** Specification of Iota
 
 The specification of ~iota~ is rather simple:
-#+INCLUDE: ../../../numeric.iota_p.ads :src ada :lines "6-10"
+#+INCLUDE: ../../../numeric/iota_p.ads :src ada :lines "6-10"
 
 The precondition is necessary to prevent possible overflows.
 

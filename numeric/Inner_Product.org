@@ -1,0 +1,164 @@
+# Created 2018-05-15 mar. 14:37
+#+OPTIONS: author:nil title:nil toc:nil
+#+EXPORT_FILE_NAME: ../../../numeric/Inner_Product.org
+* The Inner_Product algorithm
+
+The ~Inner_Product~ algorithm applies the scalar product between two vectors ~A~ and ~B~ and adds
+it to an initial value ~Init~.
+Its signature reads:
+~function Inner_Product (A : T_Arr; B : T_Arr; Init : T) return T~
+
+** The predicates used
+*** The Multiply_No_Overflow predicate
+
+This predicate will check if there will be an overflow due to te multiplication of two
+~T~ values. Thanks to Claire Dross from AdaCore for the help and solution provided to
+prove the function below.
+
+The specification of ~Multiply_No_Overflow~ is:
+#+BEGIN_SRC ada
+  function Multiply_No_Overflow
+    (X, Y : T) return Boolean is
+    (case X is
+        when 0              => True,
+        when -1             => Y /= T'First,
+        when T'First .. - 2 => Y in T'Last / X .. T'First / X,
+        when 1 .. T'Last    => Y in T'First / X .. T'Last / X)
+  with
+      Contract_Cases =>
+        ((X * Y in T) => Multiply_No_Overflow'Result = True,
+         others       => Multiply_No_Overflow'Result = False);
+#+END_SRC
+
+With just this specification, ~gnatprove~ does not prove the function. This is
+due to the fact that the properties we are trying to prove are non-linear
+arithmetics properties. Therefore, we need to write an implementation to help
+it proving the contract cases.
+
+The new specification is:
+
+#+BEGIN_SRC ada
+  function Multiply_No_Overflow (X, Y : T) return Boolean with
+     Contract_Cases =>
+     ((X * Y in T) => Multiply_No_Overflow'Result = True,
+      others       => Multiply_No_Overflow'Result = False);
+#+END_SRC
+
+And its implementation is:
+
+#+BEGIN_SRC ada
+  function Multiply_No_Overflow (X, Y : T) return Boolean is
+     Res : Boolean;
+  begin
+     case X is
+        when 0 =>
+  	 Res := True;
+        when -1 =>
+  	 Res := Y /= T'First;
+        when T'First .. -2 =>
+  	 Res := Y in T'Last / X .. T'First / X;
+  	 pragma Assert (if Y < T'Last / X - 1 then X * Y > T'Last);
+  	 pragma Assert (if Y < T'Last / X then X * Y > T'Last);
+        when 1 .. T'Last =>
+  	 Res := Y in T'First / X .. T'Last / X;
+  	 pragma Assert (if Y < T'First / X - 1 then X * Y < T'First);
+  	 pragma Assert (if Y < T'First / X then X * Y < T'First);
+     end case;
+     return Res;
+  end Multiply_No_Overflow;
+#+END_SRC
+
+Using this implementation and specification, ~gnatprove~ proves the contract cases.
+We will also use the ~Add_No_Overflow~ predicate defined in the ~Accumulate~ algorithm.
+
+*** The Inner_Prod_Def_Rec function
+
+Based on the ~Acc_Def_Rec~ function, we can write a similar function to
+calculate recursively the scalar product.
+
+#+BEGIN_SRC ada
+  function Inner_Prod_Def_Rec
+    (A, B : T_Arr;
+     F, L : Integer;
+     Init : T) return T_Option is
+    (if L < F then (True, Init)
+     else
+       (if
+  	Inner_Prod_Def_Rec (A, B, F, L - 1, Init).OK
+  	and then Multiply_No_Overflow (B (B'First + L), A (A'First + L))
+  	and then Add_No_Overflow
+  	  (Inner_Prod_Def_Rec (A, B, F, L - 1, Init).Value,
+  	   A (A'First + L) * B (B'First + L))
+        then
+  	(True,
+  	 Inner_Prod_Def_Rec (A, B, F, L - 1, Init).Value +
+  	 B (B'First + L) * A (A'First + L))
+        else (OK => False))) with
+     Pre => A'Length = B'Length
+     and then
+     (if L >= F then L in 0 .. A'Length - 1 and F in 0 .. A'Length - 1);
+  pragma Annotate (Gnatprove, Terminating, Inner_Prod_Def_Rec);
+#+END_SRC
+
+
+The function is very similar, except for the fact that we have to check
+first the fact that there is no overflow when multiplying the two values in the
+array before checking the fact that there is no overflow when adding the product
+and the previous result.
+
+*** The Inner_Prod_Def function
+
+Therefore, we can define the ~Inner_Prod_Def~ function that calls the recursive function.
+
+#+BEGIN_SRC ada
+  function Inner_Prod_Def
+    (A, B : T_Arr;
+     F, L : Integer;
+     Init : T) return T_Option is
+    (Inner_Prod_Def_Rec (A, B, F, L, Init)) with
+     Pre => A'Length = B'Length
+     and then
+     (if L >= F then L in 0 .. A'Length - 1 and F in 0 .. A'Length - 1);
+#+END_SRC
+
+** Specification of ~Inner_Product~
+
+The specification of ~Inner_Product~ is the following:
+
+#+BEGIN_SRC ada
+  function Inner_Product (A : T_Arr; B : T_Arr; Init : T) return T with
+     Pre => A'Length = B'Length
+     and then
+     (for all J in 0 .. A'Length - 1 => Inner_Prod_Def (A, B, 0, J, Init).OK),
+     Post => Inner_Product'Result =
+     Inner_Prod_Def (A, B, 0, A'Length - 1, Init).Value;
+#+END_SRC
+
+
+We check first that no overflow will occur during the algorithm. The postcondition
+is the fact that the result has to be the same as the one recursively calculated.
+
+** Implementation of ~Inner_Product~
+
+The implementation of ~Inner_Product~ is quite simple:
+#+BEGIN_SRC ada
+  function Inner_Product (A : T_Arr; B : T_Arr; Init : T) return T is
+     Result : T := Init;
+  begin
+     for J in 0 .. A'Length - 1 loop
+  
+        pragma Assert (Inner_Prod_Def (A, B, 0, J, Init).OK);
+        Result := Result + A (A'First + J) * B (B'First + J);
+  
+        pragma Loop_Invariant
+  	(Result = Inner_Prod_Def (A, B, 0, J, Init).Value);
+  
+     end loop;
+     return Result;
+#+END_SRC
+
+As in ~Accumulate~, the assertion is here to help the prover
+with the overflow checks.
+
+Using this implementation and specification, ~gnatprove~ manages to prove
+everything except for the termination of ~Inner_Prod_Def_Rec~, as usual.

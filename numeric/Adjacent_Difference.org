@@ -1,0 +1,95 @@
+# Created 2018-05-15 mar. 14:37
+#+OPTIONS: author:nil title:nil toc:nil
+#+EXPORT_FILE_NAME: ../../../numeric/Adjacent_Difference.org
+* The Adjacent_Difference algorithm
+
+The ~Adjacent_Difference~ algorithm will compute for each index ~J~ of an array,
+the difference between the value at index ~J~ and the value at index ~J-1~. Its signature reads:
+
+#+BEGIN_SRC ada
+  procedure Adjacent_Difference (A : T_Arr; B : in out T_Arr)
+#+END_SRC
+
+** Specification of Adjacent_Difference
+
+To be able to properly specify this algorithm we will need to write an overflow verification function 
+for substractions. One could argue that using the function ~Add_No_Overflow~ defined along function [[Accumulate.org][Accumulate]]
+with a minus sign in front of the second argument: ~Add_No_Overflow(X,-Y)~, but if our function 
+must work with the entire range of ~T~, which is the entire range of Ada ~Integer~, then there is one case in which 
+executing ~-Y~ triggers and overflow, since there is one more negative Integer than positive integers.
+
+We then write a new function ~Minus_No_Overflow~:
+
+#+BEGIN_SRC ada
+  function Minus_No_Overflow
+    (X, Y : T) return Boolean is
+    (Y = 0
+     or else (Y < 0 and then T'Last + Y >= X)
+     or else (Y > 0 and then T'First + Y <= X));
+#+END_SRC
+
+
+The working principle of this function is the same than the one of ~Add_No_Overflow~.
+
+We can now give a specification for ~Adjacent_Difference~:
+
+#+BEGIN_SRC ada
+  procedure Adjacent_Difference (A : T_Arr; B : in out T_Arr) with
+     Pre =>
+     (if
+        A'Length > 0
+      then
+        (for all J in A'First + 1 .. A'Last =>
+  	 Minus_No_Overflow (A (J), A (J - 1))))
+     and then B'Length = A'Length,
+     Post =>
+     (if
+        A'Length > 0
+      then
+        B (B'First) = A (A'First)
+        and then
+        (for all J in A'First + 1 .. A'Last =>
+  	 B (B'First + J - A'First) = A (J) - A (J - 1)));
+#+END_SRC
+
+The precondition state that there should be no overflow when substracting any value to the one following,
+and that both arrays should be of same length.
+
+The postcondition ensures that The first elements of both arrays are equal, and that each element of ~B~
+is the result of the substraction of the corresponding element and the previous one in ~A~.
+
+** Implementation of Adjacent_Difference
+
+with this specification we can write an implementation for the procedure:
+
+#+BEGIN_SRC ada
+  procedure Adjacent_Difference (A : T_Arr; B : in out T_Arr) is
+  begin
+     if A'Length > 0 then
+        B (B'First) := A (A'First);
+  
+        if A'Length = 1 then
+  	 return;
+        end if;
+        for J in A'First + 1 .. A'Last loop
+  
+  	 pragma Assert (Minus_No_Overflow (A (J), A (J - 1)));
+  
+  	 B (J - A'First + B'First) := A (J) - A (J - 1);
+  
+  	 pragma Loop_Invariant
+  	   (for all K in A'First + 1 .. J =>
+  	      B (B'First + K - A'First) = A (+K) - A (K - 1));
+  	 pragma Loop_Invariant (B (B'First) = A (A'First));
+  
+        end loop;
+  
+     end if;
+  end Adjacent_Difference;
+#+END_SRC
+
+The algorithm is really simple, the only annotations are the assertion, which checks that our computation
+won't generate any overflow, and the loop invariants verify that we are doing the correct calculation, and that the first index 
+of ~B~ is constant.
+
+With this specification and implementation, ~gnatprove~ proves everything.
