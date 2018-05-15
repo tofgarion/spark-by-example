@@ -1,4 +1,4 @@
-# Created 2018-05-14 Mon 11:52
+# Created 2018-05-15 Tue 13:54
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Max_Element.org
 
@@ -93,6 +93,7 @@ less than the maximum value.
 *** Predicates Upper_Bound and Strict_Upper_Bound
 
 #+INCLUDE ../../../spec/upper_bound_p.ads :src ada :lines "6-14"
+
 
 The two functions are the same as in the specification
 of the specification of ~Max_Element~ previously 

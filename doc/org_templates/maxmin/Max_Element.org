@@ -56,7 +56,8 @@
 *** Predicates Upper_Bound and Strict_Upper_Bound
 
     #+INCLUDE ../../../spec/upper_bound_p.ads :src ada :lines "6-14"
-     
+    
+ 
      The two functions are the same as in the specification
      of the specification of ~Max_Element~ previously 
      showed, except for the fact that we check for the entire

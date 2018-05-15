@@ -1,3 +1,6 @@
+#+EXPORT_FILE_NAME: ../../../mutating/Swap_Ranges.org
+#+OPTIONS: author:nil title:nil toc:nil
+
 ** The Swap_Ranges algorithm
 
    The ~swap_ranges~ algorithm exchanges the contents of two arrays.
@@ -9,11 +12,7 @@
 
     The specification of ~swap_ranges~ is the following:
 
-    #+BEGIN_SRC ada
-    procedure Swap_Ranges(A : in out T_Arr; B: in out T_Arr) with
-     Pre => A'Length = B'Length,
-     Post => A'Old = B and then B'Old = A;
-    #+END_SRC
+	#+INCLUDE: ../../../mutating/swap_ranges_p.ads :src ada :lines "6-9"
 
     The precondition expresses the fact that ~A~ and ~B~ must have the same length.
     The postcondition expresses the fact that the values in ~A~ and ~B~ have actually
@@ -21,38 +20,7 @@
 
 *** Implementation of Swap_Ranges
 
-    #+BEGIN_SRC ada
-procedure Swap_Ranges (A : in out T_Arr; B : in out T_Arr) is
-   begin
-
-      for J in 0 .. A'Length - 1 loop
-         declare
-            K : constant Positive := A'First + J;
-            L : constant Positive := B'First + J;
-         begin
-
-            Swap (A (K), B (L));
-
-            pragma Loop_Invariant (K = A'First + J and L = B'First + J);
-            pragma Loop_Invariant
-              (B'Loop_Entry (B'First .. L) = A (A'First .. K));
-            pragma Loop_Invariant
-              (A'Loop_Entry (A'First .. K) = B (B'First .. L));
-            pragma Loop_Invariant
-              (if
-                 L < B'Last
-               then
-                 B'Loop_Entry (L + 1 .. B'Last) = B (L + 1 .. B'Last));
-            pragma Loop_Invariant
-              (if
-                 K < A'Last
-               then
-                 A'Loop_Entry (K + 1 .. A'Last) = A (K + 1 .. A'Last));
-         end;
-
-      end loop;
-   end Swap_Ranges;
-    #+END_SRC
+	#+INCLUDE: ../../../mutating/swap_ranges_p.adb :src ada :lines "3-33"
 
     ~SPARK~ encounters a few problems using sliced arrays in the loop invariants.
     ~range check~ exceptions might appear if you use variables as boundaries

@@ -1,3 +1,6 @@
+#+EXPORT_FILE_NAME: ../../../mutating/Random_Shuffle.org
+#+OPTIONS: author:nil title:nil toc:nil
+
 ** The Random_Shuffle algorithm
 
 The ~Random_Shuffle~ algorithms aims to randomly rearranges the elements of an array. Its signature reads:
@@ -17,10 +20,8 @@ As mentionned earlier, ~Random_Shuffle~ should rearrange the elements of ~A~ in 
 That being said, it is not easy to mathematically define what a true random rearrangement is, so we will only require 
 that ~Random_Shuffle~ acts as a permutation, i.e. the number of occurences of each element of ~A~ remains constant when calling ~Random_Shuffle~.
 With this consideration in mind, we can write a specification for ~Random_Shuffle~:
-#+BEGIN_SRC ada
-procedure Random_Shuffle (A : in out T_Arr) with
-     Post => Multiset_Unchanged(A'Old,A);
-#+END_SRC
+
+	#+INCLUDE: ../../../mutating/random_shuffle_p.ads :src ada :lines "10-12"
 
 The postcondition ensures that the elements of ~A~ are simply permuted by ~Random_Shuffle~.
 
@@ -30,13 +31,7 @@ The predicate ~Multiset_Unchanged~ which is used in the specification of ~Random
 i.e. each element of the first array appears the same number of time in the second array, but not necessarly in the same order. This is done with the help of
 the ~Occ~  predicate, defined in chapter 3 for the function [[../non-mutating/Count.org][Count]]. ~Multiset_Unchanged~ is defined as follows:
 
-#+BEGIN_SRC ada
-function Multiset_Unchanged
-     (A : T_Arr;
-      B : T_Arr) return Boolean is
-     (for all K in T => Occ (A, K) = Occ (B, K)) with
-       Pre => A'Length = B'Length;
-#+END_SRC
+	#+INCLUDE: ../../../spec/multiset_predicates.ads :src ada :lines "22-27"
 
 Here we simply check that for two arrays of same length the number of occurences of a given ~T~ is the same for both arrays.
 It is important to do the check on all elements of ~T~ and not only on the elements of ~A~, otherwise the solvers cannot determine that 
@@ -57,10 +52,9 @@ has no real constraints on the "randomness" of the function.
 Our first implementation is as follows:
 
 #+BEGIN_SRC ada
- procedure Random_Shuffle (A : in out T_Arr) 
- is
-    J : Positive
- begin
+procedure Random_Shuffle (A : in out T_Arr) is
+      J : Positive;
+   begin
       
       for I in A'Range loop
 	 J := Random_Number(A'First, I);
@@ -69,7 +63,7 @@ Our first implementation is as follows:
 	pragma Loop_Invariant(Multiset_Unchanged(A,A'Loop_Entry));
 
       end loop;
-   end Random_Shuffle;
+end Random_Shuffle;
 #+END_SRC
 
 There are a few issues with this implementation:
@@ -91,14 +85,7 @@ parameters, and swaps the two values found at these indexes, and which would pro
 permutation on the array.
 Its specification would then be:
 
-#+BEGIN_SRC ada
-procedure Swap_Array(A : in out T_Arr; I : Positive; J : Positive) with
-      Pre => A'Length >= 1 and then I in A'Range and then J in A'Range,
-      Post =>A'Old(I) = A(J) 
-      and then A'Old(J) = A(I)
-     and then (for all K in A'Old'Range => (if I/=K and then J /= K then A'Old(K) = A(K)))
-     and then Multiset_Unchanged(A'Old,A);
-#+END_SRC
+	#+INCLUDE: ../../../mutating/swap_array_p.ads :src ada :lines "9-17"
 
 The precondition simply express that ~I~ and ~J~ are valid indexes; the postconditions express that:
   - The values at indexes ~I~ and ~J~ were swapped
@@ -122,15 +109,7 @@ With this current implementation, the desired result is achieved, but the last p
 
 The ~Is_Set~ predicate is defined as follows:
 
-#+BEGIN_SRC ada
-function Is_Set(A : T_Arr; I : Positive; V : T; B : T_Arr) return Boolean 
-   is
-     (A'First = B'First and then A'Last = B'Last
-      and then B(I) = V
-      and then (for all J in A'Range =>
-                    (if i /= J then B(J) = A(J)))) with
-   Pre => I in A'Range;
-#+END_SRC
+	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :lines "15-26"
 
 The ~Is_Set~ predicates verifies that ~B~ is equal to ~A~, except for the value found at index ~I~, which should
 be equal to ~V~. This predicate will be useful when comparing the occurences of certain values before and 
@@ -141,30 +120,12 @@ The ~Occ_Eq~ lemma is an example of how we can manualy prove a property that the
 This lemma, in the form of a procedure verifies that if two arrays are equal, then the number of occurences of a given value is equal in both arrays,
 and so for every possible value. Its specification is:
 
-#+BEGIN_SRC ada
-procedure Occ_Eq(A : T_Arr; B : T_Arr; E : T) with
-     Pre => A = B,
-     Post => Occ(A,E) = Occ(B,E);
-#+END_SRC
+	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :lines "10-14"
 
 The specification alone isn't sufficient in order to prove the lemma, a guided proof must be written in the body of the procedure :
 
-#+BEGIN_SRC ada
-procedure Occ_Eq(A: T_Arr; B : T_Arr; E : T) is
-   begin
-      if A'Length = 0 then
-      return;
-   end if;
-   
-   if A(A'Last) = E then 
-      pragma assert(B(B'Last) = E);
-   else
-      pragma assert(B(B'Last) /= E);
-   end if;
-   
-   Occ_Eq(Remove_Last(A),Remove_Last(B),E);
-end Occ_Eq;
-#+END_SRC
+	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :lines "4-18"
+
 The property is proved inductively:
 - If both arrays are empty then there is nothing to prove.
 - If the arrays are of length greater than zero, then:
@@ -176,15 +137,7 @@ The property is proved inductively:
 ~Occ_Set~ gives the relation between the occurences of a given value in an array before and after changing one of its indexes.
 It's specification is as follows:
 
-#+BEGIN_SRC ada
-procedure Occ_Set (A : T_Arr; B : T_Arr; I : Positive; V ,E : T) with
-     Pre => I in A'Range and then Is_Set(A,I,V,B),
-     Post =>
-       (if V = A(I) then Occ(B,E) = Occ(A,E)
-              elsif V = E then Occ(B,E) = Occ(A,E) + 1
-              elsif A(I) = E then Occ(B,E) = Occ(A,E) - 1
-              else Occ(B,E)=Occ(A,E));
-#+END_SRC
+	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :lines "27-35"
 
 The precondition expresses the fact that ~B~ should be equal to ~A~, to the exception of the value at index ~I~,
 which should be equal to ~V~.
@@ -192,24 +145,7 @@ The postconditions are the mathematical relations we expect to find concerning t
 
 The proof being:
 
-#+BEGIN_SRC ada
-procedure Occ_Set(A: T_arr; B : T_Arr; I : Positive; V,E : T) 
-is 
-   Tmp : T_Arr := Remove_Last(A);
-begin
-   if A'Length = 0 then 
-      return;
-   end if;
-   
-   if I = A'Last then
-      Occ_Eq(Tmp,Remove_Last(B),E);
-   else
-      Tmp(I) := V;
-      Occ_Eq(Remove_Last(B),Tmp,E);
-      Occ_Set(Remove_Last(A),Tmp,I,V,E);
-   end if;
-end Occ_Set;
-#+END_SRC
+	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :lines "19-34"
 
 The proof is once again inductive:
 - If ~A~ is empty then there is nothing to prove
@@ -227,45 +163,7 @@ function, but we could have written it in another package, it would simply have 
 Since we wrote the procedure in the declarative part of ~Swap_Array~ to be able to use all the working variables,
 we need to look at the full implementation of ~Swap_Array~ in order to understand how it functions:
 
-#+BEGIN_SRC ada
-procedure Swap_Array(A : in out T_Arr; I : Positive; J : Positive) is
-      Init : T_Arr (A'Range) :=A;
-      Temp : T := A(I);
-      
-      --ghost variables
-      
-      Interm : T_Arr (A'Range) with Ghost;
-      
-      -- ghost procedure
-      
-      procedure Prove_Perm with Ghost,
-        Pre => I in A'Range and then J in A'Range
-        and then Is_Set(Init,I,Init(J),Interm)
-        and then Is_Set(Interm,J,Init(I),A),
-        Post => Multiset_Unchanged(Init,A)
-      is
-      begin
-         for V in T loop
-            Occ_Set(Init,Interm,I,Init(J),V);
-            Occ_Set(Interm,A,J,Init(I),V);
-            pragma Loop_Invariant
-              (for all F in T'First .. V =>
-                 Occ(Init,F) = Occ(A,F));
-         end loop;
-      end Prove_Perm;
-      
-   begin
-      A(I) := A(J);
-      Interm := A; -- ghost
-      
-      pragma Assert(Is_Set(Init,I,Init(J),Interm));
-
-      A(J) := Temp;
-      
-      pragma Assert(Is_Set(Interm,J,Init(I),A));
-      Prove_Perm; --ghost
-   end Swap_Array;
-#+END_SRC
+	#+INCLUDE: ../../../mutating/swap_array_p.adb :src ada :lines "4-42"
 
 We first declare a ghost variable ~Interm~ which will hold the state of the ~Array~ on which we do the swap, after the first value assingment.
 
@@ -284,20 +182,7 @@ In the body of ~Swap_Array~ we then initialize ~Interm~ to the correct value, as
 
 With all of our lemmas and pghost proof procedure we can give a somewhat condensed and simple implementation of ~Random_Shuffle~:
 
-#+BEGIN_SRC ada
-procedure Random_Shuffle (A : in out T_Arr) is
-      J : Positive;
-   begin
-      
-      for I in A'Range loop
-	 J := Random_Number(A'First, I);
-     
-	Swap_Array(A,I,J);
-	pragma Loop_Invariant(Multiset_Unchanged(A,A'Loop_Entry));
-
-      end loop;
-end Random_Shuffle;
-#+END_SRC
+	#+INCLUDE: ../../../mutating/random_shuffle_p.adb :src ada :lines "4-16"
 
 Here we simply replace the ~swap~ procedure by our newly coded ~Swap_Array~ function, and the only loop_invariant is that the ~A~ is a permutation of ~A'Loop_Entry~, which is eaxactly the postcondition of our procedure at the exit of the loop.
 
@@ -310,35 +195,9 @@ crude version of a random number generator, using the Ada numerics package. It s
 package ~Ada.Numerics.Discrete_Random~ isn't forbiddent in SPAKR 2014, but the associated functions have side effects and cannot therfore be formaly prooved.
 A better solution would be to manualy code a random number generator, as it was done in [[https://github.com/fraunhoferfokus/acsl-by-example/blob/master/StandardAlgorithms/mutating/random_shuffle/random_number.c][ACSL by Example]]. Nevertheless our specification and implementation is:
 
-#+BEGIN_SRC ada
-function Random_Number(First : Positive; Last : Positive) return Positive with
-     Pre => Last >= First,
-     Post => Random_Number'Result in First .. Last;
-#+END_SRC 
+	#+INCLUDE: ../../../mutating/random_p.ads :src ada :lines "7-12"
 
-#+BEGIN_SRC ada
-function Random_Number(First : Positive; Last : Positive) return Positive is
-      
-      subtype Rng is Positive range First .. Last;
-      package Alea is new Ada.Numerics.Discrete_Random(Rng);
-      use Alea;
-      
-      Rnd_Gen : Generator;
-      Result : Integer;
-      
-   begin
-      Reset(Rnd_Gen);
-      Result := random(Rnd_Gen);
-      if Result < First then
-	 Result := First;
-      elsif Result > Last then
-	 Result := Last;
-      end if;
-      
-      return Result;
-      
-   end Random_Number;
-#+END_SRC
+	#+INCLUDE: ../../../mutating/random_p.adb :src ada :lines "4-28"
 
 This implementation uses the package ~Ada.Numerics.Discrete_Random~ out of conveniance, and declares a new
 andom generator at each call of the function, which isn't ideal beacause two calls with same arguments close enough in time would yield the same result, but since two consecutive calls to this function should be with different parameters 

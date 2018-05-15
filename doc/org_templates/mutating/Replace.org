@@ -1,3 +1,6 @@
+#+EXPORT_FILE_NAME: ../../../mutating/Replace.org
+#+OPTIONS: author:nil title:nil toc:nil
+
 ** The Replace algorithm
 
    The ~replace~ algorithm replaces all the occurences of a value ~V~ with another value ~W~.
@@ -9,27 +12,14 @@
 
     We will use the function ~Is_Replaced~ defined in the previous algorithm.
     The specification of the ~replace~ algorithm can be expressed as:
-    #+BEGIN_SRC ada
-     procedure Replace ( A : in out T_Arr; Val : T ; Rep : T) with
-     Post => Is_Replaced(A'Old, A, Val, Rep);
-    #+END_SRC
+
+	#+INCLUDE: ../../../mutating/replace_p.ads :src ada :lines "6-8"
 
 *** Implementation of Replace
 
     The implementation of ~replace~ is:
-    #+BEGIN_SRC ada
-    procedure Replace ( A : in out T_Arr ; Val : T ; Rep : T) is
-   begin
-      for I in A'Range loop
-	 if A(I) = Val then
-	    A(I) := Rep;
-	 end if;
-	 
-	 pragma Loop_Invariant(Is_Replaced( A'Loop_Entry ( A'First ..I ), A(A'First ..I), Val, Rep));
-	 pragma Loop_Invariant( if I < A'Last then A'Loop_Entry (I+1 .. A'Last) = A( I+1 .. A'Last));
-	 end loop;
-      end Replace;
-    #+END_SRC
+
+	#+INCLUDE: ../../../mutating/replace_p.adb :src ada :lines "3-23"
 
     The first loop invariant specifies the same thing as the loop invariant in ~replace_copy~.
     The second is necessary because we have an ~out~ parameter, meaning that the values after ~I~

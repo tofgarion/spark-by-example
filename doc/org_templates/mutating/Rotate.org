@@ -1,3 +1,6 @@
+#+EXPORT_FILE_NAME: ../../../mutating/Rotate.org
+#+OPTIONS: author:nil title:nil toc:nil
+
 ** The Rotate algorithm
 
 The ~Rotate~ Algorithm aims to achieve the same goal as the [[Rotate_Copy.org][Rotate_Copy]] algorithm, but instead of storing the result in another array,
@@ -12,14 +15,7 @@ procedure Rotate(A : in out T_Arr, N : Positive)
 Since ~Rotate~ is quite similar to ~Rotate_Copy~, their specifications do not differ greatly. 
 ~Rotate~ can be specified as follows:
 
-#+BEGIN_SRC ada
- procedure Rotate
-     (A : in out T_Arr;
-      N : Positive) with
-     Pre => N < A'Length,
-     Post => A'Old(A'First .. A'First + (N-1)) = A(A'Last -(N-1) .. A'Last)
-     and then A'Old(A'First + N .. A'Last) = A(A'First .. A'Last - N);
-#+END_SRC
+	#+INCLUDE: ../../../mutating/rotate_p.ads :src ada :lines "7-13"
 
 The postcondition expresses that the first ~N~ elments of ~A~ before the procedure become the last
 ~N~ elements after the call, and the ~A'Length - N~ last elements of ~A~ before the procedure becomme the first after the procedure.
@@ -28,15 +24,6 @@ The postcondition expresses that the first ~N~ elments of ~A~ before the procedu
 
 Rotate is implemented in a way to benefit from the [[Reverse_In_Place.org][Reverse_In_Place]] procedure, making the procedure easy and compact:
 
-#+BEGIN_SRC ada
- procedure Rotate
-     (A : in out T_Arr;
-      N : Positive) is
-   begin
-      Reverse_In_Place(A(A'First .. A'First + (N-1)));
-      Reverse_In_Place(A(A'First + N .. A'Last));
-      Reverse_In_Place(A);
-   end Rotate;
-#+END_SRC
+	#+INCLUDE: ../../../mutating/rotate_p.adb :src ada :lines "4-10"
 
 ~gnatprove~ doesn't need any additional annotations in order to prove everything.

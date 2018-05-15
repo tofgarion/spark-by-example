@@ -16,3 +16,14 @@ MAXMIN_ORG_FILES = $(patsubst %, ../maxmin/%, $(_MAXMIN_ORG_FILES))
 	echo "$^" | emacs --batch -l ./generate-org.el -f generate-org-from-org
 
 generate-org-files: $(MAXMIN_ORG_FILES)
+
+_MUTATING_ORG_FILES = Copy.org Fill.org Random_Shuffle.org Remove_Copy.org \
+	Replace_Copy.org Replace.org Reverse_Copy.org Reverse_In_Place.org \
+	Rotate_Copy.org Rotate.org Swap.org Swap_Ranges.org
+
+MUTATING_ORG_FILES = $(patsubst %, ../mutating/%, $(_MUTATING_ORG_FILES))
+
+../mutating/%.org: org_templates/maxmin/%.org
+	echo "$^" | emacs --batch -l ./generate-org.el -f generate-org-from-org
+
+generate-org-files: $(MUTATING_ORG_FILES)

@@ -1,3 +1,6 @@
+#+EXPORT_FILE_NAME: ../../../mutating/Fill.org
+#+OPTIONS: author:nil title:nil toc:nil
+
 ** The Fill algorithm
 
    The ~Fill~ algorithm initializes an array with a particular value.
@@ -10,26 +13,14 @@
 *** Specification of Fill
 
     The specification of ~fill~ is very simple.
-    #+BEGIN_SRC ada
-    procedure Fill (A : in out T_Arr; Val : T) with
-      Pre => A'Length > 0,
-Post => Constant_Range_From_Location(A, Val, A'First, A'Length);
-    #+END_SRC
+
+	#+INCLUDE: ../../../mutating/fill_p.ads :src ada :lines "6-9"
 
 *** Implementation of Fill
 
     The implementation of ~Fill~ is the following:
 
-    #+BEGIN_SRC ada
-    procedure Fill (A : in out T_Arr; Val : T) is
-      begin
-      for I in A'Range loop
-	 A(I) := Val;
-	 
-	 pragma Loop_Invariant(Constant_Range_From_Location(A, Val, A'First, I-A'First+1));
-      end loop;
-end Fill;
-    #+END_SRC
+	#+INCLUDE: ../../../mutating/fill_p.adb :src ada :lines "3-12"
 
     The loop invariant specify that there is a constant range of ~Val~
     starting at index ~A'First~ with length ~I - A'First + 1~.

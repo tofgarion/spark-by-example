@@ -1,3 +1,6 @@
+#+EXPORT_FILE_NAME: ../../../mutating/Reverse_In_Place.org
+#+OPTIONS: author:nil title:nil toc:nil
+
 ** The Reverse_In_Place algorithm
 
 The ~Reverse_In_Place~ algorithm aims to achieve the same goal as [[Reverse_Copy.org][Reverse_Copy]] but the result is stored in the original array, thus modifing it, instead of copying it.
@@ -11,11 +14,7 @@ Its signature reads:
 
 ~Reverse_In_Place~ can be specified as follows:
 
-#+BEGIN_SRC ada
-procedure Reverse_In_Place(A : in out T_Arr) with
-     Pre => A'First >0 and then A'Last >0,
-     Post => Is_Reversed(A,A'Old);
-#+END_SRC
+	#+INCLUDE: ../../../mutating/reverse_in_place_p.ads :src ada :lines "8-11"
 
 The preconditions are only required to suppress an issue where ~gnatprove~ doesn't consider the indexes of T_Arr to be ~Positives~ despite being declared as such in [[../spec/types.ads][types.ads]].
 This leads to false range_check issues.
@@ -58,27 +57,9 @@ but this assertion is proved, so we are sure that the aliasing does not come fro
 **** Avoiding the aliasing
 
 In order to avoir the aliasing issue, it is possible to modify the implementation of ~Reverse_In_Place~
-by removing the call to ~Swap~ and doing the swap "manualy" :
+by removing the call to ~Swap~ and doing the swap "manually" :
 
-#+BEGIN_SRC ada
- procedure Reverse_In_Place(A : in out T_Arr) is
-      Half : Integer :=(if A'Length > 0 then A' First + (A'Last - A'First)/2 - (if A'Length mod 2 = 0 then 0 else 1) else -1);
-      T1 : T;
-   begin
-      
-      for I in 0 .. Half-A'First  loop
-	 T1 := A(A'First+I);
-	 A(A'First+I) :=A(A'Last -I);
-	 A(A'Last -I) := T1;
-	 pragma Loop_Variant(Increases => I);
-	 pragma Loop_Invariant(A(A'First+I+1 .. A'Last -(I+1))=A'Loop_Entry(A'First+I+1 .. A'Last - (I+1)));
-	 pragma Loop_Invariant(Is_Reversed(A(A'First .. A'First+I), A'Loop_Entry(A'Last - I .. A'Last)));
-	 pragma Loop_Invariant(Is_Reversed(A'Loop_Entry(A'First .. A'First+I), A(A'Last - I .. A'Last)));
-	
-      end loop;
-      
-   end Reverse_In_Place;
-#+END_SRC
+	#+INCLUDE: ../../../mutating/reverse_in_place_p.adb :src ada :lines "4-37"
 
 Here the invariants remain the same, since we simply explicitly coded ~Swap~ instead of calling it.
 

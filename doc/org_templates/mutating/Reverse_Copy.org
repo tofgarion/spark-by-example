@@ -1,3 +1,6 @@
+#+EXPORT_FILE_NAME: ../../../mutating/Reverse_Copy.org
+#+OPTIONS: author:nil title:nil toc:nil
+
 ** The Reverse_Copy algorithm
 
 The ~Reverse_Copy~ algorithm inverts the order of the elements of a given array ~A~ in another array ~B~ without modifying ~A~.
@@ -12,11 +15,7 @@ Its signature reads:
 In order to specify and implement the ~Reverse_Copy~ properly we will first define a predicate in order
 to hide all the quantifiers and make our code more readable. The predicate ~Is_Reversed~ is defined as follows:
 
-#+BEGIN_SRC ada 
-function Is_Reversed(A : T_Arr; B : T_Arr) return Boolean is
-      (for all I in A'Range => A(I) = B(B'Last - (I - A'First)))
-	with Pre => A'Length = B'Length;
-#+END_SRC
+	#+INCLUDE: ../../../spec/is_reversed_p.ads :src ada :lines "7-12"
 
 This predicate, on the condition that the two arrays given as parameter are of same length will check 
 wether the elements of ~A~ are in reverse order of those of ~B~, i.e. ~A(A'Last) = B(B'First); A(A'Last -1) = B(B'First +1) ...~ and so on.
@@ -25,13 +24,7 @@ wether the elements of ~A~ are in reverse order of those of ~B~, i.e. ~A(A'Last)
 
 ~Reverse_Copy~ can be specified as follows :
 
-#+BEGIN_SRC ada 
-procedure Reverse_Copy
-     (A : T_Arr;
-      B : in out T_Arr) with
-     Pre => A'Length = B'Length,
-     Post => Is_Reversed(A,B);
-#+END_SRC
+	#+INCLUDE: ../../../mutating/reverse_copy_p.ads :src ada :lines "7-10"
 
 The precondition verifies that ~A~ and ~B~ are of same length; the postcondition ensures that ~A~ is indeed in the reverse order of ~B~.
 
@@ -39,20 +32,7 @@ The precondition verifies that ~A~ and ~B~ are of same length; the postcondition
 
 ~Reverse_Copy~ is implemented in the following way:
 
-#+BEGIN_SRC ada
-procedure Reverse_Copy
-     (A : T_Arr;
-      B : in out T_Arr) is
-   begin
-      for I in B'Range loop
-	 B(I) := A(A'Last - (I-B'First));
-	 
-	 pragma Loop_Variant(Increases => I);
-	 pragma Loop_Invariant(Is_Reversed(B(B'First..I), A(A'Last - (I - B'First) .. A'Last)));
-	 
-      end loop;
-   end Reverse_Copy;
-#+END_SRC
+	#+INCLUDE: ../../../mutating/reverse_copy_p.adb :src ada :lines "4-17"
 
 The implementation is straightforward, the loop variant is classicaly I, and the loop invariant
 specifies that the sub-array composed of the first ~I-B'First~ elements of ~B~ is in reverse order of

@@ -1,3 +1,6 @@
+#+EXPORT_FILE_NAME: ../../../mutating/Copy.org
+#+OPTIONS: author:nil title:nil toc:nil
+
 ** The Copy Algorithm
 
 The ~Copy~ procedure copies the content of an array into another array. Its signature is :
@@ -17,13 +20,7 @@ The purpose of this document being to prove classicals algorithms, and compare w
 
 ~Copy~ specification is:
 
-#+BEGIN_SRC ada 
-procedure Copy
-     (A : T_Arr;
-      B : in out T_Arr) with
-     Pre => A'Length = B'Length,
-     Post => B = A;
-#+END_SRC
+	#+INCLUDE: ../../../mutating/copy_p.ads :src ada :lines "7-10"
 
 The precondition expresses the fact that ~A~ and ~B~ should be of the same size.
 The post condition expresses that ~A~ and ~B~ are equal element-wise.
@@ -32,22 +29,9 @@ The post condition expresses that ~A~ and ~B~ are equal element-wise.
 
 One implementation for Copy is:
 
-#+BEGIN_SRC ada 
- procedure Copy
-     (A : T_Arr;
-      B : in out T_Arr) is
-   begin 
-      for I in A'Range loop
-	 B(B'First + (I - A'First)) := A(I);
-	 
-	 pragma Loop_Variant(Increases => I);
-	 pragma Loop_Invariant(A(A'First .. I) = B(B'First .. B'First + (I - A'First))); 
-	 
-      end loop;
-   end Copy;
-#+END_SRC
+	#+INCLUDE: ../../../mutating/copy_p.adb :src ada :lines "4-15"
 
 Here the loop variant is classicaly ~I~, and the loop invariant specifies that for all indexes ~K~ lesser
 than ~I~, then ~A(K) = B(B'First +(K - A'First))~, i.e. we have a partial copy of the first ~I-A'First~ indexes of ~A~ in ~B~.
 
-With this specification and implementation, when using ~gnatprove~ everything is poved.
+With this specification and implementation, when using ~gnatprove~ everything is proved.

@@ -1,3 +1,6 @@
+#+EXPORT_FILE_NAME: ../../../mutating/Rotate_Copy.org
+#+OPTIONS: author:nil title:nil toc:nil
+
 ** The Rotate_Copy algorithm
 
 The ~Rotate_Copy~ algorithm executes a rotation on the elements of an array, and stores the result in another array.
@@ -19,15 +22,7 @@ This is equivalent to shifting all the elements of ~A~ N places to the left.
 
 The specification of ~Rotate_Copy~ is:
 
-#+BEGIN_SRC ada
-procedure Rotate_Copy
-     (A : T_Arr;
-      N : Positive;
-      B : in out T_Arr) with
-     Pre => A'Length = B'Length and then N < A'Length,
-     Post => A(A'First .. A'First +(N -1)) = B(B'Last - (N -1) .. B'Last)
-     and then A(A'First + N .. A'Last) = B(B'First .. B'Last - N);
-#+END_SRC
+	#+INCLUDE: ../../../mutating/rotate_copy_p.ads :src ada :lines "7-11"
 
 The precondtition express:
 - That ~A~ and ~B~ should be of same length
@@ -41,15 +36,6 @@ The postconditions ensure that:
 
 Rotate copy is implemented using the [[Copy.org][Copy]] function defined previously:
 
-#+BEGIN_SRC ada
-procedure Rotate_Copy
-     (A : T_Arr;
-      N : Positive;
-      B : in out T_Arr) is
-   begin
-      Copy(A(A'First + N .. A'Last), B(B'First .. B'Last - N));
-      Copy(A(A'First .. A'First + (N -1)),B(B'Last - (N - 1) .. B'Last));
-   end Rotate_Copy;
-#+END_SRC
+	#+INCLUDE: ../../../mutating/rotate_copy_p.adb :src ada :lines "4-9"
 
 ~gnatprove~ does not require additional annotations in order to prove this program.
