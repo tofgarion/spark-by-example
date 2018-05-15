@@ -16,7 +16,7 @@
 
 *** Specification of Max_Seq
 
-	#+INCLUDE: ../../../maxmin/max_seq_p.ads :src ada :lines "8-11"
+	#+INCLUDE: ../../../maxmin/max_seq_p.ads :src ada :lines "8-12"
 
     Because we are going to use the function ~Max_Element_With_Ghost~ on A
     and we want to use the ~Value~ of option, we forbid the case ~A'Length = 0~.
@@ -26,7 +26,7 @@
 
 *** Implementation of Max_Seq 
 
-	#+INCLUDE: ../../../maxmin/max_seq_p.adb :src ada :lines "3-6"
+	#+INCLUDE: ../../../maxmin/max_seq_p.adb :src ada :lines "3-7"
 
     All the postconditions of ~Max_Element~ are sufficient to prove the
     ~Max_Seq~ algorithm with ~gnatprove~.

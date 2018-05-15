@@ -32,4 +32,4 @@ MUTATING_ORG_FILES = $(patsubst %, ../mutating/%, $(_MUTATING_ORG_FILES))
 ../mutating/%.org: org_templates/mutating/%.org
 	echo "$^" | emacs --batch -l ./generate-org.el -f generate-org-from-org
 
-generate-org-files: $(NON_MUTATING_ORG_FILES) $(MAXMIN_ORG_FILES) $(BINARY_SEARCH_ORG_FILES) $(MUTATING_ORG_FILES)
+generate-org-files: $(NON_MUTATING_ORG_FILES) $(MAXMIN_ORG_FILES) $(MUTATING_ORG_FILES)

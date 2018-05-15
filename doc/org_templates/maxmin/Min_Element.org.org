@@ -1,7 +1,6 @@
-# Created 2018-05-15 Tue 14:39
-#+OPTIONS: author:nil title:nil toc:nil
-#+EXPORT_FILE_NAME: ../../../maxmin/Min_Element.org
-
+# Created 2018-05-14 Mon 11:52
+#+TITLE: 
+#+AUTHOR: HUGUET Joffrey
 * The Min_Element algorithm
 
 The ~Min_Element~ algorith searches the minimum in a general sequence.
@@ -21,9 +20,9 @@ The ~Lower_Bound~ predicate will be used to assert that our return value is a lo
 
 #+BEGIN_SRC ada
   function Lower_Bound
-    (A : T_Arr;
-     V : T) return Boolean is
-    (for all I in A'First .. A'Last => A (I) >= V);
+       (A : T_Arr;
+        V : T) return Boolean is
+       (for all I in A'First .. A'Last => A (I) >= V);
 #+END_SRC
 
 *** The Strict_Lower_Bound predicate
@@ -32,9 +31,9 @@ The ~Strict_Lower_Bound~ predicate will be used to confirm that the value we ret
 
 #+BEGIN_SRC ada
   function Strict_Lower_Bound
-    (A : T_Arr;
-     V : T) return Boolean is
-    (for all I in A'First .. A'Last => A (I) > V);
+       (A : T_Arr;
+        V : T) return Boolean is
+       (for all I in A'First .. A'Last => A (I) > V);
 #+END_SRC
 
 ** The Specification of Min_Element
@@ -43,20 +42,20 @@ The specification of ~Min_Element~ can be expressed such as follows:
 
 #+BEGIN_SRC ada
   function Min_Element (A : T_Arr) return Option with
-     Contract_Cases =>
-     (A'Length = 0 => not Min_Element'Result.Exists,
-      A'Length > 0 =>
-        Min_Element'Result.Exists
-        and then Min_Element'Result.Value <= A'Last
-        and then Min_Element'Result.Value >= A'First
-        and then Lower_Bound (A, A (Min_Element'Result.Value))
-        and then
-        (if
-  	 Min_Element'Result.Value > A'First
-         then
-  	 Strict_Lower_Bound
-  	   (A (A'First .. Min_Element'Result.Value - 1),
-  	    A (Min_Element'Result.Value))));
+        Contract_Cases =>
+        (A'Length = 0 => not Min_Element'Result.Exists,
+         A'Length > 0 =>
+  	 Min_Element'Result.Exists
+  	 and then Min_Element'Result.Value <= A'Last
+  	 and then Min_Element'Result.Value >= A'First
+  	 and then Lower_Bound (A, A (Min_Element'Result.Value))
+  	 and then
+  	 (if
+  	    Min_Element'Result.Value > A'First
+  	  then
+  	    Strict_Lower_Bound
+  	      (A (A'First .. Min_Element'Result.Value - 1),
+  	       A (Min_Element'Result.Value))));
 #+END_SRC
 
 Here the post conditions are expressed through 2 contract cases :
@@ -70,37 +69,37 @@ Here the post conditions are expressed through 2 contract cases :
 
 #+BEGIN_SRC ada
   function Min_Element (A : T_Arr) return Option is
-     Result : Option := (Exists => False);
+        Result : Option := (Exists => False);
   
-  begin
-     if A'Length = 0 then
-        return Result;
-     else
-        Result := (Exists => True, Value => A'First);
-        for I in A'First .. A'Last loop
-  	 if A (I) < A (Result.Value) then
-  	    Result.Value := I;
-  	 end if;
+     begin
+        if A'Length = 0 then
+  	 return Result;
+        else
+  	 Result := (Exists => True, Value => A'First);
+  	 for I in A'First .. A'Last loop
+  	    if A (I) < A (Result.Value) then
+  	       Result.Value := I;
+  	    end if;
   
-  	 pragma Loop_Variant (Increases => I);
-  	 pragma Loop_Invariant (Result.Value in A'First .. A'Last);
-  	 pragma Loop_Invariant
-  	   (Lower_Bound (A (A'First .. I), A (Result.Value)));
-  	 pragma Loop_Invariant
-  	   ((if
-  	       Result.Value > A'First
-  	     then
-  	       Strict_Lower_Bound
-  		 (A (A'First .. Result.Value - 1),
-  		  A (Result.Value))));
+  	    pragma Loop_Variant (Increases => I);
+  	    pragma Loop_Invariant (Result.Value in A'First .. A'Last);
+  	    pragma Loop_Invariant
+  	      (Lower_Bound (A (A'First .. I), A (Result.Value)));
+  	    pragma Loop_Invariant
+  	      ((if
+  		  Result.Value > A'First
+  		then
+  		  Strict_Lower_Bound
+  		    (A (A'First .. Result.Value - 1),
+  		     A (Result.Value))));
   
-        end loop;
+  	 end loop;
   
-        return Result;
+  	 return Result;
   
-     end if;
+        end if;
   
-  end Min_Element;
+     end Min_Element;
 #+END_SRC
 
 The implementation is quite similar to the one of [[Max_Element.org][Max_Element]] with predicates. Here:

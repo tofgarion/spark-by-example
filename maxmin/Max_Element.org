@@ -1,4 +1,4 @@
-# Created 2018-05-15 Tue 13:54
+# Created 2018-05-15 Tue 14:39
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Max_Element.org
 
@@ -34,6 +34,7 @@ with and without ghost functions for specification (and loop invariants).
   	 A (I) <= A (Max_Element'Result.Value))
         and then
         (for all I in A'First .. Max_Element'Result.Value - 1 =>
+  	 A (I) < A (Max_Element'Result.Value)));
 #+END_SRC
 
 The postconditions are expressed through the contract cases:
@@ -73,6 +74,7 @@ we replace ~Result.Value~ by its index.
   
         return Result;
      end if;
+  end Max_Element;
 #+END_SRC
 
 The loop invariants specify that :
@@ -92,8 +94,17 @@ less than the maximum value.
 
 *** Predicates Upper_Bound and Strict_Upper_Bound
 
-#+INCLUDE ../../../spec/upper_bound_p.ads :src ada :lines "6-14"
-
+#+BEGIN_SRC ada
+  function Upper_Bound
+    (A   : T_Arr;
+     Val : T) return Boolean is
+    (for all I in A'Range => A (I) <= Val);
+  
+  function Strict_Upper_Bound
+    (A   : T_Arr;
+     Val : T) return Boolean is
+    (for all I in A'Range => A (I) < Val);
+#+END_SRC
 
 The two functions are the same as in the specification
 of the specification of ~Max_Element~ previously 
@@ -104,7 +115,19 @@ array given in entry.
 
 With the previously defined predicates, the specification of Max_Element is:
 
-#+INCLUDE ../../../maxmin/max_element_with_ghost_p.ads :src ada :lines "7-17"
+#+BEGIN_SRC ada
+  function Max_Element_With_Ghost (A : T_Arr) return Option with
+     Contract_Cases =>
+     (A'Length = 0 => not Max_Element_With_Ghost'Result.Exists,
+      A'Length > 0 =>
+        Max_Element_With_Ghost'Result.Exists
+        and then Max_Element_With_Ghost'Result.Value >= A'First
+        and then Max_Element_With_Ghost'Result.Value <= A'Last
+        and then Upper_Bound (A, A (Max_Element_With_Ghost'Result.Value))
+        and then Strict_Upper_Bound
+  	(A (A'First .. Max_Element_With_Ghost'Result.Value - 1),
+  	 A (Max_Element_With_Ghost'Result.Value)));
+#+END_SRC
 
 Because in the predicates we check for the entire array, we split the array ~A~ 
 to write the postconditions.
@@ -113,7 +136,36 @@ to write the postconditions.
 
 The implementation is almost the same as before:
 
-#+INCLUDE ../../../maxmin/max_element_with_ghost_p.adb :src ada :lines "4-31"
+#+BEGIN_SRC ada
+  function Max_Element_With_Ghost (A : T_Arr) return Option is
+     Result : Option := (Exists => False);
+  begin
+     if A'Length = 0 then
+        return Result;
+     else
+        Result := (Exists => True, Value => A'First);
+        for I in A'First .. A'Last loop
+  	 if A (Result.Value) < A (I) then
+  	    Result.Value := I;
+  	 end if;
+  
+  	 pragma Loop_Invariant (A'First <= Result.Value);
+  	 pragma Loop_Invariant (Result.Value <= A'Last);
+  	 pragma Loop_Invariant
+  	   (Upper_Bound (A (A'First .. I), A (Result.Value)));
+  	 pragma Loop_Invariant
+  	   (if
+  	      Result.Value > A'First
+  	    then
+  	      Strict_Upper_Bound
+  		(A (A'First .. Result.Value - 1),
+  		 A (Result.Value)));
+        end loop;
+  
+        return Result;
+     end if;
+  end Max_Element_With_Ghost;
+#+END_SRC
 
 The last predicate has been modified : we check first if ~A'First~
 is less than ~Result.Value~. If we didn't we would face a ~range check might fail~

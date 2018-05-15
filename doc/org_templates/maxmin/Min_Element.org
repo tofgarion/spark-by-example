@@ -18,19 +18,19 @@ function Min_Element(A : T_arr) return Option
 
 The ~Lower_Bound~ predicate will be used to assert that our return value is a lower bound for the values of ~A(A'First .. N)~, where ~N~ is given:
 
-	#+INCLUDE: ../../../spec/lower_bound_p.ads :src ada :lines "7-10"
+	#+INCLUDE: ../../../spec/lower_bound_p.ads :src ada :lines "7-11"
 
 **** The Strict_Lower_Bound predicate
 
 The ~Strict_Lower_Bound~ predicate will be used to confirm that the value we return is the *first* valid index for a minimum. It expresses the fact that all the values of ~A~ before index ~N~ are strictly lesser than ~V~:
 
-	#+INCLUDE: ../../../spec/lower_bound_p.ads :src ada :lines "12-15"
+	#+INCLUDE: ../../../spec/lower_bound_p.ads :src ada :lines "12-16"
 
 *** The Specification of Min_Element
 
 The specification of ~Min_Element~ can be expressed such as follows:
 
-	#+INCLUDE: ../../../maxmin/min_element_p.ads :src ada :lines "7-21"
+	#+INCLUDE: ../../../maxmin/min_element_p.ads :src ada :lines "7-22"
 
 Here the post conditions are expressed through 2 contract cases :
 - if ~A~ is empty then there is no index returned
@@ -41,7 +41,7 @@ Here the post conditions are expressed through 2 contract cases :
 
 *** Implementation of Min_Element
 
-	#+INCLUDE: ../../../maxmin/min_element_p.adb :src ada :lines "4-35"
+	#+INCLUDE: ../../../maxmin/min_element_p.adb :src ada :lines "4-36"
 
 The implementation is quite similar to the one of [[Max_Element.org][Max_Element]] with predicates. Here:
 - The loop variant is classicaly equal to ~I~
