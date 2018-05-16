@@ -11,6 +11,7 @@ _MUTATING_ORG_FILES = Copy.org Fill.org Random_Shuffle.org Remove_Copy.org \
 
 _NUMERIC_ORG_FILES = Iota.org Inner_Product.org Adjacent_Difference.org Accumulate.org Partial_Sum.org Numeric_Inv.org
 
+_HEAP_ORG_FILES = Is_Heap.org Pop_Heap.org Push_Heap.org Make_Heap.org Sort_Heap.org
 
 NON_MUTATING_ORG_FILES = $(patsubst %, ../non-mutating/%, $(_NON_MUTATING_ORG_FILES))
 
@@ -21,6 +22,8 @@ BINARY_SEARCH_ORG_FILES = $(patsubst %, ../binary-search/%, $(_BINARY_SEARCH_ORG
 MUTATING_ORG_FILES = $(patsubst %, ../mutating/%, $(_MUTATING_ORG_FILES))
 
 NUMERIC_ORG_FILES = $(patsubst %, ../numeric/%, $(_NUMERIC_ORG_FILES))
+
+HEAP_ORG_FILES = $(patsubst %, ../heap/%, $(_HEAP_ORG_FILES))
 
 ../non-mutating/%.org: org_templates/non-mutating/%.org
 
@@ -38,5 +41,8 @@ NUMERIC_ORG_FILES = $(patsubst %, ../numeric/%, $(_NUMERIC_ORG_FILES))
 ../numeric/%.org: org_templates/numeric/%.org
 	echo "$^" | emacs --batch -l ./generate-org.el -f generate-org-from-org
 
-generate-org-files: $(NON_MUTATING_ORG_FILES) $(MAXMIN_ORG_FILES) $(MUTATING_ORG_FILES) $(NUMERIC_ORG_FILES)
+../heap/%.org: org_templates/heap/%.org
+	echo "$^" | emacs --batch -l ./generate-org.el -f generate-org-from-org
+
+generate-org-files: $(NON_MUTATING_ORG_FILES) $(MAXMIN_ORG_FILES) $(MUTATING_ORG_FILES) $(NUMERIC_ORG_FILES) $(HEAP_ORG_FILES)
 

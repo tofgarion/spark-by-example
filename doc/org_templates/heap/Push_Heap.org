@@ -1,0 +1,165 @@
+#+EXPORT_FILE_NAME: ../../../heap/Push_Heap.org
+#+OPTIONS: author:nil title:nil toc:nil
+* The Push_Heap algorithm
+
+The ~Push_Heap~ algorithm takes a ~Heap~ with any value at the last index
+and pushes it into the heap to match the property ~Is_Heap~. Its signature
+reads :
+~procedure Push_Heap (H : in out Heap)~
+
+** Specification of Push_Heap
+
+The specification of ~Push_Heap~ is rather simple to express.
+
+#+INCLUDE: ../../../heap/push_heap_p.ads :src ada :lines "8-19"
+
+The preconditions express the fact that:
+  - the heap is not full.
+  - the heap without its last value verifies the properties of a heap.
+The postconditions express the fact that:
+  - the entire heap verifies the properties of a heap.
+  - the array in the out heap is just a permutation of the array in
+    the in heap.
+  - the size of the heap has not been modified.
+
+** New Multiset predicates
+
+Three new multiset predicates will be used in our implementation.
+
+*** The Multiset_Add and Multiset_Minus predicates
+
+The ~Multiset_Add~ and ~Multiset_Minus~ predicates will be used with
+the same array but at different points of the algorithm. It will check whether
+the number of occurences of a certain value has increased or decreased.
+
+#+INCLUDE: ../../../spec/multiset_predicates.ads :src ada :lines "28-40"
+
+Note that the precondition on ~Multiset_Add~ is used to prevent overflows.
+
+*** An other Multiset_Retain_Rest predicate
+
+As we will see later, we will use another form of ~Multiset_Retain_Rest~ defined
+in ~Remove_Copy~, but this time with two values. Its expression is not that different
+from the first one.
+
+#+INCLUDE: ../../../spec/multiset_predicates.ads :src ada :lines "14-21"
+
+** Implementation of Push_Heap
+
+   The implementation of ~Push_Heap~ in ASCL By Example is splitted in
+   three parts. We will do the same in the implementation in ADA, presenting
+   the implementation and the lemmas helping the prover to prove the parts.
+
+*** Prologue
+
+**** Implementation of Prologue
+
+The first part of the implementation is the following:
+
+#+INCLUDE: ../../../heap/push_heap_p.adb :src ada :lines "3-25"
+
+The only variables that we use here are ~Hole~ and ~A_Old~. If the size of the heap is
+~1~, there's no need to do anything. Else, we modify the array (if necessary) to make
+a heap, and we store the value at the end because we are going to rearrange the array
+and put it back in the epilogue.
+
+**** The Make_Prove_Prologue procedure
+
+The ~Make_Prove_Prologue~ is a lemma we use in the prologue. As we've seen before,
+we will write an implementation to help the prover prove it. 
+
+#+INCLUDE: ../../../lemmas/push_heap_lemmas.ads :src ada :lines "30-45"
+
+In the prologue, we replaced the last value of ~A~ by its parent's (and the two values
+were different). As usual, we have to guide the prover to prove the assertions with
+~Multiset~ predicates.
+
+#+INCLUDE: ../../../lemmas/push_heap_lemmas.adb :src ada :lines "17-28"
+
+The implementation is quite basic for this kind of lemma, except for the loop invariant
+which is a bit different from the previous ones, because of the new predicates.
+
+With this implementation and specification, ~gnatprove~ proves the lemma and the
+assertions at the end of the prologue, that are :
+  - the array is now a heap
+  - the multiset predicates are verified
+
+*** Main act
+
+**** Implementation of Main Act
+
+In the main act we go up in the tree representating the heap to find the index
+where we can put the value ~V~. Its implementation is the following:
+
+#+INCLUDE: ../../../heap/push_heap_p.adb :src ada :lines "26-67"
+
+  The actual code is not that long : in this loop we modify the position
+  of the hole (it goes up in the heap) to find the final index where we
+  will insert ~V~. In order to prove the loop, we use a ~A_Save~ array
+  which is a save of ~A~ at the beginning of each iteration. Since we
+  just modify one value in ~A~ at each iteration, we can use the ~Is_Set~
+  predicate to calculate the new occurences of the values in ~A~ with the
+  occurences in ~A_Save~. Therefore, we call ~Make_Prove_Loop~ which
+  will calculate the ~Multiset~ predicates between ~A~ and ~A_Old~,
+  considering the predicates between ~A~ and ~A_Save~, and between
+  ~A_Save~ and ~A_Old~ (the loop invariant).
+
+  The loop invariants specify the fact that:
+    - ~Hole~ is in the right range.
+    - ~H~ is a heap.
+    - ~Parent~ is the parent of ~Hole~ if ~Hole > 1~.
+    - the multiset predicates are verified.
+
+**** The No_Changes lemma
+
+     The ~No_Changes~ lemma is similar to the ~No_Changes~ lemma in
+     ~Remove_Copy~. It takes one first array and two equal arrays in entry.
+     Some multiset predicates are verified for the first array and one of
+     the two arrays. The lemma will prove the multiset predicates
+     the first array and the other of the two arrays. In the case of the
+     ~Push_Heap~ algorithm, 
+     Its specification here is:
+     #+INCLUDE: ../../../lemmas/push_heap_lemmas.ads :src ada :lines "10-29"
+
+     Its implementation is:
+     #+INCLUDE: ../../../lemmas/push_heap_lemmas.adb :src ada :lines "4-16"
+     
+**** The Make_Prove_Loop lemma
+
+     This lemma will help proving the multiset predicates between ~A~ and ~A_Old~
+     considering those between ~A_Old~ and ~A_Save~ and between ~A~ and ~A_Save~.
+     As we did before, we specify the hypothesis and conclusions in the
+     specification, and the conclusions in the implementation.
+     Its specification is:
+     #+INCLUDE: ../../../lemmas/push_heap_lemmas.ads :src ada :lines "46-66"
+	
+     Its implementation is:
+     #+INCLUDE: ../../../lemmas/push_heap_lemmas.adb :src ada :lines "29-48"
+
+     The only thing to do during the loop is to calculate the number of occurences of the values
+     in ~A~, considering the number of occurences in ~A_Save~ (only one value differs in ~A~
+     and ~A_Save~.
+
+     Using the lemmas, ~gnatprove~ manages to prove the main act.
+
+*** Epilogue
+
+**** Implementation of Epilogue
+
+     Now that we found the final index where ~V~ can be, we have to insert
+     it in the array. The implementation is:
+     #+INCLUDE: ../../../heap/push_heap_p.adb :src ada :lines "68-79"
+
+     We need to make a final save of our array, to prove the ~Multiset_Unchanged~ predicate
+     between ~A~ and ~A_Old~.
+
+**** The Make_Prove_Epilogue lemma
+
+     This lemma is very similar to the others. Its specification is:
+     #+INCLUDE: ../../../lemmas/push_heap_lemmas.ads :src ada :lines "67-84"
+     
+     Its implementation is:
+     #+INCLUDE: ../../../lemmas/push_heap_lemmas.adb :src ada :lines "49-63"
+
+
+Using ~gnatprove~, the implementations and the specifications, everything is now proved.

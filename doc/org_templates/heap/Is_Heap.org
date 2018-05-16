@@ -1,82 +1,37 @@
-# Created 2018-05-16 mer. 10:26
-#+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Is_Heap.org
-* The Is_Heap function
+#+OPTIONS: author:nil title:nil toc:nil
+** The Is_Heap function
 
 The ~Is_Heap~ functions verifies that the data given as parameter to the function respects the properties definig the heap data structure. 
 Its signature reads:
 
-#+BEGIN_SRC ada
-  function Is_Heap(H : Heap) return Boolean
+#+BEGIN_SRC ada 
+function Is_Heap(H : Heap) return Boolean
 #+END_SRC
 
-** The Is_Heap_Def predicate
+*** The Is_Heap_Def predicate
 
 In order to specify our function we need to write a predicate formally defining what a correct heap is:
 
-#+BEGIN_SRC ada
-  function Is_Heap_Def
-    (H : Heap) return Boolean is
-    (H.Size <= H.A'Last
-     and then
-     (H.Size = 0
-      or else
-      (for all I in 2 .. H.Size => H.A (I) <= H.A (Heap_Parent (I)))));
-#+END_SRC
+#+INCLUDE: ../../../spec/heap_predicates.ads :src ada :lines "15-22"
 
 This predicate checks that the last valid index of our record is less than the actual (fixed) sized of the array,
 and that our heap is either empty or that for all index ~I~ greater than two, then the value at index ~I~ is less than the value at the parent of ~I~.
 
-** Specification of Is_Heap
+*** Specification of Is_Heap
 
 The ~Is_Heap~ can be specified as follows:
 
-#+BEGIN_SRC ada
-  function Is_Heap (H : Heap) return Boolean with
-     Post => Is_Heap'Result = Is_Heap_Def (H);
-#+END_SRC
+#+INCLUDE: ../../../heap/is_heap_p.ads :src ada :lines "7-9"
 
 
 There is no precondition on our ~Heap~ record, and the only postcondition is that ~Is_Heap~ returns the same result as our formaly defined predicate.
 
-** Implementation of Is_Heap
+*** Implementation of Is_Heap
 
 Is heap can be implemented in the following way:
 
-#+BEGIN_SRC ada
-  function Is_Heap (H : Heap) return Boolean is
-     Parent : Natural := 1;
-  begin
-     if H.Size > H.A'Length then
-        return False;
-     else
-  
-        if H.Size >= 1 then
-  	 for Child in 2 .. H.Size loop
-  
-  	    if H.A (Parent) < H.A (Child) then
-  	       return False;
-  	    end if;
-  
-  	    pragma Loop_Invariant
-  	      (1 <= Parent
-  	       and then Parent < Child
-  	       and then Child <= H.Size);
-  	    pragma Loop_Invariant (Parent = Heap_Parent (Child));
-  	    pragma Loop_Invariant (Is_Heap_Def ((A => H.A, Size => Child)));
-  
-  	    if Child mod 2 = 1 then
-  	       Parent := Parent + 1;
-  	    end if;
-  
-  	 end loop;
-        end if;
-  
-        return True;
-     end if;
-  
-  end Is_Heap;
-#+END_SRC
+#+INCLUDE: ../../../heap/is_heap_p.adb :src ada :lines "4-36"
 
 We first check that the membe ~Size~ of ~H~ is valid, i.e. less that the length of the array,
 and then we verify that for each index that can be a child (~Child >=2~), the value found at its parent's index is greater thatn the value found at the child's index.
@@ -84,7 +39,7 @@ and then we verify that for each index that can be a child (~Child >=2~), the va
 
 Here the loop invariants specify that:
 - the variables ~parent~ and ~child~ are in the corect range, and order
-- that ~Child~ is indeed a child of ~Parent~
+- that ~Child~ is indeed a child of ~Parent~ 
 - that the ~Heap~ record constituted of the original array, but with size set to ~Child~ is a heap. This checks that the fisrt ~Child~ values of ~H.A~ form a heap.
 
 
