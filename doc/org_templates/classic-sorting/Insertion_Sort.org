@@ -1,13 +1,12 @@
-# Created 2018-05-16 mer. 10:29
-#+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../classic-sorting/Insertion_Sort.org
+#+OPTIONS: author:nil title:nil toc:nil
 
-* The Insertion_Sort algorithm
+** The Insertion_Sort algorithm
 
 The ~Insertion_Sort~ algorithm sorts an array in ascending order. Its signature reads
 
 #+BEGIN_SRC ada
-  procedure Insertion_Sort(A : in out T_Arr)
+procedure Insertion_Sort(A : in out T_Arr)
 #+END_SRC
 
 The ~Insertion_Sort~ algorithm sorts an array by locating the appropriate index in the sorted array
@@ -15,81 +14,43 @@ for the current value being examined at each iteration. ~Insertion_Sort~ and [[S
 a similar way, the main difference being that ~Insertion_Sort~ performs less comparisons between elements,
 but has to write more values, whereas ~Selection_Sort~ performs more comparisons, and less writes to the memory.
 
-** Specification of Insertion_Sort
+*** Specification of Insertion_Sort
 
 The specification of ~Insertion_Sort~ is identical to the one of ~Selection_Sort~ (In fact, it should be 
 the case for all sorting algorithms):
 
-#+BEGIN_SRC ada
-  procedure Insertion_Sort (A : in out T_Arr) with
-     Pre  => A'Last < Positive'Last,
-     Post => Sorted (A) and then Multiset_Unchanged (A, A'Old);
-#+END_SRC
+	#+INCLUDE: ../../../classic-sorting/insertion_sort_p.ads :src ada :lines "12-15"
 
-** Implementation of Insertion_Sort
+*** Implementation of Insertion_Sort
 
-~Insertion_Sort~ could be implemented with the help of the [[file:../mutating/Rotate.org][Rotate]] algorithm, as it was done in [[https://github.com/fraunhoferfokus/acsl-by-example/blob/master/StandardAlgorithms/classic-sorting/insertion_sort/insertion_sort.c][ACSL by example]]:
+~Insertion_Sort~ could be implemented with the help of the [[../mutating/Rotate.org][Rotate]] algorithm, as it was done in [[https://github.com/fraunhoferfokus/acsl-by-example/blob/master/StandardAlgorithms/classic-sorting/insertion_sort/insertion_sort.c][ACSL by example]]:
 
 #+BEGIN_SRC ada
-  procedure Insertion_Sort(A : in out T_Arr)
-     is
-        K : Integer;
-     begin
-        if A'Length = 0 then
-  	 return;
-        end if;
-  
-        for J in A'Range loop
-  	 K :=(if J = A'First then A'First else Search_Upper_Bound(A(A'First .. J-1),A(J)).Value);
-  	 if K < J then
-  	    Rotate(A(K .. J),J-K);
-  	 end if;
-        end loop;     
-  
-     end Insertion_Sort;
+procedure Insertion_Sort(A : in out T_Arr)
+   is
+      K : Integer;
+   begin
+      if A'Length = 0 then
+	 return;
+      end if;
+      
+      for J in A'Range loop
+	 K :=(if J = A'First then A'First else Search_Upper_Bound(A(A'First .. J-1),A(J)).Value);
+	 if K < J then
+            Rotate(A(K .. J),J-K);
+         end if;
+      end loop;     
+      
+   end Insertion_Sort;
 #+END_SRC
 
 This approach, while being concise makes the proof quite difficult since the specification of 
 ~Rotate~ only specifies equality of ranges, and we would need to deduce from these equalites that
 the multiset represented by ~A~ has not changed, and that the order of the elements of ~A~ remained
 relatively stable. To make our proof easier we will take another approach, where we emulate the effects
-of ~Rotate~ with a loop of [[file:../mutating/Random_Shuffle.org#the-swap_array-procedure][Swap_Array]], which we can annotate to our needs:
+of ~Rotate~ with a loop of [[../mutating/Random_Shuffle.org#the-swap_array-procedure][Swap_Array]], which we can annotate to our needs:
 
-#+BEGIN_SRC ada
-  procedure Insertion_Sort (A : in out T_Arr) is
-     K : Integer;
-  begin
-     if A'Length = 0 then
-        return;
-     end if;
-  
-     for J in A'Range loop
-        K :=
-  	(if J = A'First then A'First
-  	 else Search_Upper_Bound (A (A'First .. J - 1), A (J)).Value);
-  
-        for L in reverse K .. J - 1 loop
-  
-  	 Swap_Array (A, L, L + 1);
-  
-  	 pragma Loop_Invariant (if L > K then A (L - 1) <= A (L + 1));
-  	 pragma Loop_Invariant (Multiset_Unchanged (A, A'Loop_Entry));
-  	 pragma Loop_Invariant
-  	   (for all M in A'First .. L - 1 => A (M) = A'Loop_Entry (M));
-  	 pragma Loop_Invariant (Sorted (A (A'First .. L - 1)));
-  	 pragma Loop_Invariant
-  	   (for all M in A'First .. K - 1 => A (M) <= A (L));
-  	 pragma Loop_Invariant (for all M in K .. J => A (M) >= A (L));
-  	 pragma Loop_Invariant (Sorted (A (L .. J)));
-        end loop;
-  
-        pragma Loop_Invariant (Sorted (A (A'First .. J)));
-        pragma Loop_Invariant (Multiset_Unchanged (A, A'Loop_Entry));
-  
-     end loop;
-  
-  end Insertion_Sort;
-#+END_SRC
+	#+INCLUDE: ../../../classic-sorting/insertion_sort_p.adb :src ada :lines "4-37"
 
 In this implementation we can see that there is a second loop embedded within the main loop. Its function
 is to insert the element found found at index ~J~ at index ~K~ by shifting all the elements between
@@ -112,3 +73,6 @@ with the corresponding invariant of the secondary loop.
 
 
 With this specification and implementation ~gnatprove~ proves everything.
+
+
+
