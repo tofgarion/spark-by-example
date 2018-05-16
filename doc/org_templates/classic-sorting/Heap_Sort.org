@@ -1,3 +1,6 @@
+#+EXPORT_FILE_NAME: ../../../classic-sorting/Heap_Sort.org
+#+OPTIONS: author:nil title:nil toc:nil
+
 ** The Heap_Sort algorithm
 
 The ~Heap_Sort~ algorithm is an efficient sorting algorithm which makes use of the previously developped
@@ -12,11 +15,7 @@ heap data structure and the corresponding algorithms, which can be found in [[..
 ~Heap_Sort~ is a sorting algorithm, and as such its specification is quite similar to the one of 
 [[Selection_Sort.org][Selection_Sort]] or [[Insertion_Sort.org][Insertion_Sort]]:
 
-#+BEGIN_SRC ada
-procedure Heap_Sort (A : in out T_Arr) with
-      Pre  => A'Length <= MAX_SIZE and then A'Last < Positive'Last,
-      Post => Sorted (A) and then Multiset_Unchanged (A, A'Old);
-#+END_SRC
+	#+INCLUDE: ../../../classic-sorting/heap_sort_p.ads :src ada :lines "10-13"
 
 The postconditions are identical to those of the previously mentionned sorting algorithms, but there
 are some preconditions, due to the fact that the array will be converted to a heap.
@@ -25,31 +24,7 @@ are some preconditions, due to the fact that the array will be converted to a he
 
 ~Heap_Sort~ will be implemented by simply calling [[../heap/Make_Heap.org][Make_Heap]] and [[../heap/Sort_Heap.org][Sort_Heap]] consecutively:
 
-#+BEGIN_SRC ada
- procedure Heap_Sort (A : in out T_Arr) is
-      H      : Heap;
-      A_Save : T_Arr := H.A with
-         Ghost;
-      A_Old : constant T_Arr := A with
-         Ghost;
-      Size : constant Natural := A'Length;
-   begin
-      if Size > 0 then
-         H      := Make_Heap (A);
-         A_Save := H.A;
-         Sort_Heap (H);
-
-         if Size < MAX_SIZE then
-            Multiset_With_Eq (A_Save, H.A, Size + 1);
-         end if;
-
-         Unchanged_Transitivity (A, A_Save (1 .. Size), H.A (1 .. Size));
-         Unchanged_Transitivity (H.A (1 .. Size), A, A_Old);
-         A := H.A (1 .. Size);
-         Unchanged_Transitivity (A_Old, H.A (1 .. Size), A);
-      end if;
-   end Heap_Sort;
-#+END_SRC
+	#+INCLUDE: ../../../classic-sorting/heap_sort_p.adb :src ada :lines "4-27"
 
 
 As mentioned above, the only two instructions that are not opperation on ghost variables, or annotations are 

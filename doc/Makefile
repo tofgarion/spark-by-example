@@ -13,6 +13,9 @@ _NUMERIC_ORG_FILES = Iota.org Inner_Product.org Adjacent_Difference.org Accumula
 
 _SORTING_ORG_FILES = Is_Sorted.org Partial_Sort.org
 
+_CLASSIC_SORTING_ORG_FILES = Selection_Sort.org Insertion_Sort.org Heap_Sort.org
+
+
 NON_MUTATING_ORG_FILES = $(patsubst %, ../non-mutating/%, $(_NON_MUTATING_ORG_FILES))
 
 MAXMIN_ORG_FILES = $(patsubst %, ../maxmin/%, $(_MAXMIN_ORG_FILES))
@@ -24,6 +27,8 @@ MUTATING_ORG_FILES = $(patsubst %, ../mutating/%, $(_MUTATING_ORG_FILES))
 NUMERIC_ORG_FILES = $(patsubst %, ../numeric/%, $(_NUMERIC_ORG_FILES))
 
 SORTING_ORG_FILES = $(patsubst %, ../sorting/%, $(_SORTING_ORG_FILES))
+
+CLASSIC_SORTING_ORG_FILES = $(patsubst %, ../classic-sorting/%, $(_SORTING_ORG_FILES))
 
 ../non-mutating/%.org: org_templates/non-mutating/%.org
 
@@ -44,5 +49,8 @@ SORTING_ORG_FILES = $(patsubst %, ../sorting/%, $(_SORTING_ORG_FILES))
 ../sorting/%.org: org_templates/sorting/%.org
 	echo "$^" | emacs --batch -l ./generate-org.el -f generate-org-from-org
 
-generate-org-files: $(NON_MUTATING_ORG_FILES) $(MAXMIN_ORG_FILES) $(MUTATING_ORG_FILES) $(NUMERIC_ORG_FILES) $(SORTING_ORG_FILES)
+../classic-sorting/%.org: org_templates/classic-sorting/%.org
+	echo "$^" | emacs --batch -l ./generate-org.el -f generate-org-from-org
+
+generate-org-files: $(NON_MUTATING_ORG_FILES) $(MAXMIN_ORG_FILES) $(MUTATING_ORG_FILES) $(NUMERIC_ORG_FILES) $(SORTING_ORG_FILES) $(CLASSIC_SORTING_ORG_FILES)
 
