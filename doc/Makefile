@@ -28,7 +28,7 @@ NUMERIC_ORG_FILES = $(patsubst %, ../numeric/%, $(_NUMERIC_ORG_FILES))
 
 SORTING_ORG_FILES = $(patsubst %, ../sorting/%, $(_SORTING_ORG_FILES))
 
-CLASSIC_SORTING_ORG_FILES = $(patsubst %, ../classic-sorting/%, $(_SORTING_ORG_FILES))
+CLASSIC_SORTING_ORG_FILES = $(patsubst %, ../classic-sorting/%, $(_CLASSIC_SORTING_ORG_FILES))
 
 ../non-mutating/%.org: org_templates/non-mutating/%.org
 
