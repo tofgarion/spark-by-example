@@ -1,0 +1,9 @@
+gnatprove
+*/p-loc.xml
+gnatinspect.db
+auto.cgpr
+*-loc.xml
+*~
+*.o
+*.ali
+*.cgpr
