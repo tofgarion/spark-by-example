@@ -1,6 +1,6 @@
-# Created 2018-05-23 mer. 10:19
+# Created 2018-05-23 mer. 10:22
 #+OPTIONS: author:nil title:nil toc:nil
-#+EXPORT_FILE_NAME: ../../../heap/Heap.org
+#+EXPORT_FILE_NAME: ../../../heap/Make_Heap.org
 * The Make_Heap algorithm
 
 The ~Make_Heap~ algorithm will take an array and return a heap
