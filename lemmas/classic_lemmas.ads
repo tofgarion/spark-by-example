@@ -39,7 +39,7 @@ package Classic_Lemmas with
       and then B'Length = A'Length
       and then Multiset_Unchanged (Remove_Last (A), Remove_Last (B))
       and then A (A'Last) = B (B'Last),
-      Post => Multiset_Unchanged (A, B);
+     Post => Multiset_Unchanged (A, B);
 
    procedure Unchanged_Transitivity (A, B, C : T_Arr) with
       Ghost,
@@ -47,7 +47,7 @@ package Classic_Lemmas with
       and then B'Length = A'Length
       and then C'Length = B'Length
       and then Multiset_Unchanged (A, B)
-      and then (Multiset_Unchanged (B, C) or else B = C),
+      and then (Multiset_Unchanged (B, C) or else B=C),
       Post => Multiset_Unchanged (A, C);
 
    procedure Occ_To_Has_Value (A : T_Arr; V : T) with
@@ -82,5 +82,10 @@ package Classic_Lemmas with
       Post => Multiset_Unchanged
         (A (A'First .. Eq - 1),
          B (B'First .. Eq - A'First + B'First - 1));
+   
+   procedure Equal_Implies_Multiset_Unchanged(A,B: T_Arr) with
+     Ghost,
+     Pre => A=B,
+     Post => Multiset_Unchanged(A,B);
 
 end Classic_Lemmas;

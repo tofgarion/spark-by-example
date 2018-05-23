@@ -1,4 +1,4 @@
-# Created 2018-05-16 mer. 10:29
+# Created 2018-05-23 mer. 10:19
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Heap.org
 * The Make_Heap algorithm
@@ -84,7 +84,7 @@ Its specification is:
      and then B'Length = A'Length
      and then C'Length = B'Length
      and then Multiset_Unchanged (A, B)
-     and then (Multiset_Unchanged (B, C) or else B = C),
+     and then (Multiset_Unchanged (B, C) or else B=C),
      Post => Multiset_Unchanged (A, C);
 #+END_SRC
 
@@ -92,15 +92,15 @@ Its implementation is:
 #+BEGIN_SRC ada
   procedure Unchanged_Transitivity (A, B, C : T_Arr) is
   begin
-     for E in T loop
-        if B = C then
-  	 Occ_Eq (B, C, E);
-        end if;
-  
-        pragma Loop_Invariant
-  	(for all F in T'First .. E => Occ (A, F) = Occ (C, F));
-     end loop;
+     if B=C then
+        Equal_Implies_Multiset_Unchanged(B,C);
+     end if;
   end Unchanged_Transitivity;
+  
+  
+  
+  procedure Occ_To_Has_Value (A : T_Arr; V : T) is
+  begin
 #+END_SRC
 
 We use the predicate ~Occ_Eq~ already defined in the case where ~B=C~.
@@ -120,18 +120,18 @@ Its specification is:
      and then B'Length = A'Length
      and then Multiset_Unchanged (Remove_Last (A), Remove_Last (B))
      and then A (A'Last) = B (B'Last),
-     Post => Multiset_Unchanged (A, B);
+    Post => Multiset_Unchanged (A, B);
 #+END_SRC
 
 Its implementation is:
 #+BEGIN_SRC ada
   procedure New_Element (A, B : T_Arr) is
   begin
-     for E in T loop
+    -- for E in T loop
         null;
-        pragma Loop_Invariant
-  	(for all F in T'First .. E => Occ (A, F) = Occ (B, F));
-     end loop;
+      --  pragma Loop_Invariant
+      --    (for all F in T'First .. E => Occ (A, F) = Occ (B, F));
+    -- end loop;
   end New_Element;
 #+END_SRC
 

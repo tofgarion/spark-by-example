@@ -34,25 +34,22 @@ package body Classic_Lemmas with
 
    procedure New_Element (A, B : T_Arr) is
    begin
-      for E in T loop
+     -- for E in T loop
          null;
-         pragma Loop_Invariant
-           (for all F in T'First .. E => Occ (A, F) = Occ (B, F));
-      end loop;
+       --  pragma Loop_Invariant
+       --    (for all F in T'First .. E => Occ (A, F) = Occ (B, F));
+     -- end loop;
    end New_Element;
 
    procedure Unchanged_Transitivity (A, B, C : T_Arr) is
    begin
-      for E in T loop
-         if B = C then
-            Occ_Eq (B, C, E);
-         end if;
-
-         pragma Loop_Invariant
-           (for all F in T'First .. E => Occ (A, F) = Occ (C, F));
-      end loop;
+      if B=C then
+	 Equal_Implies_Multiset_Unchanged(B,C);
+      end if;
    end Unchanged_Transitivity;
-
+   
+   
+   
    procedure Occ_To_Has_Value (A : T_Arr; V : T) is
    begin
       if A'Length = 1 then
@@ -107,6 +104,15 @@ package body Classic_Lemmas with
               Occ (A (A'First .. Eq - 1), F) =
               Occ (B (B'First .. Eq_B - 1), F));
       end loop;
-
+        
    end Multiset_With_Eq;
+   
+   procedure Equal_Implies_Multiset_Unchanged(A,B : T_Arr)
+   is
+   begin
+      for V in T loop
+	 Occ_Eq(A,B,V);
+	 pragma Loop_Invariant(for all E in T'First .. V => Occ(A,E) = Occ(B,E));
+      end loop;
+   end Equal_Implies_Multiset_Unchanged;
 end Classic_Lemmas;
