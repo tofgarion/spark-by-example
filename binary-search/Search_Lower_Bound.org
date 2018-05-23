@@ -1,4 +1,4 @@
-# Created 2018-05-14 lun. 11:55
+# Created 2018-05-16 Wed 13:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Lower_Bound.org
 

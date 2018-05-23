@@ -1,58 +1,72 @@
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Upper_Bound.org
-#+OPTIONS: author: nil title: nil toc: nil
+#+OPTIONS: author:nil title:nil toc:nil
+
 **  The Search_Upper_Bound algorithm
 
-The ~Search_Upper_Bound~ algorithm searches for the greatest index at which a value can be found in a sorted array.
-It is very close to the ~Search_Lower_Bound~ algorithm. Its signature can be expressed as:
-#+BEGIN_SRC ada 
- function Search_Upper_Bound(A : T_arr; V : T) return Option
-#+END_SRC
+   The ~Search_Upper_Bound~ algorithm searches for the greatest index
+   at which a value can be found in a sorted array. It is very close
+   to the ~Search_Lower_Bound~ algorithm. Its signature can be
+   expressed as:
 
-*** TODO Working principle 
+   #+BEGIN_SRC ada
+     function Search_Upper_Bound(A : T_arr; V : T) return Option
+   #+END_SRC
 
-The ~Search_Upper_Bound~ algorithm searches for a given value ~V~ the index ~Lb~ of a given array ~A~ 
-so that if ~A'First <= K < Ub~ then ~A[K] <= V~, and if ~Ub <= K <= A'Last~ then ~V < A[K]~. It should
-be noted that ~Ub~ satisfies the inequality ~A'First <= Ub <= A'Last +1~.
+*** TODO Working principle
 
-##########################################
-add example here, such as the one in ACSL.
-##########################################
+    The ~Search_Upper_Bound~ algorithm searches for a given value ~V~
+    the index ~Lb~ of a given array ~A~ so that if ~A'First <= K < Ub~
+    then ~A[K] <= V~, and if ~Ub <= K <= A'Last~ then ~V < A[K]~. It
+    should be noted that ~Ub~ satisfies the inequality ~A'First <= Ub
+    <= A'Last +1~.
+
+    ##########################################
+    add example here, such as the one in ACSL.
+    ##########################################
 
 *** Specification of Search_Upper_Bound
 
-The ~Search_Upper_Bound~ algorithm can be specified as follow:
+    The ~Search_Upper_Bound~ algorithm can be specified as follows:
 
-#+INCLUDE: ../../../binary-search/search_upper_bound_p.ads :src ada :lines "8-22"
+    #+INCLUDE: ../../../binary-search/search_upper_bound_p.ads :src ada :lines "8-22"
 
+    It uses the predicates ~Upper_Bound~ and ~Strict_Lower_Bound~
+    defined in chapter 4.
 
-It uses the predicates ~Upper_Bound~ and ~Strict_Lower_Bound~ defined in chapter 4.
-
-The specification contains two preconditions :
-- ~A~ should be sorted.
-- ~A'Last~ must be less than Positive'Last since the result can be ~A'Last+1~.
-The postconditions are expressed with contract cases:
-- if ~A~ is empty, there is no index returned
-- otherwise, there is an index returned in range ~A'First .. A'Last +1~ and
-  1. For all ~K~ in ~A'First .. Result.Value -1,  A[K] <= V~ (this range can be empty)
-  2. For all ~K~ in ~Result.Value .. A'Last, V < A[K]~ (this range can also be empty)
+    The specification contains two preconditions :
+    - ~A~ should be sorted.
+    - ~A'Last~ must be less than Positive'Last since the result can be
+      ~A'Last+1~.
+    The postconditions are expressed with contract cases:
+    - if ~A~ is empty, there is no index returned
+    - otherwise, there is an index returned in range ~A'First
+      .. A'Last +1~ and
+      1. For all ~K~ in ~A'First .. Result.Value -1, A[K] <= V~ (this
+         range can be empty)
+      2. For all ~K~ in ~Result.Value .. A'Last, V < A[K]~ (this range
+         can also be empty)
 
 *** The implementation of Search_Upper_Bound
 
-The implementation of ~Search_Upper_Bound~ is as follows:
+    The implementation of ~Search_Upper_Bound~ is as follows:
 
-#+INCLUDE: ../../../binary-search/search_upper_bound_p.adb :src ada :lines "3-39"
-	
+    #+INCLUDE: ../../../binary-search/search_upper_bound_p.adb :src ada :lines "3-39"
 
-At each iteration, the range that contains the sought-after result is narrowed down.
- Note that the ~middle~ is calculated so as to avoid potential overflows.
+    At each iteration, the range that contains the sought-after result
+    is narrowed down. Note that the ~middle~ is calculated so as to
+    avoid potential overflows.
 
-Here the loop variant is ~Result.Value - Left~ which decreases at each step.
-The loop invariants express :
-- that ~Result.Value~ and ~Left~ are in the correct range and correctly postitionned with regard to eachother,
-- that all indexes stricly lower than ~Result.Value~ contain value lower or equal than ~V~
-- that all indexes greater than ~Result.Value~ contain values strictly greater than ~V~
+    Here the loop variant is ~Result.Value - Left~ which decreases at
+    each step. The loop invariants express:
+    - that ~Result.Value~ and ~Left~ are in the correct range and
+      correctly postitionned with regard to eachother,
+    - that all indexes stricly lower than ~Result.Value~ contain value
+      lower or equal than ~V~
+    - that all indexes greater than ~Result.Value~ contain values
+      strictly greater than ~V~
 
-With this specification and implementation, when using ~gnatprove~, everything is proved.
+    With this specification and implementation, when using
+    ~gnatprove~, everything is proved.
 
 # Local Variables:
 # ispell-dictionary: "english"
