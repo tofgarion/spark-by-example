@@ -1,4 +1,4 @@
-# Created 2018-05-23 mer. 10:24
+# Created 2018-05-25 ven. 16:03
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Upper_Bound.org
 
@@ -45,6 +45,7 @@ The ~Search_Upper_Bound~ algorithm can be specified as follows:
   	(A (Search_Upper_Bound'Result.Value .. A'Last),
   	 Val));
 #+END_SRC
+
 
 It uses the predicates ~Upper_Bound~ and ~Strict_Lower_Bound~
 defined in chapter 4.

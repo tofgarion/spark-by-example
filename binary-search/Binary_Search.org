@@ -1,4 +1,4 @@
-# Created 2018-05-23 mer. 10:24
+# Created 2018-05-25 ven. 16:03
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Binary_Search.org
 * The Binary_Search algorithm
@@ -9,9 +9,11 @@ It will return true if ~Val~ is contained in ~A~.
 ** Specification of Binary_Search
 
 The specification of ~Binary_Search~ can be the following:
+
 #+BEGIN_SRC ada
   function Binary_Search (A : T_Arr; Val : T) return Boolean with
      Pre  => Sorted (A) and then A'Last < Positive'Last,
+     Post => Binary_Search'Result = Has_Value (A, Val);
 #+END_SRC
 
 The first precondition specifies that the array has to be sorted.
@@ -36,6 +38,8 @@ The implementation of ~Binary_Search~ can be:
      else
         return False;
      end if;
+  
+  end Binary_Search;
 #+END_SRC
 
 Note that if ~Low.Exists = True~, ~Val <= A(Low.Value)~ is always true. This
