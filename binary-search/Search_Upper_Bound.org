@@ -1,4 +1,4 @@
-# Created 2018-05-25 ven. 16:03
+# Created 2018-05-25 ven. 16:08
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Upper_Bound.org
 

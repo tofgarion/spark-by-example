@@ -1,4 +1,4 @@
-# Created 2018-05-15 Tue 14:39
+# Created 2018-05-25 Fri 15:54
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Min_Element.org
 
@@ -94,13 +94,13 @@ Here the post conditions are expressed through 2 contract cases :
   		 (A (A'First .. Result.Value - 1),
   		  A (Result.Value))));
   
-        end loop;
+  	   end loop;
   
         return Result;
   
      end if;
   
-  end Min_Element;
+     end Min_Element;
 #+END_SRC
 
 The implementation is quite similar to the one of [[Max_Element.org][Max_Element]] with predicates. Here:

@@ -1,4 +1,4 @@
-# Created 2018-05-15 Tue 14:39
+# Created 2018-05-25 Fri 15:54
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Max_Element.org
 
@@ -34,7 +34,6 @@ with and without ghost functions for specification (and loop invariants).
   	 A (I) <= A (Max_Element'Result.Value))
         and then
         (for all I in A'First .. Max_Element'Result.Value - 1 =>
-  	 A (I) < A (Max_Element'Result.Value)));
 #+END_SRC
 
 The postconditions are expressed through the contract cases:
@@ -99,7 +98,8 @@ less than the maximum value.
     (A   : T_Arr;
      Val : T) return Boolean is
     (for all I in A'Range => A (I) <= Val);
-  
+#+END_SRC
+#+BEGIN_SRC ada
   function Strict_Upper_Bound
     (A   : T_Arr;
      Val : T) return Boolean is
@@ -163,7 +163,7 @@ The implementation is almost the same as before:
         end loop;
   
         return Result;
-     end if;
+        end if;
   end Max_Element_With_Ghost;
 #+END_SRC
 
