@@ -29,7 +29,7 @@ properties of the returned ~Option_Pair~ can be easily infered from those of the
 
 This algorithm can be specified as follows:
 
-#+INCLUDE: ../../../binary-search/search_equal_range_p.ads :src ada :lines "12-37"
+#+INCLUDE: ../../../binary-search/search_equal_range_p.ads :src ada :range-begin "function Search_Equal_Range" :range-end "\s-*return\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-38"
 
 In this specification there are two preconditions:
 - ~A~ should be sorted, as with all binary search algorithms 
@@ -51,7 +51,7 @@ We will present two implementations of this algorithm, both using the same speci
 
 The ~Search_Equal_Range~ can be easily implemented using the two previous functions, as they directly provide the desired pair of indexes:
 
-#+INCLUDE: ../../../binary-search/search_equal_range_p.adb :src ada :lines "4-22"
+#+INCLUDE: ../../../binary-search/search_equal_range2_p.adb :src ada :range-begin "function Search_Equal_Range2" :range-end "End Search_Equal_Range2;" :lines "4-66"
 
 ~gnatprove~ doesn't need any annotations other than the specification of the function itself to prove this implementation.
 
@@ -60,8 +60,7 @@ The ~Search_Equal_Range~ can be easily implemented using the two previous functi
 The first version, while being easy to implement, undestand and prove, does some work two times. This is why another implementation is proposed in the C++ standard library, 
 which in ADA translates to:
 
-#+INCLUDE: ../../../binary-search/search_equal_range2_p.adb :src ada :lines "4-66"
-	
+#+INCLUDE: ../../../binary-search/search_equal_range_p.adb :src ada :range-begin "function Search_Equal_Range" :range-end "End Search_Equal_Range;" :lines "4-22"	
 
 The working principle of this code is to narrow down at the same time the ranges where ~Search_Lower_Bound~ 
 and ~Search_Upper_Bound~ will look for the results, where these two programms would both do the same job otherwise.

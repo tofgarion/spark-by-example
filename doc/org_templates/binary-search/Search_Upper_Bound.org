@@ -28,7 +28,8 @@
 
     The ~Search_Upper_Bound~ algorithm can be specified as follows:
 
-    #+INCLUDE: ../../../binary-search/search_upper_bound_p.ads :src ada :lines "8-22"
+    #+INCLUDE: ../../../binari-search/search_upper_bound_p.ads :src ada :range-begin "function Search_Upper_Bound" :range-end "\s-*return\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-22"
+
 
     It uses the predicates ~Upper_Bound~ and ~Strict_Lower_Bound~
     defined in chapter 4.
@@ -50,7 +51,7 @@
 
     The implementation of ~Search_Upper_Bound~ is as follows:
 
-    #+INCLUDE: ../../../binary-search/search_upper_bound_p.adb :src ada :lines "3-39"
+    #+INCLUDE: ../../../binary-search/search_upper_bound_p.adb :src ada :range-begin "function Search_Upper_Bound" :range-end "End Search_Upper_Bound;" :lines "3-39"
 
     At each iteration, the range that contains the sought-after result
     is narrowed down. Note that the ~middle~ is calculated so as to

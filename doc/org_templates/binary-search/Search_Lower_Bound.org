@@ -23,7 +23,7 @@ add example here, such as the one in ACSL.
 
 The ~Search_Lower_Bound~ algorithm can be specified as follow:
 
-#+INCLUDE ../../../binary-search/search_lower_bound_p.ads :src ada :lines "9-22"
+#+INCLUDE: ../../../binary-search/search_lower_bound_p.ads :src ada :range-begin "function Search_Lower_Bound" :range-end "\s-*return\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-23"
 
 It uses the predicates ~Lower_Bound~ and ~Strict_Upper_Bound~ defined in chapter 4.
 
@@ -40,7 +40,7 @@ The postconditions are expressed with contract cases:
 
 The implementation of ~Search_Lower_Bound~ is as follows:
 
-#+INCLUDE ../../../binary-search/search_lower_bound_p.ads :src ada :lines "4-44"
+#+INCLUDE:../../../binary-search/search_lower_bound_p.adb :src ada :range-begin "function Search_Lower_Bound" :range-end "End Search_Lower_Bound;" :lines "4-45"
 
 At each iteration, the range that contains the sought-after result is narrowed down. Note
 that the ~middle~ is calculated so as to avoid potential overflows.

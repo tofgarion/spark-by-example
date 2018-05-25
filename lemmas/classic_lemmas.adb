@@ -34,11 +34,7 @@ package body Classic_Lemmas with
 
    procedure New_Element (A, B : T_Arr) is
    begin
-     -- for E in T loop
          null;
-       --  pragma Loop_Invariant
-       --    (for all F in T'First .. E => Occ (A, F) = Occ (B, F));
-     -- end loop;
    end New_Element;
 
    procedure Unchanged_Transitivity (A, B, C : T_Arr) is

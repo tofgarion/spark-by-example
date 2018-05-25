@@ -8,7 +8,8 @@
 *** Specification of Binary_Search
 
     The specification of ~Binary_Search~ can be the following:
-    #+INCLUDE: ../../../binary-search/binary_search_p.ads :src ada :lines "8-10"
+    
+    #+INCLUDE: ../../../binary-search/binary_search_p.ads :src ada :range-begin "function Binary_Search" :range-end "\s-*return\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-11"
 
 The first precondition specifies that the array has to be sorted.
 The second is here because we will use ~Search_Lower_Bound~ function defined above.
@@ -21,7 +22,7 @@ has a logarithmic complexity.
 
     The implementation of ~Binary_Search~ can be:
 
-    #+INCLUDE: ../../../binary-search/binary_search_p.adb :src ada :lines "3-14"
+    #+INCLUDE: ../../../binary-search/binary_search_p.adb :src ada :range-begin "function Binary_Search" :range-end "End Binary_Search;" :lines "3-15"
 
     Note that if ~Low.Exists = True~, ~Val <= A(Low.Value)~ is always true. This
     is why we only check for ~A (I) <= Val~ to be true.
