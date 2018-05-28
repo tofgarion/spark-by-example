@@ -1,4 +1,4 @@
-# Created 2018-05-15 mar. 14:37
+# Created 2018-05-28 lun. 13:22
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Accumulate.org
 * The Accumulate algorithm
@@ -31,10 +31,15 @@ predicate defining what the result of our function should be:
        when 0      => Init,
        when others =>
          Acc_Def_Rec (A (A'First .. A'Last - 1), Init) + A (A'Last));
-  
-  pragma Annotate (Gnatprove, Terminating, Acc_Def_Rec);
-  
-  function Acc_Def (A : T_Arr; Init : T) return T is (Acc_Def_Rec (A, Init));
+#+END_SRC
+#+BEGIN_SRC ada
+  function Acc_Def_Rec
+    (A    : T_Arr;
+     Init : T) return T is
+    (case A'Length is
+       when 0      => Init,
+       when others =>
+         Acc_Def_Rec (A (A'First .. A'Last - 1), Init) + A (A'Last));
 #+END_SRC
 
 *** Specification of Accumulate
@@ -70,7 +75,6 @@ One implementation satifying our specification is:
   
   end Accumulate_Naive;
 #+END_SRC
-
 
 Here the assertion in the loop verifies that there won't be any overflows during the sum, and the loop
 invariant ensures that we have donne the correct calculations.
@@ -143,8 +147,8 @@ rewrite of ~Acc_Def_Rec~:
   	(True, Acc_Def_Rec (A, F, L - 1, Init).Value + A (L))
         else (OK => False))) with
      Pre => (if L >= F then L in A'Range and F in A'Range);
-  pragma Annotate (Gnatprove, Terminating, Acc_Def_Rec);
-  
+#+END_SRC
+#+BEGIN_SRC ada
   function Acc_Def
     (A    : T_Arr;
      F, L : Integer;

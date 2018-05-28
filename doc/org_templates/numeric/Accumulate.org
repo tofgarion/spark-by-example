@@ -23,7 +23,7 @@ To be able to write the preconditions and postconditions of ~accumulate we first
 predicate defining what the result of our function should be:
 
 #+INCLUDE: ../../../spec/acc_def_naive.ads :src ada :range-begin "function Acc_Def_Rec" :range-end "\s-*return\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-14"
-#+INCLUDE: ../../../sepc/acc_def_naive.ads :src ada :range-begin "function Acc_Def_Rec" :range-end "\s-*return\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-14"
+#+INCLUDE: ../../../spec/acc_def_naive.ads :src ada :range-begin "function Acc_Def_Rec" :range-end "\s-*return\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-14"
 
 **** Specification of Accumulate
 
