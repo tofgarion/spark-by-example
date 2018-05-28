@@ -1,4 +1,4 @@
-# Created 2018-05-15 mar. 14:37
+# Created 2018-05-28 lun. 13:21
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Inner_Product.org
 * The Inner_Product algorithm
@@ -97,7 +97,6 @@ calculate recursively the scalar product.
      Pre => A'Length = B'Length
      and then
      (if L >= F then L in 0 .. A'Length - 1 and F in 0 .. A'Length - 1);
-  pragma Annotate (Gnatprove, Terminating, Inner_Prod_Def_Rec);
 #+END_SRC
 
 
@@ -155,6 +154,7 @@ The implementation of ~Inner_Product~ is quite simple:
   
      end loop;
      return Result;
+  end Inner_Product;
 #+END_SRC
 
 As in ~Accumulate~, the assertion is here to help the prover

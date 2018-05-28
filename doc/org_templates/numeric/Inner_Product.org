@@ -36,11 +36,11 @@
 
    The new specification is:
 
-   #+INCLUDE: ../../../spec/overflow.ads :src ada :lines "19-23"
+   #+INCLUDE: ../../../spec/overflow.ads :src ada :range-begin "function Multiply_No_Overflow" :range-end "\s-*return\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "19-23"
 
    And its implementation is:
    
-   #+INCLUDE: ../../../spec/overflow.adb :src ada :lines "6-25"
+   #+INCLUDE: ../../../spec/overflow.adb :src ada :range-begin "function Multiply_No_Overflow" :range-end "End Multiply_No_Overflow;" :lines "6-25"
 
    Using this implementation and specification, ~gnatprove~ proves the contract cases.
    We will also use the ~Add_No_Overflow~ predicate defined in the ~Accumulate~ algorithm.
@@ -50,7 +50,7 @@
     Based on the ~Acc_Def_Rec~ function, we can write a similar function to
     calculate recursively the scalar product.
 
-    #+INCLUDE: ../../../spec/inner_prod_def_p.ads :src ada :lines "7-28"
+    #+INCLUDE: ../../../spec/inner_prod_def_p.ads :src ada :range-begin "function Inner_Prod_Def_Rec" :range-end "\s-*return\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-27"
 
 
     The function is very similar, except for the fact that we have to check
@@ -62,13 +62,13 @@
 
     Therefore, we can define the ~Inner_Prod_Def~ function that calls the recursive function.
 
-    #+INCLUDE: ../../../spec/inner_prod_def_p.ads :src ada :lines "29-37"
+    #+INCLUDE: ../../../spec/inner_prod_def_p.ads :src ada :range-begin "function Inner_Prod_Def" :range-end "\s-*return\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "29-37"
 
 ** Specification of ~Inner_Product~
 
    The specification of ~Inner_Product~ is the following:
 
-   #+INCLUDE:../../../numeric/inner_product_p.ads :src ada :lines "7-13"
+   #+INCLUDE: ../../../numeric/inner_product_p.ads :src ada :range-begin "function Inner_Product" :range-end "\s-*return\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-13"
 
 
    We check first that no overflow will occur during the algorithm. The postcondition
@@ -77,7 +77,7 @@
 ** Implementation of ~Inner_Product~
 
    The implementation of ~Inner_Product~ is quite simple:
-   #+INCLUDE: ../../../numeric/inner_product_p.adb :src ada :lines "3-16"
+   #+INCLUDE: ../../../numeric/inner_product_p.adb :src ada :range-begin "function Inner_Product" :range-end "End Inner_Product;" :lines "3-17"
 
    As in ~Accumulate~, the assertion is here to help the prover
    with the overflow checks.
