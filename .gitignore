@@ -7,3 +7,4 @@ auto.cgpr
 *.o
 *.ali
 *.cgpr
+*/obj
