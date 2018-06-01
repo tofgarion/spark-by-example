@@ -1,4 +1,4 @@
-# Created 2018-05-15 Tue 14:07
+# Created 2018-06-01 Fri 09:54
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Replace_Copy.org
 
@@ -16,17 +16,17 @@ The algorithm copies the elements of ~A~ into ~B~, substituting each occurence o
 
 In order to write more concise specification and loop invariants we write a ~Is_Replaced~ predicate defined as follows:
 
-#+BEGIN_SRC ada
-  function Is_Replaced
-    (A : T_Arr;
-     B : T_Arr;
-     V : T;
-     W : T) return Boolean is
-    (for all K in A'Range =>
-       (if A (K) = V then B (B'First + (K - A'First)) = W
-        else A (K) = B (B'First + (K - A'First)))) with
-     Pre => A'Length = B'Length;
-#+END_SRC
+#+BEGIN_range-begin
+function Is_Replaced
+  (A : T_Arr;
+   B : T_Arr;
+   V : T;
+   W : T) return Boolean is
+  (for all K in A'Range =>
+     (if A (K) = V then B (B'First + (K - A'First)) = W
+      else A (K) = B (B'First + (K - A'First)))) with
+   Pre => A'Length = B'Length;
+#+END_range-begin
 
 This function requires that both arrays are of same length, and returns ~True~ if ~B~ is equal to ~A~ to the exception
 of the indexes ~K~ of ~A~ where ~A(K) = V~, in that case, the element at the matching index of ~B~ should be equal to ~W~.

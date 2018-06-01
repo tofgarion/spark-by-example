@@ -21,7 +21,7 @@ That being said, it is not easy to mathematically define what a true random rear
 that ~Random_Shuffle~ acts as a permutation, i.e. the number of occurences of each element of ~A~ remains constant when calling ~Random_Shuffle~.
 With this consideration in mind, we can write a specification for ~Random_Shuffle~:
 
-	#+INCLUDE: ../../../mutating/random_shuffle_p.ads :src ada :lines "10-12"
+	#+INCLUDE: ../../../mutating/random_shuffle_p.ads :src ada :range-begin "procedure Random_Shuffle" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-12"
 
 The postcondition ensures that the elements of ~A~ are simply permuted by ~Random_Shuffle~.
 
@@ -31,7 +31,7 @@ The predicate ~Multiset_Unchanged~ which is used in the specification of ~Random
 i.e. each element of the first array appears the same number of time in the second array, but not necessarly in the same order. This is done with the help of
 the ~Occ~  predicate, defined in chapter 3 for the function [[../non-mutating/Count.org][Count]]. ~Multiset_Unchanged~ is defined as follows:
 
-	#+INCLUDE: ../../../spec/multiset_predicates.ads :src ada :lines "22-27"
+	#+INCLUDE: ../../../spec/multiset_predicates.ads :src ada :range-begin "function Multiset_Unchanged" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "22-27"
 
 Here we simply check that for two arrays of same length the number of occurences of a given ~T~ is the same for both arrays.
 It is important to do the check on all elements of ~T~ and not only on the elements of ~A~, otherwise the solvers cannot determine that 
@@ -85,7 +85,7 @@ parameters, and swaps the two values found at these indexes, and which would pro
 permutation on the array.
 Its specification would then be:
 
-	#+INCLUDE: ../../../mutating/swap_array_p.ads :src ada :lines "9-17"
+	#+INCLUDE: ../../../mutating/swap_array_p.ads :src ada :range-begin "procedure Swap_Array" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-17"
 
 The precondition simply express that ~I~ and ~J~ are valid indexes; the postconditions express that:
   - The values at indexes ~I~ and ~J~ were swapped
@@ -109,35 +109,18 @@ With this current implementation, the desired result is achieved, but the last p
 
 The ~Is_Set~ predicate is defined as follows:
 
-	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :lines "15-26"
+	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :range-begin "function Is_Set" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "15-26"
 
 The ~Is_Set~ predicates verifies that ~B~ is equal to ~A~, except for the value found at index ~I~, which should
 be equal to ~V~. This predicate will be useful when comparing the occurences of certain values before and 
 after an array has its vales changed (when swapping two values for instance).
-
-***** The Occ_Eq lemma
-The ~Occ_Eq~ lemma is an example of how we can manualy prove a property that the SMT solvers struggle, or cannot prove on their own.
-This lemma, in the form of a procedure verifies that if two arrays are equal, then the number of occurences of a given value is equal in both arrays,
-and so for every possible value. Its specification is:
-
-	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :lines "10-14"
-
-The specification alone isn't sufficient in order to prove the lemma, a guided proof must be written in the body of the procedure :
-
-	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :lines "4-18"
-
-The property is proved inductively:
-- If both arrays are empty then there is nothing to prove.
-- If the arrays are of length greater than zero, then:
- - We verify that if the last value of ~A~ is equal to ~E~ then so is the last value of ~B~, and if the last value of ~A~ is different from ~E~ then is is the last value of ~B~, which given the definition of [[../non-mutating/Count.org][Occ]] will help prove that the contribution of the last index of ~A~ and ~B~ is the same in ~Occ(A,E)~ and ~Occ(B,E)~.
- - We verify that the nuber of occurences of ~E~ in ~A~ and ~B~ is the same, for the other indexes.
 
 ***** The Occ_Set lemma
 
 ~Occ_Set~ gives the relation between the occurences of a given value in an array before and after changing one of its indexes.
 It's specification is as follows:
 
-	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :lines "27-35"
+	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :range-begin "procedure Occ_Set" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "27-35"
 
 The precondition expresses the fact that ~B~ should be equal to ~A~, to the exception of the value at index ~I~,
 which should be equal to ~V~.
@@ -145,7 +128,7 @@ The postconditions are the mathematical relations we expect to find concerning t
 
 The proof being:
 
-	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :lines "19-34"
+	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :range-begin "procedure Occ_Set" :range-end "End Occ_Set;" :lines "19-34"
 
 The proof is once again inductive:
 - If ~A~ is empty then there is nothing to prove
@@ -163,7 +146,7 @@ function, but we could have written it in another package, it would simply have 
 Since we wrote the procedure in the declarative part of ~Swap_Array~ to be able to use all the working variables,
 we need to look at the full implementation of ~Swap_Array~ in order to understand how it functions:
 
-	#+INCLUDE: ../../../mutating/swap_array_p.adb :src ada :lines "4-42"
+	#+INCLUDE: ../../../mutating/swap_array_p.adb :src ada :range-begin "procedure Prove_Perm" :range-end "End Prove_Perm;" :lines "15-30"
 
 We first declare a ghost variable ~Interm~ which will hold the state of the ~Array~ on which we do the swap, after the first value assingment.
 
@@ -182,7 +165,7 @@ In the body of ~Swap_Array~ we then initialize ~Interm~ to the correct value, as
 
 With all of our lemmas and pghost proof procedure we can give a somewhat condensed and simple implementation of ~Random_Shuffle~:
 
-	#+INCLUDE: ../../../mutating/random_shuffle_p.adb :src ada :lines "4-16"
+	#+INCLUDE: ../../../mutating/random_shuffle_p.adb :src ada :range-begin "procedure Random_Shuffle" :range-end "End Random_Shuffle;" :lines "4-16"
 
 Here we simply replace the ~swap~ procedure by our newly coded ~Swap_Array~ function, and the only loop_invariant is that the ~A~ is a permutation of ~A'Loop_Entry~, which is eaxactly the postcondition of our procedure at the exit of the loop.
 

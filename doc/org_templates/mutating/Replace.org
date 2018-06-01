@@ -13,13 +13,13 @@
     We will use the function ~Is_Replaced~ defined in the previous algorithm.
     The specification of the ~replace~ algorithm can be expressed as:
 
-	#+INCLUDE: ../../../mutating/replace_p.ads :src ada :lines "6-8"
+	#+INCLUDE: ../../../mutating/replace_p.ads :src ada :range-begin "procedure Replace" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-8"
 
 *** Implementation of Replace
 
     The implementation of ~replace~ is:
 
-	#+INCLUDE: ../../../mutating/replace_p.adb :src ada :lines "3-23"
+	#+INCLUDE: ../../../mutating/replace_p.adb :src ada :range-begin "procedure Replace" :range-end "end Replace;" :lines "3-23"
 
     The first loop invariant specifies the same thing as the loop invariant in ~replace_copy~.
     The second is necessary because we have an ~out~ parameter, meaning that the values after ~I~

@@ -14,13 +14,13 @@
 
     The specification of ~fill~ is very simple.
 
-	#+INCLUDE: ../../../mutating/fill_p.ads :src ada :lines "6-9"
+	#+INCLUDE: ../../../mutating/fill_p.ads :src ada :range-begin "procedure Fill" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-9"
 
 *** Implementation of Fill
 
     The implementation of ~Fill~ is the following:
 
-	#+INCLUDE: ../../../mutating/fill_p.adb :src ada :lines "3-12"
+	#+INCLUDE: ../../../mutating/fill_p.adb :src ada :range-begin "procedure Fill" :range-end "End Fill;" :lines "3-12"
 
     The loop invariant specify that there is a constant range of ~Val~
     starting at index ~A'First~ with length ~I - A'First + 1~.

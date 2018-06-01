@@ -1,4 +1,4 @@
-# Created 2018-05-15 Tue 14:07
+# Created 2018-06-01 Fri 09:54
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Remove_Copy.org
 
@@ -90,46 +90,46 @@ The contract cases express the fact that:
 
 A first implementation of ~Remove_Copy~ could be:
 
-#+BEGIN_SRC ada
-     procedure Remove_Copy_First
-    (A   :        T_Arr;
-     B   : in out T_Arr;
-     Val :        T;
-     K   : in out Natural)
-  is
-     J      : Integer := A'First - 1;
-  
-  begin
-     if A'Length > 0 then
-     K := B'First;
-  
-     for J in A'Range loop
-        if A (J) /= Val then
-  	 B (K)  := A (J);
-  	 K := K + 1;
-        end if;
-  
-        pragma Loop_Invariant
-  	(K = B'First + Remove_Count (A (A'First .. J), Val));
-        pragma Loop_Invariant
-  	(if K = B'First then (for all L in A'First .. J => A (L) = Val));
-        pragma Loop_Invariant
-  	(if
-  	   K > B'First
-  	 then
-  	   Multiset_Retain_Rest
-  	     (A (A'First .. J),
-  	      B (B'First .. K - 1),
-  	      Val));
-        pragma Loop_Invariant (for all L in B'First .. K - 1 => B (L) /= Val);
-        pragma Loop_Invariant
-  	(for all L in K .. B'Last => B (L) = B'Loop_Entry (L));
-        end loop;
-     K := K - 1;
-     end if;
-  
-     end Remove_Copy_First;
-#+END_SRC
+#+BEGIN_range-begin
+   procedure Remove_Copy_First
+  (A   :        T_Arr;
+   B   : in out T_Arr;
+   Val :        T;
+   K   : in out Natural)
+is
+   J      : Integer := A'First - 1;
+
+begin
+   if A'Length > 0 then
+   K := B'First;
+
+for J in A'Range loop
+   if A (J) /= Val then
+      B (K)  := A (J);
+      K := K + 1;
+   end if;
+
+   pragma Loop_Invariant
+     (K = B'First + Remove_Count (A (A'First .. J), Val));
+   pragma Loop_Invariant
+     (if K = B'First then (for all L in A'First .. J => A (L) = Val));
+   pragma Loop_Invariant
+     (if
+	K > B'First
+      then
+	Multiset_Retain_Rest
+	  (A (A'First .. J),
+	   B (B'First .. K - 1),
+	   Val));
+   pragma Loop_Invariant (for all L in B'First .. K - 1 => B (L) /= Val);
+   pragma Loop_Invariant
+     (for all L in K .. B'Last => B (L) = B'Loop_Entry (L));
+   end loop;
+K := K - 1;
+end if;
+
+end Remove_Copy_First;
+#+END_range-begin
 
 The loop invariants specify that:
 - ~K~ is equal to ~B'First~ plus the number of values different from
@@ -241,49 +241,49 @@ is why we implemented the lemma.
 
 The second implementation of ~Remove_Copy~ is:
 
-#+BEGIN_SRC ada
-     procedure Remove_Copy_Second
-    (A   :        T_Arr;
-     B   : in out T_Arr;
-     Val :        T;
-     K   : in out Natural)
-  is
-     J      : Integer := A'First - 1;
-  
-  begin
-     if A'Length > 0 then
-     K := B'First;
-  
-     for J in A'Range loop
-        if A (J) /= Val then
-  	 pragma Assert (if K > B'First then Multiset_Retain_Rest(A(A'First .. J - 1), B(B'First .. K - 1), Val)); -- proved here
-  	 B (K)  := A (J);
-  	 pragma Assert (if K > B'First then Multiset_Retain_Rest(A(A'First .. J - 1), B(B'First .. K - 1), Val)); -- not proved anymore
-  	 K := K + 1;
-  	 Make_Prove_Multiset (A (A'First .. J), B (B'First .. K - 1), Val);
-        end if;
-  
-        pragma Loop_Invariant
-  	   (if K = B'First then (for all L in A'First .. J => A (L) = Val));
-        pragma Loop_Invariant
-  	(K = B'First + Remove_Count (A (A'First .. J), Val));
-        pragma Loop_Invariant
-  	(if
-  	   K > B'First
-  	 then
-  	   Multiset_Retain_Rest
-  	     (A (A'First .. J),
-  	      B (B'First .. K - 1),
-  	      Val));
-        pragma Loop_Invariant (for all L in B'First .. K - 1 => B (L) /= Val);
-        pragma Loop_Invariant
-  	(for all L in K .. B'Last => B (L) = B'Loop_Entry (L));
-        end loop;
-     K := K - 1;
-     end if;
-  
-     end Remove_Copy_Second;
-#+END_SRC
+#+BEGIN_range-begin
+   procedure Remove_Copy_Second
+  (A   :        T_Arr;
+   B   : in out T_Arr;
+   Val :        T;
+   K   : in out Natural)
+is
+   J      : Integer := A'First - 1;
+
+begin
+   if A'Length > 0 then
+   K := B'First;
+
+for J in A'Range loop
+   if A (J) /= Val then
+      pragma Assert (if K > B'First then Multiset_Retain_Rest(A(A'First .. J - 1), B(B'First .. K - 1), Val)); -- proved here
+      B (K)  := A (J);
+      pragma Assert (if K > B'First then Multiset_Retain_Rest(A(A'First .. J - 1), B(B'First .. K - 1), Val)); -- not proved anymore
+      K := K + 1;
+      Make_Prove_Multiset (A (A'First .. J), B (B'First .. K - 1), Val);
+   end if;
+
+   pragma Loop_Invariant
+	(if K = B'First then (for all L in A'First .. J => A (L) = Val));
+   pragma Loop_Invariant
+     (K = B'First + Remove_Count (A (A'First .. J), Val));
+   pragma Loop_Invariant
+     (if
+	K > B'First
+      then
+	Multiset_Retain_Rest
+	  (A (A'First .. J),
+	   B (B'First .. K - 1),
+	   Val));
+   pragma Loop_Invariant (for all L in B'First .. K - 1 => B (L) /= Val);
+   pragma Loop_Invariant
+     (for all L in K .. B'Last => B (L) = B'Loop_Entry (L));
+   end loop;
+K := K - 1;
+end if;
+
+end Remove_Copy_Second;
+#+END_range-begin
 
 Using ~gnatprove~ with this implementation, a ~precondition might fail~ appears.
 With the help of some assertions, we see that the precondition that is not verified
@@ -300,10 +300,9 @@ this ~Ghost~ variable.
 
 **** Second lemma
 
-The second lemma will be called ~Occ_Eq~ because we are going to use it a lot
-in the next algorithms. It takes two equal arrays ~A, B~ and a value ~E~, and proves
-that ~Occ(A,E) = Occ(B,E)~.
-Its specification is:
+The ~Occ_Eq~ lemma is another example of how we can manualy prove a property that the SMT solvers struggle, or cannot prove on their own.
+This lemma, in the form of a procedure verifies that if two arrays are equal, then the number of occurences of a given value is equal in both arrays,
+and so for every possible value. Its specification is:
 
 #+BEGIN_SRC ada
   procedure Occ_Eq (A : T_Arr; B : T_Arr; E : T) with
@@ -312,7 +311,7 @@ Its specification is:
      Post => Occ (A, E) = Occ (B, E);
 #+END_SRC
 
-The implementation is:
+The specification alone isn't sufficient in order to prove the lemma, a guided proof must be written in the body of the procedure :
 
 #+BEGIN_SRC ada
   procedure Occ_Eq (A : T_Arr; B : T_Arr; E : T) is
@@ -331,8 +330,11 @@ The implementation is:
   end Occ_Eq;
 #+END_SRC
 
-The implementation looks like the previous one, except for the fact that we
-guide the prover with the assertions.
+The property is proved inductively:
+- If both arrays are empty then there is nothing to prove.
+- If the arrays are of length greater than zero, then:
+  - We verify that if the last value of ~A~ is equal to ~E~ then so is the last value of ~B~, and if the last value of ~A~ is different from ~E~ then is is the last value of ~B~, which given the definition of [[file:../non-mutating/Count.org][Occ]] will help prove that the contribution of the last index of ~A~ and ~B~ is the same in ~Occ(A,E)~ and ~Occ(B,E)~.
+  - We verify that the nuber of occurences of ~E~ in ~A~ and ~B~ is the same, for the other indexes.
 
 **** The No_Changes procedure
 
@@ -372,60 +374,60 @@ As in the previous procedure, we want to prove the predicate for each value.
 
 The final implementation for ~Remove_Copy~ is the following:
 
-#+BEGIN_SRC ada
-  procedure Remove_Copy
-    (A   :        T_Arr;
-     B   : in out T_Arr;
-     Val :        T;
-     K   : in out Natural)
-  is
-     J      : Integer := A'First - 1;
-     B_Save : T_Arr   := B;
-  
-  begin
-     if A'Length > 0 then
-        K := B'First;
-  
-        for J in A'Range loop
-  	 if A (J) /= Val then
-  	    B_Save := B;
-  	    B (K)  := A (J);
-  	    if K > B'First then
-  	       No_Changes
-  		 (A (A'First .. J - 1),
-  		  B_Save (B'First .. K - 1),
-  		  B (B'First .. K - 1),
-  		  Val);
-  	    end if;
-  	    K := K + 1;
-  	    Make_Prove_Multiset
-  	      (A (A'First .. J),
-  	       B (B'First .. K - 1),
-  	       Val);
-  	 end if;
-  
-  	 pragma Loop_Invariant
-  	   (if K = B'First then (for all L in A'First .. J => A (L) = Val));
-  	 pragma Loop_Invariant
-  	   (K = B'First + Remove_Count (A (A'First .. J), Val));
-  	 pragma Loop_Invariant
-  	   (if
-  	      K > B'First
-  	    then
-  	      Multiset_Retain_Rest
-  		(A (A'First .. J),
-  		 B (B'First .. K - 1),
-  		 Val));
-  	 pragma Loop_Invariant
-  	   (for all L in B'First .. K - 1 => B (L) /= Val);
-  	 pragma Loop_Invariant
-  	   (for all L in K .. B'Last => B (L) = B'Loop_Entry (L));
-        end loop;
-        K := K - 1;
-     end if;
-  
-  end Remove_Copy;
-#+END_SRC
+#+BEGIN_range-begin
+procedure Remove_Copy
+  (A   :        T_Arr;
+   B   : in out T_Arr;
+   Val :        T;
+   K   : in out Natural)
+is
+   J      : Integer := A'First - 1;
+   B_Save : T_Arr   := B;
+
+begin
+   if A'Length > 0 then
+      K := B'First;
+
+for J in A'Range loop
+   if A (J) /= Val then
+      B_Save := B;
+      B (K)  := A (J);
+      if K > B'First then
+	 No_Changes
+	   (A (A'First .. J - 1),
+	    B_Save (B'First .. K - 1),
+	    B (B'First .. K - 1),
+	    Val);
+      end if;
+      K := K + 1;
+      Make_Prove_Multiset
+	(A (A'First .. J),
+	 B (B'First .. K - 1),
+	 Val);
+   end if;
+
+      pragma Loop_Invariant
+	(if K = B'First then (for all L in A'First .. J => A (L) = Val));
+      pragma Loop_Invariant
+	(K = B'First + Remove_Count (A (A'First .. J), Val));
+      pragma Loop_Invariant
+	(if
+	   K > B'First
+	 then
+	   Multiset_Retain_Rest
+	     (A (A'First .. J),
+	      B (B'First .. K - 1),
+	      Val));
+      pragma Loop_Invariant
+	(for all L in B'First .. K - 1 => B (L) /= Val);
+      pragma Loop_Invariant
+	(for all L in K .. B'Last => B (L) = B'Loop_Entry (L));
+   end loop;
+   K := K - 1;
+end if;
+
+end Remove_Copy;
+#+END_range-begin
 
 Now, we use the ~No_Changes~ procedure when ~K > B'First~ which means that one
 or more values have been changed in ~B~.

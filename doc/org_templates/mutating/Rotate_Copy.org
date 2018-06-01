@@ -22,7 +22,7 @@ This is equivalent to shifting all the elements of ~A~ N places to the left.
 
 The specification of ~Rotate_Copy~ is:
 
-	#+INCLUDE: ../../../mutating/rotate_copy_p.ads :src ada :lines "7-11"
+	#+INCLUDE: ../../../mutating/rotate_copy_p.ads :src ada :range-begin "procedure Rotate_Copy" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-11"
 
 The precondtition express:
 - That ~A~ and ~B~ should be of same length
@@ -36,6 +36,6 @@ The postconditions ensure that:
 
 Rotate copy is implemented using the [[Copy.org][Copy]] function defined previously:
 
-	#+INCLUDE: ../../../mutating/rotate_copy_p.adb :src ada :lines "4-9"
+	#+INCLUDE: ../../../mutating/rotate_copy_p.adb :src ada :range-begin "procedure Rotate_Copy" :range-end "End Rotate_Copy;" :lines "4-9"
 
 ~gnatprove~ does not require additional annotations in order to prove this program.

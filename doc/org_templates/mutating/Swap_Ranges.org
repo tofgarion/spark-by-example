@@ -12,7 +12,7 @@
 
     The specification of ~swap_ranges~ is the following:
 
-	#+INCLUDE: ../../../mutating/swap_ranges_p.ads :src ada :lines "6-9"
+	#+INCLUDE: ../../../mutating/swap_ranges_p.ads :src ada :range-begin "procedure Swap_Ranges" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-9"
 
     The precondition expresses the fact that ~A~ and ~B~ must have the same length.
     The postcondition expresses the fact that the values in ~A~ and ~B~ have actually
@@ -20,7 +20,7 @@
 
 *** Implementation of Swap_Ranges
 
-	#+INCLUDE: ../../../mutating/swap_ranges_p.adb :src ada :lines "3-33"
+	#+INCLUDE: ../../../mutating/swap_ranges_p.adb :src ada :range-begin "procedure Swap_Ranges" :range-end "End Swap_Ranges;" :lines "3-33"
 
     ~SPARK~ encounters a few problems using sliced arrays in the loop invariants.
     ~range check~ exceptions might appear if you use variables as boundaries
@@ -35,3 +35,4 @@
 	entry in loop.
 
      Using ~gnatprove~, everything is proved.
+     

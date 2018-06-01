@@ -15,7 +15,7 @@ procedure Rotate(A : in out T_Arr, N : Positive)
 Since ~Rotate~ is quite similar to ~Rotate_Copy~, their specifications do not differ greatly. 
 ~Rotate~ can be specified as follows:
 
-	#+INCLUDE: ../../../mutating/rotate_p.ads :src ada :lines "7-13"
+	#+INCLUDE: ../../../mutating/rotate_p.ads :src ada :range-begin "procedure Rotate" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-12"
 
 The postcondition expresses that the first ~N~ elments of ~A~ before the procedure become the last
 ~N~ elements after the call, and the ~A'Length - N~ last elements of ~A~ before the procedure becomme the first after the procedure.
@@ -24,6 +24,6 @@ The postcondition expresses that the first ~N~ elments of ~A~ before the procedu
 
 Rotate is implemented in a way to benefit from the [[Reverse_In_Place.org][Reverse_In_Place]] procedure, making the procedure easy and compact:
 
-	#+INCLUDE: ../../../mutating/rotate_p.adb :src ada :lines "4-10"
+	#+INCLUDE: ../../../mutating/rotate_p.adb :src ada :range-begin "procedure Rotate" :range-end "end Rotate;" :lines "4-10"
 
 ~gnatprove~ doesn't need any additional annotations in order to prove everything.

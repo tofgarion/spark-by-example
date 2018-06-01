@@ -20,7 +20,8 @@ The purpose of this document being to prove classicals algorithms, and compare w
 
 ~Copy~ specification is:
 
-	#+INCLUDE: ../../../mutating/copy_p.ads :src ada :lines "7-10"
+	#+INCLUDE: ../../../mutating/copy_p.ads :src ada :range-begin "procedure Copy" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-10"
+
 
 The precondition expresses the fact that ~A~ and ~B~ should be of the same size.
 The post condition expresses that ~A~ and ~B~ are equal element-wise.
@@ -29,7 +30,7 @@ The post condition expresses that ~A~ and ~B~ are equal element-wise.
 
 One implementation for Copy is:
 
-	#+INCLUDE: ../../../mutating/copy_p.adb :src ada :lines "4-15"
+#+INCLUDE: ../../../mutating/copy_p.adb :src ada :range-begin "procedure Copy" :range-end "End Copy;" :lines "4-15"
 
 Here the loop variant is classicaly ~I~, and the loop invariant specifies that for all indexes ~K~ lesser
 than ~I~, then ~A(K) = B(B'First +(K - A'First))~, i.e. we have a partial copy of the first ~I-A'First~ indexes of ~A~ in ~B~.

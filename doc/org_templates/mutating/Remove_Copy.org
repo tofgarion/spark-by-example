@@ -17,7 +17,7 @@
    the same number of occurences of each value, except for one.
    It can be expressed as:
 
-	#+INCLUDE: ../../../spec/multiset_predicates.ads :src ada :lines "8-13"
+	#+INCLUDE: ../../../spec/multiset_predicates.ads :src ada :range-begin "function Multiset_Retain_Rest" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-13"
 
    The predicate will return true if and only if for each value in
    ~T~ different from ~Val~, the number of occurences of this value
@@ -27,7 +27,7 @@
 
     The ~remove_count~ predicate is quite simple:
 
-	#+INCLUDE: ../../../spec/remove_count_p.ads :src ada :lines "7-13"
+	#+INCLUDE: ../../../spec/remove_count_p.ads :src ada :range-begin "function Remove_Count" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-13"
 
     This predicate returns the number of values different from a given
     value in an array.
@@ -36,7 +36,7 @@
 
    The specification of ~remove_copy~ is the following:
 
-	#+INCLUDE: ../../../mutating/remove_copy_p.ads :src ada :lines "11-29"
+	#+INCLUDE: ../../../mutating/remove_copy_p.ads :src ada :range-begin "procedure Remove_Copy" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-29"
 
    The preconditions express the fact that ~A~ and ~B~ are the
    same length, and ~B'Last~ is strictly less than ~Positive'Last~
@@ -57,7 +57,7 @@
 
    A first implementation of ~Remove_Copy~ could be:
 
-	#+INCLUDE: ../../../mutating/remove_copy_first_p.adb :src ada :lines "4-42"
+	#+INCLUDE: ../../../mutating/remove_copy_first_p.adb :range-begin "procedure Remove_Copy_First" :range-end "end Remove_Copy_First;" :src ada :lines "4-42"
 
    The loop invariants specify that:
    - ~K~ is equal to ~B'First~ plus the number of values different from
@@ -86,11 +86,11 @@
 
      Its specification is:
 
-	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.ads :src ada :lines "9-14"
+	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.ads :src ada :range-begin "procedure Lemma" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-14"
 
      Its implementation is:
 
-	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.adb :src ada :lines "4-11"
+	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.adb :src ada :range-begin "procedure Lemma" :range-end "End Lemma;" :lines "4-11"
 
      First, we specify the stop condition, which is when ~A~ is empty.
      Then, we use the lemma on the same array without its last value.
@@ -104,7 +104,7 @@
      The ~Make_Prove_Multiset~ procedure is here to help the prover
      to prove some properties by guiding him. We specify the hypothesis (preconditions) and results of the proof (postconditions) in the .ads file:
 
- 	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.ads :src ada :lines "22-31"
+	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.ads :src ada :range-begin "procedure Make_Prove_Multiset" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "22-31"
 
      ~A~ and ~B~ must not be empty and their last value is the same.
      The precondition expresses two different cases:
@@ -118,7 +118,7 @@
 
      Its implementation is:
 
-	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.adb :src ada :lines "25-39"
+	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.adb :src ada :range-begin "procedure Make_Prove_Multiset" :range-end "End Make_Prove_Multiset;" :lines "25-39"
 
      To verify the predicate, we need to guide the prover to prove the assertion
      for each value. Writing the ~Make_Prove_Multiset~, we noted that the prover had a problem
@@ -130,7 +130,7 @@
 
    The second implementation of ~Remove_Copy~ is:
 
-   	#+INCLUDE: ../../../mutating/remove_copy_second_p.adb :src ada :lines "4-45"
+   	#+INCLUDE: ../../../mutating/remove_copy_second_p.adb :range-begin "procedure Remove_Copy_Second" :range-end "end Remove_Copy_Second;" :src ada :lines "4-45"
 
    Using ~gnatprove~ with this implementation, a ~precondition might fail~ appears.
    With the help of some assertions, we see that the precondition that is not verified
@@ -147,19 +147,21 @@
 
 **** Second lemma
 
-     The second lemma will be called ~Occ_Eq~ because we are going to use it a lot
-     in the next algorithms. It takes two equal arrays ~A, B~ and a value ~E~, and proves
-     that ~Occ(A,E) = Occ(B,E)~.
-     Its specification is:
+The ~Occ_Eq~ lemma is another example of how we can manualy prove a property that the SMT solvers struggle, or cannot prove on their own.
+This lemma, in the form of a procedure verifies that if two arrays are equal, then the number of occurences of a given value is equal in both arrays,
+and so for every possible value. Its specification is:
 
-	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :lines "10-14"
+	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :range-begin "procedure Occ_Eq" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-14"
 
-     The implementation is:
+The specification alone isn't sufficient in order to prove the lemma, a guided proof must be written in the body of the procedure :
 
-	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :lines "4-18"
+	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :range-begin "procedure Occ_Eq" :range-end "End Occ_Eq;" :lines "4-18"
 
-     The implementation looks like the previous one, except for the fact that we
-     guide the prover with the assertions.
+The property is proved inductively:
+- If both arrays are empty then there is nothing to prove.
+- If the arrays are of length greater than zero, then:
+ - We verify that if the last value of ~A~ is equal to ~E~ then so is the last value of ~B~, and if the last value of ~A~ is different from ~E~ then is is the last value of ~B~, which given the definition of [[../non-mutating/Count.org][Occ]] will help prove that the contribution of the last index of ~A~ and ~B~ is the same in ~Occ(A,E)~ and ~Occ(B,E)~.
+ - We verify that the nuber of occurences of ~E~ in ~A~ and ~B~ is the same, for the other indexes.
 
 **** The No_Changes procedure
 
@@ -167,11 +169,11 @@
      ~Multiset_Retain_Rest (A,B,Val)~ is verified. The procedure will prove that
      ~Multiset_Retain_Rest (A,C,Val)~ is verified. The specification of ~No_Changes~ is:
 
-	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.ads :src ada :lines "15-21"
+	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.ads :src ada :range-begin "procedure No_Changes" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "15-21"
 
      The implementation is:
 
-	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.adb :src ada :lines "12-24"
+	#+INCLUDE: ../../../lemmas/remove_copy_lemmas.adb :src ada :range-begin "procedure No_Changes" :range-end "End No_Changes;" :lines "12-24"
 
      As in the previous procedure, we want to prove the predicate for each value.
      
@@ -179,7 +181,7 @@
 
     The final implementation for ~Remove_Copy~ is the following:
 
-	#+INCLUDE: ../../../mutating/remove_copy_p.adb :src ada :lines "4-56"
+	#+INCLUDE: ../../../mutating/remove_copy_p.adb :range-begin "procedure Remove_Copy_Second" :range-end "end Remove_Copy_Second;" :src ada :lines "4-56"
 
     Now, we use the ~No_Changes~ procedure when ~K > B'First~ which means that one
     or more values have been changed in ~B~.

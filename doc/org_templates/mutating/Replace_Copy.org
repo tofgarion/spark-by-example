@@ -15,7 +15,7 @@ The algorithm copies the elements of ~A~ into ~B~, substituting each occurence o
 
 In order to write more concise specification and loop invariants we write a ~Is_Replaced~ predicate defined as follows:
 
-	#+INCLUDE: ../../../spec/is_replaced_p.ads :src ada :lines "7-16"
+	#+INCLUDE: ../../../spec/is_replaced_p.ads :range-begin "function Is_Replaced" :range-end "A'Length = B'Length" :src ada :lines "7-16"
 
 This function requires that both arrays are of same length, and returns ~True~ if ~B~ is equal to ~A~ to the exception
 of the indexes ~K~ of ~A~ where ~A(K) = V~, in that case, the element at the matching index of ~B~ should be equal to ~W~.
@@ -25,7 +25,7 @@ In a less formal way, ~B~ is equal to a copy of ~A~ where all the ~V~ s were rep
 
 ~Replace_Copy~ can be specified as follows:
 
-	#+INCLUDE: ../../../mutating/replace_copy_p.ads :src ada :lines "7-10"
+	#+INCLUDE: ../../../mutating/replace_copy_p.ads :src ada :range-begin "procedure Replace_Copy" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-10"
 
 The only precondition is that both arrays should be of same length; the postcondition expresses that
 ~B~ is indeed a copy of ~A~ where all occurences of ~V~ have been replace by ~W~.
@@ -34,7 +34,7 @@ The only precondition is that both arrays should be of same length; the postcond
 
 ~Replace_Copy~ can be implemented in the following way:
 
-	#+INCLUDE: ../../../mutating/replace_copy_p.adb :src ada :lines "4-18"
+	#+INCLUDE: ../../../mutating/replace_copy_p.adb :src ada :range-begin "procedure Replace_Copy" :range-end "end Replace_Copy;" :lines "4-18"
 
 The loop invariant simply specifies that the sub-array of ~B~ created from the indexes already covered 
 by the algorithm verifies the condition of being equal to ~A~ with all occurences of ~V~ replaced by ~W~.

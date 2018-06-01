@@ -11,7 +11,7 @@
 
     The specification of ~Swap~ is the following:
 
-	#+INCLUDE: ../../../mutating/swap_p.ads :src ada :lines "5-7"
+	#+INCLUDE: ../../../mutating/swap_p.ads :src ada :range-begin "procedure Swap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "5-7"
 
     The postcondition expresses the fact that the two variables have actually been
     exchanged, using the ~'Old~ attribute available in SPARK. This attribute stores the state of the variables *before* the excecution of the procedure.
@@ -20,7 +20,7 @@
 
     The implementation of ~Swap~ is:
 
-	#+INCLUDE: ../../../mutating/swap_p.adb :src ada :lines "3-9"
+	#+INCLUDE: ../../../mutating/swap_p.adb :src ada :range-begin "procedure Swap" :range-end "End Swap;" :lines "3-9"
 
     A memory variable is used to store the value of ~P~.
     Using ~gnatprove~, everything is proved.

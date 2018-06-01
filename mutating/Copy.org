@@ -1,4 +1,4 @@
-# Created 2018-05-15 Tue 14:06
+# Created 2018-06-01 Fri 09:54
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Copy.org
 
@@ -26,6 +26,7 @@ The purpose of this document being to prove classicals algorithms, and compare w
      Pre  => A'Length = B'Length,
      Post => B = A;
 #+END_SRC
+
 
 The precondition expresses the fact that ~A~ and ~B~ should be of the same size.
 The post condition expresses that ~A~ and ~B~ are equal element-wise.

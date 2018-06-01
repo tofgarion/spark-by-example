@@ -14,7 +14,7 @@ Its signature reads:
 
 ~Reverse_In_Place~ can be specified as follows:
 
-	#+INCLUDE: ../../../mutating/reverse_in_place_p.ads :src ada :lines "8-11"
+	#+INCLUDE: ../../../mutating/reverse_in_place_p.ads :src ada :range-begin "procedure Reverse_In_Place" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-11"
 
 The preconditions are only required to suppress an issue where ~gnatprove~ doesn't consider the indexes of T_Arr to be ~Positives~ despite being declared as such in [[../spec/types.ads][types.ads]].
 This leads to false range_check issues.
@@ -59,7 +59,7 @@ but this assertion is proved, so we are sure that the aliasing does not come fro
 In order to avoir the aliasing issue, it is possible to modify the implementation of ~Reverse_In_Place~
 by removing the call to ~Swap~ and doing the swap "manually" :
 
-	#+INCLUDE: ../../../mutating/reverse_in_place_p.adb :src ada :lines "4-37"
+	#+INCLUDE: ../../../mutating/reverse_in_place_p.adb :src ada :range-begin "procedure Reverse_In_Place" :range-end "end Reverse_In_Place;" :lines "4-37"
 
 Here the invariants remain the same, since we simply explicitly coded ~Swap~ instead of calling it.
 
