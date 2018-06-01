@@ -9,7 +9,7 @@ _STATS = $(if $(STATS),cp gnatprove/gnatprove.out ../stats/$(FILE).out,)
 
 GENERATE_DEP = $1_p.ads $1_p.adb
 
-.PHONY: prove prove-coq all pp clean distclean
+.PHONY: prove prove-coq all pp clean distclean run-tests
 
 all:
 	gnatprove $(_PROJECT) -j 4 $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) chap*.adb
@@ -19,6 +19,7 @@ pp:
 
 clean:
 	gnatclean $(_PROJECT)
+	gprbuild $(_PROJECT)
 	- rm -rf *~
 
 distclean: clean
@@ -27,6 +28,11 @@ distclean: clean
 test_%: test_%.adb
 	gnatmake -gnata -gnateE -f $^
 	./$@
+
+run-tests:
+	gnattest $(_PROJECT)
+	gprbuild obj/harness/test_driver.gpr
+	./obj/harness/test_runner
 
 prove:
 	gnatprove $(_PROJECT) -f $(_PARALLEL) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) $(FILE)

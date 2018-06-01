@@ -1,16 +1,23 @@
 project Non_Mutating_Algorithms is
 
-  for Source_Dirs use (".", "../spec");
+   for Source_Dirs use (".", "../spec");
+   for Object_Dir use "obj";
 
-  package Compiler is
-    for Default_Switches ("Ada") use ("-gnat12", "-gnato13");
-  end Compiler;
+   package Compiler is
+      for Default_Switches ("Ada") use ("-gnata", "-gnat12", "-gnato13");
+   end Compiler;
 
-  package Prove is
-    for Switches use ("--mode=prove",
-                      "--report=statistics",
-                      "--proof=per_path",
-                      "--warnings=continue");
-  end Prove;
+   package Prove is
+      for Switches use ("--mode=prove",
+                        "--report=statistics",
+                        "--proof=per_path",
+                        "--warnings=continue");
+   end Prove;
+
+   package Gnattest is
+      for Harness_Dir       use "harness";
+      for Tests_Dir         use "../tests";
+      for Skeletons_Default use "pass";
+   end Gnattest;
 
 end Non_Mutating_Algorithms;
