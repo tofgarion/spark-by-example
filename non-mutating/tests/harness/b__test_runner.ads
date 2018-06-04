@@ -541,7 +541,7 @@ package ada_main is
    pragma Export (C, u00252, "find_first_of_pB");
    u00253 : constant Version_32 := 16#17bbe04b#;
    pragma Export (C, u00253, "find_first_of_pS");
-   u00254 : constant Version_32 := 16#b42d0370#;
+   u00254 : constant Version_32 := 16#2edaf786#;
    pragma Export (C, u00254, "find_pB");
    u00255 : constant Version_32 := 16#105fd213#;
    pragma Export (C, u00255, "find_pS");

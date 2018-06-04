@@ -25,7 +25,7 @@ Example by using [[https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn
      - ~P-test_data_tests.ads~ and ~P-test_data_tests.adb~ containing
        the test functions
 
-     **Beware**, these files are regenerated everytime the target
+     *Beware*, these files are regenerated everytime the target
      ~generate-tests~ is called. You should use ~generate-tests~ only
      one time to generate the skeletons and the harness, complete the
      test files, add them to the git repo and not regenerate the
@@ -43,17 +43,18 @@ Example by using [[https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn
 
    You can remove such file by:
 
-   - removing the corresponding ~XXX-tests-suite.ad[b|s]~ files in the harness
+   - removing the corresponding ~XXX-tests-suite.ad[b|s]~ files in the
+     harness
    - removing the corresponding lines in ~gnattest_main_suite.adb~
      (import and call in the ~Suite~ function)
 
 ** Adding new files in the harness
 
-   You may Let us suppose that you want to add tests for a ~Supp_P~
-   package defined in the ~supp_p.ads~ and ~supp_p.ads~ files. Calling
-   ~make generate_tests~ will create skeleton for this new file, but
-   **also recreates all the files in the harness, so you may have to
-   modify ~gnattest_main_suite.adb~ again**
+   Let us suppose that you want to add tests for a ~Supp_P~ package
+   defined in the ~supp_p.ads~ and ~supp_p.ads~ files. Calling ~make
+   generate_tests~ will create skeleton for this new file, but *also
+   recreates all the files in the harness, so you may have to modify
+   ~gnattest_main_suite.adb~ again*
 
 * Writing tests
 
