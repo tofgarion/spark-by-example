@@ -1,0 +1,13 @@
+with "aunit";
+with "gnattest_common.gpr";
+with "../../non_mutating_algorithms.gpr";
+project test_non_mutating_algorithms is
+
+   for Source_Dirs use
+     ("../../obj/../tests",
+      "common");
+
+   for Languages use Gnattest_Common'Languages & ("Ada");
+   package Compiler renames Gnattest_Common.Compiler;
+
+end test_non_mutating_algorithms;

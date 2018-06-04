@@ -1,0 +1,25 @@
+with "test_non_mutating_algorithms.gpr";
+with "gnattest_common.gpr";
+
+project Test_Driver is
+
+   for Origin_Project use "../../non_mutating_algorithms.gpr";
+
+   for Target use Gnattest_Common'Target;
+
+   for Runtime ("Ada") use Gnattest_Common'Runtime ("Ada");
+
+   for Languages use ("Ada");
+   for Main use ("test_runner.adb");
+   for Exec_Dir use ".";
+
+   package Builder renames Gnattest_Common.Builder;
+   package Linker renames Gnattest_Common.Linker;
+   package Binder renames Gnattest_Common.Binder;
+   package Compiler renames Gnattest_Common.Compiler;
+
+   package GNATtest is
+      for GNATTest_Mapping_File use "gnattest.xml";
+   end GNATtest;
+
+end Test_Driver;

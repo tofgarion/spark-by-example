@@ -1,0 +1,22 @@
+abstract project Gnattest_Common is
+   for Languages use ("Ada");
+   for Source_Files use ();
+
+   package Builder is
+      for Global_Configuration_Pragmas use "suppress.adc";
+   end Builder;
+
+   package Linker is
+      for Default_Switches ("ada") use ("-g");
+   end Linker;
+
+   package Binder is
+      for Default_Switches ("ada") use ("-E", "-static");
+   end Binder;
+
+   package Compiler is
+      for Default_Switches ("ada") use
+        ("-g", "-gnatyM0", "-gnata", "-gnat12");
+   end Compiler;
+
+end Gnattest_Common;

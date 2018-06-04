@@ -31,7 +31,8 @@ Example by using [[https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn
      test files, add them to the git repo and not regenerate the
      complete harness again (see below on how to add tests for a new
      file).
-   - create a ~tests/harness~ directory containing the harness
+   - create a ~tests/harness~ directory containing the harness. Do not
+     forget to change the policy for assertions in ~suppress.adc~.
 
 ** Removing files from the harness
 
