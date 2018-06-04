@@ -15,7 +15,7 @@ project Non_Mutating_Algorithms is
    end Prove;
 
    package Gnattest is
-      for Harness_Dir       use "harness";
+      for Harness_Dir       use "../tests/harness";
       for Tests_Dir         use "../tests";
       for Skeletons_Default use "pass";
    end Gnattest;

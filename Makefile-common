@@ -19,7 +19,7 @@ pp:
 
 clean:
 	gnatclean $(_PROJECT)
-	gprbuild $(_PROJECT)
+	gprclean tests/harness/test_driver.gpr
 	- rm -rf *~
 
 distclean: clean
@@ -29,10 +29,12 @@ test_%: test_%.adb
 	gnatmake -gnata -gnateE -f $^
 	./$@
 
-run-tests:
+generate-tests:
 	gnattest $(_PROJECT)
-	gprbuild obj/harness/test_driver.gpr
-	./obj/harness/test_runner
+
+run-tests:
+	gprbuild tests/harness/test_driver.gpr
+	./tests/harness/test_runner
 
 prove:
 	gnatprove $(_PROJECT) -f $(_PARALLEL) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) $(FILE)
