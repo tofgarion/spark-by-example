@@ -1,4 +1,4 @@
-# Created 2018-05-16 mer. 10:26
+# Created 2018-06-05 Tue 14:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Push_Heap.org
 * The Push_Heap algorithm
@@ -52,7 +52,8 @@ the number of occurences of a certain value has increased or decreased.
      Val : T) return Boolean is
     (Occ (B, Val) = Occ (A, Val) + 1) with
      Pre => A'Length < Positive'Last;
-  
+#+END_SRC
+#+BEGIN_SRC ada
   function Multiset_Minus
     (A   : T_Arr;
      B   : T_Arr;
@@ -69,13 +70,11 @@ in ~Remove_Copy~, but this time with two values. Its expression is not that diff
 from the first one.
 
 #+BEGIN_SRC ada
-  function Multiset_Retain_Rest_Double
-    (A    : T_Arr;
-     B    : T_Arr;
-     Val1 : T;
-     Val2 : T) return Boolean is
-    (for all X in T =>
-       (if X /= Val1 and then X /= Val2 then Occ (A, X) = Occ (B, X)));
+  function Multiset_Retain_Rest
+    (A   : T_Arr;
+     B   : T_Arr;
+     Val : T) return Boolean is
+    (for all X in T => (if X /= Val then Occ (A, X) = Occ (B, X)));
 #+END_SRC
 
 ** Implementation of Push_Heap
@@ -113,6 +112,7 @@ The first part of the implementation is the following:
   
   	 H.A (H.Size) := H.A (Hole);
   	 Make_Prove_Prologue (H.A, A_Old, V, H.Size);
+  	 -- end of Prologue
 #+END_SRC
 
 The only variables that we use here are ~Hole~ and ~A_Old~. If the size of the heap is
@@ -177,6 +177,8 @@ In the main act we go up in the tree representating the heap to find the index
 where we can put the value ~V~. Its implementation is the following:
 
 #+BEGIN_SRC ada
+  -- beginning of Main act
+  
   if 1 < Hole then
   
      Parent := Heap_Parent (Hole);
@@ -218,6 +220,7 @@ where we can put the value ~V~. Its implementation is the following:
   	(Multiset_Retain_Rest_Double (A_Old, H.A, H.A (Hole), V));
      end loop;
   end if;
+  -- end of Main act
 #+END_SRC
 
 The actual code is not that long : in this loop we modify the position
@@ -276,11 +279,11 @@ Its implementation is:
      Hole             : Positive)
   is
   begin
-     for E in T loop
-        Occ_Eq (A, A_Save, E);
-        pragma Loop_Invariant
+    for E in T loop
+       Occ_Eq (A, A_Save, E);
+      pragma Loop_Invariant
   	(for all F in T'First .. E => Occ (A, F) = Occ (A_Save, F));
-     end loop;
+      end loop;
   end No_Changes;
 #+END_SRC
 
@@ -292,49 +295,40 @@ As we did before, we specify the hypothesis and conclusions in the
 specification, and the conclusions in the implementation.
 Its specification is:
 #+BEGIN_SRC ada
-  procedure Make_Prove_Loop
-    (A, A_Save, A_Old : T_Arr;
-     V_Old, V         : T;
-     Hole             : Positive) with
-     Ghost,
-     Pre => A'Last < Positive'Last
-     and then A'First = A_Save'First
-     and then A'First = A_Old'First
-     and then A'Last = A_Save'Last
-     and then A'Last = A_Old'Last
-     and then Hole in A'Range
-     and then A_Save (Hole) = V_Old
-     and then A (Hole) /= V
-     and then Multiset_Add (A_Old, A_Save, V_Old)
-     and then Multiset_Minus (A_Old, A_Save, V)
-     and then Multiset_Retain_Rest_Double (A_Old, A_Save, V_Old, V)
-     and then Is_Set (A_Save, Hole, A (Hole), A),
-     Post => Multiset_Add (A_Old, A, A (Hole))
-     and then Multiset_Minus (A_Old, A, V)
-     and then Multiset_Retain_Rest_Double (A_Old, A, A (Hole), V);
+  (A, A_Save, A_Old : T_Arr;
+   V_Old, V         : T;
+   Hole             : Positive) with
+   Ghost,
+   Pre => A'Last < Positive'Last
+   and then A'First = A_Save'First
+   and then A'First = A_Old'First
+   and then A'Last = A_Save'Last
+   and then A'Last = A_Old'Last
+   and then Hole in A'Range
+   and then A_Save (Hole) = V_Old
+   and then A (Hole) /= V
+   and then Multiset_Add (A_Old, A_Save, V_Old)
+   and then Multiset_Minus (A_Old, A_Save, V)
+   and then Multiset_Retain_Rest_Double (A_Old, A_Save, V_Old, V)
+   and then Is_Set (A_Save, Hole, A (Hole), A),
+   Post => Multiset_Add (A_Old, A, A (Hole))
+   and then Multiset_Minus (A_Old, A, V)
+   and then Multiset_Retain_Rest_Double (A_Old, A, A (Hole), V);
 #+END_SRC
 
 Its implementation is:
 #+BEGIN_SRC ada
-  procedure Make_Prove_Loop
-    (A, A_Save, A_Old : T_Arr;
-     V_Old, V         : T;
-     Hole             : Positive)
-  is
+  procedure Make_Prove_Prologue (A, A_Old : T_Arr; V : T; Hole : Positive) is
   begin
-  
      for E in T loop
-  
-        Occ_Set (A_Save, A, Hole, A (Hole), E);
-  
+        Occ_Set (A_Old, A, Hole, A (Hole), E);
         pragma Loop_Invariant
   	(for all F in T'First .. E =>
-  	   (if F = A (Hole) then Occ (A, F) = Occ (A_Old, F) + 1
-  	    elsif F = V then Occ (A, F) = Occ (A_Old, F) - 1
+  	   (if F = V then Occ (A, F) = Occ (A_Old, F) - 1
+  	    elsif F = A (Hole) then Occ (A, F) = Occ (A_Old, F) + 1
   	    else Occ (A, F) = Occ (A_Old, F)));
      end loop;
-  
-  end Make_Prove_Loop;
+  end Make_Prove_Prologue;
 #+END_SRC
 
 The only thing to do during the loop is to calculate the number of occurences of the values
@@ -350,6 +344,7 @@ Using the lemmas, ~gnatprove~ manages to prove the main act.
 Now that we found the final index where ~V~ can be, we have to insert
 it in the array. The implementation is:
 #+BEGIN_SRC ada
+  	 -- beginning of Epilogue
   	 A_Save := H.A;
   	 V_Old  := H.A (Hole);
   	 No_Changes (A_Old, H.A, A_Save, V, H.A (Hole), Hole);
@@ -359,7 +354,6 @@ it in the array. The implementation is:
   
         end if;
      end if;
-  
   end Push_Heap;
 #+END_SRC
 
@@ -370,23 +364,22 @@ between ~A~ and ~A_Old~.
 
 This lemma is very similar to the others. Its specification is:
 #+BEGIN_SRC ada
-  procedure Make_Prove_Epilogue
-    (A, A_Save, A_Old : T_Arr;
-     V                : T;
-     Hole             : Positive) with
-     Ghost,
-     Pre => A'Last < Positive'Last
-     and then A'First = A_Save'First
-     and then A'First = A_Old'First
-     and then A'Last = A_Save'Last
-     and then A'Last = A_Old'Last
-     and then Hole in A'Range
-     and then A (Hole) = V
-     and then Multiset_Add (A_Old, A_Save, A_Save (Hole))
-     and then Multiset_Minus (A_Old, A_Save, V)
-     and then Multiset_Retain_Rest_Double (A_Old, A_Save, A_Save (Hole), V)
-     and then Is_Set (A_Save, Hole, V, A),
-     Post => Multiset_Unchanged (A, A_Old);
+  (A, A_Save, A_Old : T_Arr;
+   V                : T;
+   Hole             : Positive) with
+   Ghost,
+   Pre => A'Last < Positive'Last
+   and then A'First = A_Save'First
+   and then A'First = A_Old'First
+   and then A'Last = A_Save'Last
+   and then A'Last = A_Old'Last
+   and then Hole in A'Range
+   and then A (Hole) = V
+   and then Multiset_Add (A_Old, A_Save, A_Save (Hole))
+   and then Multiset_Minus (A_Old, A_Save, V)
+   and then Multiset_Retain_Rest_Double (A_Old, A_Save, A_Save (Hole), V)
+   and then Is_Set (A_Save, Hole, V, A),
+   Post => Multiset_Unchanged (A, A_Old);
 #+END_SRC
 
 Its implementation is:
@@ -406,6 +399,4 @@ Its implementation is:
      end loop;
   end Make_Prove_Epilogue;
 #+END_SRC
-
-
 Using ~gnatprove~, the implementations and the specifications, everything is now proved.

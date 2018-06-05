@@ -1,4 +1,4 @@
-# Created 2018-05-28 lun. 13:22
+# Created 2018-06-05 Tue 14:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Heap.org
 * The Make_Heap algorithm
@@ -90,17 +90,12 @@ Its specification is:
 
 Its implementation is:
 #+BEGIN_SRC ada
+  procedure Unchanged_Transitivity (A, B, C : T_Arr) is
+  begin
+     if B=C then
+        Equal_Implies_Multiset_Unchanged(B,C);
      end if;
   end Unchanged_Transitivity;
-  
-  
-  
-  procedure Occ_To_Has_Value (A : T_Arr; V : T) is
-  begin
-     if A'Length = 1 then
-        return;
-     end if;
-     if A (A'Last) = V then
 #+END_SRC
 
 We use the predicate ~Occ_Eq~ already defined in the case where ~B=C~.
@@ -129,10 +124,6 @@ Its implementation is:
   begin
         null;
   end New_Element;
-  
-  procedure Unchanged_Transitivity (A, B, C : T_Arr) is
-  begin
-     if B=C then
 #+END_SRC
 
 *** Final implementation of Make_Heap

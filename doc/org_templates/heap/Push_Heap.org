@@ -123,7 +123,7 @@ where we can put the value ~V~. Its implementation is the following:
  	#+INCLUDE: ../../../lemmas/push_heap_lemmas.ads :src ada :range-begin "procedure No_Changes" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-29"
 
      Its implementation is:
-	#+INCLUDE: push_heap_lemmas.adb :src ada :range-begin "procedure No_Changes" :range-end "End No_Changes;" :lines "4-16"
+	#+INCLUDE: ../../../lemmas/push_heap_lemmas.adb :src ada :range-begin "procedure No_Changes" :range-end "End No_Changes;" :lines "4-16"
      
 **** The Make_Prove_Loop lemma
 
