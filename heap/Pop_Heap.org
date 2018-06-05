@@ -1,4 +1,4 @@
-# Created 2018-05-16 mer. 10:26
+# Created 2018-06-05 Tue 14:36
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Pop_Heap.org
 * The Pop_Heap algorithm
@@ -148,6 +148,11 @@ We present here two lemmas concerning the properties of heap when modifying an e
      and then Is_Set (H1.A, P, H1.A (C), H2.A),
      Post => Is_Heap_Def (H2);
 #+END_SRC
+#+BEGIN_SRC ada
+  procedure Upper_Bound_Heap (H : Heap; V : T) with
+     Pre  => H.Size >= 1 and then Is_Heap_Def (H) and then V >= H.A (1),
+     Post => (for all J in 1 .. H.Size => V >= H.A (J));
+#+END_SRC
 
 In this lemma we prove that replacing the value at index ~P~ in a heap by the value found at the maximum child of ~P~ does not change the heap properties.
 More specificaly here the preconditions, which act as hyposthesis ewpress that:
@@ -161,9 +166,16 @@ The postcondition express the fact that if these hypothesis are respected then ~
 The body of the procedure only consists of the instruction ~null;~, as guiding Spark by giving him the rigth hypothesis to work with is enough for him to prove the lemma.
 
 #+BEGIN_SRC ada
-  procedure Upper_Bound_Heap (H : Heap; V : T) with
-     Pre  => H.Size >= 1 and then Is_Heap_Def (H) and then V >= H.A (1),
-     Post => (for all J in 1 .. H.Size => V >= H.A (J));
+  procedure Heap_Set (H1 : Heap; H2 : Heap; P : Positive; C : Positive) is
+  begin
+     null;
+  end Heap_Set;
+#+END_SRC
+#+BEGIN_SRC ada
+  procedure Upper_Bound_Heap (H : Heap; V : T) is
+  begin
+     null;
+  end Upper_Bound_Heap;
 #+END_SRC
 
 This lemma is here to make the solvers aware that if ~H~ respects the heap properties, and if ~V~ is 

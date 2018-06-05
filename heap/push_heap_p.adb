@@ -22,7 +22,9 @@ package body Push_Heap_P with
 
             H.A (H.Size) := H.A (Hole);
             Make_Prove_Prologue (H.A, A_Old, V, H.Size);
-
+	    -- end of Prologue
+	    -- beginning of Main act
+	    
             if 1 < Hole then
 
                Parent := Heap_Parent (Hole);
@@ -64,7 +66,8 @@ package body Push_Heap_P with
                     (Multiset_Retain_Rest_Double (A_Old, H.A, H.A (Hole), V));
                end loop;
             end if;
-
+	    -- end of Main act
+	    -- beginning of Epilogue
             A_Save := H.A;
             V_Old  := H.A (Hole);
             No_Changes (A_Old, H.A, A_Save, V, H.A (Hole), Hole);
@@ -74,6 +77,5 @@ package body Push_Heap_P with
 
          end if;
       end if;
-
    end Push_Heap;
 end Push_Heap_P;

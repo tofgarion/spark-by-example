@@ -17,7 +17,7 @@ The procedure will then reinsert the removed element at index ~H.Size~, which wa
 
 With these considerations in mind, one specification for ~Pop_Heap~ is:
 
-#+INCLUDE: ../../../heap/pop_heap_p.ads :src ada :lines "25-37"
+	#+INCLUDE: ../../../heap/pop_heap_p.ads :src ada :range-begin "procedure Pop_Heap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "25-37"
 
 The preconditions state that in order to remove an element from the heap, thisone must not be empty, and the record of type ~Heap~ 
 we will be working on must represent a heap data structure.
@@ -37,11 +37,11 @@ In order to correctly specify and implement ~Pop_Heap~ we need to write a few le
 
 This predicate defines if a given index corrrespnds to the maximum element of a given array:
 
-#+INCLUDE: ../../../spec/upper_bound_p.ads :src ada :lines "16-20"
+	#+INCLUDE: ../../../spec/upper_bound_p.ads :src ada :range-begin "function Max_Element_Def" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "16-20"
 
 **** The predicate Heap_Maximum_Child
 
-     #+INCLUDE: ../../../spec/heap_predicates.ads :src ada :lines "23-35"
+	#+INCLUDE: ../../../spec/heap_predicates.ads :src ada :range-begin "function Heap_Maximum_Child" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "23-35"
 
 
 This predicates verifies for a given ~Heap~ record and two indexes ~P~ and ~C~ that:
@@ -56,7 +56,7 @@ This function returns an option containing, for a given heap ~H~ and a given ind
 
 Its specification is as follows:
 
-#+INCLUDE: ../../../heap/pop_heap_p.ads :src ada :lines "13-24"
+	#+INCLUDE: ../../../heap/pop_heap_p.ads :src ada :range-begin "function Maximum_Heap_Child" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "13-24"
 
 The preconditions express that ~H~ represents a heap data structure, the heap represented by ~H~ has at least two elements and that ~P~ is a valid parent index.
 The postconditions are expressed through contract cases:
@@ -66,7 +66,7 @@ The postconditions are expressed through contract cases:
 
 This function can be implemented in the following way:
 
-#+INCLUDE: ../../../heap/pop_heap_p.adb :src ada :lines "4-22"
+	#+INCLUDE: ../../../heap/pop_heap_p.adb :src ada :range-begin "function Maximum_Heap_Child" :range-end "End Maximum_Heap_Child;" :lines "4-22"
 
 The implementation is quite strainghtforward, as there are no loops or calls to other function, the program does not need annotations to be proved.
 
@@ -74,7 +74,8 @@ The implementation is quite strainghtforward, as there are no loops or calls to 
 
 We present here two lemmas concerning the properties of heap when modifying an element or concerning the order of the elements.
 
-#+INCLUDE: ../../../lemmas/pop_heap_lemmas.ads :src ada :lines "13-22"
+	#+INCLUDE: ../../../lemmas/pop_heap_lemmas.ads :src ada :range-begin "procedure Heap_Set" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "13-22"
+	#+INCLUDE: ../../../lemmas/pop_heap_lemmas.ads :src ada :range-begin "procedure Upper_Bound_Heap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "23-26"
 
 In this lemma we prove that replacing the value at index ~P~ in a heap by the value found at the maximum child of ~P~ does not change the heap properties.
 More specificaly here the preconditions, which act as hyposthesis ewpress that:
@@ -87,7 +88,8 @@ The postcondition express the fact that if these hypothesis are respected then ~
 
 The body of the procedure only consists of the instruction ~null;~, as guiding Spark by giving him the rigth hypothesis to work with is enough for him to prove the lemma.
 
-#+INCLUDE: ../../../lemmas/pop_heap_lemmas.ads :src ada :lines "23-26"
+	#+INCLUDE: ../../../lemmas/pop_heap_lemmas.adb :src ada :range-begin "procedure Heap_Set" :range-end "End Heap_Set;" :lines "4-8"
+	#+INCLUDE: ../../../lemmas/pop_heap_lemmas.adb :src ada :range-begin "procedure Upper_Bound_Heap" :range-end "End Upper_Bound_Heap;" :lines "9-13"
 
 This lemma is here to make the solvers aware that if ~H~ respects the heap properties, and if ~V~ is 
 greater than the first element of ~H~ then ~V~ is greater than all the others elements of ~H~. This can be proved by induction
@@ -110,7 +112,7 @@ pragma warnings
 
 With all these lemmas and predicates we can give an implementation for ~Pop_Heap~
 
-#+INCLUDE: ../../../heap/pop_heap_p.adb :src ada :lines "23-182"
+	#+INCLUDE: ../../../heap/pop_heap_p.adb :src ada :range-begin "procedure Pop_Heap" :range-end "End Pop_Heap;" :lines "23-182"
 
 The code with all the annotations is quite difficult to read, it might be better to look at the code without annotations to understand the working principle of this algorithm:
 

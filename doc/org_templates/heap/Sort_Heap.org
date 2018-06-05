@@ -15,7 +15,7 @@ procedure Sort_Heap(H : in out Heap)
 
 The specification is as follows:
 
-#+INCLUDE: ../../../heap/sort_heap_p.ads :src ada :lines "12-22"
+	#+INCLUDE: ../../../heap/sort_heap_p.ads :src ada :range-begin "procedure Sort_Heap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-22"
 
 The only precondition is that ~H~ should represent a Heap data structure.
 The postcondition expresses the fact that after the procedure the occurences of each element in ~H.A~ 
@@ -26,7 +26,7 @@ and that the elements found at indexes greater than ~H'Old.Size~ remain unchange
 
 With the help of the previously coded procedure [[Pop_Heap.org][Pop_Heap]], ~Sort_Heap~ is quite easy to implement:
 
-#+INCLUDE: ../../../heap/sort_heap_p.adb :src ada :lines "4-29"
+	#+INCLUDE: ../../../heap/sort_heap_p.adb :src ada :range-begin "procedure Sort_Heap" :range-end "End Sort_Heap;" :lines "4-29"
 
 The ghost variable ~Interm~ will be used to compare the state of ~H~ during the execution of the loop with the previous iteration;
 ~N~ stores the initial size of the heap, which will be useful to make a ~for~ loop.

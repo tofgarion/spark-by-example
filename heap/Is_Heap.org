@@ -1,4 +1,4 @@
-# Created 2018-05-16 mer. 10:26
+# Created 2018-06-05 Tue 14:36
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Is_Heap.org
 * The Is_Heap function
@@ -35,7 +35,6 @@ The ~Is_Heap~ can be specified as follows:
   function Is_Heap (H : Heap) return Boolean with
      Post => Is_Heap'Result = Is_Heap_Def (H);
 #+END_SRC
-
 
 There is no precondition on our ~Heap~ record, and the only postcondition is that ~Is_Heap~ returns the same result as our formaly defined predicate.
 

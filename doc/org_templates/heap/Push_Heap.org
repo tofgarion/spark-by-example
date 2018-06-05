@@ -11,7 +11,7 @@ reads :
 
 The specification of ~Push_Heap~ is rather simple to express.
 
-#+INCLUDE: ../../../heap/push_heap_p.ads :src ada :lines "8-19"
+	#+INCLUDE: ../../../heap/push_heap_p.ads :src ada :range-begin "procedure Push_Heap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-19"
 
 The preconditions express the fact that:
   - the heap is not full.
@@ -32,7 +32,8 @@ The ~Multiset_Add~ and ~Multiset_Minus~ predicates will be used with
 the same array but at different points of the algorithm. It will check whether
 the number of occurences of a certain value has increased or decreased.
 
-#+INCLUDE: ../../../spec/multiset_predicates.ads :src ada :lines "28-40"
+	#+INCLUDE: ../../../spec/multiset_predicates.ads :src ada :range-begin "function Multiset_Add" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "28-34"
+	#+INCLUDE: ../../../spec/multiset_predicates.ads :src ada :range-begin "function Multiset_Minus" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "35-40"
 
 Note that the precondition on ~Multiset_Add~ is used to prevent overflows.
 
@@ -42,7 +43,7 @@ As we will see later, we will use another form of ~Multiset_Retain_Rest~ defined
 in ~Remove_Copy~, but this time with two values. Its expression is not that different
 from the first one.
 
-#+INCLUDE: ../../../spec/multiset_predicates.ads :src ada :lines "14-21"
+	#+INCLUDE: ../../../spec/multiset_predicates.ads :src ada :range-begin "function Multiset_Retain_Rest" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-13"
 
 ** Implementation of Push_Heap
 
@@ -56,7 +57,7 @@ from the first one.
 
 The first part of the implementation is the following:
 
-#+INCLUDE: ../../../heap/push_heap_p.adb :src ada :lines "3-25"
+#+INCLUDE: ../../../heap/push_heap_p.adb :src ada :range-begin "procedure Push_Heap" :range-end "-- end of Prologue" :lines "3-26"
 
 The only variables that we use here are ~Hole~ and ~A_Old~. If the size of the heap is
 ~1~, there's no need to do anything. Else, we modify the array (if necessary) to make
@@ -68,13 +69,13 @@ and put it back in the epilogue.
 The ~Make_Prove_Prologue~ is a lemma we use in the prologue. As we've seen before,
 we will write an implementation to help the prover prove it. 
 
-#+INCLUDE: ../../../lemmas/push_heap_lemmas.ads :src ada :lines "30-45"
+	#+INCLUDE: ../../../lemmas/push_heap_lemmas.ads :src ada :range-begin "procedure Make_Prove_Prologue" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "30-45"
 
 In the prologue, we replaced the last value of ~A~ by its parent's (and the two values
 were different). As usual, we have to guide the prover to prove the assertions with
 ~Multiset~ predicates.
 
-#+INCLUDE: ../../../lemmas/push_heap_lemmas.adb :src ada :lines "17-28"
+	#+INCLUDE: ../../../lemmas/push_heap_lemmas.adb :src ada :range-begin "procedure Make_Prove_Prologue" :range-end "End Make_Prove_Prologue;" :lines "17-28"
 
 The implementation is quite basic for this kind of lemma, except for the loop invariant
 which is a bit different from the previous ones, because of the new predicates.
@@ -91,7 +92,7 @@ assertions at the end of the prologue, that are :
 In the main act we go up in the tree representating the heap to find the index
 where we can put the value ~V~. Its implementation is the following:
 
-#+INCLUDE: ../../../heap/push_heap_p.adb :src ada :lines "26-67"
+#+INCLUDE: ../../../heap/push_heap_p.adb :src ada :range-begin "-- beginning of Main act" :range-end "-- end of Main act" :lines "26-70"
 
   The actual code is not that long : in this loop we modify the position
   of the hole (it goes up in the heap) to find the final index where we
@@ -119,10 +120,10 @@ where we can put the value ~V~. Its implementation is the following:
      the first array and the other of the two arrays. In the case of the
      ~Push_Heap~ algorithm, 
      Its specification here is:
-     #+INCLUDE: ../../../lemmas/push_heap_lemmas.ads :src ada :lines "10-29"
+ 	#+INCLUDE: ../../../lemmas/push_heap_lemmas.ads :src ada :range-begin "procedure No_Changes" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-29"
 
      Its implementation is:
-     #+INCLUDE: ../../../lemmas/push_heap_lemmas.adb :src ada :lines "4-16"
+	#+INCLUDE: push_heap_lemmas.adb :src ada :range-begin "procedure No_Changes" :range-end "End No_Changes;" :lines "4-16"
      
 **** The Make_Prove_Loop lemma
 
@@ -131,10 +132,10 @@ where we can put the value ~V~. Its implementation is the following:
      As we did before, we specify the hypothesis and conclusions in the
      specification, and the conclusions in the implementation.
      Its specification is:
-     #+INCLUDE: ../../../lemmas/push_heap_lemmas.ads :src ada :lines "46-66"
+	#+INCLUDE: ../../../lemmas/push_heap_lemmas.ads :src ada :range-begin "procedure Make_Prove_Loop" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "47-67"
 	
      Its implementation is:
-     #+INCLUDE: ../../../lemmas/push_heap_lemmas.adb :src ada :lines "29-48"
+	#+INCLUDE: ../../../lemmas/push_heap_lemmas.adb :src ada :range-begin "procedure Make_Prove_Prologue" :range-end "End Make_Prove_Prologue;" :lines "17-28"
 
      The only thing to do during the loop is to calculate the number of occurences of the values
      in ~A~, considering the number of occurences in ~A_Save~ (only one value differs in ~A~
@@ -148,7 +149,7 @@ where we can put the value ~V~. Its implementation is the following:
 
      Now that we found the final index where ~V~ can be, we have to insert
      it in the array. The implementation is:
-     #+INCLUDE: ../../../heap/push_heap_p.adb :src ada :lines "68-79"
+     #+INCLUDE: ../../../heap/push_heap_p.adb :src ada :range-begin "-- beginning of Epilogue" :range-end "end Push_Heap;" :lines "70-81"
 
      We need to make a final save of our array, to prove the ~Multiset_Unchanged~ predicate
      between ~A~ and ~A_Old~.
@@ -156,10 +157,8 @@ where we can put the value ~V~. Its implementation is the following:
 **** The Make_Prove_Epilogue lemma
 
      This lemma is very similar to the others. Its specification is:
-     #+INCLUDE: ../../../lemmas/push_heap_lemmas.ads :src ada :lines "67-84"
+	#+INCLUDE: ../../../lemmas/push_heap_lemmas.ads :src ada :range-begin "procedure Make_Prove_Epilogue" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "68-85"
      
      Its implementation is:
-     #+INCLUDE: ../../../lemmas/push_heap_lemmas.adb :src ada :lines "49-63"
-
-
-Using ~gnatprove~, the implementations and the specifications, everything is now proved.
+	#+INCLUDE: ../../../lemmas/push_heap_lemmas.adb :src ada :range-begin "procedure Make_Prove_Epilogue" :range-end "end Make_Prove_Epilogue;" :lines "49-63"
+     Using ~gnatprove~, the implementations and the specifications, everything is now proved.
