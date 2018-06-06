@@ -11,7 +11,7 @@
 
     The specification is simple to write:
 
-	#+INCLUDE: ../../../sorting/is_sorted_p.ads :src ada :lines "12-16"
+	#+INCLUDE: ../../../sorting/is_sorted_p.ads :src ada :range-begin "function Is_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-16"
 
 *** The Weakly_Sorted predicate and its lemma
 
@@ -19,17 +19,17 @@
     each element (except for the last one) is less than
     the element just after it. It can be expressed:
 
-	#+INCLUDE: ../../../spec/sorted_p.ads :src ada :lines "7-13"
+	#+INCLUDE: ../../../sorting/sorted_p.ads :src ada :range-begin "function Weakly_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-13"
 
     The ~Weakly_Sorted~ predicate implies the ~Sorted~ predicate,
     but the prover cannot prove it on its own.
     We have to write a lemma to prove it:
 
-	#+INCLUDE: ../../../sorting/is_sorted_p.ads :src ada :lines "7-11"
+	#+INCLUDE: ../../../sorting/is_sorted_p.ads :src ada :range-begin "procedure Weakly_To_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-11"
 
     Its implementation is as simple:
 
-	#+INCLUDE: ../../../sorting/is_sorted_p.adb :src ada :lines "4-11"
+	#+INCLUDE: ../../../sorting/is_sorted_p.adb :src ada :range-begin "procedure Weakly_To_Sorted" :range-end "End Weakly_To_Sorted;" :lines "4-11"
 
 *** Implementation of Is_Sorted
 
@@ -37,7 +37,7 @@
     weakly sorted or not. If it is, we will apply our
     previous lemma and return ~True~:
 
-	#+INCLUDE: ../../../sorting/is_sorted_p.adb :src ada :lines "12-27"
+	#+INCLUDE: ../../../sorting/is_sorted_p.adb :src ada :range-begin "function Is_Sorted" :range-end "End Is_Sorted;" :lines "12-27"
 
     Using this implementation and specification,
     ~gnatprove~ proves the function.

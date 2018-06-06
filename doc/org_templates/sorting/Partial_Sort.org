@@ -21,7 +21,7 @@
 
    The specification of ~Partial_Sort~ is simple:
 
-	#+INCLUDE: ../../../sorting/partial_sort_p.ads :src ada :lines "39-44"
+	#+INCLUDE: ../../../sorting/partial_sort_p.ads :src ada :range-begin "procedure Partial_Sort" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "39-44"
 
    The length of ~A~ has to be less than the maximum size of a heap
    because a heap will be used in the implementation.
@@ -36,7 +36,7 @@
 
      The specification of our auxiliary function is:
 
-	#+INCLUDE: ../../../sorting/partial_sort_p.ads :src ada :lines "24-38"
+	#+INCLUDE: ../../../sorting/partial_sort_p.ads :src ada :range-begin "procedure Partial_Sort_Aux" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "24-38"
 
      We will call this function only if ~M > A'First~, that's why
      ~M~ is in range ~2 .. H.Size~. At the end of the function,
@@ -47,7 +47,7 @@
 
     The implementation of ~Partial_Sort_Aux~ is the following:
 
-	#+INCLUDE: ../../../sorting/partial_sort_p.adb :src ada :lines "9-44"
+	#+INCLUDE: ../../../sorting/partial_sort_p.adb :src ada :range-begin "procedure Partial_Sort_Aux" :range-end "End Partial_Sort_Aux;" :lines "9-44"
 
     The ~Size~ constant is equal to the size of the actual heap.
     ~Old_Size~ is equal to ~A'Length~ (~A~ input in the real
@@ -76,12 +76,14 @@
 
      Their specification is:
 
-	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :lines "53-62"
+	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :range-begin "procedure Occ_To_Has_Value" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "53-57"
+	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :range-begin "procedure Has_Value_To_Occ" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "58-62"
 
      Their implementation is:
 
-	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :lines "56-84"
-     
+	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :range-begin "procedure Occ_To_Has_Value" :range-end "End Occ_To_Has_Value;" :lines "49-61"	#+INCLUDE: classic_lemmas.adb :src ada :range-begin "procedure Has_Value_To_Occ" :range-end "End Has_Value_To_Occ;" :lines "62-77"
+	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :range-begin "procedure Has_Value_To_Occ" :range-end "End Has_Value_To_Occ;" :lines "62-77"
+
      For further details about the implementation, we already
      explained it in function such as [[../mutating/Remove_Copy.org][Remove_Copy]] or
      [[../mutating/Random_Shuffle.org][Random_Shuffle]].
@@ -94,11 +96,11 @@
 
      The specifications are:
 
-	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :lines "63-85"
+	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :range-begin "procedure Partial_Eq" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "63-72"
 
      The implementations are:
 
-	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :lines "85-112"
+	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :range-begin "procedure Partial_Eq" :range-end "End Partial_Eq;" :lines "78-92"
 
      It may seem very difficult but we just adapt the lemma
      for the cases where ~A~ and ~B~ does not have the same
@@ -116,7 +118,7 @@
 
     Its specification is:
 
-	#+INCLUDE: ../../../lemmas/partial_sort_lemmas.ads :src ada :lines "15-29"
+	#+INCLUDE: ../../../lemmas/partial_sort_lemmas.ads :src ada :range-begin "procedure Prove_Lower_Bound" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "15-29"
     
     The method used is:
      - we have ~Multiset_Unchanged (A, A_Save)~ and
@@ -132,7 +134,7 @@
 
        This implementation is:
 
-	#+INCLUDE: ../../../lemmas/partial_sort_lemmas.adb :src ada :lines "5-12"
+	#+INCLUDE: ../../../lemmas/partial_sort_lemmas.adb :src ada :range-begin "procedure Prove_Lower_Bound" :range-end "End Prove_Lower_Bound;" :lines "5-12"
 
 *** The Prove_Partition lemma
 
@@ -142,14 +144,14 @@
     ~M~.
     The specification is:
 
-	#+INCLUDE: ../../../lemmas/partial_sort_lemmas.ads :src ada :lines "30-45"
+	#+INCLUDE: ../../../lemmas/partial_sort_lemmas.ads :src ada :range-begin "procedure Prove_Partition" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "30-45"
 
     The implementation is similar to the previous one,
     except for the fact that we want to prove the 
     ~Partition~ predicate for all ~K~ in a certain range.
     The implementation is the following:
 
-	#+INCLUDE: ../../../lemmas/partial_sort_lemmas.adb :src ada :lines "13-27"
+	#+INCLUDE: ../../../lemmas/partial_sort_lemmas.adb :src ada :range-begin "procedure Prove_Partition" :range-end "End Prove_Partition;" :lines "13-27"
 
     Using ~gnatprove~, the lemmas, the implementation
     and specification, the auxiliary function is proved.
@@ -165,7 +167,7 @@ predicate using the ~New_Element~ lemma described in
 The only thing remaining is playing with a save of ~A~
 to prove the ~Multiset_Unchanged~ preservation.
 
-	#+INCLUDE: ../../../sorting/partial_sort_p.adb :src ada :lines "45-92"
+	#+INCLUDE: ../../../sorting/partial_sort_p.adb :src ada :range-begin "procedure Partial_Sort" :range-end "End Partial_Sort;" :lines "45-92"
 
 Using this implementation and specification, ~gnatprove~
 proves the ~Partial_Sort~ algorithm.
