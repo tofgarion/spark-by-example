@@ -11,7 +11,7 @@
 
     The specification is simple to write:
 
-	#+INCLUDE: ../../../spec/is_sorted_p.ads :src ada :range-begin "function Is_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-16"
+	#+INCLUDE: ../../../sorting/is_sorted_p.ads :src ada :range-begin "function Is_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-16"
 
 *** The Weakly_Sorted predicate and its lemma
 
@@ -19,7 +19,7 @@
     each element (except for the last one) is less than
     the element just after it. It can be expressed:
 
-	#+INCLUDE: ../../../sorting/sorted_p.ads :src ada :range-begin "function Weakly_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-13"
+	#+INCLUDE: ../../../spec/sorted_p.ads :src ada :range-begin "function Weakly_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-13"
 
     The ~Weakly_Sorted~ predicate implies the ~Sorted~ predicate,
     but the prover cannot prove it on its own.
