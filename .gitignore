@@ -7,3 +7,7 @@ auto.cgpr
 *.o
 *.ali
 *.cgpr
+*/obj
+*.stderr
+*.stdout
+test_runner*

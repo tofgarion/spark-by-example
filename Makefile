@@ -27,6 +27,9 @@ test_%: test_%.adb
 	gnatmake -gnata -gnateE -f $^
 	./$@
 
+tests:
+	make -C non-mutating run-tests
+
 prove:
 	gnatprove $(_PROJECT) -f $(_PARALLEL) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) $(FILE)
 

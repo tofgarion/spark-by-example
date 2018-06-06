@@ -1,0 +1,108 @@
+#+TITLE: How to write unit tests for SPARK by Example
+
+This short document explains how to write unit tests for SPARK by
+Example by using [[https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-unit-test-generator-gnattest][gnattest]] and [[http://docs.adacore.com/live/wave/aunit/html/aunit_cb/aunit_cb.html][AUnit]].
+
+* gnattest
+
+  ~gnattest~ is an utility that creates skeletons for unit testing and
+  a test harness. In the following, we will take for example the code
+  located in the ~non-mutating~ directory.
+
+** Generating test harness
+
+   A ~generate-tests~ target has been defined in ~Makefile-common~ to
+   generate the tests skeletons and the harness. It depends on
+   properties defined in the project file, particularly those defined
+   in the ~Gnattest~ package. Executing this target will:
+
+   - create a ~tests~ directory in which the unit tests files are
+     located. For each package ~P~, the following files will be
+     defined:
+
+     - ~P-test_data.ads~ and ~P-test_data.adb~ containing the tests
+       fixtures, i.e. data used for the tests
+     - ~P-test_data_tests.ads~ and ~P-test_data_tests.adb~ containing
+       the test functions
+
+     *Beware*, these files are regenerated everytime the target
+     ~generate-tests~ is called. You should use ~generate-tests~ only
+     one time to generate the skeletons and the harness, complete the
+     test files, add them to the git repo and not regenerate the
+     complete harness again (see below on how to add tests for a new
+     file).
+   - create a ~tests/harness~ directory containing the harness. Do not
+     forget to change the policy for assertions in ~suppress.adc~.
+
+** Removing files from the harness
+
+   Some packages are only used for explanations and they may lack an
+   implementation. For instance, ~naive_search_contract_pb.ads~ is
+   only here to show a specification problem and do not need a unit
+   test.
+
+   You can remove such file by:
+
+   - removing the corresponding ~XXX-tests-suite.ad[b|s]~ files in the
+     harness
+   - removing the corresponding lines in ~gnattest_main_suite.adb~
+     (import and call in the ~Suite~ function)
+
+** Adding new files in the harness
+
+   Let us suppose that you want to add tests for a ~Supp_P~ package
+   defined in the ~supp_p.ads~ and ~supp_p.ads~ files. Calling ~make
+   generate_tests~ will create skeleton for this new file, but *also
+   recreates all the files in the harness, so you may have to modify
+   ~gnattest_main_suite.adb~ again*
+
+* Writing tests
+
+  Let us consider the ~Find_P~ package. The tests for the functions
+  defined in the package are located in the
+  ~tests/find_p-test_data-tests.adb~ file. There is only one test
+  function, namely ~Test_Find~. You can use the ~Assert~ functions to
+  add assertions.
+
+  You often need to define common test fixtures. The easiest way to do
+  that is to define a new type containing the fixtures. For instance,
+  in ~common_fixtures.ads~:
+
+  #+BEGIN_SRC ada
+    with Aunit.Test_Fixtures;
+    with Types; use Types;
+
+    Package Common_Fixtures is
+       type Array_Common_Fixture is new AUnit.Test_Fixtures.Test_Fixture
+          with Record
+             Empty_Array          : T_Arr (1 .. 0) := (others => 0);
+             Singleton_Array_Neg  : T_Arr (1 .. 1) := ( 1     => -5 );
+             Singleton_Array_Zero : T_Arr (1 .. 1) := ( 1     => 0 );
+             Singleton_Array_Pos  : T_Arr (1 .. 1) := ( 1     => 2 );
+             Simple_Array         : T_Arr (1 .. 7) := ( -5, 2, -6, 0, 7, 4, 3 );
+             Wrong_Values         : T_Arr (1 .. 8) := (-10, -8, -1, 1, 6, 5, 8, 10);
+          End Record;
+    End Common_Fixtures;
+  #+END_SRC
+
+  Then:
+
+  - redefine the ~Test~ type in ~find_p-test_data.ads~ to inherit from
+    this type:
+
+    #+BEGIN_SRC ada
+      type Test is new Common_Fixtures.Array_Common_Fixture with null record;
+    #+END_SRC
+  - remove the
+
+    #+BEGIN_SRC ada
+      pragma Unreferenced (Gnattest_T);
+    #+END_SRC
+
+    pragma in ~find_p-test_data-tests.adb~ and use ~Gnattest_T.XXX~ to
+    access test fixture ~XXX~.
+
+* Launching the tests
+
+  To compile and lauch the tests, simply use the ~run-tests~ Makefile
+  rule.
