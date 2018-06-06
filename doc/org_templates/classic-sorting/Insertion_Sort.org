@@ -19,7 +19,7 @@ but has to write more values, whereas ~Selection_Sort~ performs more comparisons
 The specification of ~Insertion_Sort~ is identical to the one of ~Selection_Sort~ (In fact, it should be 
 the case for all sorting algorithms):
 
-	#+INCLUDE: ../../../classic-sorting/insertion_sort_p.ads :src ada :lines "12-15"
+	#+INCLUDE: ../../../classic-sorting/insertion_sort_p.ads :src ada :range-begin "procedure Insertion_Sort" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-15"
 
 *** Implementation of Insertion_Sort
 
@@ -50,7 +50,7 @@ the multiset represented by ~A~ has not changed, and that the order of the eleme
 relatively stable. To make our proof easier we will take another approach, where we emulate the effects
 of ~Rotate~ with a loop of [[../mutating/Random_Shuffle.org#the-swap_array-procedure][Swap_Array]], which we can annotate to our needs:
 
-	#+INCLUDE: ../../../classic-sorting/insertion_sort_p.adb :src ada :lines "4-37"
+	#+INCLUDE: ../../../classic-sorting/insertion_sort_p.adb :src ada :range-begin "procedure Insertion_Sort" :range-end "End Insertion_Sort;" :lines "4-37"
 
 In this implementation we can see that there is a second loop embedded within the main loop. Its function
 is to insert the element found found at index ~J~ at index ~K~ by shifting all the elements between
