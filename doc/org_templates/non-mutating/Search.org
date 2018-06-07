@@ -24,7 +24,7 @@
 
      A first specification of ~Search~ can be the following:
 
-     #+INCLUDE: ../../../non-mutating/search_wo_ghost_p.ads :src ada :lines "6-26"
+     #+INCLUDE: ../../../non-mutating/search_wo_ghost_p.ads :src ada :range-begin "function Search" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-26"
 
      - the precondition expresses
        - the fact that the last index of ~A~ is less than the last
@@ -50,7 +50,7 @@
 
 **** Implementation of Search
 
-     #+INCLUDE: ../../../non-mutating/search_wo_ghost_p.adb :src ada :lines "6-27"
+     #+INCLUDE: ../../../non-mutating/search_wo_ghost_p.adb :src ada :range-begin "function Search" :range-end "End Search;" :lines "6-27"
 
      - the implementation is (again) classic: we range over ~A~ indexes trying
        to find a subsequence equal to ~B~
@@ -75,7 +75,7 @@
      We will define the ghost function ~Has_Subrange~ to represent
      the fact that ~B~ is a subsequence of ~A~:
 
-     #+INCLUDE: ../../../non-mutating/search_with_ghost_p.ads :src ada :lines "6-13"
+     #+INCLUDE: ../../../non-mutating/search_with_ghost_p.ads :range-begin "function Has_Subrange" :range-end "Ghost;" :src ada :lines "6-13"
 
      We equip the function with preconditions specifying that ~A~ is
      longer than ~B~ and that the last index of ~A~ is not the last
@@ -90,14 +90,14 @@
 
      The specification of ~Search~ using ~Has_Subrange~ is now:
 
-     #+INCLUDE: ../../../non-mutating/search_with_ghost_p.ads :src ada :lines "14-32"
+     #+INCLUDE: ../../../non-mutating/search_with_ghost_p.ads :range-begin "function Search" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "14-32"
 
 **** Implementation of Search
 
      The implementation of ~Search~ is the same as previous excepting
      the use of ~Has_Subrange~:
 
-     #+INCLUDE: ../../../non-mutating/search_with_ghost_p.adb :src ada :lines "6-27"
+     #+INCLUDE: ../../../non-mutating/search_with_ghost_p.adb :range-begin "function Search" :range-end "end Search;" :src ada :lines "6-27"
 
      Using this specification and this implementation, ~gnatprove~
      cannot prove contract cases. This is mainly due to the way SMT
@@ -120,26 +120,26 @@
         ~B~ starting at index ~J~. This function contains the
         necessary slice for ~A~.
 
-        #+INCLUDE: ../../../spec/has_subrange_p.ads :src ada :lines "11-19"
+        #+INCLUDE: ../../../spec/has_subrange_p.ads :range-begin "function Equal_Subrange" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "11-19"
 
      2. a function ~Has_Subrange_In_Prefix~ is then defined. It
         expresses the fact that a subrange of ~A~ is equal to ~B~ and
         that the index of ~A~ at which the subrange starts is less
         than ~J~.
 
-        #+INCLUDE: ../../../spec/has_subrange_p.ads :src ada :lines "20-28"
+        #+INCLUDE: ../../../spec/has_subrange_p.ads :range-begin "Has_Subrange_In_Prefix" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "20-28"
 
      3. finally ~Has_Subrange~ is defined using
         ~Has_Subrange_In_Prefix~ and does not contain directly
         quantifiers or slices.
 
-        #+INCLUDE: ../../../spec/has_subrange_p.ads :src ada :lines "40-47"
+        #+INCLUDE: ../../../spec/has_subrange_p.ads :range-begin "Has_Subrange" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "40-47"
 
 **** Specification of Search
 
      The specification of ~Search~ is now the following:
 
-     #+INCLUDE: ../../../non-mutating/search_p.ads :src ada :lines "7-21"
+     #+INCLUDE: ../../../non-mutating/search_p.ads :range-begin "function Search" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "7-21"
 
      The previously defined functions are now used in the
      specification. Notice that slices or quantifiers do not appear
@@ -149,7 +149,7 @@
 
      The implementation of ~Search~ is the following:
 
-     #+INCLUDE: ../../../non-mutating/search_p.adb :src ada :lines "6-26"
+     #+INCLUDE: ../../../non-mutating/search_p.adb :range-begin "function Search" :range-end "end Search;" :src ada :lines "6-26"
 
      Everything is now proved by ~gnatprove~ (using a timeout of 30s).
 
