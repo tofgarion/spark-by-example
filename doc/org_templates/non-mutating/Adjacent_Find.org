@@ -19,35 +19,35 @@
 
 *** The predicate Has_Equal_Neighbors
 
-    As usual, we will first define a predicate to help us write the
+    As usual, we will first define a predicate to help us writing the
     specification. ~Has_Equal_Neigbors (A)~ is true if the array ~A~
     has two consecutive elements that are equal:
 
     #+INCLUDE: "../../../spec/has_equal_neighbors_p.ads" :src ada :range-begin "function Has_Equal_Neighbors" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-13"
 
     Notice that we must take care of one boundary case, i.e., when ~A~
-    is empty, otherwise as ~A'Last~ can be negative when ~A'Length =
-    0~, it could take ~Integer'First~ as a value and an overflow would
-    occur due to ~A'Last - 1~.
+    is empty, otherwise as ~A'Last~ can be less than ~A'First~ when
+    ~A'Length = 0~, it could take ~Integer'First~ as a value and an
+    overflow would occur due to ~A'Last - 1~.
 
 *** Specification of Adjacent_Find
 
     The specification of ~Adjacent_Find~ will use the following
     contract cases:
 
-    - either there is two adjacent elements in ~A~ that are equal and
+    - either there are two adjacent elements in ~A~ that are equal and
       in this case, ~Adjacent_Find~ must return an ~Option~ with a
       valid index ~I~ such that ~A (I) = A (I + 1)~ and there is no
       adjacent equal elements in ~A~ up to ~I~
-    - otherwise ~Adjacent_Find~ must return an ~Option~ specifying
-      that such an index does not exist
+    - or ~Adjacent_Find~ must return an ~Option~ specifying that
+      such an index does not exist
 
     #+INCLUDE: "../../../non-mutating/adjacent_find_p.ads" :src ada :range-begin "function Adjacent_Find" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-18"
 
 *** Implementation of Adjacent_Find
 
     The implementation of ~Adjacent_Find~ goes through ~A~, searching
-    for two consecutive elements that are equal:
+    for two consecutive elements that are equal is defined as follows:
 
     #+INCLUDE: "../../../non-mutating/adjacent_find_p.adb" :src ada :range-begin "function Adjacent_Find" :range-end "end Adjacent_Find;" :lines "6-27"
 

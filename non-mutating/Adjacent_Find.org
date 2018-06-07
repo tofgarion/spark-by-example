@@ -1,4 +1,4 @@
-# Created 2018-06-07 Thu 16:33
+# Created 2018-06-07 Thu 22:02
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Adjacent_Find.org
 
@@ -20,7 +20,7 @@ Given an array ~A~, ~Adjacent_Find~ will either return:
 
 ** The predicate Has_Equal_Neighbors
 
-As usual, we will first define a predicate to help us write the
+As usual, we will first define a predicate to help us writing the
 specification. ~Has_Equal_Neigbors (A)~ is true if the array ~A~
 has two consecutive elements that are equal:
 
@@ -32,21 +32,21 @@ has two consecutive elements that are equal:
 #+END_SRC
 
 Notice that we must take care of one boundary case, i.e., when ~A~
-is empty, otherwise as ~A'Last~ can be negative when ~A'Length =
-    0~, it could take ~Integer'First~ as a value and an overflow would
-occur due to ~A'Last - 1~.
+is empty, otherwise as ~A'Last~ can be less than ~A'First~ when
+~A'Length = 0~, it could take ~Integer'First~ as a value and an
+overflow would occur due to ~A'Last - 1~.
 
 ** Specification of Adjacent_Find
 
 The specification of ~Adjacent_Find~ will use the following
 contract cases:
 
-- either there is two adjacent elements in ~A~ that are equal and
+- either there are two adjacent elements in ~A~ that are equal and
   in this case, ~Adjacent_Find~ must return an ~Option~ with a
   valid index ~I~ such that ~A (I) = A (I + 1)~ and there is no
   adjacent equal elements in ~A~ up to ~I~
-- otherwise ~Adjacent_Find~ must return an ~Option~ specifying
-  that such an index does not exist
+- or ~Adjacent_Find~ must return an ~Option~ specifying that
+  such an index does not exist
 
 #+BEGIN_SRC ada
   function Adjacent_Find (A : T_Arr) return Option with
@@ -64,7 +64,7 @@ contract cases:
 ** Implementation of Adjacent_Find
 
 The implementation of ~Adjacent_Find~ goes through ~A~, searching
-for two consecutive elements that are equal:
+for two consecutive elements that are equal is defined as follows:
 
 #+BEGIN_SRC ada
   function Adjacent_Find (A : T_Arr) return Option is
