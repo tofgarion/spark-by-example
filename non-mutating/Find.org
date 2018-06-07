@@ -1,4 +1,4 @@
-# Created 2018-06-07 Thu 16:45
+# Created 2018-06-07 Thu 17:00
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Find.org
 
@@ -9,7 +9,7 @@ The array will be represented by the following types:
 
 #+BEGIN_SRC ada
   type T is new Integer;
-
+  
   type T_Arr is array (Positive range <>) of T;
 #+END_SRC
 
@@ -96,23 +96,23 @@ The implementation of ~Find~ is straightforward:
   begin
      for I in A'Range loop
         if A (I) = Val then
-           return I;
+  	 return I;
         end if;
-
+  
         pragma Loop_Invariant (for all J in A'First .. I => A (J) /= Val);
      end loop;
-
+  
      return A'Last + 1;
   end Find;
 #+END_SRC
 
 - the implementation is classic: we range over ~A~ indexes trying
   to find an element equal to ~Val~. If we find such an element,
-  we return its index, which guarantees that this will be the
+  its index is returned, which guarantees that this will be the
   least valid index.
 - in order to prove the postconditions of ~Find~, we must add a
-  *loop invariant*. In each loop turn, after the conditional we
-  can assert that every traversed element differs from
+  *loop invariant*. At each loop turn, we can assert after the
+  conditional that each traversed element differs from
   ~Val~. This will be useful to prove that the returned value is
   the least valid index of ~A~ such that the corresponding
   element is equal to ~A~ and this is the invariant we have
@@ -142,10 +142,10 @@ this case, an overflow occurs.
 We can provide a less naive version of ~Find~ by
 
 - factorizing specification in a *ghost* function ~Has_Value~ that
-  specifies that a value occurs in an array and that can be reused
-  in other specifications. [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/specification_features.html#ghost-code][Ghost functions]] are functions that are
-  discared during compilation but can be used for
-  specification. They can be used like *predicates* in ACSL.
+  specifies that a value occurs in an array. This ghost function
+  can be reused in other specifications. [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/specification_features.html#ghost-code][Ghost functions]] are
+  functions that are discared during compilation but can be used
+  for specification. They can be used like *predicates* in ACSL.
 - solving the range and overflow errors by encapsulating the
   result of the function in an "option" type
 - using slices with arrays in order to make the specification more
@@ -176,18 +176,18 @@ done using a [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/type_con
   type Option (Exists : Boolean := False) is record
      case Exists is
         when True =>
-           Value : Integer;
+  	 Value : Integer;
         when False =>
-           null;
+  	 null;
      end case;
   end record;
 #+END_SRC
 
 Given a value of type ~Option~, you should first check if
-~Exists~ is true: in this case, it means that ~Value~ has a
-meaning, otherwise there is no acceptable value for the
-request. We will say that the ~Option~ is false or does not hold
-a valid index if the corresponding field ~Exists~ is ~False~.
+~Exists~ is true: in this case, it means that ~Value~ exists,
+otherwise there is no acceptable value for the request. We will
+say that the ~Option~ is false or does not hold a valid index if
+the corresponding field ~Exists~ is ~False~.
 
 For ~Find~, if the value is not found in the array, then ~Exists~
 will be false, otherwise ~Value~ will hold the index of the array
@@ -217,8 +217,8 @@ slicing ~A~ up to ~Find'Result.Value~.
 
 *** Implementation of Find
 
-The implementation of ~Find~ is the same as previous except the
-use of the ~Option~ type:
+The implementation of ~Find~ is the same as the previous one
+except the use of the ~Option~ type:
 
 #+BEGIN_SRC ada
   function Find (A : T_Arr; Val : T) return Option is
@@ -226,15 +226,15 @@ use of the ~Option~ type:
   begin
      for I in A'Range loop
         if A (I) = Val then
-           Result := (Exists => True, Value => I);
-
-           return Result;
+  	 Result := (Exists => True, Value => I);
+  
+  	 return Result;
         end if;
-
+  
         pragma Loop_Invariant (not Has_Value (A (A'First .. I), Val));
         pragma Loop_Invariant (not Result.Exists);
      end loop;
-
+  
      return Result;
   end Find;
 #+END_SRC

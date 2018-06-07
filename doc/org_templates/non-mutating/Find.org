@@ -72,11 +72,11 @@
 
      - the implementation is classic: we range over ~A~ indexes trying
        to find an element equal to ~Val~. If we find such an element,
-       we return its index, which guarantees that this will be the
+       its index is returned, which guarantees that this will be the
        least valid index.
      - in order to prove the postconditions of ~Find~, we must add a
-       *loop invariant*. In each loop turn, after the conditional we
-       can assert that every traversed element differs from
+       *loop invariant*. At each loop turn, we can assert after the
+       conditional that each traversed element differs from
        ~Val~. This will be useful to prove that the returned value is
        the least valid index of ~A~ such that the corresponding
        element is equal to ~A~ and this is the invariant we have
@@ -106,10 +106,10 @@
     We can provide a less naive version of ~Find~ by
 
     - factorizing specification in a *ghost* function ~Has_Value~ that
-      specifies that a value occurs in an array and that can be reused
-      in other specifications. [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/specification_features.html#ghost-code][Ghost functions]] are functions that are
-      discared during compilation but can be used for
-      specification. They can be used like *predicates* in ACSL.
+      specifies that a value occurs in an array. This ghost function
+      can be reused in other specifications. [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/specification_features.html#ghost-code][Ghost functions]] are
+      functions that are discared during compilation but can be used
+      for specification. They can be used like *predicates* in ACSL.
     - solving the range and overflow errors by encapsulating the
       result of the function in an "option" type
     - using slices with arrays in order to make the specification more
@@ -134,10 +134,10 @@
      #+INCLUDE: "../../../spec/types.ads" :src ada :range-begin "type Option" :range-end "end record;" :lines "20-28"
 
      Given a value of type ~Option~, you should first check if
-     ~Exists~ is true: in this case, it means that ~Value~ has a
-     meaning, otherwise there is no acceptable value for the
-     request. We will say that the ~Option~ is false or does not hold
-     a valid index if the corresponding field ~Exists~ is ~False~.
+     ~Exists~ is true: in this case, it means that ~Value~ exists,
+     otherwise there is no acceptable value for the request. We will
+     say that the ~Option~ is false or does not hold a valid index if
+     the corresponding field ~Exists~ is ~False~.
 
      For ~Find~, if the value is not found in the array, then ~Exists~
      will be false, otherwise ~Value~ will hold the index of the array
@@ -158,8 +158,8 @@
 
 **** Implementation of Find
 
-     The implementation of ~Find~ is the same as previous except the
-     use of the ~Option~ type:
+     The implementation of ~Find~ is the same as the previous one
+     except the use of the ~Option~ type:
 
      #+INCLUDE: "../../../non-mutating/find_p.adb" :src ada :range-begin "function Find" :range-end "end Find;" :lines "6-22"
 
