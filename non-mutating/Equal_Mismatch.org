@@ -1,4 +1,4 @@
-# Created 2018-06-07 Thu 16:33
+# Created 2018-06-07 Thu 22:12
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Equal_Mismatch.org
 
@@ -15,9 +15,9 @@ signatures are the following:
 ~Equal (A, B)~ returns ~True~ if ~A~ and ~B~ have the same length
 and elements of ~A~ and ~B~ are equal when traversing ~A~ and ~B~
 in the same order. ~Mismatch~ is not simply the negation of
-~Equal~: it returns the least valid index of ~A~ at which the
-element of ~A~ differs from the one in ~B~ (an ~Option~ is used to
-consider the case where ~A~ and ~B~ are identical).
+~Equal~: it returns the least valid index ~J~ of ~A~ such that ~A
+   (J)~ differs from ~B (J)~ (an ~Option~ is used to consider the case
+where ~A~ and ~B~ are identical).
 
 In the following, we will first define ~Mismatch~ and then ~Equal~
 using ~Mismatch~.
@@ -33,27 +33,15 @@ equality on arrays to define the predicate:
 #+END_SRC
 
 ~Equal_Ranges (A, B)~ will be false if ~B~ is longer than ~A~, so
-we have to pay attention to the slices that will be used during
-the writing of ~Mismatch~ specification.
+we have to pay attention to the slices that will be used in
+~Mismatch~ specification.
 
 We will also define an overloaded version of ~Equal_Ranges~ using
 an offset (this is just syntactic sugar as slices can also be
 used):
 
-function Equal_Ranges
-  (A      : T_Arr;
-   B      : T_Arr;
-   Offset : Natural) return Boolean is
-  (A (A'First .. A'First + Offset) = B (B'First .. B'First + Offset)) with
-   Pre => Offset < A'Length and then Offset < B'Length;
-
 #+BEGIN_SRC ada
-  function Equal_Ranges
-    (A      : T_Arr;
-     B      : T_Arr;
-     Offset : Natural) return Boolean is
-    (A (A'First .. A'First + Offset) = B (B'First .. B'First + Offset)) with
-     Pre => Offset < A'Length and then Offset < B'Length;
+  function Equal_Ranges (A : T_Arr; B : T_Arr) return Boolean is (A = B);
 #+END_SRC
 
 We need to add a [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#preconditions][precondition]] to exclude invalid ~Offset~
@@ -117,7 +105,7 @@ The implementation of ~Mismatch~ is the following:
   end Mismatch;
 #+END_SRC
 
-The invariants are rather simple to write given the predicate
+The invariants are rather simple to write using the predicate
 ~Equal_Ranges~.
 
 ** Specification of Equal
@@ -145,8 +133,9 @@ the first ~A'Length~ elements of ~B~ with the ones of ~A~.
     (not Mismatch (A, B (B'First .. B'First - 1 + A'Length)).Exists);
 #+END_SRC
 
-Notice that as ~Equal~ is defined with an expression, we could
-also have directly defined the function with its specification.
+As ~Equal~ is defined with an expression function, we could also
+have directly give the implementation of ~Equal~ within its
+specification.
 
 ** A "reversed" specification and implementation of Equal
 
@@ -164,14 +153,5 @@ mismatch:
      Post => Equal'Result =
 #+END_SRC
 
-#+BEGIN_SRC ada
-  function Equal
-    (A : T_Arr;
-     B : T_Arr) return Boolean is
-    (A = B (B'First .. B'First - 1 + A'Length)) with
-     Pre  => A'Length <= B'Length,
-     Post => Equal'Result = (not Mismatch (A, B).Exists);
-#+END_SRC
-
-This specification and implementation of ~Equal~ can also be
+These specification and implementation of ~Equal~ can also be
 proved.

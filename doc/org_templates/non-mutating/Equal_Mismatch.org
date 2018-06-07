@@ -14,9 +14,9 @@
    ~Equal (A, B)~ returns ~True~ if ~A~ and ~B~ have the same length
    and elements of ~A~ and ~B~ are equal when traversing ~A~ and ~B~
    in the same order. ~Mismatch~ is not simply the negation of
-   ~Equal~: it returns the least valid index of ~A~ at which the
-   element of ~A~ differs from the one in ~B~ (an ~Option~ is used to
-   consider the case where ~A~ and ~B~ are identical).
+   ~Equal~: it returns the least valid index ~J~ of ~A~ such that ~A
+   (J)~ differs from ~B (J)~ (an ~Option~ is used to consider the case
+   where ~A~ and ~B~ are identical).
 
    In the following, we will first define ~Mismatch~ and then ~Equal~
    using ~Mismatch~.
@@ -30,23 +30,14 @@
     #+INCLUDE: "../../../spec/equal_ranges_p.ads" :src ada :range-begin "function Equal_Ranges" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-11"
 
     ~Equal_Ranges (A, B)~ will be false if ~B~ is longer than ~A~, so
-    we have to pay attention to the slices that will be used during
-    the writing of ~Mismatch~ specification.
+    we have to pay attention to the slices that will be used in
+    ~Mismatch~ specification.
 
     We will also define an overloaded version of ~Equal_Ranges~ using
     an offset (this is just syntactic sugar as slices can also be
     used):
 
-    #+INCLUDE: "../../../spec/equal_ranges_p.ads" :lines "12-18"
-
-    #+BEGIN_SRC ada
-      function Equal_Ranges
-        (A      : T_Arr;
-         B      : T_Arr;
-         Offset : Natural) return Boolean is
-        (A (A'First .. A'First + Offset) = B (B'First .. B'First + Offset)) with
-         Pre => Offset < A'Length and then Offset < B'Length;
-    #+END_SRC
+    #+INCLUDE: "../../../spec/equal_ranges_p.ads" :src ada :range-begin "function Equal_Ranges" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-11"
 
     We need to add a [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#preconditions][precondition]] to exclude invalid ~Offset~
     values. Notice that running ~gnatprove~ on the corresponding file
@@ -76,7 +67,7 @@
 
     #+INCLUDE: "../../../non-mutating/mismatch_p.adb" :src ada :range-begin "function Mismatch" :range-end "end Mismatch;" :lines "6-22"
 
-    The invariants are rather simple to write given the predicate
+    The invariants are rather simple to write using the predicate
     ~Equal_Ranges~.
 
 *** Specification of Equal
@@ -94,8 +85,9 @@
 
     #+INCLUDE: "../../../non-mutating/equal_p.adb" :src ada :range-begin "function Equal" :range-end "end Equal;" :lines "7-11"
 
-    Notice that as ~Equal~ is defined with an expression, we could
-    also have directly defined the function with its specification.
+    As ~Equal~ is defined with an expression function, we could also
+    have directly give the implementation of ~Equal~ within its
+    specification.
 
 *** A "reversed" specification and implementation of Equal
 
@@ -106,16 +98,7 @@
 
     #+INCLUDE: "../../../non-mutating/equal_rev_p.ads" :src ada :range-begin "function Equal" range-begin "function Equal_Ranges\\n" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-16"
 
-    #+BEGIN_SRC ada
-      function Equal
-        (A : T_Arr;
-         B : T_Arr) return Boolean is
-        (A = B (B'First .. B'First - 1 + A'Length)) with
-         Pre  => A'Length <= B'Length,
-         Post => Equal'Result = (not Mismatch (A, B).Exists);
-    #+END_SRC
-
-    This specification and implementation of ~Equal~ can also be
+    These specification and implementation of ~Equal~ can also be
     proved.
 
 # Local Variables:
