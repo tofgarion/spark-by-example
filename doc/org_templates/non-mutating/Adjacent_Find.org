@@ -23,7 +23,7 @@
     specification. ~Has_Equal_Neigbors (A)~ is true if the array ~A~
     has two consecutive elements that are equal:
 
-    #+INCLUDE: ../../../spec/has_equal_neighbors_p.ads :src ada :lines "9-13"
+    #+INCLUDE: "../../../spec/has_equal_neighbors_p.ads" :range-begin "function Has_Equal_Neighbors" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "9-13"
 
     Notice that we must take care of one boundary case, i.e., when ~A~
     is empty, otherwise as ~A'Last~ can be negative when ~A'Length =
@@ -42,14 +42,14 @@
     - otherwise ~Adjacent_Find~ must return an ~Option~ specifying
       that such an index does not exist
 
-    #+INCLUDE: ../../../non-mutating/adjacent_find_p.ads :src ada :lines "8-18"
+    #+INCLUDE: "../../../non-mutating/adjacent_find_p.ads" :range-begin "function Adjacent_Find" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "8-18"
 
 *** Implementation of Adjacent_Find
 
     The implementation of ~Adjacent_Find~ goes through ~A~, searching
     for two consecutive elements that are equal:
 
-    #+INCLUDE: ../../../non-mutating/adjacent_find_p.adb :src ada :lines "6-27"
+    #+INCLUDE: "../../../non-mutating/adjacent_find_p.adb" :range-begin "function Adjacent_Find" :range-end "end Adjacent_Find;" :src ada :lines "6-27"
 
     The invariants needed to prove the function are the following:
 

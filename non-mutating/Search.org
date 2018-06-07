@@ -1,4 +1,4 @@
-# Created 2018-06-07 Thu 13:49
+# Created 2018-06-07 Thu 15:44
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Search.org
 
@@ -245,13 +245,24 @@ three steps:
    quantifiers or slices.
 
    #+BEGIN_range-begin
-   function Has_Subrange
-     (A : T_Arr;
-      B : T_Arr) return Boolean is
-     (Has_Subrange_In_Prefix (A, A'Last + 1 - B'Length, B)) with
-      Pre => A'Length > 0
-         and then A'Length >= B'Length
-      and then A'Last < Positive'Last;
+   -- The Has_Subrange function is used to specify if an array is a
+   -- subrange of another one.
+
+   with Types;          use Types;
+   with Equal_Ranges_P; use Equal_Ranges_P;
+
+   package Has_Subrange_P with
+        Spark_Mode,
+        Ghost is
+
+   function Equal_Subrange
+     (A     : T_Arr;
+      Start : Positive;
+      B     : T_Arr) return Boolean is
+     (A (Start .. Start - 1 + B'Length) = B) with
+      Pre => A'Length >= B'Length
+      and then A'Last < Positive'Last
+      and then Start in A'First .. A'Last + 1 - B'Length;
    #+END_range-begin
 
 *** Specification of Search

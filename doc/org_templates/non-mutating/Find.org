@@ -6,7 +6,7 @@
    The ~Find~ algorithm is a classic sequential search in an array.
    The array will be represented by the following types:
 
-   #+INCLUDE: "../../../spec/types.ads" :src ada :lines "5-8"
+   #+INCLUDE: "../../../spec/types.ads" :range-begin "type T is new Integer;" :range-end "(Positive range <>) of T" :src ada :lines "5-8"
 
    ~T_Arr~ is an array of integers, with indexes ranging the positive
    integers. We will use this type in the functions needing an array.
@@ -28,7 +28,7 @@
 
      A first specification of ~Find~ can be the following:
 
-     #+INCLUDE: "../../../non-mutating/naive_find_p.ads" :src ada :lines "8-16"
+     #+INCLUDE: "../../../non-mutating/naive_find_p.ads" :range-begin "function Find" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "8-16"
 
      - the [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#postconditions][postcondition]] indicates that the result of ~Find~ is always
        less or equal than ~A'Last + 1~ and that for every index ~I~ in
@@ -51,7 +51,7 @@
        disjointedness of contract cases. For instance, consider the
        following specification for ~Find~:
 
-       #+INCLUDE: "../../../non-mutating/naive_find_contract_pb.ads" :src ada :lines "8-16"
+       #+INCLUDE: "../../../non-mutating/naive_find_contract_pb.ads" :range-begin "function Find" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "8-16"
 
        In this case, ~gnatprove~ emits two errors:
 
@@ -68,7 +68,7 @@
 
      The implementation of ~Find~ is straightforward:
 
-     #+INCLUDE: "../../../non-mutating/naive_find_p.adb" :src ada :lines "6-18"
+     #+INCLUDE: "../../../non-mutating/naive_find_p.adb" :range-begin "function Find" :range-end "end Find;" :src ada :lines "6-18"
 
      - the implementation is classic: we range over ~A~ indexes trying
        to find an element equal to ~Val~. If we find such an element,
@@ -119,7 +119,7 @@
 
      Defining the ~Has_Value~ predicate is rather straightforward:
 
-     #+INCLUDE: "../../../spec/has_value_p.ads" :src ada :lines "9-13"
+     #+INCLUDE: "../../../spec/has_value_p.ads" :range-begin "function Has_Value" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "9-13"
 
      Notice that ~Has_Value~ is defined in a package with the ~Ghost~
      aspect: it is not necessary to add the aspect to the
@@ -131,7 +131,7 @@
      Defining an "option" type for holding the result of ~Find~ can be
      done using a [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/type_contracts.html?highlight=variant%20record#record-discriminants][variant record]]:
 
-     #+INCLUDE: "../../../spec/types.ads" :src ada :lines "20-27"
+     #+INCLUDE: "../../../spec/types.ads" :range-begin "type Option" :range-end "end record;" :src ada :lines "20-28"
 
      Given a value of type ~Option~, you should first check if
      ~Exists~ is true: in this case, it means that ~Value~ has a
@@ -147,7 +147,7 @@
 
      The specification of ~Find~ is now:
 
-     #+INCLUDE: "../../../non-mutating/find_p.ads" :src ada :lines "9-17"
+     #+INCLUDE: "../../../non-mutating/find_p.ads" :range-begin "function Find" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "9-17"
 
      Using ~Option~ overloads the function specification but is
      cleaner for dealing with the case when ~Val~ is not in ~A~. Using
@@ -161,7 +161,7 @@
      The implementation of ~Find~ is the same as previous except the
      use of the ~Option~ type:
 
-     #+INCLUDE: "../../../non-mutating/find_p.adb" :src ada :lines "6-22"
+     #+INCLUDE: "../../../non-mutating/find_p.adb" :range-begin "function Find" :range-end "end Find;" :src ada :lines "6-22"
 
      Notice that a slice is also used for the loop invariant and that
      another invariant has to be specified to ensure that
