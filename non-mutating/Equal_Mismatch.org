@@ -1,4 +1,4 @@
-# Created 2018-06-07 Thu 22:12
+# Created 2018-06-07 Thu 22:18
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Equal_Mismatch.org
 
@@ -151,6 +151,7 @@ mismatch:
     (A = B (B'First .. B'First - 1 + A'Length)) with
      Pre  => A'Length <= B'Length,
      Post => Equal'Result =
+     (not Mismatch (A, B (B'First .. B'First - 1 + A'Length)).Exists);
 #+END_SRC
 
 These specification and implementation of ~Equal~ can also be

@@ -20,7 +20,7 @@
    ~Has_Value_Of~ predicate using the previously defined ~Has_Value~
    predicate:
 
-   #+INCLUDE: "../../../spec/has_value_p.ads" :src ada :range-begin "function Has_Value_Of" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-13"
+   #+INCLUDE: "../../../spec/has_value_of_p.ads" :src ada :range-begin "function Has_Value_Of" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-14"
 
    Again, ~Has_Value_Of~ is defined in a package with the ~Ghost~
    aspect, so ~Has_Value_Of~ can only be used in
