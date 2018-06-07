@@ -1,4 +1,4 @@
-# Created 2018-06-07 Thu 16:33
+# Created 2018-06-07 Thu 21:50
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Find_First_Of.org
 
@@ -6,10 +6,10 @@
 
 The ~Find_First_Of~ algorithm is related to ~Find~: given an array
 ~A~ and an array ~B~, it will return the least valid index of ~A~
-such that the element at this position also occurs in ~B~. We will
-again use the ~Option~ type to encapsulate the result.
+such that the element at this position also occurs in ~B~. The
+~Option~ type is again used to encapsulate the result.
 
-Its signature is the following:
+The signature of ~Find_First_Of~ is the following:
 
 #+BEGIN_SRC ada
   function Find_First_Of (A : T_Arr; B : T_Arr) return Option
@@ -17,8 +17,8 @@ Its signature is the following:
 
 ** The predicate Has_Value_Of
 
-In order to specify ~Find_First_Of~, we will first define the
-~Has_Value_Of~ predicate using our previously defined ~Has_Value~
+In order to specify ~Find_First_Of~, we first define the
+~Has_Value_Of~ predicate using the previously defined ~Has_Value~
 predicate:
 
 #+BEGIN_SRC ada
@@ -29,25 +29,15 @@ predicate:
 #+END_SRC
 
 Again, ~Has_Value_Of~ is defined in a package with the ~Ghost~
-aspect, so ~Has_Value_Of~ can only be used in specification. Notice
-that defining ~Has_Value_Of~ with ~Has_Value~ is easy:
-~Has_Value_Of(A, B)~ is true if some value in ~A~ occurs in ~B~.
+aspect, so ~Has_Value_Of~ can only be used in
+specifications. Notice that defining ~Has_Value_Of~ with
+~Has_Value~ is easy: ~Has_Value_Of(A, B)~ is true if some value in
+~A~ occurs in ~B~.
 
 ** Specification of Find_First_Of
 
 Using ~Has_Value~ and ~Has_Value_Of~, the specification of
 ~Find_First_Of~ can be written as
-
-#+BEGIN_SRC ada
-  function Find_First_Of (A : T_Arr; B : T_Arr) return Option with
-     Contract_Cases =>
-     (Has_Value_Of (A, B) =>
-        (Find_First_Of'Result.Exists = True)
-        and then (Has_Value (B, A (Find_First_Of'Result.Value)))
-        and then
-        (not Has_Value_Of (A (A'First .. Find_First_Of'Result.Value - 1), B)),
-      others => Find_First_Of'Result.Exists = False);
-#+END_SRC
 
 #+BEGIN_SRC ada
   function Find_First_Of (A : T_Arr; B : T_Arr) return Option with
@@ -94,8 +84,7 @@ The implementation of Find_First_Of is the following:
 #+END_SRC
 
 We use the ~Find~ algorithm on each element of ~A~ to check if it
-is present in ~B~. The invariants and the variant are rather
+is present in ~B~. The invariants are rather
 straightforward. Notice that we could have "inlined" ~Find~ inside
-~Find_First_Of~, but this would leads to write more
-invariants. Like ACSL by Example, we emphasize here reuse over
-efficiency.
+~Find_First_Of~, but this would lead to more invariants. Like ACSL
+by Example, we emphasize here reuse over efficiency.
