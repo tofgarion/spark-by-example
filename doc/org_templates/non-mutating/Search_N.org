@@ -22,7 +22,7 @@
     express that an array contains a constant subrange of length
     ~Length~ from location ~Loc~:
 
-    #+INCLUDE: "../../../spec/has_constant_subrange_p.ads" :range-begin "function Constant_Range_From_Location" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "7-17"
+    #+INCLUDE: "../../../spec/has_constant_subrange_p.ads" :src ada :range-begin "function Constant_Range_From_Location" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-17"
 
     The preconditions avoid possible overflows.
 
@@ -30,13 +30,13 @@
     express that an array has a subrange containing only a given value
     (the precondition avoids a possible overflow too):
 
-    #+INCLUDE: "../../../spec/has_constant_subrange_p.ads" :range-begin "function Has_Constant_Subrange" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "18-25"
+    #+INCLUDE: "../../../spec/has_constant_subrange_p.ads" :src ada :range-begin "function Has_Constant_Subrange" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "18-25"
 
 *** Specification of Search_N
 
     The specification of ~Search_N~ is rather easy to express:
 
-    #+INCLUDE: "../../../non-mutating/search_n_p.ads" :range-begin "function Search_N" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "9-30"
+    #+INCLUDE: "../../../non-mutating/search_n_p.ads" :src ada :range-begin "function Search_N" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-30"
 
     - the preconditions express
       - the fact that the last index of ~A~ is less than the last
@@ -58,7 +58,7 @@
 
     The implementation of ~Search_N~ is the following:
 
-    #+INCLUDE: "../../../non-mutating/search_n_p.adb" :range-begin "function Search_N" :range-end "end Search_N;" :src ada :lines "6-38"
+    #+INCLUDE: "../../../non-mutating/search_n_p.adb" :src ada :range-begin "function Search_N" :range-end "end Search_N;" :lines "6-38"
 
     The loop invariants specify that:
       - no subsequence of ~N~ times the value ~Value~ has been found

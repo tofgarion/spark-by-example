@@ -1,4 +1,4 @@
-# Created 2018-06-07 Thu 15:44
+# Created 2018-06-07 Thu 16:33
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Count.org
 
@@ -24,22 +24,22 @@ define a recursive function ~Occ_Def~ which will be used in ~Occ~
 as *~gnatprove~ only introduces axioms for postconditions of
 non-recursive functions*.
 
-#+BEGIN_range-begin
-function Remove_Last
-  (A : T_Arr) return T_Arr is
-  (A (A'First .. A'Last - 1)) with
-   Pre => A'Length > 0,
-   Ghost;
-
-function Occ_Def
-  (A   : T_Arr;
-   Val : T) return Natural is
-  (if A'Length = 0 then 0
-   elsif A (A'Last) = Val then Occ_Def (Remove_Last (A), Val) + 1
-   else Occ_Def (Remove_Last (A), Val)) with
-   Post => Occ_Def'Result <= A'Length;
-pragma Annotate (Gnatprove, Terminating, Occ_Def);
-#+END_range-begin
+#+BEGIN_SRC ada
+  function Remove_Last
+    (A : T_Arr) return T_Arr is
+    (A (A'First .. A'Last - 1)) with
+     Pre => A'Length > 0,
+     Ghost;
+  
+  function Occ_Def
+    (A   : T_Arr;
+     Val : T) return Natural is
+    (if A'Length = 0 then 0
+     elsif A (A'Last) = Val then Occ_Def (Remove_Last (A), Val) + 1
+     else Occ_Def (Remove_Last (A), Val)) with
+     Post => Occ_Def'Result <= A'Length;
+  pragma Annotate (Gnatprove, Terminating, Occ_Def);
+#+END_SRC
 
 The line ~pragma Annotate (Gnatprove, Terminating, Occ_Def);~ is
 very important here. It states that the function ~Occ_Def~
@@ -52,10 +52,10 @@ verify by other means that ~Occ_Def~ really terminates.
 After having defined ~Occ_def~, the definition of ~Occ~ is rather
 easy:
 
-#+BEGIN_range-begin
-function Occ (A : T_Arr; Val : T) return Natural is (Occ_Def (A, Val)) with
-   Post => Occ'Result <= A'Length;
-#+END_range-begin
+#+BEGIN_SRC ada
+  function Occ (A : T_Arr; Val : T) return Natural is (Occ_Def (A, Val)) with
+     Post => Occ'Result <= A'Length;
+#+END_SRC
 
 #+BEGIN_SRC ada
   function Occ (A : T_Arr; Val : T) return Natural is (Occ_Def (A, Val)) with
@@ -69,13 +69,13 @@ The postcondition is necessary to prove loop invariants in
 
 The specification of ~Count~ is the following:
 
-#+BEGIN_range-begin
-function Count (A : T_Arr; Val : T) return Natural with
-   Post =>
-      (Count'Result <= A'Length
-    and then Count'Result in 0 .. A'Length
-    and then Count'Result = Occ (A, Val));
-#+END_range-begin
+#+BEGIN_SRC ada
+  function Count (A : T_Arr; Val : T) return Natural with
+     Post =>
+     (Count'Result <= A'Length
+      and then Count'Result in 0 .. A'Length
+      and then Count'Result = Occ (A, Val));
+#+END_SRC
 
 The postconditions express
 - that the number returned is correct (it is not less than 0 nor
@@ -87,22 +87,22 @@ The postconditions express
 
 The implementation of ~Count~ is the following:
 
-#+BEGIN_range-begin
-function Count (A : T_Arr; Val : T) return Natural is
-   Result : Natural := 0;
-begin
-   for I in A'Range loop
-      if A (I) = Val then
-	 Result := Result + 1;
-      end if;
-
-   pragma Loop_Invariant (Result <= A'Length);
-   pragma Loop_Invariant (Result = Occ (A (A'First .. I), Val));
-end loop;
-
-   return Result;
-end Count;
-#+END_range-begin
+#+BEGIN_SRC ada
+  function Count (A : T_Arr; Val : T) return Natural is
+     Result : Natural := 0;
+  begin
+     for I in A'Range loop
+        if A (I) = Val then
+  	 Result := Result + 1;
+        end if;
+  
+        pragma Loop_Invariant (Result <= A'Length);
+        pragma Loop_Invariant (Result = Occ (A (A'First .. I), Val));
+     end loop;
+  
+     return Result;
+  end Count;
+#+END_SRC
 
 The first invariant states that ~Result~ always stays in a correct
 range. The second one states that at each loop iteration, we can

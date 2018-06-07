@@ -27,7 +27,7 @@
     identical. Using Ada support for array types, we can directly use
     equality on arrays to define the predicate:
 
-    #+INCLUDE: "../../../spec/equal_ranges_p.ads" :range-begin "function Equal_Ranges" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "10-11"
+    #+INCLUDE: "../../../spec/equal_ranges_p.ads" :src ada :range-begin "function Equal_Ranges" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-11"
 
     ~Equal_Ranges (A, B)~ will be false if ~B~ is longer than ~A~, so
     we have to pay attention to the slices that will be used during
@@ -37,7 +37,7 @@
     an offset (this is just syntactic sugar as slices can also be
     used):
 
-    #+INCLUDE: "../../../spec/equal_ranges_p.ads" :src ada :lines "12-18"
+    #+INCLUDE: "../../../spec/equal_ranges_p.ads" :lines "12-18"
 
     #+BEGIN_SRC ada
       function Equal_Ranges
@@ -64,7 +64,7 @@
       - ~A~ and ~B~ differ at offset ~I~ and all elements of ~A~ and
         ~B~ are equal up to offset ~I~
 
-    #+INCLUDE: "../../../non-mutating/mismatch_p.ads" :range-begin "function Mismatch" range-begin "function Equal_Ranges\\n" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "9-24"
+    #+INCLUDE: "../../../non-mutating/mismatch_p.ads" :src ada :range-begin "function Mismatch" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-24"
 
     Notice that we must add a precondition specifying that ~A~ has the
     same length than ~B~ to mimic ACSL by Example specification and to
@@ -74,7 +74,7 @@
 
     The implementation of ~Mismatch~ is the following:
 
-    #+INCLUDE: "../../../non-mutating/mismatch_p.adb" :range-begin "function Mismatch" :range-end "end Mismatch;" :src ada :lines "6-22"
+    #+INCLUDE: "../../../non-mutating/mismatch_p.adb" :src ada :range-begin "function Mismatch" :range-end "end Mismatch;" :lines "6-22"
 
     The invariants are rather simple to write given the predicate
     ~Equal_Ranges~.
@@ -86,13 +86,13 @@
     but that ~B~ may be longer than ~A~. In this case, we only compare
     the first ~A'Length~ elements of ~B~ with the ones of ~A~.
 
-    #+INCLUDE: "../../../non-mutating/equal_p.ads" :range-begin "function Equal" range-begin "function Equal_Ranges\\n" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "9-13"
+    #+INCLUDE: "../../../non-mutating/equal_p.ads" :src ada :range-begin "function Equal" range-begin "function Equal_Ranges\\n" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-13"
 
 *** Implementation of Equal
 
     ~Equal~ is easily implemented using ~Mismatch~:
 
-    #+INCLUDE: "../../../non-mutating/equal_p.adb" :range-begin "function Equal" :range-end "end Equal;" :src ada :lines "7-11"
+    #+INCLUDE: "../../../non-mutating/equal_p.adb" :src ada :range-begin "function Equal" :range-end "end Equal;" :lines "7-11"
 
     Notice that as ~Equal~ is defined with an expression, we could
     also have directly defined the function with its specification.
@@ -104,7 +104,7 @@
     specifying as a postcondition that arrays ~A~ and ~B~ do not
     mismatch:
 
-    #+INCLUDE: "../../../non-mutating/equal_rev_p.ads" :range-begin "function Equal" range-begin "function Equal_Ranges\\n" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :src ada :lines "10-16"
+    #+INCLUDE: "../../../non-mutating/equal_rev_p.ads" :src ada :range-begin "function Equal" range-begin "function Equal_Ranges\\n" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-16"
 
     #+BEGIN_SRC ada
       function Equal

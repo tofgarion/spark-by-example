@@ -6,8 +6,8 @@
   This directory contains the specification and implementation files
   for the following algorithms: ~Find~, ~Find_First_Of~,
   ~Adjacent_Find~, ~Equal~, ~Search~, ~Search_N~, ~Find_End~ and
-  ~Count~. As usual, ghost functions used in specification are located
-  in the ~spec~ directory at project root.
+  ~Count~. As usual, ghost functions used in specifications are
+  located in the ~spec~ directory at project root.
 
   The functions and the corresponding files are presented in the
   following table (click on the link to have more details one the
