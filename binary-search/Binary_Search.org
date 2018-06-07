@@ -1,4 +1,4 @@
-# Created 2018-06-01 Fri 16:47
+# Created 2018-06-07 Thu 12:41
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Binary_Search.org
 * The Binary_Search algorithm

@@ -11,9 +11,6 @@ GENERATE_DEP = $1_p.ads $1_p.adb
 
 .PHONY: prove prove-coq all pp clean distclean run-tests
 
-all:
-	gnatprove $(_PROJECT) -j 4 $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) chap*.adb
-
 pp:
 	gnatpp $(_PROJECT) -rnb
 
