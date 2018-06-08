@@ -3,7 +3,9 @@ package body Partial_Sort_P with
 
    procedure Upper_Bound_Heap (H : Heap; V : T) is
    begin
-      null;
+      for J in 1 .. H.Size loop
+	 pragma Loop_Invariant(for all K in 1 .. J => V >= H.A(K));
+      end loop;   
    end Upper_Bound_Heap;
 
    procedure Partial_Sort_Aux (H : in out Heap; M : Positive) is
