@@ -149,8 +149,10 @@ package body Pop_Heap_P with
             then
               (for all J in H.Size + 1 .. H.A'Last => H.A (J) = Init (J)));
 
-      else
-         pragma Assert
+	    else
+	       pragma Assert(H.A(H.Size) >= H.A(1));
+	       Upper_Bound_Heap(H,H.A(1));
+	       pragma Assert
            (H.A (H.Size) =
             H.A
               (1));  -- if nothing was done we verify that the last element and first element of the heap are equal (should be since the array is constant)

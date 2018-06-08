@@ -13,7 +13,7 @@ SPEC_MAKE_HEAP 		 = ../spec/occ_p.ads $(call GENERATE_DEP, ../lemmas/push_heap_l
 SPEC_SORT_HEAP 		 = ../spec/sorted_p.ads ../spec/upper_bound_p.ads ../spec/lower_bound_p.ads  $(call GENERATE_DEP, pop_heap)  $(SPEC_MULTISET_PREDICATES) $(SPEC_TYPES_AND_HEAP)
 
 # level for each function
-LEVEL_IS_HEAP 	= 0
+LEVEL_IS_HEAP 	= 1
 LEVEL_PUSH_HEAP = 1
 LEVEL_POP_HEAP 	= 1
 LEVEL_MAKE_HEAP = 1
