@@ -1,16 +1,11 @@
+with "../spark_by_example_shared.gpr";
+
 project Numeric_Algorithms is
 
   for Source_Dirs use (".", "../spec");
 
-  package Compiler is
-    for Default_Switches ("Ada") use ("-gnat12", "-gnato13");
-  end Compiler;
+  package Compiler renames Spark_By_Example_Shared.Compiler;
 
-  package Prove is
-    for Switches use ("--mode=prove",
-                      "--report=statistics",
-                      "--proof=per_path",
-                      "--warnings=continue");
-  end Prove;
+  package Prove renames Spark_By_Example_Shared.Prove;
 
 end Numeric_Algorithms;

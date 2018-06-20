@@ -1,18 +1,12 @@
+with "../spark_by_example_shared.gpr";
+
 project Non_Mutating_Algorithms is
 
    for Source_Dirs use (".", "../spec");
-   for Object_Dir use "obj";
 
-   package Compiler is
-      for Default_Switches ("Ada") use ("-gnata", "-gnat12", "-gnato13");
-   end Compiler;
+   package Compiler renames Spark_By_Example_Shared.Compiler;
 
-   package Prove is
-      for Switches use ("--mode=prove",
-                        "--report=statistics",
-                        "--proof=per_path",
-                        "--warnings=continue");
-   end Prove;
+   package Prove renames Spark_By_Example_Shared.Prove;
 
    package Gnattest is
       for Harness_Dir       use "../tests/harness";

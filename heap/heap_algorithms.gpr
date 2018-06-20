@@ -1,11 +1,11 @@
 with "../spark_by_example_shared.gpr";
 
-project Max_Min_Algorithms is
+project Heap_Algorithms is
 
-  for Source_Dirs use (".", "../spec");
+  for Source_Dirs use (".", "../spec","../maxmin","../non-mutating","../lemmas","../mutating");
 
   package Compiler renames Spark_By_Example_Shared.Compiler;
 
   package Prove renames Spark_By_Example_Shared.Prove;
 
-end Max_Min_Algorithms;
+end Heap_Algorithms;
