@@ -45,7 +45,7 @@ Here the assertion in the loop verifies that there won't be any overflows during
 invariant ensures that we have donne the correct calculations.
 
 With this implementation the assertion, the loop invariant and the postcondition is proved.
-Nevertheless, ~gnatprove~ outputs two ~mediums~:
+Nevertheless, ~GNATprove~ outputs two ~mediums~:
 #+BEGIN_SRC 
 acc_def_naive.ads:8:13: medium: subprogram "Acc_Def_Rec" might not terminate, terminating annotation could be incorrect
 acc_def_naive.ads:14:54: medium: overflow check might fail
@@ -109,4 +109,4 @@ An implementation deriving from the previous specification can be:
 The assertion here checks that there are no overflow when adding ~A(J)~ to the intermediary result.
 The loop invariant ensures we are doing the right calculations.
 
-With this specification and implementation everything is proved by ~gnatprove~.
+With this specification and implementation everything is proved by ~GNATprove~.

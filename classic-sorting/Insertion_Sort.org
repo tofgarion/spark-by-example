@@ -1,4 +1,4 @@
-# Created 2018-06-06 Wed 15:08
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../classic-sorting/Insertion_Sort.org
 
@@ -111,4 +111,4 @@ we can proove the first loop invariant of the main loop. The ~Multiset_Unchanged
 with the corresponding invariant of the secondary loop.
 
 
-With this specification and implementation ~gnatprove~ proves everything.
+With this specification and implementation ~GNATprove~ proves everything.

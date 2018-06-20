@@ -1,4 +1,4 @@
-# Created 2018-06-01 Fri 09:54
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Reverse_In_Place.org
 
@@ -21,7 +21,7 @@ Its signature reads:
      Post => Is_Reversed (A, A'Old);
 #+END_SRC
 
-The preconditions are only required to suppress an issue where ~gnatprove~ doesn't consider the indexes of T_Arr to be ~Positives~ despite being declared as such in [[file:../spec/types.ads][types.ads]].
+The preconditions are only required to suppress an issue where ~GNATprove~ doesn't consider the indexes of T_Arr to be ~Positives~ despite being declared as such in [[file:../spec/types.ads][types.ads]].
 This leads to false range_check issues.
 
 The postcondition ensures that ~A~ is indeed reversed at the end of the procedure compared to it's state at the begining of the procedure.
@@ -55,7 +55,7 @@ There are a few things to point out here:
 - The first loop invariant specifies that the array remains unchanged in the ~A'Length-2*I~ middle indexes, which the algorithm has not yet covered at iteration ~I~
 - The two other invariants specify that the sub-arrays ~A(A'First .. A'First + I)~ and ~A(A'Last - I .. A'Last)~ are reversed compared to the arrays before entering the loop.
 
-With this implementation ~gnatprove~ manages to prove everything but one thing: it cannot verify that ~A(A'First + I)~ and ~A(A'Last - I)~ are not alised (see [[http://docs.adacore.com/spark2014-docs/html/lrm/subprograms.html#anti-aliasing][SPARK reference manual section 6.4.2]]). 
+With this implementation ~GNATprove~ manages to prove everything but one thing: it cannot verify that ~A(A'First + I)~ and ~A(A'Last - I)~ are not alised (see [[http://docs.adacore.com/spark2014-docs/html/lrm/subprograms.html#anti-aliasing][SPARK reference manual section 6.4.2]]). 
 Indeed, if ~A'Firs+I = A'Last-I~ then there could be aliasing issue, but we took care of that by ranging I from 0 to Half -A'First. One can add the assertion ~pragma Assert(A'First + I /= A'Last - I);~ in the loop,
 but this assertion is proved, so we are sure that the aliasing does not come from equal indexes.
 
@@ -102,4 +102,4 @@ by removing the call to ~Swap~ and doing the swap "manually" :
 
 Here the invariants remain the same, since we simply explicitly coded ~Swap~ instead of calling it.
 
-This implementation enables ~gnatprove~ to prove everything.
+This implementation enables ~GNATprove~ to prove everything.

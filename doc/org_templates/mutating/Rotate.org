@@ -26,4 +26,4 @@ Rotate is implemented in a way to benefit from the [[Reverse_In_Place.org][Rever
 
 	#+INCLUDE: ../../../mutating/rotate_p.adb :src ada :range-begin "procedure Rotate" :range-end "end Rotate;" :lines "4-10"
 
-~gnatprove~ doesn't need any additional annotations in order to prove everything.
+~GNATprove~ doesn't need any additional annotations in order to prove everything.

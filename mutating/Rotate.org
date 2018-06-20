@@ -1,4 +1,4 @@
-# Created 2018-06-01 Fri 09:54
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Rotate.org
 
@@ -40,4 +40,4 @@ Rotate is implemented in a way to benefit from the [[Reverse_In_Place.org][Rever
   end Rotate;
 #+END_SRC
 
-~gnatprove~ doesn't need any additional annotations in order to prove everything.
+~GNATprove~ doesn't need any additional annotations in order to prove everything.

@@ -1,4 +1,4 @@
-# Created 2018-06-06 Wed 11:36
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../sorting/Partial_Sort.org
 
@@ -336,7 +336,7 @@ The implementation is the following:
   end Prove_Partition;
 #+END_SRC
 
-Using ~gnatprove~, the lemmas, the implementation
+Using ~GNATprove~, the lemmas, the implementation
 and specification, the auxiliary function is proved.
 
 ** Implementation of ~Partial_Sort~
@@ -400,5 +400,5 @@ to prove the ~Multiset_Unchanged~ preservation.
   end Partial_Sort;
 #+END_SRC
 
-Using this implementation and specification, ~gnatprove~
+Using this implementation and specification, ~GNATprove~
 proves the ~Partial_Sort~ algorithm.

@@ -1,4 +1,4 @@
-# Created 2018-05-25 Fri 15:54
+# Created 2018-06-20 Wed 13:05
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Max_Element.org
 
@@ -81,7 +81,7 @@ The loop invariants specify that :
 2. every traversed elements is less or equal than the value at index ~Result.Value~.
 3. every element before index ~Result.Value~ are less than the value at index ~Result.Value~.
 
-When using ~gnatprove~ on the body of ~Max_Element~, everything is proved.
+When using ~GNATprove~ on the body of ~Max_Element~, everything is proved.
 
 ** A version of Max_Element with ghost functions
 
@@ -163,7 +163,7 @@ The implementation is almost the same as before:
         end loop;
   
         return Result;
-        end if;
+     end if;
   end Max_Element_With_Ghost;
 #+END_SRC
 
@@ -172,4 +172,4 @@ is less than ~Result.Value~. If we didn't we would face a ~range check might fai
 exception (in the case ~A'First = A'Last~, we can't split the array ~A~ with
 ~A (A'First .. A'Last - 1)~).
 
-With this implementation, using ~gnatprove~ everything is proved.
+With this implementation, using ~GNATprove~ everything is proved.

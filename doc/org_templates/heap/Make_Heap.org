@@ -90,4 +90,4 @@
     This final implementation is:
 	#+INCLUDE: ../../../heap/make_heap_p.adb :src ada :range-begin "function Make_Heap" :range-end "End Make_Heap;" :lines "4-62"
 
-    Using ~gnatprove~, this implementation and the specification above, everything is proved.
+    Using ~GNATprove~, this implementation and the specification above, everything is proved.

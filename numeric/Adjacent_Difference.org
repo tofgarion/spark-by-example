@@ -1,4 +1,4 @@
-# Created 2018-05-15 mar. 14:37
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Adjacent_Difference.org
 * The Adjacent_Difference algorithm
@@ -92,4 +92,4 @@ The algorithm is really simple, the only annotations are the assertion, which ch
 won't generate any overflow, and the loop invariants verify that we are doing the correct calculation, and that the first index 
 of ~B~ is constant.
 
-With this specification and implementation, ~gnatprove~ proves everything.
+With this specification and implementation, ~GNATprove~ proves everything.

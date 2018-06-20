@@ -1,4 +1,4 @@
-# Created 2018-06-07 Thu 16:33
+# Created 2018-06-20 Wed 13:05
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Find_End.org
 
@@ -161,4 +161,4 @@ The specification of ~Find_End~ is as follows:
   2. or no matching subsequence of ~A~ starting at an index
      lower than ~I~ has been found.
 
-Using ~gnatprove~ on ~Find_End~, all the assertions are proved.
+Using ~GNATprove~ on ~Find_End~, all the assertions are proved.

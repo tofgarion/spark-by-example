@@ -1,4 +1,4 @@
-# Created 2018-06-20 Wed 13:02
+# Created 2018-06-20 Wed 13:05
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Search.org
 
@@ -191,7 +191,7 @@ the use of ~Has_Subrange~:
   end Search;
 #+END_SRC
 
-Using this specification and this implementation, ~gnatprove~
+Using this specification and this implementation, ~GNATprove~
 cannot prove contract cases. This is mainly due to the way SMT
 provers (CVC4, Z3 and Alt-Ergo in our case) handle functions with
 quantifiers and how they instanciate these quantifiers.
@@ -316,4 +316,4 @@ The implementation of ~Search~ is the following:
   end Search;
 #+END_SRC
 
-Everything is now proved by ~gnatprove~ (using a timeout of 30s).
+Everything is now proved by ~GNATprove~ (using a timeout of 30s).

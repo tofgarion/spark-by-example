@@ -72,7 +72,7 @@ we can proove the first loop invariant of the main loop. The ~Multiset_Unchanged
 with the corresponding invariant of the secondary loop.
 
 
-With this specification and implementation ~gnatprove~ proves everything.
+With this specification and implementation ~GNATprove~ proves everything.
 
 
 

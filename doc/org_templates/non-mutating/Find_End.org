@@ -91,7 +91,7 @@
       2. or no matching subsequence of ~A~ starting at an index
          lower than ~I~ has been found.
 
-    Using ~gnatprove~ on ~Find_End~, all the assertions are proved.
+    Using ~GNATprove~ on ~Find_End~, all the assertions are proved.
 
 # Local Variables:
 # ispell-dictionary : "english"

@@ -42,7 +42,7 @@ The loop invariants here ensure that:
 - ~H.A~ is sorted between indexes ~J~ and ~N~
 - The values found at indexes greater than ~N~ remain unchanged.
 
-with those annotations, when using ~gnatprove~ everything is proved. The proof is again 5 minutes long, because ~gnatprove~ reproves the algorithm [[Pop_Heap.org][Pop_Heap]].
+with those annotations, when using ~GNATprove~ everything is proved. The proof is again 5 minutes long, because ~GNATprove~ reproves the algorithm [[Pop_Heap.org][Pop_Heap]].
 
 
 

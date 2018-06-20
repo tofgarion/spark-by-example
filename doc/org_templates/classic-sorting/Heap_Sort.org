@@ -46,6 +46,6 @@ lemma, which established the transitivity of ~Multiset_Unchanged~ when the autom
 Finnaly we copy back ~H.A~ in ~A~ and re_prove the transitivity of ~Multiset_Unchanged~ on ~A~. This
 proves the last postcondition, the first simply being given by the postcondition of ~Sort_Heap~.
 
-When using gnatprove with this specification and implementation everything is proved.
+When using GNATprove with this specification and implementation everything is proved.
 
 

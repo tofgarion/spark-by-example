@@ -29,7 +29,7 @@
           others       => Multiply_No_Overflow'Result = False);
    #+END_SRC
 
-   With just this specification, ~gnatprove~ does not prove the function. This is
+   With just this specification, ~GNATprove~ does not prove the function. This is
    due to the fact that the properties we are trying to prove are non-linear
    arithmetics properties. Therefore, we need to write an implementation to help
    it proving the contract cases.
@@ -42,7 +42,7 @@
    
    #+INCLUDE: ../../../spec/overflow.adb :src ada :range-begin "function Multiply_No_Overflow" :range-end "End Multiply_No_Overflow;" :lines "6-25"
 
-   Using this implementation and specification, ~gnatprove~ proves the contract cases.
+   Using this implementation and specification, ~GNATprove~ proves the contract cases.
    We will also use the ~Add_No_Overflow~ predicate defined in the ~Accumulate~ algorithm.
 
 *** The Inner_Prod_Def_Rec function
@@ -82,5 +82,5 @@
    As in ~Accumulate~, the assertion is here to help the prover
    with the overflow checks.
 
-   Using this implementation and specification, ~gnatprove~ manages to prove
+   Using this implementation and specification, ~GNATprove~ manages to prove
    everything except for the termination of ~Inner_Prod_Def_Rec~, as usual.

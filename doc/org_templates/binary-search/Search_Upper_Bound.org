@@ -67,7 +67,7 @@
       strictly greater than ~V~
 
     With this specification and implementation, when using
-    ~gnatprove~, everything is proved.
+    ~GNATprove~, everything is proved.
 
 # Local Variables:
 # ispell-dictionary: "english"

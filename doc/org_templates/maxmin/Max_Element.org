@@ -43,7 +43,7 @@
      2. every traversed elements is less or equal than the value at index ~Result.Value~.
      3. every element before index ~Result.Value~ are less than the value at index ~Result.Value~.
 
-     When using ~gnatprove~ on the body of ~Max_Element~, everything is proved.
+     When using ~GNATprove~ on the body of ~Max_Element~, everything is proved.
      
 ** A version of Max_Element with ghost functions
 
@@ -83,4 +83,4 @@
      exception (in the case ~A'First = A'Last~, we can't split the array ~A~ with
      ~A (A'First .. A'Last - 1)~).
 
-     With this implementation, using ~gnatprove~ everything is proved.
+     With this implementation, using ~GNATprove~ everything is proved.

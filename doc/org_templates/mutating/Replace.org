@@ -26,4 +26,4 @@
     could be changed in the loop. We specify in this loop invariant that ~A~ has not been changed
     after index ~I~.
 
-    Using ~gnatprove~, everything is proved.
+    Using ~GNATprove~, everything is proved.

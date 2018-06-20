@@ -29,4 +29,4 @@
 	#+INCLUDE: ../../../maxmin/max_seq_p.adb :src ada :range-begin "function Max_Seq" :range-end "End Max_Seq;" :lines "3-7"
 
     All the postconditions of ~Max_Element~ are sufficient to prove the
-    ~Max_Seq~ algorithm with ~gnatprove~.
+    ~Max_Seq~ algorithm with ~GNATprove~.

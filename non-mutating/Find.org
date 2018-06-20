@@ -1,4 +1,4 @@
-# Created 2018-06-07 Thu 17:00
+# Created 2018-06-20 Wed 13:05
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Find.org
 
@@ -61,7 +61,7 @@ A first specification of ~Find~ can be the following:
     be equal to ~A'Last + 1~ (and is not a valid index of the
     array).
 
-  Notice that ~gnatprove~ verifies the completeness and the
+  Notice that ~GNATprove~ verifies the completeness and the
   disjointedness of contract cases. For instance, consider the
   following specification for ~Find~:
 
@@ -76,7 +76,7 @@ A first specification of ~Find~ can be the following:
         (for some I in A'Range => A (I) /= Val) => Find'Result = A'Last + 1);
   #+END_SRC
 
-  In this case, ~gnatprove~ emits two errors:
+  In this case, ~GNATprove~ emits two errors:
 
   #+BEGIN_SRC shell
     medium: contract cases might not be complete (e.g. when A = (others => 0) and A'First = 1 and A'Last = 0 and Val = 0)
@@ -131,7 +131,7 @@ The implementation of ~Find~ is straightforward:
   needed here* (but it would be necessary with a ~while~ loop or
   a plain loop).
 
-Using ~gnatprove~ on the body of ~Find~, the contract is proved,
+Using ~GNATprove~ on the body of ~Find~, the contract is proved,
 but a range check and an overflow check performed by SPARK are
 not verified. These checks are done for the expression ~A'Last +
      1~: it may be the case that ~A'Last~ is ~Positive'Last~ and in

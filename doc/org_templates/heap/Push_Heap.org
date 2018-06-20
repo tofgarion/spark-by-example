@@ -80,7 +80,7 @@ were different). As usual, we have to guide the prover to prove the assertions w
 The implementation is quite basic for this kind of lemma, except for the loop invariant
 which is a bit different from the previous ones, because of the new predicates.
 
-With this implementation and specification, ~gnatprove~ proves the lemma and the
+With this implementation and specification, ~GNATprove~ proves the lemma and the
 assertions at the end of the prologue, that are :
   - the array is now a heap
   - the multiset predicates are verified
@@ -141,7 +141,7 @@ where we can put the value ~V~. Its implementation is the following:
      in ~A~, considering the number of occurences in ~A_Save~ (only one value differs in ~A~
      and ~A_Save~.
 
-     Using the lemmas, ~gnatprove~ manages to prove the main act.
+     Using the lemmas, ~GNATprove~ manages to prove the main act.
 
 *** Epilogue
 
@@ -161,4 +161,4 @@ where we can put the value ~V~. Its implementation is the following:
      
      Its implementation is:
 	#+INCLUDE: ../../../lemmas/push_heap_lemmas.adb :src ada :range-begin "procedure Make_Prove_Epilogue" :range-end "end Make_Prove_Epilogue;" :lines "49-63"
-     Using ~gnatprove~, the implementations and the specifications, everything is now proved.
+     Using ~GNATprove~, the implementations and the specifications, everything is now proved.

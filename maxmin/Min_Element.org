@@ -1,4 +1,4 @@
-# Created 2018-05-25 Fri 15:54
+# Created 2018-06-20 Wed 13:05
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Min_Element.org
 
@@ -94,13 +94,13 @@ Here the post conditions are expressed through 2 contract cases :
   		 (A (A'First .. Result.Value - 1),
   		  A (Result.Value))));
   
-  	   end loop;
+        end loop;
   
         return Result;
   
      end if;
   
-     end Min_Element;
+  end Min_Element;
 #+END_SRC
 
 The implementation is quite similar to the one of [[Max_Element.org][Max_Element]] with predicates. Here:
@@ -110,4 +110,4 @@ The implementation is quite similar to the one of [[Max_Element.org][Max_Element
   2. the current result is a minimum for all the values already examined (from ~A'First~ to ~I~)
   3. the current minimum is the first of A (i.e. all previous values of A are striclty greater)
 
-When using ~gnatprove~ on this specification and implementation, everything is proved.
+When using ~GNATprove~ on this specification and implementation, everything is proved.

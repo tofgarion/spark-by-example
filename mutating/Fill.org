@@ -1,4 +1,4 @@
-# Created 2018-06-01 Fri 09:54
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Fill.org
 
@@ -40,4 +40,4 @@ The implementation of ~Fill~ is the following:
 The loop invariant specify that there is a constant range of ~Val~
 starting at index ~A'First~ with length ~I - A'First + 1~.
 
-Using ~gnatprove~, everything is proved.
+Using ~GNATprove~, everything is proved.

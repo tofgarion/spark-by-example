@@ -1,4 +1,4 @@
-# Created 2018-06-01 Fri 09:54
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Replace.org
 
@@ -51,4 +51,4 @@ The second is necessary because we have an ~out~ parameter, meaning that the val
 could be changed in the loop. We specify in this loop invariant that ~A~ has not been changed
 after index ~I~.
 
-Using ~gnatprove~, everything is proved.
+Using ~GNATprove~, everything is proved.

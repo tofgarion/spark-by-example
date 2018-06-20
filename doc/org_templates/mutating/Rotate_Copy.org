@@ -38,4 +38,4 @@ Rotate copy is implemented using the [[Copy.org][Copy]] function defined previou
 
 	#+INCLUDE: ../../../mutating/rotate_copy_p.adb :src ada :range-begin "procedure Rotate_Copy" :range-end "End Rotate_Copy;" :lines "4-9"
 
-~gnatprove~ does not require additional annotations in order to prove this program.
+~GNATprove~ does not require additional annotations in order to prove this program.

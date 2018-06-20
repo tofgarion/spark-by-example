@@ -1,4 +1,4 @@
-# Created 2018-06-05 Tue 14:38
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Sort_Heap.org
 * The Sort_Heap algorithm
@@ -80,4 +80,4 @@ The loop invariants here ensure that:
 - ~H.A~ is sorted between indexes ~J~ and ~N~
 - The values found at indexes greater than ~N~ remain unchanged.
 
-with those annotations, when using ~gnatprove~ everything is proved. The proof is again 5 minutes long, because ~gnatprove~ reproves the algorithm [[Pop_Heap.org][Pop_Heap]].
+with those annotations, when using ~GNATprove~ everything is proved. The proof is again 5 minutes long, because ~GNATprove~ reproves the algorithm [[Pop_Heap.org][Pop_Heap]].

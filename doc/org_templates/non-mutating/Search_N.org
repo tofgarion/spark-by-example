@@ -76,7 +76,7 @@
         ~Val~. This invariant states that ~Start~ *is* the first index
         of the constant range.
 
-     Everything is proved by ~gnatprove~.
+     Everything is proved by ~GNATprove~.
 
  # Local Variables:
  # ispell-dictionary : "english"

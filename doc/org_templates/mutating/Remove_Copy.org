@@ -69,7 +69,7 @@
    - each value of ~B~ that has been modified is different from ~Val~.
    - each value of ~B~ that has not been modified is the same as before.
 
-     With this specification and implementation, ~gnatprove~ cannot prove
+     With this specification and implementation, ~GNATprove~ cannot prove
      the loop invariant with ~Multiset_Retain_Rest~. Indeed, the predicate
      checks a recursive property for each value of ~T~. We will need to
      help the prover to manage to prove the function.
@@ -132,7 +132,7 @@
 
    	#+INCLUDE: ../../../mutating/remove_copy_second_p.adb :range-begin "procedure Remove_Copy_Second" :range-end "end Remove_Copy_Second;" :src ada :lines "4-45"
 
-   Using ~gnatprove~ with this implementation, a ~precondition might fail~ appears.
+   Using ~GNATprove~ with this implementation, a ~precondition might fail~ appears.
    With the help of some assertions, we see that the precondition that is not verified
    is the ~Multiset_Retain_Rest~ one. Indeed, the prover may consider that after the
    line with the affectation, the state of ~B~ has changed. Therefore, even though the
@@ -186,4 +186,4 @@ The property is proved inductively:
     Now, we use the ~No_Changes~ procedure when ~K > B'First~ which means that one
     or more values have been changed in ~B~.
 
-    Using ~gnatprove~ with this implementation, everything is finally proved.
+    Using ~GNATprove~ with this implementation, everything is finally proved.

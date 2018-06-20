@@ -1,4 +1,4 @@
-# Created 2018-06-07 Thu 22:02
+# Created 2018-06-20 Wed 13:05
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Adjacent_Find.org
 

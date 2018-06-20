@@ -40,4 +40,4 @@
 	#+INCLUDE: ../../../sorting/is_sorted_p.adb :src ada :range-begin "function Is_Sorted" :range-end "End Is_Sorted;" :lines "12-27"
 
     Using this implementation and specification,
-    ~gnatprove~ proves the function.
+    ~GNATprove~ proves the function.

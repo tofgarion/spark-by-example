@@ -40,7 +40,7 @@
     #+INCLUDE: "../../../spec/equal_ranges_p.ads" :src ada :range-begin "function Equal_Ranges" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-11"
 
     We need to add a [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#preconditions][precondition]] to exclude invalid ~Offset~
-    values. Notice that running ~gnatprove~ on the corresponding file
+    values. Notice that running ~GNATprove~ on the corresponding file
     proves that there are no range errors.
 
 *** Specification of Mismatch

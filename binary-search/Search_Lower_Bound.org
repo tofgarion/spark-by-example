@@ -1,4 +1,4 @@
-# Created 2018-06-01 Fri 09:54
+# Created 2018-06-20 Wed 13:05
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Lower_Bound.org
 
@@ -110,4 +110,4 @@ The loop invariants express :
 - that all indexes stricly lower than ~Result.value~ contain value sctrictly lower than ~V~
 - that all indexes greater than ~Right~ contain values greater than ~V~
 
-With this specification and implementation, when using ~gnatprove~, everything is proved.
+With this specification and implementation, when using ~GNATprove~, everything is proved.

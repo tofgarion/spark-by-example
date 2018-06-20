@@ -23,4 +23,4 @@
 	#+INCLUDE: ../../../mutating/swap_p.adb :src ada :range-begin "procedure Swap" :range-end "End Swap;" :lines "3-9"
 
     A memory variable is used to store the value of ~P~.
-    Using ~gnatprove~, everything is proved.
+    Using ~GNATprove~, everything is proved.

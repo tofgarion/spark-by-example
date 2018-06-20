@@ -1,4 +1,4 @@
-# Created 2018-06-20 Wed 13:02
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Heap.org
 * The Make_Heap algorithm
@@ -190,4 +190,4 @@ This final implementation is:
   end Make_Heap;
 #+END_SRC
 
-Using ~gnatprove~, this implementation and the specification above, everything is proved.
+Using ~GNATprove~, this implementation and the specification above, everything is proved.

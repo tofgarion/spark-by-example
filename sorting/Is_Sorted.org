@@ -1,4 +1,4 @@
-# Created 2018-06-06 Wed 11:36
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../sorting/Is_Sorted.org
 
@@ -82,4 +82,4 @@ previous lemma and return ~True~:
 #+END_SRC
 
 Using this implementation and specification,
-~gnatprove~ proves the function.
+~GNATprove~ proves the function.

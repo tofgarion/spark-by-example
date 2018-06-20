@@ -1,4 +1,4 @@
-# Created 2018-05-25 Fri 15:55
+# Created 2018-06-20 Wed 13:05
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Max_Seq.org
 
@@ -40,4 +40,4 @@ The postconditions express the fact that:
 #+END_SRC
 
 All the postconditions of ~Max_Element~ are sufficient to prove the
-~Max_Seq~ algorithm with ~gnatprove~.
+~Max_Seq~ algorithm with ~GNATprove~.

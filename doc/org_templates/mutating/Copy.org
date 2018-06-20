@@ -35,4 +35,4 @@ One implementation for Copy is:
 Here the loop variant is classicaly ~I~, and the loop invariant specifies that for all indexes ~K~ lesser
 than ~I~, then ~A(K) = B(B'First +(K - A'First))~, i.e. we have a partial copy of the first ~I-A'First~ indexes of ~A~ in ~B~.
 
-With this specification and implementation, when using ~gnatprove~ everything is proved.
+With this specification and implementation, when using ~GNATprove~ everything is proved.

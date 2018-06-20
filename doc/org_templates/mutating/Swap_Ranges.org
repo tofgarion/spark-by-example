@@ -34,5 +34,5 @@
       - the next values are still the same and they can be exchanged in the next
 	entry in loop.
 
-     Using ~gnatprove~, everything is proved.
+     Using ~GNATprove~, everything is proved.
      

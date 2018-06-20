@@ -53,7 +53,7 @@ The ~Search_Equal_Range~ can be easily implemented using the two previous functi
 
 #+INCLUDE: ../../../binary-search/search_equal_range2_p.adb :src ada :range-begin "function Search_Equal_Range2" :range-end "End Search_Equal_Range2;" :lines "4-66"
 
-~gnatprove~ doesn't need any annotations other than the specification of the function itself to prove this implementation.
+~GNATprove~ doesn't need any annotations other than the specification of the function itself to prove this implementation.
 
 **** A more elaborate implementation
 
@@ -71,4 +71,4 @@ The loop invariants express that:
 - that all values found at an index striclty lower than ~Left~ are less than ~V~
 - that all values found at an index greater or equal than ~Right~ are striclty greater than ~V~.
 
-These loop invariants, in additions to the post-conditions of ~Search_Lower_Bound~ and ~Search_Upper_Bound~ enable ~gnatprove~ to prove everything.
+These loop invariants, in additions to the post-conditions of ~Search_Lower_Bound~ and ~Search_Upper_Bound~ enable ~GNATprove~ to prove everything.

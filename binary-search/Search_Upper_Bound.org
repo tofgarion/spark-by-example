@@ -1,4 +1,4 @@
-# Created 2018-06-07 Thu 12:41
+# Created 2018-06-20 Wed 13:05
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Upper_Bound.org
 
@@ -120,4 +120,4 @@ each step. The loop invariants express:
   strictly greater than ~V~
 
 With this specification and implementation, when using
-~gnatprove~, everything is proved.
+~GNATprove~, everything is proved.

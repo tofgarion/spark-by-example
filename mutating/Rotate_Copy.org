@@ -1,4 +1,4 @@
-# Created 2018-06-01 Fri 09:54
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Rotate_Copy.org
 
@@ -50,4 +50,4 @@ Rotate copy is implemented using the [[Copy.org][Copy]] function defined previou
   end Rotate_Copy;
 #+END_SRC
 
-~gnatprove~ does not require additional annotations in order to prove this program.
+~GNATprove~ does not require additional annotations in order to prove this program.

@@ -35,4 +35,4 @@ The loop invariants specify the fact that:
    - ~count~ is indeed a counter starting at ~Val~ and has the right value
    - the predicate ~Is_Iota~ is verified for the sliced array ~A(A'First .. I)~.
 
-Using ~gnatprove~, everything is proved.
+Using ~GNATprove~, everything is proved.

@@ -1,4 +1,4 @@
-# Created 2018-06-07 Thu 22:18
+# Created 2018-06-20 Wed 13:05
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Equal_Mismatch.org
 
@@ -45,7 +45,7 @@ used):
 #+END_SRC
 
 We need to add a [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#preconditions][precondition]] to exclude invalid ~Offset~
-values. Notice that running ~gnatprove~ on the corresponding file
+values. Notice that running ~GNATprove~ on the corresponding file
 proves that there are no range errors.
 
 ** Specification of Mismatch

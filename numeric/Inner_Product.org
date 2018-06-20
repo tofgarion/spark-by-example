@@ -1,4 +1,4 @@
-# Created 2018-05-28 lun. 13:21
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Inner_Product.org
 * The Inner_Product algorithm
@@ -30,7 +30,7 @@ The specification of ~Multiply_No_Overflow~ is:
          others       => Multiply_No_Overflow'Result = False);
 #+END_SRC
 
-With just this specification, ~gnatprove~ does not prove the function. This is
+With just this specification, ~GNATprove~ does not prove the function. This is
 due to the fact that the properties we are trying to prove are non-linear
 arithmetics properties. Therefore, we need to write an implementation to help
 it proving the contract cases.
@@ -68,7 +68,7 @@ And its implementation is:
   end Multiply_No_Overflow;
 #+END_SRC
 
-Using this implementation and specification, ~gnatprove~ proves the contract cases.
+Using this implementation and specification, ~GNATprove~ proves the contract cases.
 We will also use the ~Add_No_Overflow~ predicate defined in the ~Accumulate~ algorithm.
 
 *** The Inner_Prod_Def_Rec function
@@ -160,5 +160,5 @@ The implementation of ~Inner_Product~ is quite simple:
 As in ~Accumulate~, the assertion is here to help the prover
 with the overflow checks.
 
-Using this implementation and specification, ~gnatprove~ manages to prove
+Using this implementation and specification, ~GNATprove~ manages to prove
 everything except for the termination of ~Inner_Prod_Def_Rec~, as usual.

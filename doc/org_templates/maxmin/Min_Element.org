@@ -50,4 +50,4 @@ The implementation is quite similar to the one of [[Max_Element.org][Max_Element
   2. the current result is a minimum for all the values already examined (from ~A'First~ to ~I~)
   3. the current minimum is the first of A (i.e. all previous values of A are striclty greater)
 
-When using ~gnatprove~ on this specification and implementation, everything is proved.
+When using ~GNATprove~ on this specification and implementation, everything is proved.

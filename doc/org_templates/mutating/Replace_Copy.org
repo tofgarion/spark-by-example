@@ -39,4 +39,4 @@ The only precondition is that both arrays should be of same length; the postcond
 The loop invariant simply specifies that the sub-array of ~B~ created from the indexes already covered 
 by the algorithm verifies the condition of being equal to ~A~ with all occurences of ~V~ replaced by ~W~.
 
-With this specification and implementation, ~gnatprove~ manages to prove everything.
+With this specification and implementation, ~GNATprove~ manages to prove everything.

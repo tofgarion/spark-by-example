@@ -1,4 +1,4 @@
-# Created 2018-06-01 Fri 09:59
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Iota.org
 * The Iota algorithm
@@ -57,4 +57,4 @@ The loop invariants specify the fact that:
 - ~count~ is indeed a counter starting at ~Val~ and has the right value
 - the predicate ~Is_Iota~ is verified for the sliced array ~A(A'First .. I)~.
 
-Using ~gnatprove~, everything is proved.
+Using ~GNATprove~, everything is proved.

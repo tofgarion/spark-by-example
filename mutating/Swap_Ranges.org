@@ -1,4 +1,4 @@
-# Created 2018-06-01 Fri 09:54
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Swap_Ranges.org
 
@@ -70,4 +70,4 @@ The loop invariants specify that :
 - the next values are still the same and they can be exchanged in the next
   entry in loop.
 
-Using ~gnatprove~, everything is proved.
+Using ~GNATprove~, everything is proved.

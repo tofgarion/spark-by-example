@@ -1,4 +1,4 @@
-# Created 2018-06-07 Thu 12:41
+# Created 2018-06-20 Wed 13:05
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Binary_Search.org
 * The Binary_Search algorithm
@@ -45,4 +45,4 @@ The implementation of ~Binary_Search~ can be:
 Note that if ~Low.Exists = True~, ~Val <= A(Low.Value)~ is always true. This
 is why we only check for ~A (I) <= Val~ to be true.
 
-Using ~gnatprove~, the function is proved.
+Using ~GNATprove~, the function is proved.

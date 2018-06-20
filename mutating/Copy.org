@@ -1,4 +1,4 @@
-# Created 2018-06-01 Fri 09:54
+# Created 2018-06-20 Wed 13:05
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Copy.org
 
@@ -52,4 +52,4 @@ One implementation for Copy is:
 Here the loop variant is classicaly ~I~, and the loop invariant specifies that for all indexes ~K~ lesser
 than ~I~, then ~A(K) = B(B'First +(K - A'First))~, i.e. we have a partial copy of the first ~I-A'First~ indexes of ~A~ in ~B~.
 
-With this specification and implementation, when using ~gnatprove~ everything is proved.
+With this specification and implementation, when using ~GNATprove~ everything is proved.

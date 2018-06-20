@@ -153,7 +153,7 @@
 
 	#+INCLUDE: ../../../lemmas/partial_sort_lemmas.adb :src ada :range-begin "procedure Prove_Partition" :range-end "End Prove_Partition;" :lines "13-27"
 
-    Using ~gnatprove~, the lemmas, the implementation
+    Using ~GNATprove~, the lemmas, the implementation
     and specification, the auxiliary function is proved.
 
 ** Implementation of ~Partial_Sort~
@@ -169,5 +169,5 @@ to prove the ~Multiset_Unchanged~ preservation.
 
 	#+INCLUDE: ../../../sorting/partial_sort_p.adb :src ada :range-begin "procedure Partial_Sort" :range-end "End Partial_Sort;" :lines "45-92"
 
-Using this implementation and specification, ~gnatprove~
+Using this implementation and specification, ~GNATprove~
 proves the ~Partial_Sort~ algorithm.

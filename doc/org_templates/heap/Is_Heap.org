@@ -42,4 +42,4 @@ Here the loop invariants specify that:
 - that the ~Heap~ record constituted of the original array, but with size set to ~Child~ is a heap. This checks that the fisrt ~Child~ values of ~H.A~ form a heap.
 
 
-With this specification and implementation, ~gnatprove~ proves everything.
+With this specification and implementation, ~GNATprove~ proves everything.

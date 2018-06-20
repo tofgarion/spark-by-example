@@ -30,4 +30,4 @@ Given its specification, ~Partial_Sum~ can be implemented in the folowing way:
 This implementation is quite similar to the one of [[Accumulate.org][Accumulate]], the assertions ensures that there are no overflows,
 and the loop invariant verifies that our calculations are correct.
 
-With this implementation and specification everything is proved by ~gnatprove~.
+With this implementation and specification everything is proved by ~GNATprove~.

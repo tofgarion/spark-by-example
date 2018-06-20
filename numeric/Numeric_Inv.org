@@ -1,4 +1,4 @@
-# Created 2018-05-15 mar. 14:37
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Numeric_Inv.org
 * Inverting Partial_Sum and Adjacent_Difference
@@ -52,17 +52,17 @@ Our implementation of ~Partial_Sum_Inv~ is as follows:
 
 #+BEGIN_SRC ada
   procedure Partial_Sum_Inv (A, B : in out T_Arr) is
+     Init : T_Arr := A with Ghost;  -- not used anywhere, but somehow helps prove the loop invariants.
   begin
      if A'Length = 0 then
         return;
      end if;
   
+  
      Partial_Sum (A, B);
-     pragma Assert
-       (for all J in B'First + 1 .. B'Last =>
-  	B (J) = B (J - 1) + A (A'First + (J - B'First)));
-     Adjacent_Difference (B, A);
-  end Partial_Sum_Inv;
+     pragma Assert(A(A'First) = B(B'First));
+  
+     if A'Length >1 then
 #+END_SRC
 
 Here we simply verify that if the length of ~A~ is greater or equal to one (nothing needs to be proven
@@ -99,6 +99,18 @@ The preconditions are those of ~Adjacent_Difference~; The postcondition once aga
 The implementation of ~Adjacent_Difference_Inv~ is as follows:
 
 #+BEGIN_SRC ada
+  	 pragma Loop_Invariant
+  	   (for all J in B'First + 1 .. B'Last =>
+  	      B (J) = B (J - 1) + A (A'First + (J - B'First)));
+  	 pragma Loop_Invariant
+  	   (for all J in A'First + 1 .. A'Last =>
+  	      A(J) = B(B'First + (J - A'First)) - B (B'First + (J - 1 - A'First)));
+        end loop;
+     end if;
+  
+     Adjacent_Difference (B, A);
+  end Partial_Sum_Inv;
+  
   procedure Adjacent_Difference_Inv (A, B : in out T_Arr) is
      Tmp : T with
         Ghost;
@@ -122,18 +134,6 @@ The implementation of ~Adjacent_Difference_Inv~ is as follows:
   	 pragma Loop_Invariant (Tmp = A (J));
   	 pragma Loop_Invariant
   	   (for all K in A'First .. J =>
-  	      Acc_Def (B, B'First, K - A'First + B'First, 0).OK
-  	      and then
-  		Acc_Def (B, B'First, K - A'First + B'First, 0).Value =
-  		A (K));
-  	 pragma Loop_Invariant
-  	   (for all K in B'First .. J - A'First + B'First =>
-  	      Acc_Def (B, B'First, K, 0).OK);
-        end loop;
-     end if;
-     Partial_Sum (B, A);
-  
-  end Adjacent_Difference_Inv;
 #+END_SRC
 
 There are more things to annotate in this function, because the preconditions of ~Partial_Sum~ are 

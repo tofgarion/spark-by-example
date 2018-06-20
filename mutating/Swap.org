@@ -1,4 +1,4 @@
-# Created 2018-06-01 Fri 09:54
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Swap.org
 
@@ -34,4 +34,4 @@ The implementation of ~Swap~ is:
 #+END_SRC
 
 A memory variable is used to store the value of ~P~.
-Using ~gnatprove~, everything is proved.
+Using ~GNATprove~, everything is proved.

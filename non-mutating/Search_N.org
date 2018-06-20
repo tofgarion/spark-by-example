@@ -1,4 +1,4 @@
-# Created 2018-06-07 Thu 16:33
+# Created 2018-06-20 Wed 13:05
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Search_N.org
 
@@ -151,4 +151,4 @@ The loop invariants specify that:
   ~Val~. This invariant states that ~Start~ *is* the first index
   of the constant range.
 
-Everything is proved by ~gnatprove~.
+Everything is proved by ~GNATprove~.

@@ -76,7 +76,7 @@ to help the solvers understand that swapping two values in an array is a permuta
 
 **** Second implementation : Manual proof
 We will here help the solvers prove our function by adding a manual proof in the form of ghost code. This section makes
-use of the examples given in the [[https://docs.adacore.com/spark2014-docs/html/ug/gnatprove_by_example/manual_proof.html#manual-proof-using-ghost-code][SPARK 2014 User's Guide]].
+use of the examples given in the [[https://docs.adacore.com/spark2014-docs/html/ug/GNATprove_by_example/manual_proof.html#manual-proof-using-ghost-code][SPARK 2014 User's Guide]].
 
 ***** The Swap_Array procedure
 
@@ -169,7 +169,7 @@ With all of our lemmas and pghost proof procedure we can give a somewhat condens
 
 Here we simply replace the ~swap~ procedure by our newly coded ~Swap_Array~ function, and the only loop_invariant is that the ~A~ is a permutation of ~A'Loop_Entry~, which is eaxactly the postcondition of our procedure at the exit of the loop.
 
-With this implementation and theses ghost procedures, ~gnatprove~ manages to prove everything.
+With this implementation and theses ghost procedures, ~GNATprove~ manages to prove everything.
 
 **** A word on the implementation of Random_Number
 

@@ -38,4 +38,4 @@ The implementation is straightforward, the loop variant is classicaly I, and the
 specifies that the sub-array composed of the first ~I-B'First~ elements of ~B~ is in reverse order of
 the sub-array of same length, composed of the last elements of ~A~.
 
-When using ~gnatprove~ on this implementation and specification, everything is proved.
+When using ~GNATprove~ on this implementation and specification, everything is proved.

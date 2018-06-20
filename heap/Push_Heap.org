@@ -1,4 +1,4 @@
-# Created 2018-06-05 Tue 14:38
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Push_Heap.org
 * The Push_Heap algorithm
@@ -164,7 +164,7 @@ were different). As usual, we have to guide the prover to prove the assertions w
 The implementation is quite basic for this kind of lemma, except for the loop invariant
 which is a bit different from the previous ones, because of the new predicates.
 
-With this implementation and specification, ~gnatprove~ proves the lemma and the
+With this implementation and specification, ~GNATprove~ proves the lemma and the
 assertions at the end of the prologue, that are :
 - the array is now a heap
 - the multiset predicates are verified
@@ -335,7 +335,7 @@ The only thing to do during the loop is to calculate the number of occurences of
 in ~A~, considering the number of occurences in ~A_Save~ (only one value differs in ~A~
 and ~A_Save~.
 
-Using the lemmas, ~gnatprove~ manages to prove the main act.
+Using the lemmas, ~GNATprove~ manages to prove the main act.
 
 *** Epilogue
 
@@ -399,4 +399,4 @@ Its implementation is:
      end loop;
   end Make_Prove_Epilogue;
 #+END_SRC
-Using ~gnatprove~, the implementations and the specifications, everything is now proved.
+Using ~GNATprove~, the implementations and the specifications, everything is now proved.

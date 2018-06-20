@@ -25,4 +25,4 @@
     The loop invariant specify that there is a constant range of ~Val~
     starting at index ~A'First~ with length ~I - A'First + 1~.
 
-    Using ~gnatprove~, everything is proved.
+    Using ~GNATprove~, everything is proved.

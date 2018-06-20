@@ -1,4 +1,4 @@
-# Created 2018-05-15 mar. 14:37
+# Created 2018-06-20 Wed 13:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Partial_Sum.org
 * The Partial_Sum algorithm
@@ -58,4 +58,4 @@ Given its specification, ~Partial_Sum~ can be implemented in the folowing way:
 This implementation is quite similar to the one of [[Accumulate.org][Accumulate]], the assertions ensures that there are no overflows,
 and the loop invariant verifies that our calculations are correct.
 
-With this implementation and specification everything is proved by ~gnatprove~.
+With this implementation and specification everything is proved by ~GNATprove~.
