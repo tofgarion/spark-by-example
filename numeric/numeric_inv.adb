@@ -13,14 +13,12 @@ package body Numeric_Inv with
       pragma Assert(A(A'First) = B(B'First));
       
       if A'Length >1 then
-	 for J in B'First+1 .. B'Last loop
-	    pragma Loop_Invariant
-	      (for all J in B'First + 1 .. B'Last =>
-		 B (J) = B (J - 1) + A (A'First + (J - B'First)));
-	    pragma Loop_Invariant
-	      (for all J in A'First + 1 .. A'Last =>
-		 A(J) = B(B'First + (J - A'First)) - B (B'First + (J - 1 - A'First)));
-	 end loop;
+	 pragma assert
+	   (for all J in B'First + 1 .. B'Last =>
+	      B (J) = B (J - 1) + A (A'First + (J - B'First)));
+	 pragma Assert 
+	   (for all J in A'First + 1 .. A'Last =>
+	      A(J) = B(B'First + (J - A'First)) - B (B'First + (J - 1 - A'First)));
       end if;
       
       Adjacent_Difference (B, A);
