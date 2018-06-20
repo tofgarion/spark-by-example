@@ -11,18 +11,18 @@
    #+END_SRC
 
    ~Search~ will return an option containing the *first valid* index
-   ~I~ of ~A~ such that ~A (I .. I + B'Length - 1) = B~ if it exists.
+   ~J~ of ~A~ such that ~A (J .. J + B'Length - 1) = B~ if it exists.
 
 *** A first version of Search without ghost functions for specification
 
     We will first specify and implement ~Search~ without using ghost
     functions: we will see in the next sections that using ghost
     functions to factorize specification as usual is not trivial in
-    this case (this is mainly due to limitations of the SMT solvers).
+    this case (this is mainly due to limitations of SMT solvers).
 
 **** Specification of Search without ghost functions
 
-     A first specification of ~Search~ can be the following:
+     A specification of ~Search~ can be written as follows:
 
      #+INCLUDE: "../../../non-mutating/search_wo_ghost_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-26"
 
@@ -57,9 +57,8 @@
      - the loop invariants specify that the subsequence has not been
        found starting from the previously tried indexes and that the
        ~Option~ result does not contain a valid index
-     - the loop variant is again ~I~
 
-     When using ~gnatprove~ on ~Search~, all the assertions are
+     When using ~GNATprove~ on ~Search~, all the assertions are
      proved. Notice that proving the invariant preservation VC and the
      contract case VC is difficult and takes some time.
 
