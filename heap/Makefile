@@ -15,7 +15,7 @@ SPEC_SORT_HEAP 		 = ../spec/sorted_p.ads ../spec/upper_bound_p.ads ../spec/lower
 # level for each function
 LEVEL_IS_HEAP 	= 1
 LEVEL_PUSH_HEAP = 1
-LEVEL_POP_HEAP 	= 1
+LEVEL_POP_HEAP 	= 4
 LEVEL_MAKE_HEAP = 1
 LEVEL_SORT_HEAP = 1
 

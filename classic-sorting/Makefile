@@ -17,7 +17,7 @@ LEVEL_HEAP_SORT = 1
 # all proof targets
 ALL_PROOF_TARGETS = selection_sort insertion_sort heap_sort
 
-include ../Makefile
+include ../Makefile-common
 
 .PHONY:
 

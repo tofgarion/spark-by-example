@@ -6,7 +6,7 @@ _PARALLEL = $(if $(PARALLEL),-j $(PARALLEL),-j 0)
 _PROJECT = $(if $(PROJECT),-P $(PROJECT),-P spark_by_example.gpr)
 _WHYCONF = $(if $(WHYCONF),--why3-conf=$(WHYCONF),)
 _DEBUG = $(if $(DEBUG),-d -v,)
-_STATS = $(if $(STATS),cp gnatprove/gnatprove.out ../stats/$(FILE).out,)
+_STATS = $(if $(STATS),cp gnatprove/gnatprove.out ../stats/$(FILE).out;python ../stats/generate_csv_function.py ../stats/$(FILE),)
 
 GENERATE_DEP = $1_p.ads $1_p.adb
 

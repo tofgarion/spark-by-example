@@ -1,4 +1,4 @@
-# Created 2018-06-20 Wed 13:06
+# Created 2018-06-28 jeu. 16:21
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../classic-sorting/Insertion_Sort.org
 
