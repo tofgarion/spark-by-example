@@ -45,7 +45,7 @@ fill: $(call GENERATE_DEP, fill) $(SPEC_FILL)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_FILL) $(MUTATING_DEFAULT_TIMEOUT)
 
 random_shuffle: $(call GENERATE_DEP, random_shuffle) $(SPEC_RANDOM_SHUFFLE)
-	make prove FILE=$@_p.ads LEVEL=$(LEVEL_RANDOM_SHUFFLE) $(MUTATING_DEFAULT_TIMEOUT)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_RANDOM_SHUFFLE) $(MUTATING_DEFAULT_TIMEOUT)
 
 remove_copy: $(call GENERATE_DEP, remove_copy) $(SPEC_REMOVE_COPY)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REMOVE_COPY) $(MUTATING_DEFAULT_TIMEOUT)
@@ -75,3 +75,4 @@ swap_ranges: $(call GENERATE_DEP,swap_ranges) $(SPEC_SWAP)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SWAP_RANGES) $(MUTATING_DEFAULT_TIMEOUT)
 
 all :$(ALL_PROOF_TARGET)
+	$(if $(STATS), python ../stats/generate_csv_chapter.py mutating,)

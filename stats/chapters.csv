@@ -1,0 +1,9 @@
+chapter,algos,,,,,,,,,,,,,
+non-mutating,naive_find_p.adb,naive_find_contract_pb.ads,find_p.adb,find_first_of_p.adb,adjacent_find_p.adb,mismatch_p.adb,equal_p.adb,equal_rev_p.ads,search_wo_ghost_p.adb,search_with_ghost_p.adb,search_p.adb,search_n_p.adb,find_end_p.adb,count_p.adb
+maxmin,max_element_p.adb,max_element_with_ghost_p.adb,max_seq_p.adb,min_element_p.adb,,,,,,,,,,
+binary-search,search_upper_bound_p.adb,search_lower_bound_p.adb,search_equal_range_p.adb,search_equal_range2_p.adb,binary_search_p.adb,,,,,,,,,
+mutating,copy_p.adb,fill_p.adb,random_shuffle_p.adb,remove_copy_p.adb,replace_copy_p.adb,replace_p.adb,reverse_copy_p.adb,reverse_in_place_p.adb,rotate_copy_p.adb,rotate_p.adb,swap_p.adb,swap_ranges_p.adb,,
+numeric,iota_p.adb,accumulate_naive.adb,accumulate_p.adb,inner_product_p.adb,partial_sum_p.adb,adjacent_difference_p.adb,numeric_inv.adb,,,,,,,
+heap,is_heap_p.adb,push_heap_p.adb,pop_heap_p.adb,make_heap_p.adb,sort_heap_p.adb,,,,,,,,,
+sorting,is_heap_p.adb,partial_sort_p.adb,,,,,,,,,,,,
+classic-sorting,insertion_sort_p.adb,selection_sort_p.adb,heap_sort_p.adb,,,,,,,,,,,

@@ -35,3 +35,4 @@ heap_sort: $(call GENERATE_DEP, heap_sort)
 
 # All proofs
 all: $(ALL_PROOF_TARGETS)
+	$(if $(STATS), python ../stats/generate_csv_chapter.py classic-sorting,)

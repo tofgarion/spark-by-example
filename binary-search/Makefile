@@ -43,3 +43,4 @@ binary_search: $(call GENERATE_DEP, binary_search) $(SPEC_BINARY_SEARCH)
 
 # All proofs
 all: $(ALL_PROOF_TARGETS)
+	$(if $(STATS), python ../stats/generate_csv_chapter.py binary-search,)
