@@ -96,7 +96,7 @@ while tokens[0] != 'Summary' :
         cat = 'check'
         current +=1
     elif cat == 'loop' :
-        current +=2
+        current += 1 if tokens[5] == 'variant' else 2
     elif cat == 'contract' :
         current +=1
     tokens[current] = tokens[current][1:len(tokens[current])]
