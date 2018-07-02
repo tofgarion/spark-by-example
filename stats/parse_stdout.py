@@ -20,6 +20,7 @@ i=0
 solvers = dict([('total',0),('altergo' , 1),('CVC4' , 2),('Z3' , 3),('unprooved',4)])
 cats = dict([('initialization',0),('check',1),('assertion',2),('loop',3),('precondition',4),('postcondition',5),('contract',6),('total',7)])
 cats_names = list(cats.keys())
+cats_names.sort(key= lambda x : cats[x])
 values = [[0]*5 for i in range(8)]
 inline = input.readline()
 tokens = list(filter(None,re.split("[ :]",inline)))
@@ -34,7 +35,7 @@ while tokens[0][0:len(tokens[0])-4] != filename[9:len(filename)-4] :
 while tokens[0][0:len(tokens[0])-4] == filename[9:len(filename)-4] : 
     print(inline)
     if tokens[3] == 'medium' :
-        values[7][5] += 1
+        values[7][4] += 1
         inline = input.readline()
         tokens = list(filter(None,re.split("[ :]",inline)))
         continue
@@ -47,7 +48,7 @@ while tokens[0][0:len(tokens[0])-4] == filename[9:len(filename)-4] :
         cat = 'check'
         current +=1
     elif cat == 'loop' :
-        current +=2
+        current += 1 if tokens[5] == 'variant' else 2
     elif cat == 'contract' :
         current +=1
     tokens[current] = tokens[current][1:len(tokens[current])]
