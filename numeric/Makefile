@@ -2,6 +2,7 @@ PROJECT=numeric_algorithms.gpr
 
 # timeout for chapter
 NUMERIC_DEFAULT_TIMEOUT = "TIMEOUT=5"
+NUMERIC_INV_TIMEOUT = "TIMEOUT=10"
 
 # specification dependencies for each function
 SPEC_TYPES		 = ../spec/types.ads
@@ -55,7 +56,7 @@ adjacent_difference: $(call GENERATE_DEP, adjacent_difference) $(SPEC_ADJACENT_D
 
 # Numeric_Inv
 numeric_inv: numeric_inv.adb numeric_inv.ads $(SPEC_NUMERIC_INV)
-	make prove FILE=$@.adb LEVEL=$(LEVEL_NUMERIC_INV) $(NUMERIC_DEFAULT_TIMEOUT)
+	make prove FILE=$@.adb LEVEL=$(LEVEL_NUMERIC_INV) $(NUMERIC_INV_TIMEOUT)
 
 # All proods
 all: $(ALL_PROOF_TARGETS)

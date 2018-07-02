@@ -11,3 +11,6 @@ auto.cgpr
 *.stderr
 *.stdout
 test_runner*
+*.csv
+*.out
+*.stdout
