@@ -23,7 +23,7 @@ for i in range(1,8):
                 values[5]+= float(tokens[7])
             input.close()
             values[1]= (values[0]-values[5])/values[0]*100
-            output.write(algos[i])
+            output.write(algos[j])
             for k in range(0,5):
                 output.write(","+str(values[k]))
             output.write("\n")

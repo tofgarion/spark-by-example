@@ -98,4 +98,4 @@ count: $(call GENERATE_DEP,count) $(SPEC_COUNT)
 
 # All proofs
 all: $(ALL_PROOF_TARGETS)
-	$(if $(STATS), python ../stats/generate_csv_chapter.py non-mutating,)
+	$(if $(STATS), python ../stats/generate_csv_chapter.py non-mutating; python ../stats/generate_csv_chapter_stdout.py non-mutating,)

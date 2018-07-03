@@ -60,4 +60,4 @@ numeric_inv: numeric_inv.adb numeric_inv.ads $(SPEC_NUMERIC_INV)
 
 # All proods
 all: $(ALL_PROOF_TARGETS)
-	$(if $(STATS), python ../stats/generate_csv_chapter.py numeric,)
+	$(if $(STATS), python ../stats/generate_csv_chapter.py numeric; python ../stats/generate_csv_chapter_stdout.py numeric,)

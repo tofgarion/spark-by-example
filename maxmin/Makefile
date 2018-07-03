@@ -34,4 +34,4 @@ min_element: $(call GENERATE_DEP,min_element) $(SPEC_MIN_ELEMENT)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_MIN_ELEMENT) $(MAX_MIN_DEFAULT_TIMEOUT)
 
 all: $(ALL_PROOF_TARGET)
-	$(if $(STATS), python ../stats/generate_csv_chapter.py maxmin,)
+	$(if $(STATS), python ../stats/generate_csv_chapter.py maxmin; python ../stats/generate_csv_chapter_stdout.py maxmin,)
