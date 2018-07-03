@@ -50,4 +50,4 @@ sort_heap: $(call GENERATE_DEP, sort_heap)
 
 # All proofs
 all: $(ALL_PROOF_TARGETS)
-	$(if $(STATS), python ../stats/generate_csv_chapter.py heap,)
+	$(if $(STATS), python ../stats/generate_csv_chapter.py heap; python ../stats/generate_csv_chapter_stdout.py heap,)

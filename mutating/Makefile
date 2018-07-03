@@ -75,4 +75,4 @@ swap_ranges: $(call GENERATE_DEP,swap_ranges) $(SPEC_SWAP)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SWAP_RANGES) $(MUTATING_DEFAULT_TIMEOUT)
 
 all :$(ALL_PROOF_TARGET)
-	$(if $(STATS), python ../stats/generate_csv_chapter.py mutating,)
+	$(if $(STATS), python ../stats/generate_csv_chapter.py mutating; python ../stats/generate_csv_chapter_stdout.py mutating,)

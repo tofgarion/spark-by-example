@@ -28,4 +28,4 @@ partial_sort: $(call GENERATE_DEP, partial_sort) $(SPEC_PARTIAL_SORT)
 
 
 all: $(ALL_PROOF_TARGET)
-	$(if $(STATS), python ../stats/generate_csv_chapter.py sorting,)
+	$(if $(STATS), python ../stats/generate_csv_chapter.py sorting; python ../stats/generate_csv_chapter_stdout.py sorting,)
