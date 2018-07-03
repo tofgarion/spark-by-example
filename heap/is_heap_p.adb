@@ -21,12 +21,13 @@ package body Is_Heap_P with
                   and then Child <= H.Size);
                pragma Loop_Invariant (Parent = Heap_Parent (Child));
                pragma Loop_Invariant (Is_Heap_Def ((A => H.A, Size => Child)));
-
+	       pragma Assert(if Child = H.Size then Is_Heap_Def(H)); 
                if Child mod 2 = 1 then
                   Parent := Parent + 1;
                end if;
 
-            end loop;
+	    end loop;
+            pragma Assert(Is_Heap_Def(H));
          end if;
 
          return True;

@@ -1,7 +1,7 @@
 PROJECT=sorting_algorithms.gpr
 
 #timeout for chapter
-SORTING_DEFAULT_TIMEOUT = "TIMEOUT=5"
+SORTING_DEFAULT_TIMEOUT = "TIMEOUT=20"
 
 #All proof target
 ALL_PROOF_TARGET = is_sorted partial_sort

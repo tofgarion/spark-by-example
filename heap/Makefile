@@ -1,7 +1,9 @@
 PROJECT=Heap_Algorithms.gpr
 
 #timeout for chapter
-HEAP_DEFAULT_TIMEOUT = "TIMEOUT=5"
+HEAP_DEFAULT_TIMEOUT = "TIMEOUT=10"
+IS_HEAP_TIMEOUT = "TIMEOUT=20"
+
 
 # specification dependencies for each function
 SPEC_TYPES_AND_HEAP 	 = ../spec/types.ads ../spec/heap_predicates.ads
@@ -13,7 +15,7 @@ SPEC_MAKE_HEAP 		 = ../spec/occ_p.ads $(call GENERATE_DEP, ../lemmas/push_heap_l
 SPEC_SORT_HEAP 		 = ../spec/sorted_p.ads ../spec/upper_bound_p.ads ../spec/lower_bound_p.ads  $(call GENERATE_DEP, pop_heap)  $(SPEC_MULTISET_PREDICATES) $(SPEC_TYPES_AND_HEAP)
 
 # level for each function
-LEVEL_IS_HEAP 	= 1
+LEVEL_IS_HEAP 	= 4
 LEVEL_PUSH_HEAP = 1
 LEVEL_POP_HEAP 	= 4
 LEVEL_MAKE_HEAP = 1
@@ -28,7 +30,7 @@ include ../Makefile-common
 
 # Is_Heap
 is_heap: $(call GENERATE_DEP, is_heap)
-	make prove FILE=$@_p.adb LEVEL=$(LEVEL_IS_HEAP) $(HEAP_DEFAULT_TIMEOUT)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_IS_HEAP) $(IS_HEAP_TIMEOUT)
 
 # Push_Heap
 push_heap: $(call GENERATE_DEP, push_heap)

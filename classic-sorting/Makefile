@@ -1,7 +1,7 @@
 PROJECT=classic_sorting_algorithms.gpr
 
 # timeout for chapter
-CLASSIC_SORTING_DEFAULT_TIMEOUT = "TIMEOUT=5"
+CLASSIC_SORTING_DEFAULT_TIMEOUT = "TIMEOUT=10"
 
 # specification dependencies for each function
 SPEC_TYPES_MULTISET_SORTED = ../spec/types.ads ../spec/sorted_p.ads ../spec/multiset_predicates.ads
