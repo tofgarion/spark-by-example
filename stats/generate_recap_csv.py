@@ -8,7 +8,6 @@ for j in range(len(chapters)):
     tokens=input.readline().split(",")
     while len(tokens)>1 :
         tokens = input.readline().split(",")
-        print(tokens)
         if len(tokens)==1 :
             continue
         values[0]+= float(tokens[1])
