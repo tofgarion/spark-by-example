@@ -15,13 +15,13 @@ filename = sys.argv[1]
 input = open(filename+'.stdout',"r")
 output = open(filename+'.stdout.csv',"w")
 
-output.write('analysis,total,altergo,cvc4,z3,unproved\n')
+output.write('analysis,total,altergo,cvc4,z3,unproved,flow,\n')
 i=0
-solvers = dict([('total',0),('altergo' , 1),('CVC4' , 2),('Z3' , 3),('unprooved',4)])
+solvers = dict([('total',0),('altergo' , 1),('CVC4' , 2),('Z3' , 3),('unprooved',4),('flow',5)])
 cats = dict([('initialization',0),('check',1),('assertion',2),('loop',3),('precondition',4),('postcondition',5),('contract',6),('total',7)])
 cats_names = list(cats.keys())
 cats_names.sort(key= lambda x : cats[x])
-values = [[0]*5 for i in range(8)]
+values = [[0]*6 for i in range(8)]
 inline = input.readline()
 tokens = list(filter(None,re.split("[ :]",inline)))
 
@@ -44,6 +44,9 @@ while tokens[0][0:len(tokens[0])-4] == filename[9:len(filename)-4] :
     current = 6
     if cat == 'initialization' :
         values[cats[cat]][0]+=1
+        values[7][0]+=1
+        values[0][5]+=1
+        values[7][5]+=1
     elif cat in ['discriminant','overflow','index','division'] :
         cat = 'check'
         current +=1
@@ -70,7 +73,7 @@ outline=''
 
 for i in range(8):
     outline = cats_names[i]
-    for j in range(5):
+    for j in range(6):
         outline +=','+str(values[i][j])
     outline+=',\n'
     output.write(outline)
@@ -92,6 +95,9 @@ while tokens[0] != 'Summary' :
     current = 6
     if cat == 'initialization' :
         values[cats[cat]][0]+=1
+        values[7][0]+=1
+        values[0][5]+=1
+        values[7][5]+=1
     elif cat in ['discriminant','overflow','index','division','range'] :
         cat = 'check'
         current +=1
@@ -117,7 +123,7 @@ outline=''
 
 for i in range(8):
     outline = cats_names[i]
-    for j in range(5):
+    for j in range(6):
         outline +=','+str(values[i][j])
     outline+=',\n'
     output.write(outline)
