@@ -1,4 +1,4 @@
 #!/bin/bash
 
-make -C $GIT_DIR/../doc generate-org-files
-git add $GIT_DIR/../*/*.org
+make -C ./doc generate-org-files
+git add ./*/*.org
