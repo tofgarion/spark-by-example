@@ -1,4 +1,4 @@
-# Created 2018-06-20 Wed 13:05
+# Created 2018-07-12 Thu 14:59
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Find.org
 
@@ -34,14 +34,13 @@ defined as follows:
 A first specification of ~Find~ can be the following:
 
 #+BEGIN_SRC ada
-  function Find (A : T_Arr; Val : T) return Positive with
-     Post =>
-     (Find'Result <= A'Last + 1
-      and then (for all I in A'First .. Find'Result - 1 => A (I) /= Val)),
-     Contract_Cases =>
-     ((for some I in A'Range => A (I) = Val) =>
-        Find'Result <= A'Last and then A (Find'Result) = Val,
-      others => Find'Result = A'Last + 1);
+  Post =>
+  (Find'Result <= A'Last + 1
+   and then (for all I in A'First .. Find'Result - 1 => A (I) /= Val)),
+  Contract_Cases =>
+  ((for some I in A'Range => A (I) = Val) =>
+     Find'Result <= A'Last and then A (Find'Result) = Val,
+   others => Find'Result = A'Last + 1);
 #+END_SRC
 
 - the [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#postconditions][postcondition]] indicates that the result of ~Find~ is always
@@ -66,14 +65,13 @@ A first specification of ~Find~ can be the following:
   following specification for ~Find~:
 
   #+BEGIN_SRC ada
-    function Find (A : T_Arr; Val : T) return Positive with
-       Post =>
-       (Find'Result <= A'Last + 1
-        and then (for all I in A'First .. Find'Result - 1 => A (I) /= Val)),
-       Contract_Cases =>
-       ((for some I in A'Range => A (I) = Val) =>
-          Find'Result <= A'Last and then A (Find'Result) = Val,
-        (for some I in A'Range => A (I) /= Val) => Find'Result = A'Last + 1);
+    Post =>
+    (Find'Result <= A'Last + 1
+     and then (for all I in A'First .. Find'Result - 1 => A (I) /= Val)),
+    Contract_Cases =>
+    ((for some I in A'Range => A (I) = Val) =>
+       Find'Result <= A'Last and then A (Find'Result) = Val,
+     (for some I in A'Range => A (I) /= Val) => Find'Result = A'Last + 1);
   #+END_SRC
 
   In this case, ~GNATprove~ emits two errors:
@@ -92,18 +90,18 @@ A first specification of ~Find~ can be the following:
 The implementation of ~Find~ is straightforward:
 
 #+BEGIN_SRC ada
-  function Find (A : T_Arr; Val : T) return Positive is
-  begin
-     for I in A'Range loop
-        if A (I) = Val then
-  	 return I;
-        end if;
+     begin
+        for I in A'Range loop
+  	 if A (I) = Val then
+  	    return I;
+  	 end if;
   
-        pragma Loop_Invariant (for all J in A'First .. I => A (J) /= Val);
-     end loop;
+  	 pragma Loop_Invariant (for all J in A'First .. I => A (J) /= Val);
+        end loop;
   
-     return A'Last + 1;
-  end Find;
+        return A'Last + 1;
+     end Find;
+  end Naive_Find_P;
 #+END_SRC
 
 - the implementation is classic: we range over ~A~ indexes trying
@@ -156,10 +154,8 @@ We can provide a less naive version of ~Find~ by
 Defining the ~Has_Value~ predicate is rather straightforward:
 
 #+BEGIN_SRC ada
-  function Has_Value
-    (A   : T_Arr;
-     Val : T) return Boolean is
-    (for some I in A'Range => A (I) = Val);
+  (A   : T_Arr;
+   Val : T) return Boolean is
 #+END_SRC
 
 Notice that ~Has_Value~ is defined in a package with the ~Ghost~
@@ -198,14 +194,13 @@ at which the element is equal to the value.
 The specification of ~Find~ is now:
 
 #+BEGIN_SRC ada
-  function Find (A : T_Arr; Val : T) return Option with
-     Contract_Cases =>
-     (Has_Value (A, Val) =>
-        (Find'Result.Exists = True)
-        and then Find'Result.Value in A'First .. A'Last
-        and then (A (Find'Result.Value) = Val)
-        and then (not Has_Value (A (A'First .. Find'Result.Value - 1), Val)),
-      others => Find'Result.Exists = False);
+  Contract_Cases =>
+  (Has_Value (A, Val) =>
+     (Find'Result.Exists = True)
+     and then Find'Result.Value in A'First .. A'Last
+     and then (A (Find'Result.Value) = Val)
+     and then (not Has_Value (A (A'First .. Find'Result.Value - 1), Val)),
+   others => Find'Result.Exists = False);
 #+END_SRC
 
 Using ~Option~ overloads the function specification but is
@@ -221,22 +216,22 @@ The implementation of ~Find~ is the same as the previous one
 except the use of the ~Option~ type:
 
 #+BEGIN_SRC ada
-  function Find (A : T_Arr; Val : T) return Option is
-     Result : Option := (Exists => False);
-  begin
-     for I in A'Range loop
-        if A (I) = Val then
-  	 Result := (Exists => True, Value => I);
+        Result : Option := (Exists => False);
+     begin
+        for I in A'Range loop
+  	 if A (I) = Val then
+  	    Result := (Exists => True, Value => I);
   
-  	 return Result;
-        end if;
+  	    return Result;
+  	 end if;
   
-        pragma Loop_Invariant (not Has_Value (A (A'First .. I), Val));
-        pragma Loop_Invariant (not Result.Exists);
-     end loop;
+  	 pragma Loop_Invariant (not Has_Value (A (A'First .. I), Val));
+  	 pragma Loop_Invariant (not Result.Exists);
+        end loop;
   
-     return Result;
-  end Find;
+        return Result;
+     end Find;
+  end Find_P;
 #+END_SRC
 
 Notice that a slice is also used for the loop invariant and that

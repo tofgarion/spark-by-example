@@ -35,7 +35,7 @@ LEVEL_COUNT             = 0
 # specific timeouts
 TIMEOUT_SEARCH_WO_GHOST   = "TIMEOUT=5"
 TIMEOUT_SEARCH_WITH_GHOST = "TIMEOUT=5"
-TIMEOUT_SEARCH            = "TIMEOUT=30"
+TIMEOUT_SEARCH            = "TIMEOUT=5"
 
 # all proof targets
 ALL_PROOF_TARGETS = naive_find naive_find_contract_pb find find_first_of adjacent_find \

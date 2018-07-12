@@ -8,6 +8,12 @@ package Has_Subrange_P with
      Spark_Mode,
      Ghost is
 
+   function Last
+     (I : Positive;
+      B : T_Arr) return Natural is
+     (I - 1 + B'Length) with
+      Pre => I - 1 <= Positive'Last - B'Length;
+
    function Equal_Subrange
      (A     : T_Arr;
       Start : Positive;
@@ -40,7 +46,8 @@ package Has_Subrange_P with
    function Has_Subrange
      (A : T_Arr;
       B : T_Arr) return Boolean is
-     (Has_Subrange_In_Prefix (A, A'Last + 1 - B'Length, B)) with
+     (for some J in A'First .. A'Last - B'Length + 1 =>
+        A (J .. Last (J, B)) = B) with
       Pre => A'Length > 0
       and then A'Length >= B'Length
       and then A'Last < Positive'Last;
