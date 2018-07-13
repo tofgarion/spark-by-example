@@ -1,4 +1,4 @@
-# Created 2018-07-12 Thu 14:59
+# Created 2018-07-13 Fri 15:55
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Search.org
 
@@ -273,19 +273,17 @@ The ~Last~ function is simply defined as follows:
 The specification of ~Search~ is now the following:
 
 #+BEGIN_SRC ada
-     function Search (A : T_Arr; B : T_Arr) return Option with
-        Pre            => A'Last < Positive'Last,
-        Contract_Cases =>
-  	 (A'Length >= B'Length and then B'Length /= 0
-  	  and then Has_Subrange (A, B) =>
-  	  Search'Result.Exists
-  	  and then A (Search'Result.Value .. Last (Search'Result.Value, B)) = B
-  	  and then
-  	    (if Search'Result.Value > A'First Then
-  	       (for all J in A'First .. Search'Result.Value - 1 => A (J .. Last (J, B)) /= B)),
-  	 others => not Search'Result.Exists);
-  
-  end Search_P;
+  function Search (A : T_Arr; B : T_Arr) return Option with
+     Pre            => A'Last < Positive'Last,
+     Contract_Cases =>
+        (A'Length >= B'Length and then B'Length /= 0
+         and then Has_Subrange (A, B) =>
+         Search'Result.Exists
+         and then A (Search'Result.Value .. Last (Search'Result.Value, B)) = B
+         and then
+  	 (if Search'Result.Value > A'First Then
+  	    (for all J in A'First .. Search'Result.Value - 1 => A (J .. Last (J, B)) /= B)),
+        others => not Search'Result.Exists);
 #+END_SRC
 
 The previously defined functions are now used in the
@@ -317,6 +315,9 @@ The implementation of ~Search~ is the following:
   	(for all K in A'First .. J => A (K .. Last (K, B)) /= B);
         pragma Loop_Invariant (not Result.Exists);
      end loop;
+  
+     return Result;
+  end Search;
 #+END_SRC
 
 Everything is now proved by ~GNATprove~ at level 1 with a timeout
