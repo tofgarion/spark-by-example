@@ -1,4 +1,4 @@
-# Created 2018-06-20 Wed 13:05
+# Created 2018-07-13 Fri 15:55
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Search.org
 
@@ -27,11 +27,11 @@ A specification of ~Search~ can be written as follows:
 
 #+BEGIN_SRC ada
   function Search (A : T_Arr; B : T_Arr) return Option with
-     Pre            => A'Last < Positive'Last and then B'First <= B'Last,
+     Pre            => A'Last < Positive'Last,
      Contract_Cases =>
      (B'Length = 0        => not Search'Result.Exists,
       A'Length < B'Length => not Search'Result.Exists,
-      A'Length >= B'Length
+      A'Length >= B'Length and then B'Length /= 0
       and then
       (for some J in A'First .. A'Last - B'Length + 1 =>
          A (J .. J - 1 + B'Length) = B) =>
@@ -44,8 +44,8 @@ A specification of ~Search~ can be written as follows:
   	 Search'Result.Value > A'First
          then
   	 (for all K in A'First .. Search'Result.Value - 1 =>
-  	    --A (K .. K - 1 + B'Length) /= B)),
-        (for some L In K .. K - 1 + B'Length => A (K) /= B (B'First + L - K)))),
+  	    A (K .. K - 1 + B'Length) /= B)),
+      others => not Search'Result.Exists);
 #+END_SRC
 
 - the precondition expresses
@@ -80,20 +80,20 @@ A specification of ~Search~ can be written as follows:
         return Result;
      end if;
   
-     for J in A'First .. A'Last + 1 - B'Length loop
-        if A (J .. J - 1 + B'Length) = B then
-  	 Result := (Exists => True, Value => J);
+     for I in A'First .. A'Last + 1 - B'Length loop
+        if A (I .. I - 1 + B'Length) = B then
+  	 Result := (Exists => True, Value => I);
   
-  	 pragma Assert (for all K in A'First .. J - 1 => A (K .. K - 1 + B'Length) /= B);
   	 return Result;
         end if;
   
         pragma Loop_Invariant
-  	(for all K in A'First .. J => A (K .. K - 1 + B'Length) /= B);
+  	(for all J in A'First .. I => A (J .. J - 1 + B'Length) /= B);
         pragma Loop_Invariant (not Result.Exists);
      end loop;
   
      return Result;
+  end Search;
 #+END_SRC
 
 - the implementation is (again) classic: we range over ~A~ indexes trying
@@ -102,16 +102,38 @@ A specification of ~Search~ can be written as follows:
   found starting from the previously tried indexes and that the
   ~Option~ result does not contain a valid index
 
-When using ~GNATprove~ on ~Search~, all the assertions are
-proved. Notice that proving the invariant preservation VC and the
-contract case VC is difficult and takes some time.
+When using ~GNATprove~ on ~Search~, all the assertions are proved
+except the contract case, even with a timeout of 1800s on a
+powerful machine. Notice that the counterexample returned in the
+case where ~B~ is a subarray of ~A~ is wrong:
 
-** A version of Search with ghost functions: first try
+#+BEGIN_SRC shell
+  search_wo_ghost_p.ads:14:42: medium: contract case might fail
+    (e.g. when A = (others => 0) and A'First = 0 and A'Last = 0 and
+  	     B = (others => 0) and B'First = 0 and B'Last = 0 and
+  	     Search'Result = (Exists => False, Value => 0))
+#+END_SRC
 
-We will now try to define a predicate to represent the main
-property, i.e., the fact that ~B~ is a subsequence of ~A~. We will
-see in the following that using this ghost function does not
-permit to prove ~Search~ with the SMT solvers used in the project.
+This may happen when solvers are stopped during their search
+because of a timeout for instance, see the article
+/Counterexamples from Proof Failures in SPARK/ available [[https://hal.inria.fr/hal-01314885/][here]].
+
+Why are SMT solvers unable to prove the contract cases? In fact,
+they do not play very well with nested quantifiers, particularly
+when there are existential quantifiers. Here, the use of equality
+over arrays implies universal quantification (two arrays are
+equal if and only if for the elements of each array at the same
+offset are equal).
+
+In the following, we will try to use ghost functions to "hide"
+the quantifiers to the SMT solvers.
+
+** Defining a predicate
+
+We will first define a predicate to represent the main property,
+i.e., the fact that ~B~ is a subsequence of ~A~. We will see in
+the following that using this ghost function does not allow to
+prove ~Search~ with the SMT solvers used in the project.
 
 *** The predicate Has_Subrange
 
@@ -147,7 +169,8 @@ The specification of ~Search~ using ~Has_Subrange~ is now:
      Contract_Cases =>
      (B'Length = 0 => not Search'Result.Exists,
       A'Length < B'Length => not Search'Result.Exists,
-      A'Length >= B'Length and then Has_Subrange (A, B) =>
+      A'Length >= B'Length and then B'Length /=0
+      and then Has_Subrange (A, B) =>
         Search'Result.Exists
         and then
   	A (Search'Result.Value .. Search'Result.Value - 1 + B'Length) =
@@ -192,77 +215,58 @@ the use of ~Has_Subrange~:
 #+END_SRC
 
 Using this specification and this implementation, ~GNATprove~
-cannot prove contract cases. This is mainly due to the way SMT
-provers (CVC4, Z3 and Alt-Ergo in our case) handle functions with
-quantifiers and how they instanciate these quantifiers.
+cannot prove contract cases. This is not surprising, as the ghost
+function does nothing more than the previous specification and
+implementation.
 
 ** A correct version of Search with ghost functions
 
-An usual trick to solve the previous problem is to hide the
-unnecessary quantifiers in auxiliary subprograms (this has been
-suggested by Yannick Moy of Adacore).
+An usual trick to help SMT solvers is to hide the unnecessary
+quantifiers in auxiliary subprograms (this has been suggested by
+Yannick Moy of Adacore). A previous version of ~Search~ redefines
+the ~Has_Subrange~ function by using two intermediate functions
+allowing to hide the quantifiers: one function to express that a
+subrange of ~A~ is equal to ~B~ starting from a particular index
+~J~ and another one to express the fact that a subrange of ~A~ is
+equal to ~B~ starting from a index less than a given index. This
+permit to "split" the different use of quantifiers (one function
+to bound the subrange with a lower index and the other one with an
+upper index). See the ~GPL2017~ branch of Spark by Example
+repository for this implementation.
+
+Claire Dross from Adacore suggested that the provers have
+difficulties with the slices and particularly the expression ~J -
+    1 + B'Length~ that is used to qualify the last index of a slice of
+~A~ starting from ~J~ and with a length equal to ~B~
+length. Encapsulating this expression in a function should help
+the solvers, as they have a new identifier to work with.
+
+*** The Last function
+
+The ~Last~ function is simply defined as follows:
+
+#+BEGIN_SRC ada
+  function Last
+    (I : Positive;
+     B : T_Arr) return Natural is
+    (I - 1 + B'Length) with
+     Pre => I - 1 <= Positive'Last - B'Length;
+#+END_SRC
 
 *** A new definition for Has_Subrange
 
-In order to help the solvers, ~Has_Subrange~ will be defined in
-three steps:
+~Has_Subrange~ is now defined using the ~Last~ function:
 
-1. first, a function ~Equal_Subrange~ is defined. This function
-   expresses the fact that there is a subrange in ~A~ equal to
-   ~B~ starting at index ~J~. This function contains the
-   necessary slice for ~A~.
-
-   #+BEGIN_SRC ada
-     function Equal_Subrange
-       (A     : T_Arr;
-        Start : Positive;
-        B     : T_Arr) return Boolean is
-       (A (Start .. Start - 1 + B'Length) = B) with
-        Pre => A'Length >= B'Length
-        and then A'Last < Positive'Last
-        and then Start in A'First .. A'Last + 1 - B'Length;
-   #+END_SRC
-
-2. a function ~Has_Subrange_In_Prefix~ is then defined. It
-   expresses the fact that a subrange of ~A~ is equal to ~B~ and
-   that the index of ~A~ at which the subrange starts is less
-   than ~J~.
-
-   #+BEGIN_SRC ada
-     function Has_Subrange_In_Prefix
-       (A    : T_Arr;
-        Last : Positive;
-        B    : T_Arr) return Boolean is
-       (for some J in A'First .. Last => Equal_Subrange (A, J, B)) with
-        Pre => A'Length >= B'Length
-        and then A'Last < Positive'Last
-        and then Last <= A'Last + 1 - B'Length;
-   #+END_SRC
-
-3. finally ~Has_Subrange~ is defined using
-   ~Has_Subrange_In_Prefix~ and does not contain directly
-   quantifiers or slices.
-
-   #+BEGIN_SRC ada
-     -- The Has_Subrange function is used to specify if an array is a
-     -- subrange of another one.
-  
-     with Types;          use Types;
-     with Equal_Ranges_P; use Equal_Ranges_P;
-  
-     package Has_Subrange_P with
-          Spark_Mode,
-          Ghost is
-  
-        function Equal_Subrange
-          (A     : T_Arr;
-           Start : Positive;
-           B     : T_Arr) return Boolean is
-          (A (Start .. Start - 1 + B'Length) = B) with
-           Pre => A'Length >= B'Length
-           and then A'Last < Positive'Last
-           and then Start in A'First .. A'Last + 1 - B'Length;
-   #+END_SRC
+#+BEGIN_SRC ada
+  function Has_Subrange
+    (A : T_Arr;
+     B : T_Arr) return Boolean is
+    (for some J in A'First .. A'Last - B'Length + 1 =>
+       A (J .. Last (J, B)) = B) with
+     Pre => A'Length > 0
+     and then A'Length >= B'Length
+     and then A'Last < Positive'Last;
+#+END_SRC
 
 *** Specification of Search
 
@@ -270,24 +274,22 @@ The specification of ~Search~ is now the following:
 
 #+BEGIN_SRC ada
   function Search (A : T_Arr; B : T_Arr) return Option with
-     Pre            => A'Last < Positive'Last and then B'First <= B'Last,
+     Pre            => A'Last < Positive'Last,
      Contract_Cases =>
-     (B'Length = 0 => not Search'Result.Exists,
-      A'Length < B'Length => not Search'Result.Exists,
-      A'Length >= B'Length and then Has_Subrange (A, B) =>
-        Search'Result.Exists
-        and then Equal_Subrange (A, Search'Result.Value, B)
-        and then
-        (if
-  	 Search'Result.Value > A'First
-         then
-  	 (not Has_Subrange_In_Prefix (A, Search'Result.Value - 1, B))),
-      others => not Search'Result.Exists);
+        (A'Length >= B'Length and then B'Length /= 0
+         and then Has_Subrange (A, B) =>
+         Search'Result.Exists
+         and then A (Search'Result.Value .. Last (Search'Result.Value, B)) = B
+         and then
+  	 (if Search'Result.Value > A'First Then
+  	    (for all J in A'First .. Search'Result.Value - 1 => A (J .. Last (J, B)) /= B)),
+        others => not Search'Result.Exists);
 #+END_SRC
 
 The previously defined functions are now used in the
-specification. Notice that slices or quantifiers do not appear
-directly in the specification.
+specification. Notice that we use slices without any
+problem. Several contract cases are also gathered in the ~others~
+default case.
 
 *** Implementation of Search
 
@@ -298,17 +300,19 @@ The implementation of ~Search~ is the following:
      Result : Option := (Exists => False);
   begin
      if (A'Length < B'Length or else B'Length = 0) then
+  
         return Result;
      end if;
   
-     for I in A'First .. A'Last + 1 - B'Length loop
-        if A (I .. I - 1 + B'Length) = B then
-  	 Result := (Exists => True, Value => I);
+     for J in A'First .. A'Last + 1 - B'Length loop
+        if A (J .. J - 1 + B'Length) = B then
+  	 Result := (Exists => True, Value => J);
   
   	 return Result;
         end if;
   
-        pragma Loop_Invariant (not Has_Subrange_In_Prefix (A, I, B));
+        pragma Loop_Invariant
+  	(for all K in A'First .. J => A (K .. Last (K, B)) /= B);
         pragma Loop_Invariant (not Result.Exists);
      end loop;
   
@@ -316,4 +320,9 @@ The implementation of ~Search~ is the following:
   end Search;
 #+END_SRC
 
-Everything is now proved by ~GNATprove~ (using a timeout of 30s).
+Everything is now proved by ~GNATprove~ at level 1 with a timeout
+of 5s. The previous specification and implementation available in
+the ~GPL2017~ branch needed a timeout of 30s. Notice that SPARK
+Discovery 2017 with CVC 1.5 and Z3 4.6.0 can also prove the
+function, but with a slightly number of steps for the contract
+cases. Provers are getting better and better!

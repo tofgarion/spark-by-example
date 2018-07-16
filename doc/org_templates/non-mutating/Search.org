@@ -24,7 +24,7 @@
 
      A specification of ~Search~ can be written as follows:
 
-     #+INCLUDE: "../../../non-mutating/search_wo_ghost_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-26"
+     #+INCLUDE: "../../../non-mutating/search_wo_ghost_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-26"
 
      - the precondition expresses
        - the fact that the last index of ~A~ is less than the last
@@ -58,16 +58,38 @@
        found starting from the previously tried indexes and that the
        ~Option~ result does not contain a valid index
 
-     When using ~GNATprove~ on ~Search~, all the assertions are
-     proved. Notice that proving the invariant preservation VC and the
-     contract case VC is difficult and takes some time.
+     When using ~GNATprove~ on ~Search~, all the assertions are proved
+     except the contract case, even with a timeout of 1800s on a
+     powerful machine. Notice that the counterexample returned in the
+     case where ~B~ is a subarray of ~A~ is wrong:
 
-*** A version of Search with ghost functions: first try
+     #+BEGIN_SRC shell
+       search_wo_ghost_p.ads:14:42: medium: contract case might fail
+         (e.g. when A = (others => 0) and A'First = 0 and A'Last = 0 and
+                    B = (others => 0) and B'First = 0 and B'Last = 0 and
+                    Search'Result = (Exists => False, Value => 0))
+     #+END_SRC
 
-    We will now try to define a predicate to represent the main
-    property, i.e., the fact that ~B~ is a subsequence of ~A~. We will
-    see in the following that using this ghost function does not
-    permit to prove ~Search~ with the SMT solvers used in the project.
+     This may happen when solvers are stopped during their search
+     because of a timeout for instance, see the article
+     /Counterexamples from Proof Failures in SPARK/ available [[https://hal.inria.fr/hal-01314885/][here]].
+
+     Why are SMT solvers unable to prove the contract cases? In fact,
+     they do not play very well with nested quantifiers, particularly
+     when there are existential quantifiers. Here, the use of equality
+     over arrays implies universal quantification (two arrays are
+     equal if and only if for the elements of each array at the same
+     offset are equal).
+
+     In the following, we will try to use ghost functions to "hide"
+     the quantifiers to the SMT solvers.
+
+*** Defining a predicate
+
+    We will first define a predicate to represent the main property,
+    i.e., the fact that ~B~ is a subsequence of ~A~. We will see in
+    the following that using this ghost function does not allow to
+    prove ~Search~ with the SMT solvers used in the project.
 
 **** The predicate Has_Subrange
 
@@ -89,7 +111,7 @@
 
      The specification of ~Search~ using ~Has_Subrange~ is now:
 
-     #+INCLUDE: "../../../non-mutating/search_with_ghost_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "14-32"
+     #+INCLUDE: "../../../non-mutating/search_with_ghost_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "14-33"
 
 **** Implementation of Search
 
@@ -99,58 +121,67 @@
      #+INCLUDE: "../../../non-mutating/search_with_ghost_p.adb" :src ada :range-begin "function Search" :range-end "end Search;" :lines "6-27"
 
      Using this specification and this implementation, ~GNATprove~
-     cannot prove contract cases. This is mainly due to the way SMT
-     provers (CVC4, Z3 and Alt-Ergo in our case) handle functions with
-     quantifiers and how they instanciate these quantifiers.
+     cannot prove contract cases. This is not surprising, as the ghost
+     function does nothing more than the previous specification and
+     implementation.
 
 *** A correct version of Search with ghost functions
 
-    An usual trick to solve the previous problem is to hide the
-    unnecessary quantifiers in auxiliary subprograms (this has been
-    suggested by Yannick Moy of Adacore).
+    An usual trick to help SMT solvers is to hide the unnecessary
+    quantifiers in auxiliary subprograms (this has been suggested by
+    Yannick Moy of Adacore). A previous version of ~Search~ redefines
+    the ~Has_Subrange~ function by using two intermediate functions
+    allowing to hide the quantifiers: one function to express that a
+    subrange of ~A~ is equal to ~B~ starting from a particular index
+    ~J~ and another one to express the fact that a subrange of ~A~ is
+    equal to ~B~ starting from a index less than a given index. This
+    permit to "split" the different use of quantifiers (one function
+    to bound the subrange with a lower index and the other one with an
+    upper index). See the ~GPL2017~ branch of Spark by Example
+    repository for this implementation.
+
+    Claire Dross from Adacore suggested that the provers have
+    difficulties with the slices and particularly the expression ~J -
+    1 + B'Length~ that is used to qualify the last index of a slice of
+    ~A~ starting from ~J~ and with a length equal to ~B~
+    length. Encapsulating this expression in a function should help
+    the solvers, as they have a new identifier to work with.
+
+**** The Last function
+
+     The ~Last~ function is simply defined as follows:
+
+     #+INCLUDE: "../../../spec/has_subrange_p.ads" :src ada :range-begin "function Last" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-16"
 
 **** A new definition for Has_Subrange
 
-     In order to help the solvers, ~Has_Subrange~ will be defined in
-     three steps:
+     ~Has_Subrange~ is now defined using the ~Last~ function:
 
-     1. first, a function ~Equal_Subrange~ is defined. This function
-        expresses the fact that there is a subrange in ~A~ equal to
-        ~B~ starting at index ~J~. This function contains the
-        necessary slice for ~A~.
-
-        #+INCLUDE: "../../../spec/has_subrange_p.ads" :src ada :range-begin "function Equal_Subrange" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-19"
-
-     2. a function ~Has_Subrange_In_Prefix~ is then defined. It
-        expresses the fact that a subrange of ~A~ is equal to ~B~ and
-        that the index of ~A~ at which the subrange starts is less
-        than ~J~.
-
-        #+INCLUDE: "../../../spec/has_subrange_p.ads" :src ada :range-begin "Has_Subrange_In_Prefix" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "20-28"
-
-     3. finally ~Has_Subrange~ is defined using
-        ~Has_Subrange_In_Prefix~ and does not contain directly
-        quantifiers or slices.
-
-        #+INCLUDE: "../../../spec/has_subrange_p.ads" :src ada :range-begin "Has_Subrange" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "1-19"
+     #+INCLUDE: "../../../spec/has_subrange_p.ads" :src ada :range-begin "function Has_Subrange[^_]" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "46-54"
 
 **** Specification of Search
 
      The specification of ~Search~ is now the following:
 
-     #+INCLUDE: "../../../non-mutating/search_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-21"
+     #+INCLUDE: "../../../non-mutating/search_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-21"
 
      The previously defined functions are now used in the
-     specification. Notice that slices or quantifiers do not appear
-     directly in the specification.
+     specification. Notice that we use slices without any
+     problem. Several contract cases are also gathered in the ~others~
+     default case.
 
 **** Implementation of Search
 
      The implementation of ~Search~ is the following:
 
-     #+INCLUDE: "../../../non-mutating/search_p.adb" :src ada :range-begin "function Search" :range-end "end Search;" :lines "6-26"
+     #+INCLUDE: "../../../non-mutating/search_p.adb" :src ada :range-begin "function Search" :range-end "end Search;" :lines "7-27"
 
-     Everything is now proved by ~GNATprove~ (using a timeout of 30s).
+     Everything is now proved by ~GNATprove~ at level 1 with a timeout
+     of 5s. The previous specification and implementation available in
+     the ~GPL2017~ branch needed a timeout of 30s. Notice that SPARK
+     Discovery 2017 with CVC 1.5 and Z3 4.6.0 can also prove the
+     function, but with a slightly number of steps for the contract
+     cases. Provers are getting better and better!
 
 # Local Variables:
 # ispell-dictionary: "english"

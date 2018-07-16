@@ -16,7 +16,8 @@ package Search_With_Ghost_P with
       Contract_Cases =>
       (B'Length = 0 => not Search'Result.Exists,
        A'Length < B'Length => not Search'Result.Exists,
-       A'Length >= B'Length and then Has_Subrange (A, B) =>
+       A'Length >= B'Length and then B'Length /=0
+       and then Has_Subrange (A, B) =>
          Search'Result.Exists
          and then
            A (Search'Result.Value .. Search'Result.Value - 1 + B'Length) =

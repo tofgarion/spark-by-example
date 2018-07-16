@@ -4,11 +4,11 @@ package Search_Wo_Ghost_P with
      Spark_Mode is
 
    function Search (A : T_Arr; B : T_Arr) return Option with
-      Pre            => A'Last < Positive'Last and then B'First <= B'Last,
+      Pre            => A'Last < Positive'Last,
       Contract_Cases =>
       (B'Length = 0        => not Search'Result.Exists,
        A'Length < B'Length => not Search'Result.Exists,
-       A'Length >= B'Length
+       A'Length >= B'Length and then B'Length /= 0
        and then
        (for some J in A'First .. A'Last - B'Length + 1 =>
           A (J .. J - 1 + B'Length) = B) =>
