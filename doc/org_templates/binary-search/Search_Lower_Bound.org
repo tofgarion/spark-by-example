@@ -9,15 +9,11 @@ Its signature can be expressed as:
  function Search_Lower_Bound(A : T_arr; V : T) return Option
 #+END_SRC
 
-*** TODO Working principle 
+*** Working principle 
 
 The ~Search_Lower_Bound~ algorithm searches for a given value ~V~ the index ~Lb~ of a given array ~A~ 
 so that if ~A'First <= K < Lb~ then ~A[K] < V~, and if ~Lb <= K <= A'Last~ then ~V < A[K]~. It should
 be noted that ~Lb~ satisfies the inequality ~A'First <= Lb <= A'Last +1~.
-
-##########################################
-add example here, such as the one in ACSL.
-##########################################
 
 *** Specification of Search_Lower_Bound
 
