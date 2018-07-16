@@ -1,0 +1,33 @@
+#+EXPORT_FILE_NAME: ../../../maxmin/README.org
+#+OPTIONS: author:nil title:nil toc:nil
+
+* Maxmin algorithms
+
+  This directory contains the specification and implementation files
+  for the following algorithms: ~Min_Element~, ~Max_Element~ and ~Max_Seq~.
+  As usual, ghost functions used in specifications are
+  located in the ~spec~ directory at project root.
+
+  The functions and the corresponding files are presented in the
+  following table (click on the link to have more details one the
+  specification/implementation of each function):
+
+
+| function    | files                          | comments                                     |
+|-------------+--------------------------------+----------------------------------------------|
+| [[file:Min_Element.org][Min_Element]] | ~../spec/lower_bound_p.ads~    |                                              |
+|             | ~min_element_p.ads~            |                                              |
+|             | ~min_element_p.adb~            |                                              |
+|-------------+--------------------------------+----------------------------------------------|
+| [[file:Max_Element.org][Max_Element]] | ~../spec/uuper_bound_p.ads~    | Two versions of this algorithm are provided: |
+|             | ~max_element_p.ads~            | one without ghost function,                  |
+|             | ~max_element_p.adb~            | the other with ghost functions.              |
+|             | ~max_element_with_ghost_p.ads~ |                                              |
+|             | ~max_element_with_ghost_p.adb~ |                                              |
+|-------------+--------------------------------+----------------------------------------------|
+| [[file:Max_Seq.org][Max_Seq]]     | ~../spec/has_value_p.ads~      |                                              |
+|             | ~../spec/uupper_bound_p.ads~   |                                              |
+|             | ~max_element_with_ghost.ads~   |                                              |
+|             | ~max_element_with_ghost.adb~   |                                              |
+|-------------+--------------------------------+----------------------------------------------|
+
