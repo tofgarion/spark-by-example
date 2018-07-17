@@ -14,3 +14,5 @@ cd ../sorting
 make all STATS=1
 cd ../classic-sorting
 make all STATS=1
+cd ../stats
+python generate_recap_csv.py
