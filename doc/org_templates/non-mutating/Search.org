@@ -163,7 +163,7 @@
 
      The specification of ~Search~ is now the following:
 
-     #+INCLUDE: "../../../non-mutating/search_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-21"
+     #+INCLUDE: "../../../non-mutating/search_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-19"
 
      The previously defined functions are now used in the
      specification. Notice that we use slices without any
@@ -174,7 +174,7 @@
 
      The implementation of ~Search~ is the following:
 
-     #+INCLUDE: "../../../non-mutating/search_p.adb" :src ada :range-begin "function Search" :range-end "end Search;" :lines "7-27"
+     #+INCLUDE: "../../../non-mutating/search_p.adb" :src ada :range-begin "function Search" :range-end "end Search;" :lines "7-29"
 
      Everything is now proved by ~GNATprove~ at level 1 with a timeout
      of 5s. The previous specification and implementation available in

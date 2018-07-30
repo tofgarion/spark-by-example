@@ -9,6 +9,10 @@
   - highlight differences between verification of C programs and
     verification of SPARK programs
 
+  Adacore has developed a great tutorial website for Ada/SPARK
+  beginners [[https://learn.adacore.com/][here]]. It is recommended to follow this tutorial before
+  reading SPARK by Example.
+
 ** Tools used
 
    [[https://www.adacore.com/community][GNAT Community 2018]] has been used for this project. You may
@@ -38,10 +42,10 @@
    sufficient to prove the corresponding algorithms with the previous
    tools on a machine equipped with an Intel Core i7-4810MQ CPU and
    16GB of RAM. Moreover, a ~STATS~ option enables the generation of
-   statistics on the proof, based on the standard output. generated files 
+   statistics on the proof, based on the standard output. generated files
    will be placed in the ~stats~ directory at the root of the project.
-   Executing the file [[file:all-chapters.sh][all-chapters.sh]] will proove all the functions, 
-   gather statistics for all the functions, and generate a recap file in 
+   Executing the file [[file:all-chapters.sh][all-chapters.sh]] will proove all the functions,
+   gather statistics for all the functions, and generate a recap file in
    the ~stats~ directory.
 
 ** Table of contents
@@ -58,6 +62,7 @@
 ** References
 
   - [[http://docs.adacore.com/spark2014-docs/html/ug/index.html][SPARK 2014 user guide 19.0]]
+  - [[https://learn.adacore.com/][learn.adacore.com]]
 
 # Local Variables:
 # ispell-dictionary: "english"
