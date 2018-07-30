@@ -10,8 +10,8 @@
     verification of SPARK programs
 
   Adacore has developed a great tutorial website for Ada/SPARK
-  beginners [[https://learn.adacore.com/][here]]. It is recommended to follow this tutorial before
-  reading SPARK by Example.
+  beginners [[https://learn.adacore.com/][here]]. It is recommended to follow at least the SPARK part
+  of this tutorial before reading SPARK by Example.
 
 ** Tools used
 
