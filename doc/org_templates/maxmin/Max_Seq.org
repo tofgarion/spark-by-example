@@ -19,7 +19,7 @@
 
     #+INCLUDE: "../../../maxmin/max_seq_p.ads" :src ada :range-begin "function Max_Seq" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-12"
 
-    Because we are going to use the function ~Max_Element_With_Ghost~
+    Because we are going to use the function ~Max_Element~
     on ~A~ and want to use the ~Value~ field of option, we forbid the
     case ~A'Length = 0~. This is expressed as a precondition.
 

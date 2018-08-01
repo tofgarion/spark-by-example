@@ -1,7 +1,11 @@
 package body Max_Element_Wo_Ghost_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Max_Element (A : T_Arr) return Option is
+   function Max_Element
+     (A : T_Arr)
+      return Option
+   is
       Result : Option := (Exists => False);
    begin
       if A'Length = 0 then
