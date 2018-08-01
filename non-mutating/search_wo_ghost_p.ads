@@ -1,12 +1,15 @@
 with Types; use Types;
 
 package Search_Wo_Ghost_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Search (A : T_Arr; B : T_Arr) return Option with
+   function Search
+     (A : T_Arr;
+      B : T_Arr)
+      return Option with
       Pre            => A'Last < Positive'Last,
-      Contract_Cases =>
-      (B'Length = 0        => not Search'Result.Exists,
+      Contract_Cases => (B'Length = 0 => not Search'Result.Exists,
        A'Length < B'Length => not Search'Result.Exists,
        A'Length >= B'Length and then B'Length /= 0
        and then
@@ -14,12 +17,9 @@ package Search_Wo_Ghost_P with
           A (J .. J - 1 + B'Length) = B) =>
          Search'Result.Exists
          and then
-           A (Search'Result.Value .. Search'Result.Value - 1 + B'Length) =
-           B
+           A (Search'Result.Value .. Search'Result.Value - 1 + B'Length) = B
          and then
-         (if
-            Search'Result.Value > A'First
-          then
+         (if Search'Result.Value > A'First then
             (for all K in A'First .. Search'Result.Value - 1 =>
                A (K .. K - 1 + B'Length) /= B)),
        others => not Search'Result.Exists);

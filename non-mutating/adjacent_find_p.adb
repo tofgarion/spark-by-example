@@ -1,9 +1,13 @@
 -- implementation of Adjacent_Find.
 
 package body Adjacent_Find_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Adjacent_Find (A : T_Arr) return Option is
+   function Adjacent_Find
+     (A : T_Arr)
+      return Option
+   is
       Result : Option := (Exists => False);
    begin
       if A'Length <= 1 then

@@ -1,9 +1,14 @@
 -- implementation of Mismatch
 
 package body Mismatch_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Mismatch (A : T_Arr; B : T_Arr) return Option is
+   function Mismatch
+     (A : T_Arr;
+      B : T_Arr)
+      return Option
+   is
       Result : Option := (Exists => False);
    begin
       for I in 0 .. A'Length - 1 loop

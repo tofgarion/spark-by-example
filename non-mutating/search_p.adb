@@ -4,7 +4,11 @@ package body Search_P with
    Spark_Mode
  is
 
-   function Search (A : T_Arr; B : T_Arr) return Option is
+   function Search
+     (A : T_Arr;
+      B : T_Arr)
+      return Option
+   is
       Result : Option := (Exists => False);
    begin
       if (A'Length < B'Length or else B'Length = 0) then

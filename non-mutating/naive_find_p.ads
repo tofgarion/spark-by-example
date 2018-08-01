@@ -3,9 +3,13 @@
 with Types; use Types;
 
 package Naive_Find_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Find (A : T_Arr; Val : T) return Positive with
+   function Find
+     (A   : T_Arr;
+      Val : T)
+      return Positive with
       Post =>
       (Find'Result <= A'Last + 1
        and then (for all I in A'First .. Find'Result - 1 => A (I) /= Val)),

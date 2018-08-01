@@ -1,9 +1,14 @@
 -- Naive Find implementation
 
 package body Naive_Find_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Find (A : T_Arr; Val : T) return Positive is
+   function Find
+     (A   : T_Arr;
+      Val : T)
+      return Positive
+   is
    begin
       for I in A'Range loop
          if A (I) = Val then

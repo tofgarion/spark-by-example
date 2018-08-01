@@ -1,9 +1,14 @@
 -- implementation of a better version of Find
 
 package body Find_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Find (A : T_Arr; Val : T) return Option is
+   function Find
+     (A   : T_Arr;
+      Val : T)
+      return Option
+   is
       Result : Option := (Exists => False);
    begin
       for I in A'Range loop

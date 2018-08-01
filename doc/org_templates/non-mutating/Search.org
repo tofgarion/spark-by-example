@@ -24,7 +24,7 @@
 
      A specification of ~Search~ can be written as follows:
 
-     #+INCLUDE: "../../../non-mutating/search_wo_ghost_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-26"
+     #+INCLUDE: "../../../non-mutating/search_wo_ghost_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-26"
 
      - the precondition expresses
        - the fact that the last index of ~A~ is less than the last
@@ -50,7 +50,7 @@
 
 **** Implementation of Search
 
-     #+INCLUDE: "../../../non-mutating/search_wo_ghost_p.adb" :src ada :range-begin "function Search" :range-end "End Search;" :lines "6-27"
+     #+INCLUDE: "../../../non-mutating/search_wo_ghost_p.adb" :src ada :range-begin "function Search" :range-end "End Search;" :lines "7-32"
 
      - the implementation is (again) classic: we range over ~A~ indexes trying
        to find a subsequence equal to ~B~
@@ -96,7 +96,7 @@
      We will define the ghost function ~Has_Subrange~ to represent
      the fact that ~B~ is a subsequence of ~A~:
 
-     #+INCLUDE: "../../../non-mutating/search_with_ghost_p.ads" :src ada :range-begin "function Has_Subrange" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-13"
+     #+INCLUDE: "../../../non-mutating/search_with_ghost_p.ads" :src ada :range-begin "function Has_Subrange" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-15"
 
      We equip the function with preconditions specifying that ~A~ is
      longer than ~B~ and that the last index of ~A~ is not the last
@@ -111,14 +111,14 @@
 
      The specification of ~Search~ using ~Has_Subrange~ is now:
 
-     #+INCLUDE: "../../../non-mutating/search_with_ghost_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "14-33"
+     #+INCLUDE: "../../../non-mutating/search_with_ghost_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "16-33"
 
 **** Implementation of Search
 
      The implementation of ~Search~ is the same as previous excepting
      the use of ~Has_Subrange~:
 
-     #+INCLUDE: "../../../non-mutating/search_with_ghost_p.adb" :src ada :range-begin "function Search" :range-end "end Search;" :lines "6-27"
+     #+INCLUDE: "../../../non-mutating/search_with_ghost_p.adb" :src ada :range-begin "function Search" :range-end "end Search;" :lines "7-32"
 
      Using this specification and this implementation, ~GNATprove~
      cannot prove contract cases. This is not surprising, as the ghost
@@ -151,19 +151,19 @@
 
      The ~Last~ function is simply defined as follows:
 
-     #+INCLUDE: "../../../spec/has_subrange_p.ads" :src ada :range-begin "function Last" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-16"
+     #+INCLUDE: "../../../spec/has_subrange_p.ads" :src ada :range-begin "function Last" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-17"
 
 **** A new definition for Has_Subrange
 
      ~Has_Subrange~ is now defined using the ~Last~ function:
 
-     #+INCLUDE: "../../../spec/has_subrange_p.ads" :src ada :range-begin "function Has_Subrange[^_]" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "46-54"
+     #+INCLUDE: "../../../spec/has_subrange_p.ads" :src ada :range-begin "function Has_Subrange[^_]" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "45-53"
 
 **** Specification of Search
 
      The specification of ~Search~ is now the following:
 
-     #+INCLUDE: "../../../non-mutating/search_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-19"
+     #+INCLUDE: "../../../non-mutating/search_p.ads" :src ada :range-begin "function Search" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-23"
 
      The previously defined functions are now used in the
      specification. Notice that we use slices without any
@@ -174,7 +174,7 @@
 
      The implementation of ~Search~ is the following:
 
-     #+INCLUDE: "../../../non-mutating/search_p.adb" :src ada :range-begin "function Search" :range-end "end Search;" :lines "7-29"
+     #+INCLUDE: "../../../non-mutating/search_p.adb" :src ada :range-begin "function Search" :range-end "end Search;" :lines "7-33"
 
      Everything is now proved by ~GNATprove~ at level 1 with a timeout
      of 5s. The previous specification and implementation available in

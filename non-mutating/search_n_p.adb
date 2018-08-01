@@ -1,9 +1,15 @@
 -- implementation of Search_N function
 
 package body Search_N_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Search_N (A : T_Arr; Val : T; N : Positive) return Option is
+   function Search_N
+     (A   : T_Arr;
+      Val : T;
+      N   : Positive)
+      return Option
+   is
       Result : Option   := (Exists => False);
       Start  : Positive := A'First;
    begin
@@ -23,9 +29,7 @@ package body Search_N_P with
          pragma Loop_Invariant (not Result.Exists);
          pragma Loop_Invariant (Start in A'First .. I + 1);
          pragma Loop_Invariant
-           (if
-              Start <= I
-            then
+           (if Start <= I then
               Constant_Range_From_Location (A, Val, Start, I + 1 - Start));
          pragma Loop_Invariant
            (not Has_Constant_Subrange (A (A'First .. I), Val, N));

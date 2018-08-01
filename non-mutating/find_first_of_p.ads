@@ -5,9 +5,13 @@ with Has_Value_P;    use Has_Value_P;
 with Has_Value_Of_P; use Has_Value_Of_P;
 
 package Find_First_Of_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Find_First_Of (A : T_Arr; B : T_Arr) return Option with
+   function Find_First_Of
+     (A : T_Arr;
+      B : T_Arr)
+      return Option with
       Contract_Cases =>
       (Has_Value_Of (A, B) =>
          (Find_First_Of'Result.Exists = True)
