@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 12:02
+# Created 2018-08-01 Wed 14:46
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Max_Element.org
 
@@ -110,15 +110,15 @@ index is less than the maximum value.
 #+BEGIN_SRC ada
   function Upper_Bound
     (A   : T_Arr;
-     Val : T) return Boolean is
-    (for all I in A'Range => A (I) <= Val);
+     Val : T)
+     return Boolean is (for all I in A'Range => A (I) <= Val);
 #+END_SRC
 
 #+BEGIN_SRC ada
   function Strict_Upper_Bound
     (A   : T_Arr;
-     Val : T) return Boolean is
-    (for all I in A'Range => A (I) < Val);
+     Val : T)
+     return Boolean is (for all I in A'Range => A (I) < Val);
 #+END_SRC
 
 These two ghost functions are only wrappers for expressions used

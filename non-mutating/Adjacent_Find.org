@@ -1,4 +1,4 @@
-# Created 2018-06-20 Wed 13:05
+# Created 2018-08-01 Wed 14:46
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Adjacent_Find.org
 
@@ -26,7 +26,8 @@ has two consecutive elements that are equal:
 
 #+BEGIN_SRC ada
   function Has_Equal_Neighbors
-    (A : T_Arr) return Boolean is
+    (A : T_Arr)
+     return Boolean is
     (if (A'Length = 0) then False
      else (for some I in A'First .. A'Last - 1 => A (I) = A (I + 1)));
 #+END_SRC
@@ -49,7 +50,9 @@ contract cases:
   such an index does not exist
 
 #+BEGIN_SRC ada
-  function Adjacent_Find (A : T_Arr) return Option with
+  function Adjacent_Find
+    (A : T_Arr)
+     return Option with
      Contract_Cases =>
      (Has_Equal_Neighbors (A) =>
         (Adjacent_Find'Result.Exists = True)
@@ -67,7 +70,10 @@ The implementation of ~Adjacent_Find~ goes through ~A~, searching
 for two consecutive elements that are equal is defined as follows:
 
 #+BEGIN_SRC ada
-  function Adjacent_Find (A : T_Arr) return Option is
+  function Adjacent_Find
+    (A : T_Arr)
+     return Option
+  is
      Result : Option := (Exists => False);
   begin
      if A'Length <= 1 then

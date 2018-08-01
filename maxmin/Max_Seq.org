@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 11:46
+# Created 2018-08-01 Wed 14:46
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Max_Seq.org
 
@@ -25,7 +25,7 @@ therefore it will be easy to write.
      and then (Upper_Bound (A, Max_Seq'Result));
 #+END_SRC
 
-Because we are going to use the function ~Max_Element_With_Ghost~
+Because we are going to use the function ~Max_Element~
 on ~A~ and want to use the ~Value~ field of option, we forbid the
 case ~A'Length = 0~. This is expressed as a precondition.
 
@@ -39,7 +39,7 @@ The postconditions express the fact that
 #+BEGIN_SRC ada
   function Max_Seq (A : T_Arr) return T is
   begin
-     return A (Max_Element_With_Ghost (A).Value);
+     return A (Max_Element (A).Value);
   end Max_Seq;
 #+END_SRC
 

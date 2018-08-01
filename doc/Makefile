@@ -1,3 +1,5 @@
+SHELL=/usr/bin/zsh
+
 _NON_MUTATING_ORG_FILES = Adjacent_Find.org Count.org Equal_Mismatch.org \
 	Find_End.org Find_First_Of.org Find.org README.org Search_N.org Search.org
 
@@ -31,6 +33,7 @@ HEAP_ORG_FILES = $(patsubst %, ../heap/%, $(_HEAP_ORG_FILES))
 SORTING_ORG_FILES = $(patsubst %, ../sorting/%, $(_SORTING_ORG_FILES))
 CLASSIC_SORTING_ORG_FILES = $(patsubst %, ../classic-sorting/%, $(_CLASSIC_SORTING_ORG_FILES))
 
+# targets to generat Org files
 ../non-mutating/%.org: org_templates/non-mutating/%.org
 	echo "$^" | emacs --batch -l ./generate-org.el -f generate-org-from-org
 
@@ -60,3 +63,7 @@ generate-org-files: $(NON_MUTATING_ORG_FILES) $(MAXMIN_ORG_FILES)    \
 	$(BINARY_SEARCH_ORG_FILES) $(MUTATING_ORG_FILES)             \
         $(NUMERIC_ORG_FILES) $(HEAP_ORG_FILES)                       \
 	$(SORTING_ORG_FILES) $(CLASSIC_SORTING_ORG_FILES)            \
+
+# check lines range in Org file template
+check:
+	for f in `ls org_templates/*/*.org`; echo "$$f" | emacs --batch -l ./update-lines-range.el -f check-lines-range

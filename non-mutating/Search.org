@@ -1,4 +1,4 @@
-# Created 2018-07-13 Fri 15:55
+# Created 2018-08-01 Wed 14:46
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Search.org
 
@@ -26,10 +26,12 @@ this case (this is mainly due to limitations of SMT solvers).
 A specification of ~Search~ can be written as follows:
 
 #+BEGIN_SRC ada
-  function Search (A : T_Arr; B : T_Arr) return Option with
+  function Search
+    (A : T_Arr;
+     B : T_Arr)
+     return Option with
      Pre            => A'Last < Positive'Last,
-     Contract_Cases =>
-     (B'Length = 0        => not Search'Result.Exists,
+     Contract_Cases => (B'Length = 0 => not Search'Result.Exists,
       A'Length < B'Length => not Search'Result.Exists,
       A'Length >= B'Length and then B'Length /= 0
       and then
@@ -37,12 +39,9 @@ A specification of ~Search~ can be written as follows:
          A (J .. J - 1 + B'Length) = B) =>
         Search'Result.Exists
         and then
-  	A (Search'Result.Value .. Search'Result.Value - 1 + B'Length) =
-  	B
+  	A (Search'Result.Value .. Search'Result.Value - 1 + B'Length) = B
         and then
-        (if
-  	 Search'Result.Value > A'First
-         then
+        (if Search'Result.Value > A'First then
   	 (for all K in A'First .. Search'Result.Value - 1 =>
   	    A (K .. K - 1 + B'Length) /= B)),
       others => not Search'Result.Exists);
@@ -73,7 +72,11 @@ A specification of ~Search~ can be written as follows:
 *** Implementation of Search
 
 #+BEGIN_SRC ada
-  function Search (A : T_Arr; B : T_Arr) return Option is
+  function Search
+    (A : T_Arr;
+     B : T_Arr)
+     return Option
+  is
      Result : Option := (Exists => False);
   begin
      if (A'Length < B'Length or else B'Length = 0) then
@@ -143,7 +146,8 @@ the fact that ~B~ is a subsequence of ~A~:
 #+BEGIN_SRC ada
   function Has_Subrange
     (A : T_Arr;
-     B : T_Arr) return Boolean is
+     B : T_Arr)
+     return Boolean is
     (for some J in A'First .. A'Last + 1 - B'Length =>
        A (J .. J - 1 + B'Length) = B) with
      Pre => A'Length >= B'Length and then A'Last < Positive'Last,
@@ -164,24 +168,22 @@ expression previously used in the specification of ~Search~.
 The specification of ~Search~ using ~Has_Subrange~ is now:
 
 #+BEGIN_SRC ada
-  function Search (A : T_Arr; B : T_Arr) return Option with
+  function Search
+    (A : T_Arr;
+     B : T_Arr)
+     return Option with
      Pre            => A'Last < Positive'Last and then B'First <= B'Last,
-     Contract_Cases =>
-     (B'Length = 0 => not Search'Result.Exists,
+     Contract_Cases => (B'Length = 0 => not Search'Result.Exists,
       A'Length < B'Length => not Search'Result.Exists,
-      A'Length >= B'Length and then B'Length /=0
+      A'Length >= B'Length and then B'Length /= 0
       and then Has_Subrange (A, B) =>
         Search'Result.Exists
         and then
-  	A (Search'Result.Value .. Search'Result.Value - 1 + B'Length) =
-  	B
+  	A (Search'Result.Value .. Search'Result.Value - 1 + B'Length) = B
         and then
-        (if
-  	 Search'Result.Value > A'First
-         then
+        (if Search'Result.Value > A'First then
   	 (not Has_Subrange
-  	    (A (A'First .. Search'Result.Value + B'Length - 2),
-  	     B))),
+  	    (A (A'First .. Search'Result.Value + B'Length - 2), B))),
       others => not Search'Result.Exists);
 #+END_SRC
 
@@ -191,7 +193,11 @@ The implementation of ~Search~ is the same as previous excepting
 the use of ~Has_Subrange~:
 
 #+BEGIN_SRC ada
-  function Search (A : T_Arr; B : T_Arr) return Option is
+  function Search
+    (A : T_Arr;
+     B : T_Arr)
+     return Option
+  is
      Result : Option := (Exists => False);
   begin
      if (A'Length < B'Length or else B'Length = 0) then
@@ -248,8 +254,8 @@ The ~Last~ function is simply defined as follows:
 #+BEGIN_SRC ada
   function Last
     (I : Positive;
-     B : T_Arr) return Natural is
-    (I - 1 + B'Length) with
+     B : T_Arr)
+     return Natural is (I - 1 + B'Length) with
      Pre => I - 1 <= Positive'Last - B'Length;
 #+END_SRC
 
@@ -260,11 +266,11 @@ The ~Last~ function is simply defined as follows:
 #+BEGIN_SRC ada
   function Has_Subrange
     (A : T_Arr;
-     B : T_Arr) return Boolean is
+     B : T_Arr)
+     return Boolean is
     (for some J in A'First .. A'Last - B'Length + 1 =>
        A (J .. Last (J, B)) = B) with
-     Pre => A'Length > 0
-     and then A'Length >= B'Length
+     Pre => A'Length > 0 and then A'Length >= B'Length
      and then A'Last < Positive'Last;
 #+END_SRC
 
@@ -273,17 +279,21 @@ The ~Last~ function is simply defined as follows:
 The specification of ~Search~ is now the following:
 
 #+BEGIN_SRC ada
-  function Search (A : T_Arr; B : T_Arr) return Option with
+  function Search
+    (A : T_Arr;
+     B : T_Arr)
+     return Option with
      Pre            => A'Last < Positive'Last,
      Contract_Cases =>
-        (A'Length >= B'Length and then B'Length /= 0
-         and then Has_Subrange (A, B) =>
-         Search'Result.Exists
-         and then A (Search'Result.Value .. Last (Search'Result.Value, B)) = B
-         and then
-  	 (if Search'Result.Value > A'First Then
-  	    (for all J in A'First .. Search'Result.Value - 1 => A (J .. Last (J, B)) /= B)),
-        others => not Search'Result.Exists);
+     (A'Length >= B'Length and then B'Length /= 0
+      and then Has_Subrange (A, B) =>
+        Search'Result.Exists
+        and then A (Search'Result.Value .. Last (Search'Result.Value, B)) = B
+        and then
+        (if Search'Result.Value > A'First then
+  	 (for all J in A'First .. Search'Result.Value - 1 =>
+  	    A (J .. Last (J, B)) /= B)),
+      others => not Search'Result.Exists);
 #+END_SRC
 
 The previously defined functions are now used in the
@@ -296,7 +306,11 @@ default case.
 The implementation of ~Search~ is the following:
 
 #+BEGIN_SRC ada
-  function Search (A : T_Arr; B : T_Arr) return Option is
+  function Search
+    (A : T_Arr;
+     B : T_Arr)
+     return Option
+  is
      Result : Option := (Exists => False);
   begin
      if (A'Length < B'Length or else B'Length = 0) then
