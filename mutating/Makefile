@@ -9,7 +9,7 @@ ALL_PROOF_TARGET = copy fill random_shuffle remove_copy replace_copy replace rev
 #specification dependencies for each function
 SPEC_TYPES       		= ../spec/types.ads
 SPEC_LEMMAS 			= ../lemmas/classic_lemmas.ads
-SPEC_COPY 			= $(SPEC_TYPES) ../spec/equal_ranges_p.ads	
+SPEC_COPY 			= $(SPEC_TYPES) ../spec/equal_ranges_p.ads
 SPEC_FILL 			= $(SPEC_TYPES) ../spec/has_constant_subrange_p.ads
 SPEC_RANDOM_SHUFFLE 		= $(SPEC_TYPES) $(SPEC_LEAMMAS) ../spec/multiset_predicates.ads $(call GENERATE_DEP, random) $(call GENERATE_DEP, swap_array)
 SPEC_REMOVE_COPY 		= $(SPEC_TYPES) ../spec/multiset_predicates.ads ../spec/occ_p.ads ../spec/occ_def_p.ads ../lemmas/remove_copy_lemmas.ads $(call GENERATE_DEP, remove_copy)
@@ -38,41 +38,53 @@ LEVEL_SWAP_RANGES      = 0
 
 include ../Makefile-common
 
-copy: $(call GENERATE_DEP, copy) $(SPEC_COPY)
-	make prove FILE=$@_p.adb LEVEL=$(LEVEL_COPY) $(MUTATING_DEFAULT_TIMEOUT)
-
+# Fill
 fill: $(call GENERATE_DEP, fill) $(SPEC_FILL)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_FILL) $(MUTATING_DEFAULT_TIMEOUT)
 
-random_shuffle: $(call GENERATE_DEP, random_shuffle) $(SPEC_RANDOM_SHUFFLE)
-	make prove FILE=$@_p.adb LEVEL=$(LEVEL_RANDOM_SHUFFLE) $(MUTATING_DEFAULT_TIMEOUT)
-
-remove_copy: $(call GENERATE_DEP, remove_copy) $(SPEC_REMOVE_COPY)
-	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REMOVE_COPY) $(MUTATING_DEFAULT_TIMEOUT)
-
-replace_copy: $(call GENERATE_DEP, replace_copy) $(SPEC_REPLACE_COPY)
-	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REPLACE_COPY) $(MUTATING_DEFAULT_TIMEOUT)
-
-replace: $(call GENERATE_DEP, replace) $(SPEC_REPLACE)
-	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REPLACE) $(MUTATING_DEFAULT_TIMEOUT)
-
-reverse_copy: $(call GENERATE_DEP, reverse_copy) $(SPEC_REVERSE_COPY)
-	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REVERSE_COPY) $(MUTATING_DEFAULT_TIMEOUT)
-
-reverse_in_place: $(call GENERATE_DEP, reverse_in_place) $(SPEC_REVERSE_IN_PLACE)
-	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REVERSE_IN_PLACE) $(MUTATING_DEFAULT_TIMEOUT)
-
-rotate_copy: $(call GENERATE_DEP, rotate_copy) $(SPEC_ROTATE_COPY)
-	make prove FILE=$@_p.adb LEVEL=$(LEVEL_ROTATE_COPY) $(MUTATING_DEFAULT_TIMEOUT)
-
-rotate: $(call GENERATE_DEP,rotate) $(SPEC_ROTATE)
-	make prove FILE=$@_p.adb LEVEL=$(LEVEL_ROTATE) $(MUTATING_DEFAULT_TIMEOUT)
-
+# Swap
 swap: $(call GENERATE_DEP,swap) $(SPEC_SWAP)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SWAP) $(MUTATING_DEFAULT_TIMEOUT)
 
+# Swap_Ranges
 swap_ranges: $(call GENERATE_DEP,swap_ranges) $(SPEC_SWAP)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SWAP_RANGES) $(MUTATING_DEFAULT_TIMEOUT)
+
+# Copy
+copy: $(call GENERATE_DEP, copy) $(SPEC_COPY)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_COPY) $(MUTATING_DEFAULT_TIMEOUT)
+
+# Reverse_Copy
+reverse_copy: $(call GENERATE_DEP, reverse_copy) $(SPEC_REVERSE_COPY)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REVERSE_COPY) $(MUTATING_DEFAULT_TIMEOUT)
+
+# Reverse_In_Place
+reverse_in_place: $(call GENERATE_DEP, reverse_in_place) $(SPEC_REVERSE_IN_PLACE)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REVERSE_IN_PLACE) $(MUTATING_DEFAULT_TIMEOUT)
+
+# Rotate_Copy
+rotate_copy: $(call GENERATE_DEP, rotate_copy) $(SPEC_ROTATE_COPY)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_ROTATE_COPY) $(MUTATING_DEFAULT_TIMEOUT)
+
+# Rotate
+rotate: $(call GENERATE_DEP,rotate) $(SPEC_ROTATE)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_ROTATE) $(MUTATING_DEFAULT_TIMEOUT)
+
+# Replace_Copy
+replace_copy: $(call GENERATE_DEP, replace_copy) $(SPEC_REPLACE_COPY)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REPLACE_COPY) $(MUTATING_DEFAULT_TIMEOUT)
+
+# Replace
+replace: $(call GENERATE_DEP, replace) $(SPEC_REPLACE)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REPLACE) $(MUTATING_DEFAULT_TIMEOUT)
+
+# Remove_Copy
+remove_copy: $(call GENERATE_DEP, remove_copy) $(SPEC_REMOVE_COPY)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REMOVE_COPY) $(MUTATING_DEFAULT_TIMEOUT)
+
+# Random_Shuffle
+random_shuffle: $(call GENERATE_DEP, random_shuffle) $(SPEC_RANDOM_SHUFFLE)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_RANDOM_SHUFFLE) $(MUTATING_DEFAULT_TIMEOUT)
 
 all :$(ALL_PROOF_TARGET)
 	$(if $(STATS), python ../stats/generate_csv_chapter.py mutating; python ../stats/generate_csv_chapter_stdout.py mutating,)
