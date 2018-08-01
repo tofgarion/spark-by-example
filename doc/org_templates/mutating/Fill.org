@@ -12,7 +12,8 @@
 
    ~A~ needs of course to be passed as a ~out~ parameter as it will be
    modified, but also as an ~in~ parameter because it will be used
-   with the ~Constant_Range_From_Location~ function which requires a
+   with the ~Constant_Range_From_Location~ predicate defined with the
+   [[../non-mutating/Search_N.org][Search_N]] algorithm and ~Constant_Range_From_Location~ requires a
    ~in~ parameter.
 
 *** Specification of Fill
