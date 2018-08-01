@@ -1,23 +1,25 @@
-# Created 2018-06-20 Wed 13:05
+# Created 2018-08-01 Wed 10:43
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Min_Element.org
 
 * The Min_Element algorithm
 
-The ~Min_Element~ algorith searches the minimum in a general sequence.
+The ~Min_Element~ algorithm searches the minimum in a general sequence.
 Its signature can be expressed as:
 
 #+BEGIN_SRC ada
   function Min_Element(A : T_arr) return Option
 #+END_SRC
 
-~Min_Element~ will return an option containing the first index ~I~ of ~A~ such as for all ~K~ in ~A'First .. A'Last~, ~A(I) <= A(K)~.
+~Min_Element~ will return an option containing the first index ~I~
+of ~A~ such as for all ~K~ in ~A'First .. A'Last~, ~A(I) <= A(K)~.
 
-** Used predicates
-
+** Predicates used for specification
 *** The Lower_Bound predicate
 
-The ~Lower_Bound~ predicate will be used to assert that our return value is a lower bound for the values of ~A(A'First .. N)~, where ~N~ is given:
+The ~Lower_Bound~ predicate will be used to assert that the
+return value is a lower bound for the values of ~A (A'First
+     .. N)~, where ~N~ is given:
 
 #+BEGIN_SRC ada
   function Lower_Bound
@@ -28,7 +30,10 @@ The ~Lower_Bound~ predicate will be used to assert that our return value is a lo
 
 *** The Strict_Lower_Bound predicate
 
-The ~Strict_Lower_Bound~ predicate will be used to confirm that the value we return is the *first* valid index for a minimum. It expresses the fact that all the values of ~A~ before index ~N~ are strictly lesser than ~V~:
+The ~Strict_Lower_Bound~ predicate will be used to confirm that
+the returned value is the *first* valid index for a minimum. It
+expresses the fact that all the values of ~A~ before index ~N~
+are strictly lesser than ~V~:
 
 #+BEGIN_SRC ada
   function Strict_Lower_Bound
