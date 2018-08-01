@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 14:52
+# Created 2018-08-01 Wed 14:54
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Upper_Bound.org
 
@@ -10,7 +10,7 @@ to the ~Search_Lower_Bound~ algorithm. Its signature can be
 expressed as:
 
 #+BEGIN_SRC ada
-  function Search_Upper_Bound(A : T_arr; V : T) return Option
+  function Search_Upper_Bound (A : T_arr; V : T) return Option
 #+END_SRC
 
 ** Working principle
