@@ -6,80 +6,83 @@
   This directory contains the specification and implementation files
   for the following algorithms: ~Fill~, ~Swap~, ~Swap_Ranges~, ~Copy~,
   ~Reverse_Copy~, ~Reverse_In_Place~, ~Rotate_Copy~, ~Rotate~,
-  ~Replace_Copy~, ~Replace~, ~Remove_Copy~, ~Random_Shuffle~. As
-  usual, ghost functions used in specifications are located in the
+  ~Replace_Copy~, ~Replace~, ~Remove_Copy~, ~Random_Shuffle~. These
+  algorithms are particular, as they modify at least one of their
+  parameters.
+
+  As usual, ghost functions used in specifications are located in the
   ~spec~ directory at project root.
 
   The functions and the corresponding files are presented in the
   following table (click on the link to have more details one the
   specification/implementation of each function):
 
-| function         | files                                 | comments                                |
-|------------------+---------------------------------------+-----------------------------------------|
-| [[./Fill.org][Fill]]             | ~fill_p.ads~                          |                                         |
-|                  | ~fill_p.adb~                          |                                         |
-|                  | ~../spec/has_constant_subrange_p.ads~ |                                         |
-|------------------+---------------------------------------+-----------------------------------------|
-| [[./Swap.org][Swap]]             | ~swap_p.ads~                          |                                         |
-|                  | ~swap_p.adb~                          |                                         |
-|------------------+---------------------------------------+-----------------------------------------|
-| [[./Swap_Ranges.org][Swap_Ranges]]      | ~swap_ranges_p.ads~                   |                                         |
-|                  | ~swap_ranges_p.adb~                   |                                         |
-|                  | ~swap_p.ads~                          |                                         |
-|                  | ~swap_p.adb~                          |                                         |
-|------------------+---------------------------------------+-----------------------------------------|
-| [[./Copy.org][Copy]]             | ~copy_p.ads~                          |                                         |
-|                  | ~copy_p.adb~                          |                                         |
-|                  | ~../binary-search/equal_ranges_p.ads~ |                                         |
-|                  | ~../binary-search/equal_ranges_p.adb~ |                                         |
-|------------------+---------------------------------------+-----------------------------------------|
-| [[./Reverse_Copy.org][Reverse_Copy]]     | ~reverse_copy_p.ads~                  |                                         |
-|                  | ~reverse_copy_p.adb~                  |                                         |
-|                  | ~../spec/is_reversed_p.ads~           |                                         |
-|------------------+---------------------------------------+-----------------------------------------|
-| [[./Reverse_In_Place.org][Reverse_In_Place]] | ~reverse_in_place_p.ads~              |                                         |
-|                  | ~reverse_in_place_p.adb~              |                                         |
-|                  | ~../spec/is_reversed_p.ads~           |                                         |
-|                  | ~swap_p.ads~                          |                                         |
-|                  | ~swap_p.adb~                          |                                         |
-|------------------+---------------------------------------+-----------------------------------------|
-| [[./Rotate_Copy.org][Rotate_Copy]]      | ~rotate_copy_p.ads~                   |                                         |
-|                  | ~rotate_copy_p .adb~                  |                                         |
-|                  | ~copy_p.ads~                          |                                         |
-|                  | ~copy_p.adb~                          |                                         |
-|------------------+---------------------------------------+-----------------------------------------|
-| [[./Rotate.org][Rotate]]           | ~rotate_p.ads~                        |                                         |
-|                  | ~rotate_p.adb~                        |                                         |
-|                  | ~reverse_in_place_p.ads~              |                                         |
-|                  | ~reverse_in_place_p.adb~              |                                         |
-|------------------+---------------------------------------+-----------------------------------------|
-| [[./Replace_Copy.org][Replace_Copy]]     | ~replace_copy_p.ads~                  |                                         |
-|                  | ~replace_copy_p.adb~                  |                                         |
-|                  | ~../spec/is_replaced_p.ads~           |                                         |
-|------------------+---------------------------------------+-----------------------------------------|
-| [[./Replace.org][Replace]]          | ~replace_p.ads~                       |                                         |
-|                  | ~replace_p.adb~                       |                                         |
-|                  | ~../spec/is_replaced_p.ads~           |                                         |
-|------------------+---------------------------------------+-----------------------------------------|
-| [[./Remove_Copy.org][Remove_Copy]]      | ~remove_copy_first_p.ads~             | a first attempt to prove ~remove_copy~  |
-|                  | ~remove_copy_first_p.adb~             |                                         |
-|                  | ~remove_copy_second_p.ads~            | a second attempt to prove ~remove_copy~ |
-|                  | ~remove_copy_second_p.adb~            | using lemmas                            |
-|                  | ~remove_copy_p.ads~                   | final implementation of ~remove_copy~   |
-|                  | ~remove_copy_p.adb~                   | everything is proved                    |
-|                  | ~../spec/multiset_predicates.ads~     |                                         |
-|                  | ~../spec/remove_count_p.ads~          |                                         |
-|                  | ~../spec/occ_p.ads~                   |                                         |
-|                  | ~../lemmas/remove_copy_lemmas.ads~    |                                         |
-|                  | ~../lemmas/remove_copy_lemmas.adb~    |                                         |
-|------------------+---------------------------------------+-----------------------------------------|
-| [[./Random_Shuffle.org][Random_Shuffle]]   | ~random_shuffle_p.ads~                |                                         |
-|                  | ~random_shuffle_p.adb~                |                                         |
-|                  | ~random_p.ads~                        |                                         |
-|                  | ~random_p.adb~                        |                                         |
-|                  | ~../spec/multiset_predicates.ads~     |                                         |
-|                  | ~swap_array_p.ads~                    |                                         |
-|                  | ~swap_array_p.adb~                    |                                         |
-|                  | ~../lemmas/classic_lemmas.ads~        |                                         |
-|                  | ~../lemmas/classic_lemmas.adb~        |                                         |
-|------------------+---------------------------------------+-----------------------------------------|
+  | function         | files                                 | comments                                             |
+  |------------------+---------------------------------------+------------------------------------------------------|
+  | [[./Fill.org][Fill]]             | ~../spec/has_constant_subrange_p.ads~ |                                                      |
+  |                  | ~fill_p.ads~                          |                                                      |
+  |                  | ~fill_p.adb~                          |                                                      |
+  |------------------+---------------------------------------+------------------------------------------------------|
+  | [[./Swap.org][Swap]]             | ~swap_p.ads~                          |                                                      |
+  |                  | ~swap_p.adb~                          |                                                      |
+  |------------------+---------------------------------------+------------------------------------------------------|
+  | [[./Swap_Ranges.org][Swap_Ranges]]      | ~swap_p.ads~                          |                                                      |
+  |                  | ~swap_p.adb~                          |                                                      |
+  |                  | ~swap_ranges_p.ads~                   |                                                      |
+  |                  | ~swap_ranges_p.adb~                   |                                                      |
+  |------------------+---------------------------------------+------------------------------------------------------|
+  | [[./Copy.org][Copy]]             | ~../binary-search/equal_ranges_p.ads~ |                                                      |
+  |                  | ~../binary-search/equal_ranges_p.adb~ |                                                      |
+  |                  | ~copy_p.ads~                          |                                                      |
+  |                  | ~copy_p.adb~                          |                                                      |
+  |------------------+---------------------------------------+------------------------------------------------------|
+  | [[./Reverse_Copy.org][Reverse_Copy]]     | ~../spec/is_reversed_p.ads~           |                                                      |
+  |                  | ~reverse_copy_p.ads~                  |                                                      |
+  |                  | ~reverse_copy_p.adb~                  |                                                      |
+  |------------------+---------------------------------------+------------------------------------------------------|
+  | [[./Reverse_In_Place.org][Reverse_In_Place]] | ~../spec/is_reversed_p.ads~           |                                                      |
+  |                  | ~swap_p.ads~                          |                                                      |
+  |                  | ~swap_p.adb~                          |                                                      |
+  |                  | ~reverse_in_place_p.ads~              |                                                      |
+  |                  | ~reverse_in_place_p.adb~              |                                                      |
+  |------------------+---------------------------------------+------------------------------------------------------|
+  | [[./Rotate_Copy.org][Rotate_Copy]]      | ~copy_p.ads~                          |                                                      |
+  |                  | ~copy_p.adb~                          |                                                      |
+  |                  | ~rotate_copy_p.ads~                   |                                                      |
+  |                  | ~rotate_copy_p.adb~                   |                                                      |
+  |------------------+---------------------------------------+------------------------------------------------------|
+  | [[./Rotate.org][Rotate]]           | ~reverse_in_place_p.ads~              |                                                      |
+  |                  | ~reverse_in_place_p.adb~              |                                                      |
+  |                  | ~rotate_p.ads~                        |                                                      |
+  |                  | ~rotate_p.adb~                        |                                                      |
+  |------------------+---------------------------------------+------------------------------------------------------|
+  | [[./Replace_Copy.org][Replace_Copy]]     | ~../spec/is_replaced_p.ads~           |                                                      |
+  |                  | ~replace_copy_p.ads~                  |                                                      |
+  |                  | ~replace_copy_p.adb~                  |                                                      |
+  |------------------+---------------------------------------+------------------------------------------------------|
+  | [[./Replace.org][Replace]]          | ~../spec/is_replaced_p.ads~           |                                                      |
+  |                  | ~replace_p.ads~                       |                                                      |
+  |                  | ~replace_p.adb~                       |                                                      |
+  |------------------+---------------------------------------+------------------------------------------------------|
+  | [[./Remove_Copy.org][Remove_Copy]]      | ~../spec/multiset_predicates.ads~     |                                                      |
+  |                  | ~../spec/remove_count_p.ads~          |                                                      |
+  |                  | ~../spec/occ_p.ads~                   |                                                      |
+  |                  | ~../lemmas/remove_copy_lemmas.ads~    |                                                      |
+  |                  | ~../lemmas/remove_copy_lemmas.adb~    |                                                      |
+  |                  | ~remove_copy_first_p.ads~             | a first attempt to prove ~remove_copy~               |
+  |                  | ~remove_copy_first_p.adb~             |                                                      |
+  |                  | ~remove_copy_second_p.ads~            | a second attempt to prove ~remove_copy~ using lemmas |
+  |                  | ~remove_copy_second_p.adb~            |                                                      |
+  |                  | ~remove_copy_p.ads~                   | final implementation of ~remove_copy~                |
+  |                  | ~remove_copy_p.adb~                   |                                                      |
+  |------------------+---------------------------------------+------------------------------------------------------|
+  | [[./Random_Shuffle.org][Random_Shuffle]]   | ~../spec/multiset_predicates.ads~     |                                                      |
+  |                  | ~../lemmas/classic_lemmas.ads~        |                                                      |
+  |                  | ~../lemmas/classic_lemmas.adb~        |                                                      |
+  |                  | ~swap_array_p.ads~                    |                                                      |
+  |                  | ~swap_array_p.adb~                    |                                                      |
+  |                  | ~random_shuffle_p.ads~                |                                                      |
+  |                  | ~random_shuffle_p.adb~                |                                                      |
+  |                  | ~random_p.ads~                        |                                                      |
+  |                  | ~random_p.adb~                        |                                                      |
+  |------------------+---------------------------------------+------------------------------------------------------|
