@@ -57,15 +57,13 @@
     #+INCLUDE: ../../../maxmin/min_element_p.adb :src ada :range-begin "function Min_Element" :range-end "End Min_Element;" :lines "4-35"
 
     The implementation is quite similar to the one of [[Max_Element.org][Max_Element]] with
-    predicates. Here:
+    predicates. Here the loop invariants specify that
 
-    - no variant is needed, as usual with ~For~ loops in SPARK
-    - the loop invariants specify that
-      1. the result is in a valid range
-      2. the current result is a minimum for all the values already
-         examined (from ~A'First~ to ~I~)
-      3. the current minimum is the first occurrence of this value in
-         ~A~ (i.e. all previous values of A are striclty greater)
+    1. the result is in a valid range
+    2. the current result is a minimum for all the values already
+       examined (from ~A'First~ to ~I~)
+    3. the current minimum is the first occurrence of this value in
+       ~A~ (i.e. all previous values of A are striclty greater)
 
     When using ~GNATprove~ on this specification and implementation,
     everything is proved.

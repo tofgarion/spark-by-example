@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 11:02
+# Created 2018-08-01 Wed 11:12
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Min_Element.org
 
@@ -116,15 +116,13 @@ Here, the post conditions are expressed through 2 contract cases:
 #+END_SRC
 
 The implementation is quite similar to the one of [[Max_Element.org][Max_Element]] with
-predicates. Here:
+predicates. Here the loop invariants specify that
 
-- no variant is needed, as usual with ~For~ loops in SPARK
-- the loop invariants specify that
-  1. the result is in a valid range
-  2. the current result is a minimum for all the values already
-     examined (from ~A'First~ to ~I~)
-  3. the current minimum is the first occurrence of this value in
-     ~A~ (i.e. all previous values of A are striclty greater)
+1. the result is in a valid range
+2. the current result is a minimum for all the values already
+   examined (from ~A'First~ to ~I~)
+3. the current minimum is the first occurrence of this value in
+   ~A~ (i.e. all previous values of A are striclty greater)
 
 When using ~GNATprove~ on this specification and implementation,
 everything is proved.
