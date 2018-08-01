@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 10:49
+# Created 2018-08-01 Wed 10:52
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Min_Element.org
 
@@ -77,38 +77,37 @@ Here, the post conditions are expressed through 2 contract cases:
 ** Implementation of Min_Element
 
 #+BEGIN_SRC ada
-     function Min_Element (A : T_Arr) return Option is
-        Result : Option := (Exists => False);
+  function Min_Element (A : T_Arr) return Option is
+     Result : Option := (Exists => False);
   
-     begin
-        if A'Length = 0 then
-  	 return Result;
-        else
-  	 Result := (Exists => True, Value => A'First);
-  	 for I in A'First .. A'Last loop
-  	    if A (I) < A (Result.Value) then
-  	       Result.Value := I;
-  	    end if;
+  begin
+     if A'Length = 0 then
+        return Result;
+     else
+        Result := (Exists => True, Value => A'First);
+        for I in A'First .. A'Last loop
+  	 if A (I) < A (Result.Value) then
+  	    Result.Value := I;
+  	 end if;
   
-  	    pragma Loop_Invariant (Result.Value in A'First .. A'Last);
-  	    pragma Loop_Invariant
-  	      (Lower_Bound (A (A'First .. I), A (Result.Value)));
-  	    pragma Loop_Invariant
-  	      ((if
-  		  Result.Value > A'First
-  		then
-  		  Strict_Lower_Bound
-  		    (A (A'First .. Result.Value - 1),
-  		     A (Result.Value))));
+  	 pragma Loop_Invariant (Result.Value in A'First .. A'Last);
+  	 pragma Loop_Invariant
+  	   (Lower_Bound (A (A'First .. I), A (Result.Value)));
+  	 pragma Loop_Invariant
+  	   ((if
+  	       Result.Value > A'First
+  	     then
+  	       Strict_Lower_Bound
+  		 (A (A'First .. Result.Value - 1),
+  		  A (Result.Value))));
   
-  	 end loop;
+        end loop;
   
-  	 return Result;
+        return Result;
   
-        end if;
+     end if;
   
-     end Min_Element;
-  end Min_Element_P;
+  end Min_Element;
 #+END_SRC
 
 The implementation is quite similar to the one of [[Max_Element.org][Max_Element]] with

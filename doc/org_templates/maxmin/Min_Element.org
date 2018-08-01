@@ -49,7 +49,7 @@
 
 *** Implementation of Min_Element
 
-    #+INCLUDE: ../../../maxmin/min_element_p.adb :src ada :range-begin "function Min_Element" :range-end "End Min_Element;" :lines "4-36"
+    #+INCLUDE: ../../../maxmin/min_element_p.adb :src ada :range-begin "function Min_Element" :range-end "End Min_Element;" :lines "4-35"
 
     The implementation is quite similar to the one of [[Max_Element.org][Max_Element]] with
     predicates. Here:
