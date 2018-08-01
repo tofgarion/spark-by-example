@@ -3,30 +3,34 @@
 
 ** The Max_Seq algorithm
 
-   The ~Max_Seq~ algorithm returns the maximum value contained in an array.
-   
+   The ~Max_Seq~ algorithm returns the maximum value contained in an
+   array.
+
    Its signature can be defined as:
 
    #+BEGIN_SRC ada
     function Max_Seq (A : T_Arr) return T
    #+END_SRC
 
-   This algorithm will be based on the previous ~Max_Element~ algorithm, therefore it
-   will be very easy to write.
+   This algorithm will use the previous ~Max_Element~ algorithm,
+   therefore it will be easy to write.
 
 *** Specification of Max_Seq
 
-	#+INCLUDE: ../../../maxmin/max_seq_p.ads :src ada :range-begin "function Max_Seq" :range-end "\s-*return\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-12"
+    #+INCLUDE: "../../../maxmin/max_seq_p.ads" :src ada :range-begin "function Max_Seq" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-12"
 
-    Because we are going to use the function ~Max_Element_With_Ghost~ on A
-    and we want to use the ~Value~ of option, we forbid the case ~A'Length = 0~.
-    The postconditions express the fact that:
-      - the value in contained in the array.
-      - is more or equal than the others values contained in the array.
+    Because we are going to use the function ~Max_Element_With_Ghost~
+    on ~A~ and want to use the ~Value~ field of option, we forbid the
+    case ~A'Length = 0~. This is expressed as a precondition.
 
-*** Implementation of Max_Seq 
+    The postconditions express the fact that
+      - the value in contained in the array
+      - the value returned is more or equal than the others values
+        contained in the array.
 
-	#+INCLUDE: ../../../maxmin/max_seq_p.adb :src ada :range-begin "function Max_Seq" :range-end "End Max_Seq;" :lines "3-7"
+*** Implementation of Max_Seq
 
-    All the postconditions of ~Max_Element~ are sufficient to prove the
+    #+INCLUDE: "../../../maxmin/max_seq_p.adb" :src ada :range-begin "function Max_Seq" :range-end "End Max_Seq;" :lines "3-7"
+
+    The specification of ~Max_Element~ is sufficient to prove the
     ~Max_Seq~ algorithm with ~GNATprove~.

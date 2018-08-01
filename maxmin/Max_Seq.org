@@ -1,10 +1,11 @@
-# Created 2018-06-20 Wed 13:05
+# Created 2018-08-01 Wed 11:46
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Max_Seq.org
 
 * The Max_Seq algorithm
 
-The ~Max_Seq~ algorithm returns the maximum value contained in an array.
+The ~Max_Seq~ algorithm returns the maximum value contained in an
+array.
 
 Its signature can be defined as:
 
@@ -12,8 +13,8 @@ Its signature can be defined as:
   function Max_Seq (A : T_Arr) return T
 #+END_SRC
 
-This algorithm will be based on the previous ~Max_Element~ algorithm, therefore it
-will be very easy to write.
+This algorithm will use the previous ~Max_Element~ algorithm,
+therefore it will be easy to write.
 
 ** Specification of Max_Seq
 
@@ -24,11 +25,14 @@ will be very easy to write.
      and then (Upper_Bound (A, Max_Seq'Result));
 #+END_SRC
 
-Because we are going to use the function ~Max_Element_With_Ghost~ on A
-and we want to use the ~Value~ of option, we forbid the case ~A'Length = 0~.
-The postconditions express the fact that:
-- the value in contained in the array.
-- is more or equal than the others values contained in the array.
+Because we are going to use the function ~Max_Element_With_Ghost~
+on ~A~ and want to use the ~Value~ field of option, we forbid the
+case ~A'Length = 0~. This is expressed as a precondition.
+
+The postconditions express the fact that
+- the value in contained in the array
+- the value returned is more or equal than the others values
+  contained in the array.
 
 ** Implementation of Max_Seq
 
@@ -39,5 +43,5 @@ The postconditions express the fact that:
   end Max_Seq;
 #+END_SRC
 
-All the postconditions of ~Max_Element~ are sufficient to prove the
+The specification of ~Max_Element~ is sufficient to prove the
 ~Max_Seq~ algorithm with ~GNATprove~.
