@@ -29,7 +29,7 @@ LEVEL_SEARCH_WO_GHOST   = 4
 LEVEL_SEARCH_WITH_GHOST = 4
 LEVEL_SEARCH            = 1
 LEVEL_SEARCH_N          = 1
-LEVEL_FIND_END          = 1
+LEVEL_FIND_END          = 4
 LEVEL_COUNT             = 0
 
 # specific timeouts
