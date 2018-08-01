@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 14:09
+# Created 2018-08-01 Wed 14:52
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Upper_Bound.org
 
@@ -26,20 +26,20 @@ should be noted that ~J~ satisfies the inequality ~A'First <= J <=
 The ~Search_Upper_Bound~ algorithm can be specified as follows:
 
 #+BEGIN_SRC ada
-  function Search_Upper_Bound (A : T_Arr; Val : T) return Option with
+  function Search_Upper_Bound
+    (A   : T_Arr;
+     Val : T)
+     return Option with
      Pre            => Sorted (A) and then A'Last < Positive'Last,
-     Contract_Cases =>
-     (A'Length = 0 => not Search_Upper_Bound'Result.Exists,
+     Contract_Cases => (A'Length = 0 => not Search_Upper_Bound'Result.Exists,
       A'Length > 0 =>
         Search_Upper_Bound'Result.Exists
         and then A'First <= Search_Upper_Bound'Result.Value
         and then Search_Upper_Bound'Result.Value <= A'Last + 1
         and then Upper_Bound
-  	(A (A'First .. Search_Upper_Bound'Result.Value - 1),
-  	 Val)
+  	(A (A'First .. Search_Upper_Bound'Result.Value - 1), Val)
         and then Strict_Lower_Bound
-  	(A (Search_Upper_Bound'Result.Value .. A'Last),
-  	 Val));
+  	(A (Search_Upper_Bound'Result.Value .. A'Last), Val));
 #+END_SRC
 
 It uses the predicates ~Upper_Bound~ and ~Strict_Lower_Bound~
@@ -66,7 +66,11 @@ The postconditions are expressed with contract cases:
 The implementation of ~Search_Upper_Bound~ is defined as follows:
 
 #+BEGIN_SRC ada
-  function Search_Upper_Bound (A : T_Arr; Val : T) return Option is
+  function Search_Upper_Bound
+    (A   : T_Arr;
+     Val : T)
+     return Option
+  is
      Left   : Integer := A'First;
      Middle : Integer := A'First;
      Result : Option  := (Exists => False);
@@ -89,14 +93,10 @@ The implementation of ~Search_Upper_Bound~ is defined as follows:
   	 pragma Loop_Invariant (Left <= Result.Value);
   	 pragma Loop_Invariant (Result.Value <= A'Last + 1);
   	 pragma Loop_Invariant
-  	   (if
-  	      Left /= A'First
-  	    then
+  	   (if Left /= A'First then
   	      Upper_Bound (A (A'First .. Left - 1), Val));
   	 pragma Loop_Invariant
-  	   (if
-  	      Result.Value /= A'Last + 1
-  	    then
+  	   (if Result.Value /= A'Last + 1 then
   	      Strict_Lower_Bound (A (Result.Value .. A'Last), Val));
         end loop;
         return Result;

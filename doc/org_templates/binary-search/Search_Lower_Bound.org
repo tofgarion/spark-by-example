@@ -1,51 +1,76 @@
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Lower_Bound.org
 #+OPTIONS: author:nil title:nil toc:nil
 
-**  The Search_Lower_Bound algorithm
+** The Search_Lower_Bound algorithm
 
-The ~Search_Lower_Bound~ algorithm searches for the lowest index at which a value can be found in a sorted array.
-Its signature can be expressed as:
-#+BEGIN_SRC ada 
- function Search_Lower_Bound(A : T_arr; V : T) return Option
-#+END_SRC
+   The ~Search_Lower_Bound~ algorithm searches for the lowest index at
+   which a value can be found in a sorted array. Its signature can be
+   expressed as:
 
-*** Working principle 
+   #+BEGIN_SRC ada
+     function Search_Lower_Bound(A : T_arr; V : T) return Option
+   #+END_SRC
 
-The ~Search_Lower_Bound~ algorithm searches for a given value ~V~ the index ~Lb~ of a given array ~A~ 
-so that if ~A'First <= K < Lb~ then ~A[K] < V~, and if ~Lb <= K <= A'Last~ then ~V < A[K]~. It should
-be noted that ~Lb~ satisfies the inequality ~A'First <= Lb <= A'Last +1~.
+*** Working principle
+
+    The ~Search_Lower_Bound~ algorithm searches for a given value ~V~
+    the index ~J~ of a given array ~A~ so that if ~A'First <= K < J~
+    then ~A[K] < V~, and if ~J <= K <= A'Last~ then ~V <= A[K]~. It
+    should be noted that ~J~ satisfies the inequality ~A'First <= J
+    <= A'Last +1~. In the case when ~V~ is greater than all values in
+    ~A~, then ~J = A'Last + 1~. We could also return an ~Option~
+    without value in this case.
 
 *** Specification of Search_Lower_Bound
 
-The ~Search_Lower_Bound~ algorithm can be specified as follow:
+    The ~Search_Lower_Bound~ algorithm can be specified as follows:
 
-#+INCLUDE: ../../../binary-search/search_lower_bound_p.ads :src ada :range-begin "function Search_Lower_Bound" :range-end "\s-*return\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-23"
+    #+INCLUDE: "../../../binary-search/search_lower_bound_p.ads" :src ada :range-begin "function Search_Lower_Bound" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-24"
 
-It uses the predicates ~Lower_Bound~ and ~Strict_Upper_Bound~ defined in chapter 4.
+    It uses the predicates ~Lower_Bound~ and ~Strict_Upper_Bound~
+    defined in chapter 4. The specification contains two preconditions:
 
-The specification contains two precondition :
-- ~A~ should be sorted.
-- ~A'Last~ must be less than Positive'Last since the result can be ~A'Last+1~.
-The postconditions are expressed with contract cases:
-- if ~A~ is empty, there is no index returned
-- otherwise, there is an index returned in range ~A'First .. A'Last +1~ and
-  1. For all ~K~ in ~A'First .. Result.Value -1,  A[K] < V~ (this range can be empty)
-  2. For all ~K~ in ~Result.Value .. A'Last, V <= A[K]~ (this range can also be empty)
-     
+    - ~A~ should be sorted. This is defined by a ~Sorted~ predicate:
+
+    #+INCLUDE: "../../../spec/sorted_p.ads" :src ada :range-begin "function Sorted" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "14-19"
+
+    - ~A'Last~ must be less than Positive'Last since the result can be
+      ~A'Last+1~.
+
+    The postconditions are expressed with contract cases:
+    - if ~A~ is empty, there is no index returned
+    - otherwise, there is an index returned in range ~A'First
+      .. A'Last +1~ and
+      1. for all ~K~ in ~A'First .. Result.Value -1, A[K] < V~ (this
+         range can be empty)
+      2. for all ~K~ in ~Result.Value .. A'Last, V <= A[K]~ (this
+         range can also be empty)
+
 *** The implementation of Search_Lower_Bound
 
-The implementation of ~Search_Lower_Bound~ is as follows:
+    The implementation of ~Search_Lower_Bound~ is defined as follows:
 
-#+INCLUDE:../../../binary-search/search_lower_bound_p.adb :src ada :range-begin "function Search_Lower_Bound" :range-end "End Search_Lower_Bound;" :lines "4-45"
+    #+INCLUDE: "../../../binary-search/search_lower_bound_p.adb" :src ada :range-begin "function Search_Lower_Bound" :range-end "End Search_Lower_Bound;" :lines "5-45"
 
-At each iteration, the range that contains the sought-after result is narrowed down. Note
-that the ~middle~ is calculated so as to avoid potential overflows.
+    At each iteration, the range that contains the sought-after result
+    is narrowed down. Note that ~middle~ is classically calculated to
+    avoid potential overflows.
 
+    The loop variant is ~Right - Result.Value~ which decreases at each
+    step. It is needed as we use a ~For~ loop here.
 
-Here the loop variant is ~Right - Result.Value~ which decreases at each step.
-The loop invariants express :
-- that ~Result.Value~ and ~Right~ are in the correct range and corectly postitionned with regard to eachother,
-- that all indexes stricly lower than ~Result.value~ contain value sctrictly lower than ~V~
-- that all indexes greater than ~Right~ contain values greater than ~V~
+    The loop invariants express
 
-With this specification and implementation, when using ~GNATprove~, everything is proved.
+    - that ~Result.Value~ and ~Right~ are in the correct range and
+      corectly positioned with regard to each other
+    - that all indexes stricly lower than ~Result.value~ contain value
+      strictly lower than ~V~
+    - that all indexes greater than ~Right~ contain values greater
+      than ~V~
+
+    With this specification and implementation, everything is proved
+    using ~GNATprove~.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

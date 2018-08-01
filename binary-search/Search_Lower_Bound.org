@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 14:09
+# Created 2018-08-01 Wed 14:52
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Lower_Bound.org
 
@@ -27,20 +27,20 @@ without value in this case.
 The ~Search_Lower_Bound~ algorithm can be specified as follows:
 
 #+BEGIN_SRC ada
-  function Search_Lower_Bound (A : T_Arr; V : T) return Option with
+  function Search_Lower_Bound
+    (A : T_Arr;
+     V : T)
+     return Option with
      Pre            => Sorted (A) and then A'Last < Positive'Last,
-     Contract_Cases =>
-     (A'Length = 0 => not Search_Lower_Bound'Result.Exists,
+     Contract_Cases => (A'Length = 0 => not Search_Lower_Bound'Result.Exists,
       A'Length > 0 =>
         Search_Lower_Bound'Result.Exists
         and then A'First <= Search_Lower_Bound'Result.Value
         and then Search_Lower_Bound'Result.Value <= A'Last + 1
         and then Strict_Upper_Bound
-  	(A (A'First .. Search_Lower_Bound'Result.Value - 1),
-  	 V)
+  	(A (A'First .. Search_Lower_Bound'Result.Value - 1), V)
         and then Lower_Bound
-  	(A (Search_Lower_Bound'Result.Value .. A'Last),
-  	 V));
+  	(A (Search_Lower_Bound'Result.Value .. A'Last), V));
 #+END_SRC
 
 It uses the predicates ~Lower_Bound~ and ~Strict_Upper_Bound~
@@ -50,7 +50,8 @@ defined in chapter 4. The specification contains two preconditions:
 
 #+BEGIN_SRC ada
   function Sorted
-    (A : T_Arr) return Boolean is
+    (A : T_Arr)
+     return Boolean is
     (for all J in A'Range =>
        (for all I in A'First .. J - 1 => A (I) <= A (J)));
 #+END_SRC
@@ -72,7 +73,11 @@ The postconditions are expressed with contract cases:
 The implementation of ~Search_Lower_Bound~ is defined as follows:
 
 #+BEGIN_SRC ada
-  function Search_Lower_Bound (A : T_Arr; V : T) return Option is
+  function Search_Lower_Bound
+    (A : T_Arr;
+     V : T)
+     return Option
+  is
   
      Result : Option  := (Exists => False);
      Right  : Integer := A'Last + 1;
@@ -94,18 +99,13 @@ The implementation of ~Search_Lower_Bound~ is defined as follows:
   
   	 pragma Loop_Variant (Decreases => Right - Result.Value);
   	 pragma Loop_Invariant
-  	   (A'First <= Result.Value
-  	    and then Result.Value <= Right
+  	   (A'First <= Result.Value and then Result.Value <= Right
   	    and then Right <= A'Last + 1);
   	 pragma Loop_Invariant
-  	   (if
-  	      Result.Value /= A'First
-  	    then
+  	   (if Result.Value /= A'First then
   	      Strict_Upper_Bound (A (A'First .. Result.Value - 1), V));
   	 pragma Loop_Invariant
-  	   (if
-  	      Right /= A'Last + 1
-  	    then
+  	   (if Right /= A'Last + 1 then
   	      Lower_Bound (A (Right .. A'Last), V));
   
         end loop;
