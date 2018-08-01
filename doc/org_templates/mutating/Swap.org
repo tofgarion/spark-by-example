@@ -3,24 +3,26 @@
 
 ** The Swap algorithm
 
-   The ~swap~ algorithm exchanges the contents of two variables. 
-   Its signature can be expressed as:
-   ~procedure Swap (P : in out T; Q : in out T)~
+   The ~Swap~ algorithm exchanges the contents of two variables. Its
+   signature can be expressed as: ~procedure Swap (P : in out T; Q :
+   in out T)~
 
 *** Specification of Swap
 
     The specification of ~Swap~ is the following:
 
-	#+INCLUDE: ../../../mutating/swap_p.ads :src ada :range-begin "procedure Swap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "5-7"
+    #+INCLUDE: "../../../mutating/swap_p.ads" :src ada :range-begin "procedure Swap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "5-7"
 
-    The postcondition expresses the fact that the two variables have actually been
-    exchanged, using the ~'Old~ attribute available in SPARK. This attribute stores the state of the variables *before* the excecution of the procedure.
+    The postcondition expresses the fact that the two variables have
+    actually been exchanged, using the ~'Old~ attribute available in
+    SPARK. This attribute stores the state of the variables *before*
+    the excecution of the procedure.
 
 *** Implementation of Swap
 
     The implementation of ~Swap~ is:
 
-	#+INCLUDE: ../../../mutating/swap_p.adb :src ada :range-begin "procedure Swap" :range-end "End Swap;" :lines "3-9"
+    #+INCLUDE: "../../../mutating/swap_p.adb" :src ada :range-begin "procedure Swap" :range-end "End Swap;" :lines "4-13"
 
-    A memory variable is used to store the value of ~P~.
-    Using ~GNATprove~, everything is proved.
+    A memory variable is used to store the value of ~P~. Using
+    ~GNATprove~, everything is proved.
