@@ -13,20 +13,20 @@
   specification/implementation of each function):
 
 
-| function    | files                          | comments                                     |
-|-------------+--------------------------------+----------------------------------------------|
-| [[file:Min_Element.org][Min_Element]] | ~../spec/lower_bound_p.ads~    |                                              |
-|             | ~min_element_p.ads~            |                                              |
-|             | ~min_element_p.adb~            |                                              |
-|-------------+--------------------------------+----------------------------------------------|
-| [[file:Max_Element.org][Max_Element]] | ~../spec/uuper_bound_p.ads~    | Two versions of this algorithm are provided: |
-|             | ~max_element_p.ads~            | one without ghost function,                  |
-|             | ~max_element_p.adb~            | the other with ghost functions.              |
-|             | ~max_element_with_ghost_p.ads~ |                                              |
-|             | ~max_element_with_ghost_p.adb~ |                                              |
-|-------------+--------------------------------+----------------------------------------------|
-| [[file:Max_Seq.org][Max_Seq]]     | ~../spec/has_value_p.ads~      |                                              |
-|             | ~../spec/uupper_bound_p.ads~   |                                              |
-|             | ~max_element_with_ghost.ads~   |                                              |
-|             | ~max_element_with_ghost.adb~   |                                              |
-|-------------+--------------------------------+----------------------------------------------|
+| function    | files                          | comments                       |
+|-------------+--------------------------------+--------------------------------|
+| [[file:Min_Element.org][Min_Element]] | ~../spec/lower_bound_p.ads~    |                                |
+|             | ~min_element_p.ads~            |                                |
+|             | ~min_element_p.adb~            |                                |
+|-------------+--------------------------------+--------------------------------|
+| [[file:Max_Element.org][Max_Element]] | ~../spec/uuper_bound_p.ads~    |                                |
+|             | ~max_element_p.ads~            | version without ghost function |
+|             | ~max_element_p.adb~            |                                |
+|             | ~max_element_with_ghost_p.ads~ | version with ghost function    |
+|             | ~max_element_with_ghost_p.adb~ |                                |
+|-------------+--------------------------------+--------------------------------|
+| [[file:Max_Seq.org][Max_Seq]]     | ~../spec/has_value_p.ads~      |                                |
+|             | ~../spec/upper_bound_p.ads~    |                                |
+|             | ~max_seq_p.ads~                |                                |
+|             | ~max_seq_p.adb~                |                                |
+|-------------+--------------------------------+--------------------------------|
