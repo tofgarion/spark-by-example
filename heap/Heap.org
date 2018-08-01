@@ -1,4 +1,4 @@
-# Created 2018-07-30 Mon 13:43
+# Created 2018-08-01 Wed 10:33
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Heap.org
 * The Make_Heap algorithm
