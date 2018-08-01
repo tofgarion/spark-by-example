@@ -1,6 +1,10 @@
 package body Swap_Ranges_P with
-     Spark_Mode is
-   procedure Swap_Ranges (A : in out T_Arr; B : in out T_Arr) is
+   Spark_Mode
+ is
+   procedure Swap_Ranges
+     (A : in out T_Arr;
+      B : in out T_Arr)
+   is
    begin
 
       for J in 0 .. A'Length - 1 loop
@@ -17,14 +21,10 @@ package body Swap_Ranges_P with
             pragma Loop_Invariant
               (A'Loop_Entry (A'First .. K) = B (B'First .. L));
             pragma Loop_Invariant
-              (if
-                 L < B'Last
-               then
+              (if L < B'Last then
                  B'Loop_Entry (L + 1 .. B'Last) = B (L + 1 .. B'Last));
             pragma Loop_Invariant
-              (if
-                 K < A'Last
-               then
+              (if K < A'Last then
                  A'Loop_Entry (K + 1 .. A'Last) = A (K + 1 .. A'Last));
          end;
 

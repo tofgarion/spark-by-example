@@ -1,5 +1,6 @@
 package body Remove_Copy_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
    procedure Remove_Copy
      (A   :        T_Arr;
@@ -20,16 +21,12 @@ package body Remove_Copy_P with
                B (K)  := A (J);
                if K > B'First then
                   No_Changes
-                    (A (A'First .. J - 1),
-                     B_Save (B'First .. K - 1),
-                     B (B'First .. K - 1),
-                     Val);
+                    (A (A'First .. J - 1), B_Save (B'First .. K - 1),
+                     B (B'First .. K - 1), Val);
                end if;
                K := K + 1;
                Make_Prove_Multiset
-                 (A (A'First .. J),
-                  B (B'First .. K - 1),
-                  Val);
+                 (A (A'First .. J), B (B'First .. K - 1), Val);
             end if;
 
             pragma Loop_Invariant
@@ -37,13 +34,9 @@ package body Remove_Copy_P with
             pragma Loop_Invariant
               (K = B'First + Remove_Count (A (A'First .. J), Val));
             pragma Loop_Invariant
-              (if
-                 K > B'First
-               then
+              (if K > B'First then
                  Multiset_Retain_Rest
-                   (A (A'First .. J),
-                    B (B'First .. K - 1),
-                    Val));
+                   (A (A'First .. J), B (B'First .. K - 1), Val));
             pragma Loop_Invariant
               (for all L in B'First .. K - 1 => B (L) /= Val);
             pragma Loop_Invariant

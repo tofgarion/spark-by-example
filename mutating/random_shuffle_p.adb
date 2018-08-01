@@ -1,5 +1,6 @@
 package body Random_Shuffle_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
    procedure Random_Shuffle (A : in out T_Arr) is
       J : Positive;

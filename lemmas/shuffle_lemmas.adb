@@ -1,7 +1,12 @@
 package body Shuffle_Lemmas with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   procedure Occ_Eq (A : T_Arr; B : T_Arr; E : T) is
+   procedure Occ_Eq
+     (A : T_Arr;
+      B : T_Arr;
+      E : T)
+   is
    begin
       if A'Length = 0 then
          return;
@@ -16,7 +21,12 @@ package body Shuffle_Lemmas with
       Occ_Eq (Remove_Last (A), Remove_Last (B), E);
    end Occ_Eq;
 
-   procedure Occ_Set (A : T_Arr; B : T_Arr; I : Positive; V, E : T) is
+   procedure Occ_Set
+     (A    : T_Arr;
+      B    : T_Arr;
+      I    : Positive;
+      V, E : T)
+   is
       Tmp : T_Arr := Remove_Last (A);
    begin
       if A'Length = 0 then

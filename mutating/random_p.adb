@@ -3,7 +3,8 @@ package body Random_P is --with
 
    function Random_Number
      (First : Positive;
-      Last  : Positive) return Positive
+      Last  : Positive)
+      return Positive
    is
 
       subtype Rng is Positive range First .. Last;

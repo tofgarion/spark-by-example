@@ -1,8 +1,12 @@
 package body Partial_Sort_Lemmas with
 
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   procedure Prove_Lower_Bound (A, A_Save : T_Arr; M, J : Positive) is
+   procedure Prove_Lower_Bound
+     (A, A_Save : T_Arr;
+      M, J      : Positive)
+   is
    begin
       Multiset_With_Eq (A, A_Save, M);
       Has_Value_To_Occ (A (1 .. M - 1), A (1));

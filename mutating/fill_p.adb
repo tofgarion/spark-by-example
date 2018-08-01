@@ -1,6 +1,10 @@
 package body Fill_P with
-     Spark_Mode is
-   procedure Fill (A : in out T_Arr; Val : T) is
+   Spark_Mode
+ is
+   procedure Fill
+     (A   : in out T_Arr;
+      Val :        T)
+   is
    begin
       for I in A'Range loop
          A (I) := Val;

@@ -1,13 +1,11 @@
 package body Reverse_In_Place_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
    procedure Reverse_In_Place (A : in out T_Arr) is
       Half : Integer :=
-        (if
-           A'Length > 0
-         then
-           A'First +
-           (A'Last - A'First) / 2 -
+        (if A'Length > 0 then
+           A'First + (A'Last - A'First) / 2 -
            (if A'Length mod 2 = 0 then 0 else 1)
          else -1);
       T1 : T;

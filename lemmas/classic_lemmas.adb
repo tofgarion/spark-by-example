@@ -1,7 +1,12 @@
 package body Classic_Lemmas with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   procedure Occ_Eq (A : T_Arr; B : T_Arr; E : T) is
+   procedure Occ_Eq
+     (A : T_Arr;
+      B : T_Arr;
+      E : T)
+   is
    begin
       if A'Length = 0 then
          return;
@@ -16,7 +21,12 @@ package body Classic_Lemmas with
       Occ_Eq (Remove_Last (A), Remove_Last (B), E);
    end Occ_Eq;
 
-   procedure Occ_Set (A : T_Arr; B : T_Arr; I : Positive; V, E : T) is
+   procedure Occ_Set
+     (A    : T_Arr;
+      B    : T_Arr;
+      I    : Positive;
+      V, E : T)
+   is
       Tmp : T_Arr := Remove_Last (A);
    begin
       if A'Length = 0 then
@@ -34,19 +44,20 @@ package body Classic_Lemmas with
 
    procedure New_Element (A, B : T_Arr) is
    begin
-         null;
+      null;
    end New_Element;
 
    procedure Unchanged_Transitivity (A, B, C : T_Arr) is
    begin
-      if B=C then
-	 Equal_Implies_Multiset_Unchanged(B,C);
+      if B = C then
+         Equal_Implies_Multiset_Unchanged (B, C);
       end if;
    end Unchanged_Transitivity;
-   
-   
-   
-   procedure Occ_To_Has_Value (A : T_Arr; V : T) is
+
+   procedure Occ_To_Has_Value
+     (A : T_Arr;
+      V : T)
+   is
    begin
       if A'Length = 1 then
          return;
@@ -59,7 +70,10 @@ package body Classic_Lemmas with
 
    end Occ_To_Has_Value;
 
-   procedure Has_Value_To_Occ (A : T_Arr; V : T) is
+   procedure Has_Value_To_Occ
+     (A : T_Arr;
+      V : T)
+   is
    begin
       if A'Length = 1 then
          pragma Assert (A (A'First) = V);
@@ -75,7 +89,11 @@ package body Classic_Lemmas with
       end if;
    end Has_Value_To_Occ;
 
-   procedure Partial_Eq (A, B : T_Arr; Eq : Positive; E : T) is
+   procedure Partial_Eq
+     (A, B : T_Arr;
+      Eq   : Positive;
+      E    : T)
+   is
    begin
       if A'Last = Eq then
          return;
@@ -90,7 +108,10 @@ package body Classic_Lemmas with
       Partial_Eq (Remove_Last (A), Remove_Last (B), Eq, E);
    end Partial_Eq;
 
-   procedure Multiset_With_Eq (A, B : T_Arr; Eq : Positive) is
+   procedure Multiset_With_Eq
+     (A, B : T_Arr;
+      Eq   : Positive)
+   is
       Eq_B : constant Positive := Eq - A'First + B'First;
    begin
       for E in T loop
@@ -100,15 +121,15 @@ package body Classic_Lemmas with
               Occ (A (A'First .. Eq - 1), F) =
               Occ (B (B'First .. Eq_B - 1), F));
       end loop;
-        
+
    end Multiset_With_Eq;
-   
-   procedure Equal_Implies_Multiset_Unchanged(A,B : T_Arr)
-   is
+
+   procedure Equal_Implies_Multiset_Unchanged (A, B : T_Arr) is
    begin
       for V in T loop
-	 Occ_Eq(A,B,V);
-	 pragma Loop_Invariant(for all E in T'First .. V => Occ(A,E) = Occ(B,E));
+         Occ_Eq (A, B, V);
+         pragma Loop_Invariant
+           (for all E in T'First .. V => Occ (A, E) = Occ (B, E));
       end loop;
    end Equal_Implies_Multiset_Unchanged;
 end Classic_Lemmas;

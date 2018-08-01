@@ -1,7 +1,12 @@
 package body Swap_Array_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   procedure Swap_Array (A : in out T_Arr; I : Positive; J : Positive) is
+   procedure Swap_Array
+     (A : in out T_Arr;
+      I :        Positive;
+      J :        Positive)
+   is
       Init : T_Arr (A'Range) := A;
       Temp : T               := A (I);
 
@@ -14,11 +19,11 @@ package body Swap_Array_P with
 
       procedure Prove_Perm with
          Ghost,
-         Pre => I in A'Range
-         and then J in A'Range
+         Pre => I in A'Range and then J in A'Range
          and then Is_Set (Init, I, Init (J), Interm)
          and then Is_Set (Interm, J, Init (I), A),
-         Post => Multiset_Unchanged (Init, A) is
+         Post => Multiset_Unchanged (Init, A)
+       is
       begin
          for V in T loop
             Occ_Set (Init, Interm, I, Init (J), V);

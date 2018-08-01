@@ -10,16 +10,16 @@ with Multiset_Predicates; use Multiset_Predicates;
 with Classic_Lemmas;      use Classic_Lemmas;
 
 package Partial_Sort_Lemmas with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   procedure Prove_Lower_Bound (A, A_Save : T_Arr; M, J : Positive) with
+   procedure Prove_Lower_Bound
+     (A, A_Save : T_Arr;
+      M, J      : Positive) with
       Ghost,
-      Pre => A'Length > 0
-      and then M in A'First + 1 .. A'Last
-      and then J in A'Range
-      and then A_Save'First = A'First
-      and then A_Save'Last = A'Last
-      and then A'First = 1
+      Pre => A'Length > 0 and then M in A'First + 1 .. A'Last
+      and then J in A'Range and then A_Save'First = A'First
+      and then A_Save'Last = A'Last and then A'First = 1
       and then A'Last = MAX_SIZE
       and then
       (for all K in 1 .. M - 1 => Lower_Bound (A_Save (M .. J), A_Save (K)))
@@ -31,14 +31,10 @@ package Partial_Sort_Lemmas with
      (A, A_Save : T_Arr;
       M, Size   : Positive) with
       Ghost,
-      Pre => A'Length > 0
-      and then M in A'First + 1 .. Size
-      and then Size in A'Range
-      and then A_Save'First = A'First
-      and then A_Save'Last = A'Last
-      and then A'First = 1
-      and then A'Last = MAX_SIZE
-      and then Partition (A_Save, M, Size)
+      Pre => A'Length > 0 and then M in A'First + 1 .. Size
+      and then Size in A'Range and then A_Save'First = A'First
+      and then A_Save'Last = A'Last and then A'First = 1
+      and then A'Last = MAX_SIZE and then Partition (A_Save, M, Size)
       and then Multiset_Unchanged (A, A_Save)
       and then (for all K in M .. MAX_SIZE => A (K) = A_Save (K)),
       Post => Partition (A, M, Size);

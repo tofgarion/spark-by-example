@@ -1,7 +1,11 @@
 package body Copy_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   procedure Copy (A : T_Arr; B : in out T_Arr) is
+   procedure Copy
+     (A :        T_Arr;
+      B : in out T_Arr)
+   is
    begin
       for I in A'Range loop
          B (B'First + (I - A'First)) := A (I);
