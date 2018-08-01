@@ -14,7 +14,6 @@ package body Min_Element_P with
                Result.Value := I;
             end if;
 
-            pragma Loop_Variant (Increases => I);
             pragma Loop_Invariant (Result.Value in A'First .. A'Last);
             pragma Loop_Invariant
               (Lower_Bound (A (A'First .. I), A (Result.Value)));
