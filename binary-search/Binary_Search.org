@@ -1,34 +1,50 @@
-# Created 2018-06-28 jeu. 16:21
+# Created 2018-08-01 Wed 15:21
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Binary_Search.org
+
 * The Binary_Search algorithm
 
-The ~Binary_Search~ algorithm is a search in a sorted array. Its signature can be expressed:
-~function Binary_Search (A : T_Arr; Val : T) return Boolean~
-It will return true if ~Val~ is contained in ~A~.
-** Specification of Binary_Search
-
-The specification of ~Binary_Search~ can be the following:
+The ~Binary_Search~ algorithm is a classic Computer Science
+algorithm. Its signature can be expressed as
 
 #+BEGIN_SRC ada
-  function Binary_Search (A : T_Arr; Val : T) return Boolean with
+  function Binary_Search (A : T_Arr; Val : T) return Boolean
+#+END_SRC
+
+It will simply return ~True~ if ~Val~ is contained in ~A~.
+
+** Specification of Binary_Search
+
+The specification of ~Binary_Search~ can be expressed as
+
+#+BEGIN_SRC ada
+  function Binary_Search
+    (A   : T_Arr;
+     Val : T)
+     return Boolean with
      Pre  => Sorted (A) and then A'Last < Positive'Last,
      Post => Binary_Search'Result = Has_Value (A, Val);
 #+END_SRC
 
-The first precondition specifies that the array has to be sorted.
-The second is here because we will use ~Search_Lower_Bound~ function defined above.
-If we don't specify that ~A'Last < Positive'Last~, we might encounter a message like
-~precondition might fail~ during the proof. The difference between ~Find~ and
-~Binary_Search~ is that ~Find~ has a linear complexity whereas ~Binary_Search~
-has a logarithmic complexity.
+The first precondition specifies that the array has to be
+sorted. The second precondition is needed because we will use the
+~Search_Lower_Bound~ function previously defined. If we do not
+specify that ~A'Last < Positive'Last~, we might encounter an
+~precondition might fail~ error during the proof. Of course, the
+difference between ~Find~ (defined in the chapter on non mutating
+algorithms) and ~Binary_Search~ is that ~Find~ has a linear
+complexity whereas ~Binary_Search~ has a logarithmic complexity.
 
 ** Implementation of Binary_Search
 
-The implementation of ~Binary_Search~ can be:
+The implementation of ~Binary_Search~ is
 
 #+BEGIN_SRC ada
-  function Binary_Search (A : T_Arr; Val : T) return Boolean is
+  function Binary_Search
+    (A   : T_Arr;
+     Val : T)
+     return Boolean
+  is
      Low : Option := Search_Lower_Bound (A, Val);
      I   : Positive;
   begin
@@ -45,4 +61,4 @@ The implementation of ~Binary_Search~ can be:
 Note that if ~Low.Exists = True~, ~Val <= A(Low.Value)~ is always true. This
 is why we only check for ~A (I) <= Val~ to be true.
 
-Using ~GNATprove~, the function is proved.
+Using ~GNATprove~, the function is proved without difficulty.

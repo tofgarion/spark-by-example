@@ -1,33 +1,42 @@
 #+EXPORT_FILE_NAME: ../../../binary-search/Binary_Search.org
 #+OPTIONS: author:nil title:nil toc:nil
+
 ** The Binary_Search algorithm
 
-   The ~Binary_Search~ algorithm is a search in a sorted array. Its signature can be expressed:
-   ~function Binary_Search (A : T_Arr; Val : T) return Boolean~
-   It will return true if ~Val~ is contained in ~A~.
+   The ~Binary_Search~ algorithm is a classic Computer Science
+   algorithm. Its signature can be expressed as
+
+   #+BEGIN_SRC ada
+     function Binary_Search (A : T_Arr; Val : T) return Boolean
+   #+END_SRC
+
+   It will simply return ~True~ if ~Val~ is contained in ~A~.
+
 *** Specification of Binary_Search
 
-    The specification of ~Binary_Search~ can be the following:
-    
-    #+INCLUDE: ../../../binary-search/binary_search_p.ads :src ada :range-begin "function Binary_Search" :range-end "\s-*return\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-11"
+    The specification of ~Binary_Search~ can be expressed as
 
-The first precondition specifies that the array has to be sorted.
-The second is here because we will use ~Search_Lower_Bound~ function defined above.
-If we don't specify that ~A'Last < Positive'Last~, we might encounter a message like
-~precondition might fail~ during the proof. The difference between ~Find~ and
-~Binary_Search~ is that ~Find~ has a linear complexity whereas ~Binary_Search~
-has a logarithmic complexity.
+    #+INCLUDE: "../../../binary-search/binary_search_p.ads" :src ada :range-begin "function Binary_Search" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-15"
+
+    The first precondition specifies that the array has to be
+    sorted. The second precondition is needed because we will use the
+    ~Search_Lower_Bound~ function previously defined. If we do not
+    specify that ~A'Last < Positive'Last~, we might encounter an
+    ~precondition might fail~ error during the proof. Of course, the
+    difference between ~Find~ (defined in the chapter on non mutating
+    algorithms) and ~Binary_Search~ is that ~Find~ has a linear
+    complexity whereas ~Binary_Search~ has a logarithmic complexity.
 
 *** Implementation of Binary_Search
 
-    The implementation of ~Binary_Search~ can be:
+    The implementation of ~Binary_Search~ is
 
-    #+INCLUDE: ../../../binary-search/binary_search_p.adb :src ada :range-begin "function Binary_Search" :range-end "End Binary_Search;" :lines "3-15"
+    #+INCLUDE: "../../../binary-search/binary_search_p.adb" :src ada :range-begin "function Binary_Search" :range-end "End Binary_Search;" :lines "4-20"
 
     Note that if ~Low.Exists = True~, ~Val <= A(Low.Value)~ is always true. This
     is why we only check for ~A (I) <= Val~ to be true.
 
-    Using ~GNATprove~, the function is proved.
+    Using ~GNATprove~, the function is proved without difficulty.
 
 # Local Variables:
 # ispell-dictionary: "english"
