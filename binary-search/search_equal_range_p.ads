@@ -7,33 +7,30 @@ with Lower_Bound_P;        use Lower_Bound_P;
 with Upper_Bound_P;        use Upper_Bound_P;
 
 package Search_Equal_Range_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Search_Equal_Range (A : T_Arr; V : T) return Option_Pair with
+   function Search_Equal_Range
+     (A : T_Arr;
+      V : T)
+      return Option_Pair with
       Pre            => A'Last < Positive'Last and then Sorted (A),
-      Contract_Cases =>
-      (A'Length = 0 => not Search_Equal_Range'Result.Exists,
+      Contract_Cases => (A'Length = 0 => not Search_Equal_Range'Result.Exists,
        A'Length > 0 =>
          Search_Equal_Range'Result.Exists
          and then A'First <= Search_Equal_Range'Result.Lower
-         and then
-           Search_Equal_Range'Result.Lower <=
+         and then Search_Equal_Range'Result.Lower <=
            Search_Equal_Range'Result.Upper
          and then Search_Equal_Range'Result.Upper <= A'Last + 1
          and then Strict_Upper_Bound
-           (A (A'First .. Search_Equal_Range'Result.Lower - 1),
-            V)
+           (A (A'First .. Search_Equal_Range'Result.Lower - 1), V)
          and then
-         (if
-            Search_Equal_Range'Result.Lower /= Search_Equal_Range'Result.Upper
+         (if Search_Equal_Range'Result.Lower /= Search_Equal_Range'Result.Upper
           then
             Constant_Range
-              (A,
-               V,
-               Search_Equal_Range'Result.Lower,
+              (A, V, Search_Equal_Range'Result.Lower,
                Search_Equal_Range'Result.Upper - 1))
          and then Strict_Lower_Bound
-           (A (Search_Equal_Range'Result.Upper .. A'Last),
-            V));
+           (A (Search_Equal_Range'Result.Upper .. A'Last), V));
 
 end Search_Equal_Range_P;

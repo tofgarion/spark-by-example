@@ -1,7 +1,12 @@
 package body Search_Equal_Range2_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Search_Equal_Range2 (A : T_Arr; V : T) return Option_Pair is
+   function Search_Equal_Range2
+     (A : T_Arr;
+      V : T)
+      return Option_Pair
+   is
 
       Result : Option_Pair := (Exists => False);
       Middle : Integer     := A'First;
@@ -23,18 +28,13 @@ package body Search_Equal_Range2_P with
 
             pragma Loop_Variant (Decreases => Right - Left);
             pragma Loop_Invariant
-              (A'First <= Left
-               and then Left <= Right
+              (A'First <= Left and then Left <= Right
                and then Right <= A'Last + 1);
             pragma Loop_Invariant
-              (if
-                 Left /= A'First
-               then
+              (if Left /= A'First then
                  Strict_Upper_Bound (A (A'First .. Left - 1), V));
             pragma Loop_Invariant
-              (if
-                 Right /= A'Last + 1
-               then
+              (if Right /= A'Last + 1 then
                  Strict_Lower_Bound (A (Right .. A'Last), V));
 
          end loop;

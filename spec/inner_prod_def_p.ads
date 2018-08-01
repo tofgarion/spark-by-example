@@ -2,12 +2,14 @@ with Types;    use Types;
 with Overflow; use Overflow;
 
 package Inner_Prod_Def_P with
-     Spark_Mode,
-     Ghost is
+   Spark_Mode,
+   Ghost
+ is
    function Inner_Prod_Def_Rec
      (A, B : T_Arr;
       F, L : Integer;
-      Init : T) return T_Option is
+      Init : T)
+      return T_Option is
      (if L < F then (True, Init)
       else
         (if
@@ -29,8 +31,8 @@ package Inner_Prod_Def_P with
    function Inner_Prod_Def
      (A, B : T_Arr;
       F, L : Integer;
-      Init : T) return T_Option is
-     (Inner_Prod_Def_Rec (A, B, F, L, Init)) with
+      Init : T)
+      return T_Option is (Inner_Prod_Def_Rec (A, B, F, L, Init)) with
       Pre => A'Length = B'Length
       and then
       (if L >= F then L in 0 .. A'Length - 1 and F in 0 .. A'Length - 1);

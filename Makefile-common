@@ -15,7 +15,7 @@ GENERATE_DEP = $1_p.ads $1_p.adb
 .PHONY: prove prove-coq all pp clean distclean run-tests
 
 pp:
-	gnatpp $(_PROJECT) -rnb
+	gnatpp $(_PROJECT) -rnb --par-threshold=1
 
 clean:
 	gnatclean $(_PROJECT)

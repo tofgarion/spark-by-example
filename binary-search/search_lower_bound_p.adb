@@ -1,7 +1,12 @@
 package body Search_Lower_Bound_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Search_Lower_Bound (A : T_Arr; V : T) return Option is
+   function Search_Lower_Bound
+     (A : T_Arr;
+      V : T)
+      return Option
+   is
 
       Result : Option  := (Exists => False);
       Right  : Integer := A'Last + 1;
@@ -23,18 +28,13 @@ package body Search_Lower_Bound_P with
 
             pragma Loop_Variant (Decreases => Right - Result.Value);
             pragma Loop_Invariant
-              (A'First <= Result.Value
-               and then Result.Value <= Right
+              (A'First <= Result.Value and then Result.Value <= Right
                and then Right <= A'Last + 1);
             pragma Loop_Invariant
-              (if
-                 Result.Value /= A'First
-               then
+              (if Result.Value /= A'First then
                  Strict_Upper_Bound (A (A'First .. Result.Value - 1), V));
             pragma Loop_Invariant
-              (if
-                 Right /= A'Last + 1
-               then
+              (if Right /= A'Last + 1 then
                  Lower_Bound (A (Right .. A'Last), V));
 
          end loop;

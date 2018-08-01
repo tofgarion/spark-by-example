@@ -1,6 +1,11 @@
 package body Binary_Search_P with
-     Spark_Mode is
-   function Binary_Search (A : T_Arr; Val : T) return Boolean is
+   Spark_Mode
+ is
+   function Binary_Search
+     (A   : T_Arr;
+      Val : T)
+      return Boolean
+   is
       Low : Option := Search_Lower_Bound (A, Val);
       I   : Positive;
    begin

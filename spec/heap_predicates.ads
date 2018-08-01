@@ -1,19 +1,27 @@
 with Types; use Types;
 
 package Heap_Predicates with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Heap_Left (I : Positive) return Positive is (2 * I) with
+   function Heap_Left
+     (I : Positive)
+      return Positive is (2 * I) with
       Pre => I <= (Positive'Last) / 2;
 
-   function Heap_Right (I : Positive) return Positive is (2 * I + 1) with
+   function Heap_Right
+     (I : Positive)
+      return Positive is (2 * I + 1) with
       Pre => I <= (Positive'Last - 1) / 2;
 
-   function Heap_Parent (I : Positive) return Positive is (I / 2) with
+   function Heap_Parent
+     (I : Positive)
+      return Positive is (I / 2) with
       Pre => I > 1;
 
    function Is_Heap_Def
-     (H : Heap) return Boolean is
+     (H : Heap)
+      return Boolean is
      (H.Size <= H.A'Last
       and then
       (H.Size = 0
@@ -23,11 +31,10 @@ package Heap_Predicates with
    function Heap_Maximum_Child
      (H : Heap;
       P : Positive;
-      C : Positive) return Boolean is
-     (Is_Heap_Def (H)
-      and then H.Size in 2 .. Positive'Last - 1
-      and then P in 1 .. H.Size / 2
-      and then C in 2 .. H.Size
+      C : Positive)
+      return Boolean is
+     (Is_Heap_Def (H) and then H.Size in 2 .. Positive'Last - 1
+      and then P in 1 .. H.Size / 2 and then C in 2 .. H.Size
       and then P = Heap_Parent (C)
       and then (if Heap_Left (P) <= H.Size then H.A (Heap_Left (P)) <= H.A (C))
       and then

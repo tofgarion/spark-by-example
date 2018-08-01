@@ -1,9 +1,13 @@
 package body Overflow with
-     Spark_Mode is
+   Spark_Mode
+ is
 
    -- Thanks to Claire Dross from AdaCore for the help and the solution provided to prove the Multiply_No_Overflow function below.
 
-   function Multiply_No_Overflow (X, Y : T) return Boolean is
+   function Multiply_No_Overflow
+     (X, Y : T)
+      return Boolean
+   is
       Res : Boolean;
    begin
       case X is
