@@ -1,4 +1,5 @@
-with Types; use Types;
+with Types;         use Types;
+with Upper_Bound_P; use Upper_Bound_P;
 
 package Max_Element_P with
      Spark_Mode is
@@ -7,13 +8,12 @@ package Max_Element_P with
       Contract_Cases =>
       (A'Length = 0 => not Max_Element'Result.Exists,
        A'Length > 0 =>
-         Max_Element'Result.Value >= A'First
-         and then (Max_Element'Result.Value <= A'Last)
-         and then
-         (for all I in A'First .. A'Last =>
-            A (I) <= A (Max_Element'Result.Value))
-         and then
-         (for all I in A'First .. Max_Element'Result.Value - 1 =>
-            A (I) < A (Max_Element'Result.Value)));
+         Max_Element'Result.Exists
+         and then Max_Element'Result.Value >= A'First
+         and then Max_Element'Result.Value <= A'Last
+         and then Upper_Bound (A, A (Max_Element'Result.Value))
+         and then Strict_Upper_Bound
+           (A (A'First .. Max_Element'Result.Value - 1),
+            A (Max_Element'Result.Value)));
 
 end Max_Element_P;

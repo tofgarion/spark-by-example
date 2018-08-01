@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 11:33
+# Created 2018-08-01 Wed 12:02
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Max_Element.org
 
@@ -133,17 +133,17 @@ With the previously defined predicates, the specification of
 ~Max_Element~ is:
 
 #+BEGIN_SRC ada
-  function Max_Element_With_Ghost (A : T_Arr) return Option with
+  function Max_Element (A : T_Arr) return Option with
      Contract_Cases =>
-     (A'Length = 0 => not Max_Element_With_Ghost'Result.Exists,
+     (A'Length = 0 => not Max_Element'Result.Exists,
       A'Length > 0 =>
-        Max_Element_With_Ghost'Result.Exists
-        and then Max_Element_With_Ghost'Result.Value >= A'First
-        and then Max_Element_With_Ghost'Result.Value <= A'Last
-        and then Upper_Bound (A, A (Max_Element_With_Ghost'Result.Value))
+        Max_Element'Result.Exists
+        and then Max_Element'Result.Value >= A'First
+        and then Max_Element'Result.Value <= A'Last
+        and then Upper_Bound (A, A (Max_Element'Result.Value))
         and then Strict_Upper_Bound
-  	(A (A'First .. Max_Element_With_Ghost'Result.Value - 1),
-  	 A (Max_Element_With_Ghost'Result.Value)));
+  	(A (A'First .. Max_Element'Result.Value - 1),
+  	 A (Max_Element'Result.Value)));
 #+END_SRC
 
 *** Implementation of Max_Element
@@ -151,7 +151,7 @@ With the previously defined predicates, the specification of
 The implementation is almost the same as before:
 
 #+BEGIN_SRC ada
-  function Max_Element_With_Ghost (A : T_Arr) return Option is
+  function Max_Element (A : T_Arr) return Option is
      Result : Option := (Exists => False);
   begin
      if A'Length = 0 then
@@ -178,7 +178,7 @@ The implementation is almost the same as before:
   
         return Result;
      end if;
-  end Max_Element_With_Ghost;
+  end Max_Element;
 #+END_SRC
 
 The last predicate has been modified: we first check if ~A'First~

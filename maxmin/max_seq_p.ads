@@ -1,7 +1,7 @@
-with Types;                    use Types;
-with Max_Element_With_Ghost_P; use Max_Element_With_Ghost_P;
-with Has_Value_P;              use Has_Value_P;
-with Upper_Bound_P;            use Upper_Bound_P;
+with Types;          use Types;
+with Max_Element_P;  use Max_Element_P;
+with Has_Value_P;    use Has_Value_P;
+with Upper_Bound_P;  use Upper_Bound_P;
 
 package Max_Seq_P with
      Spark_Mode is

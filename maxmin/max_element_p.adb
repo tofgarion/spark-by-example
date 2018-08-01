@@ -14,12 +14,16 @@ package body Max_Element_P with
             end if;
 
             pragma Loop_Invariant (A'First <= Result.Value);
-            pragma Loop_Invariant (A'Last >= Result.Value);
+            pragma Loop_Invariant (Result.Value <= A'Last);
             pragma Loop_Invariant
-              (for all K in A'First .. I => A (K) <= A (Result.Value));
+              (Upper_Bound (A (A'First .. I), A (Result.Value)));
             pragma Loop_Invariant
-              (for all K in A'First .. Result.Value - 1 =>
-                 A (K) < A (Result.Value));
+              (if
+                 Result.Value > A'First
+               then
+                 Strict_Upper_Bound
+                   (A (A'First .. Result.Value - 1),
+                    A (Result.Value)));
          end loop;
 
          return Result;

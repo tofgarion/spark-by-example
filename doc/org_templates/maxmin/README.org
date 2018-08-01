@@ -16,10 +16,10 @@
   | function    | files                          | comments                       |
   |-------------+--------------------------------+--------------------------------|
   | [[file:Max_Element.org][Max_Element]] | ~../spec/upper_bound_p.ads~    |                                |
-  |             | ~max_element_p.ads~            | version without ghost function |
+  |             | ~max_element_wo_ghost_p.ads~   | version without ghost function |
+  |             | ~max_element_wo_ghost_p.adb~   |                                |
+  |             | ~max_element_p.ads~            | version with ghost function    |
   |             | ~max_element_p.adb~            |                                |
-  |             | ~max_element_with_ghost_p.ads~ | version with ghost function    |
-  |             | ~max_element_with_ghost_p.adb~ |                                |
   |-------------+--------------------------------+--------------------------------|
   | [[file:Max_Seq.org][Max_Seq]]     | ~../spec/has_value_p.ads~      |                                |
   |             | ~../spec/upper_bound_p.ads~    |                                |
