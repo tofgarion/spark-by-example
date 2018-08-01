@@ -1,4 +1,4 @@
-# Created 2018-06-28 jeu. 16:21
+# Created 2018-08-01 Wed 14:09
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Upper_Bound.org
 
@@ -13,17 +13,13 @@ expressed as:
   function Search_Upper_Bound(A : T_arr; V : T) return Option
 #+END_SRC
 
-** TODO Working principle
+** Working principle
 
 The ~Search_Upper_Bound~ algorithm searches for a given value ~V~
-the index ~Lb~ of a given array ~A~ so that if ~A'First <= K < Ub~
-then ~A[K] <= V~, and if ~Ub <= K <= A'Last~ then ~V < A[K]~. It
-should be noted that ~Ub~ satisfies the inequality ~A'First <= Ub
-    <= A'Last +1~.
-
-##########################################
-add example here, such as the one in ACSL.
-##########################################
+the index ~J~ of a given array ~A~ so that if ~A'First <= K < J~
+then ~A[K] <= V~, and if ~J <= K <= A'Last~ then ~V < A[K]~. It
+should be noted that ~J~ satisfies the inequality ~A'First <= J <=
+    A'Last +1~.
 
 ** Specification of Search_Upper_Bound
 
@@ -46,26 +42,28 @@ The ~Search_Upper_Bound~ algorithm can be specified as follows:
   	 Val));
 #+END_SRC
 
-
 It uses the predicates ~Upper_Bound~ and ~Strict_Lower_Bound~
 defined in chapter 4.
 
-The specification contains two preconditions :
-- ~A~ should be sorted.
-- ~A'Last~ must be less than Positive'Last since the result can be
-  ~A'Last+1~.
+The specification contains two preconditions:
+
+- ~A~ should be sorted (cf. [[file:Search_Lower_Bound.org][Search_Lower_Bound]] algorithm)
+- ~A'Last~ must be less than ~Positive'Last~ since the result can
+  be ~A'Last+1~.
+
 The postconditions are expressed with contract cases:
+
 - if ~A~ is empty, there is no index returned
 - otherwise, there is an index returned in range ~A'First
         .. A'Last +1~ and
-  1. For all ~K~ in ~A'First .. Result.Value -1, A[K] <= V~ (this
+  1. for all ~K~ in ~A'First .. Result.Value -1, A[K] <= V~ (this
      range can be empty)
-  2. For all ~K~ in ~Result.Value .. A'Last, V < A[K]~ (this range
+  2. for all ~K~ in ~Result.Value .. A'Last, V < A[K]~ (this range
      can also be empty)
 
 ** The implementation of Search_Upper_Bound
 
-The implementation of ~Search_Upper_Bound~ is as follows:
+The implementation of ~Search_Upper_Bound~ is defined as follows:
 
 #+BEGIN_SRC ada
   function Search_Upper_Bound (A : T_Arr; Val : T) return Option is
@@ -79,12 +77,14 @@ The implementation of ~Search_Upper_Bound~ is as follows:
         Result := (Exists => True, Value => A'Last + 1);
         while (Left < Result.Value) loop
   	 Middle := Left + (Result.Value - Left) / 2;
+  
   	 if A (Middle) <= Val then
   	    Left := Middle + 1;
   	 else
   	    Result.Value := Middle;
   	 end if;
   
+  	 pragma Loop_Variant (Decreases => Result.Value - Left);
   	 pragma Loop_Invariant (A'First <= Left);
   	 pragma Loop_Invariant (Left <= Result.Value);
   	 pragma Loop_Invariant (Result.Value <= A'Last + 1);
@@ -98,7 +98,6 @@ The implementation of ~Search_Upper_Bound~ is as follows:
   	      Result.Value /= A'Last + 1
   	    then
   	      Strict_Lower_Bound (A (Result.Value .. A'Last), Val));
-  	 pragma Loop_Variant (Decreases => Result.Value - Left);
         end loop;
         return Result;
      end if;
@@ -107,11 +106,13 @@ The implementation of ~Search_Upper_Bound~ is as follows:
 #+END_SRC
 
 At each iteration, the range that contains the sought-after result
-is narrowed down. Note that the ~middle~ is calculated so as to
+is narrowed down. Again, note that the ~middle~ is calculated to
 avoid potential overflows.
 
-Here the loop variant is ~Result.Value - Left~ which decreases at
-each step. The loop invariants express:
+The loop variant is ~Result.Value - Left~ which decreases at each
+step. It is needed as we use a ~For~ loop here. The loop
+invariants express
+
 - that ~Result.Value~ and ~Left~ are in the correct range and
   correctly postitionned with regard to eachother,
 - that all indexes stricly lower than ~Result.Value~ contain value

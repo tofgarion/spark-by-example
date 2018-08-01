@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 10:43
+# Created 2018-08-01 Wed 14:09
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/README.org
 
@@ -11,7 +11,7 @@ for the following algorithms: ~Find~, ~Find_First_Of~,
 located in the ~spec~ directory at project root.
 
 The functions and the corresponding files are presented in the
-following table (click on the link to have more details one the
+following table (click on the links to have more details on the
 specification/implementation of each function):
 
 | function                                          | files                                 | comments                                                               |

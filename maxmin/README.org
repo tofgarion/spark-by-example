@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 12:07
+# Created 2018-08-01 Wed 14:09
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/README.org
 
@@ -10,9 +10,8 @@ for the following algorithms: ~Max_Element~, ~Max_Seq~ and
 located in the ~spec~ directory at project root.
 
 The functions and the corresponding files are presented in the
-following table (click on the link to have more details on the
+following table (click on the links to have more details on the
 specification/implementation of each function):
-
 
 | function                              | files                        | comments                       |
 |---------------------------------------+------------------------------+--------------------------------|

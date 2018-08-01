@@ -6,7 +6,7 @@
   This directory contains the specification and implementation files
   for the following algorithms: ~Fill~, ~Swap~, ~Swap_Ranges~, ~Copy~,
   ~Reverse_Copy~, ~Reverse_In_Place~, ~Rotate_Copy~, ~Rotate~,
-  ~Replace_Copy~, ~Replace~, ~Remove_Copy~, ~Random_Shuffle~.  As
+  ~Replace_Copy~, ~Replace~, ~Remove_Copy~, ~Random_Shuffle~. As
   usual, ghost functions used in specifications are located in the
   ~spec~ directory at project root.
 
