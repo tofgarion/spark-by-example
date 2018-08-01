@@ -3,26 +3,32 @@
 
 ** The Fill algorithm
 
-   The ~Fill~ algorithm initializes an array with a particular value.
-   Its signature reads:
-   ~procedure Fill (A : in out T_Arr; Val : T)~
+   The ~Fill~ algorithm initializes an array with a particular
+   value. Here is its signature:
 
-   ~A~ needs to be passed as an ~in~ parameter because we are going to
-   use the function ~Constant_Range_From_Location~ on ~A~. (see Implementation)
+   #+BEGIN_SRC ada
+     procedure Fill (A : in out T_Arr; Val : T)
+   #+END_SRC
+
+   ~A~ needs of course to be passed as a ~out~ parameter as it will be
+   modified, but also as an ~in~ parameter because it will be used
+   with the ~Constant_Range_From_Location~ function which requires a
+   ~in~ parameter.
 
 *** Specification of Fill
 
-    The specification of ~fill~ is very simple.
+    The specification of ~Fill~ is very simple:
 
-	#+INCLUDE: ../../../mutating/fill_p.ads :src ada :range-begin "procedure Fill" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-9"
+    #+INCLUDE: "../../../mutating/fill_p.ads" :src ada :range-begin "procedure Fill" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-12"
 
 *** Implementation of Fill
 
     The implementation of ~Fill~ is the following:
 
-	#+INCLUDE: ../../../mutating/fill_p.adb :src ada :range-begin "procedure Fill" :range-end "End Fill;" :lines "3-12"
+    #+INCLUDE: "../../../mutating/fill_p.adb" :src ada :range-begin "procedure Fill" :range-end "End Fill;" :lines "4-16"
 
     The loop invariant specify that there is a constant range of ~Val~
-    starting at index ~A'First~ with length ~I - A'First + 1~.
+    values starting at index ~A'First~ with length ~I - A'First + 1~
+    in ~A~.
 
-    Using ~GNATprove~, everything is proved.
+    Everything is easily proved with ~GNATprove~.
