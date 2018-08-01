@@ -27,7 +27,7 @@
   |                    | ~search_upper_bound_p.ads~     |                                                       |
   |                    | ~search_upper_bound_p.adb~     |                                                       |
   |--------------------+--------------------------------+-------------------------------------------------------|
-  | [[FILE:./Search_Equal_Ranges.org][Search_Equal_Range]] | ~../spec/sorted_p.ads~         | This function has two differents implementations:     |
+  | [[FILE:./Search_Equal_Range.org][Search_Equal_Range]] | ~../spec/sorted_p.ads~         | This function has two differents implementations:     |
   |                    | ~../spec/lower_bound_p.ads~    | the first version reuses the two previous algorithms, |
   |                    | ~../spec/upper_bound_p.ads~    | the second one is more efficient.                     |
   |                    | ~../spec/constant_range_p.ads~ |                                                       |

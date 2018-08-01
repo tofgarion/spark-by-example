@@ -6,7 +6,7 @@ _NON_MUTATING_ORG_FILES = Adjacent_Find.org Count.org Equal_Mismatch.org \
 _MAXMIN_ORG_FILES = Max_Element.org Min_Element.org Max_Seq.org README.org
 
 _BINARY_SEARCH_ORG_FILES = Search_Lower_Bound.org Search_Upper_Bound.org \
-	Search_Equal_Ranges.org Binary_Search.org README.org
+	Search_Equal_Range.org Binary_Search.org README.org
 
 _MUTATING_ORG_FILES = Copy.org Fill.org Random_Shuffle.org Remove_Copy.org \
 	Replace_Copy.org Replace.org Reverse_Copy.org Reverse_In_Place.org \
