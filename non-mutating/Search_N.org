@@ -1,4 +1,4 @@
-# Created 2018-06-20 Wed 13:05
+# Created 2018-08-01 Wed 16:47
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Search_N.org
 
@@ -14,7 +14,7 @@ following:
 
 As usual, we will use an ~Option~ to encapsulate the result.
 
-** The Constant_Range and Has_Constant_Subrange predicates
+** The Constant_Range_From_Location and Has_Constant_Subrange predicates
 
 Like usual, we define predicates to express more easily the
 specification of ~Search_N~.
@@ -28,11 +28,11 @@ express that an array contains a constant subrange of length
     (A      : T_Arr;
      Val    : T;
      Loc    : Positive;
-     Length : Positive) return Boolean is
+     Length : Positive)
+     return Boolean is
     (Loc - 1 + Length <= A'Last
      and then (for all I in Loc .. Loc - 1 + Length => A (I) = Val)) with
-     Pre => Loc >= A'First
-     and then Loc <= A'Last - Length + 1
+     Pre => Loc >= A'First and then Loc <= A'Last - Length + 1
      and then Loc - 1 + Length <= Positive'Last;
 #+END_SRC
 
@@ -46,7 +46,8 @@ express that an array has a subrange containing only a given value
   function Has_Constant_Subrange
     (A   : T_Arr;
      Val : T;
-     N   : Positive) return Boolean is
+     N   : Positive)
+     return Boolean is
     (for some I in A'First .. A'Last - N + 1 =>
        Constant_Range_From_Location (A, Val, I, N)) with
      Pre => A'First <= A'Last;
@@ -57,26 +58,22 @@ express that an array has a subrange containing only a given value
 The specification of ~Search_N~ is rather easy to express:
 
 #+BEGIN_SRC ada
-  function Search_N (A : T_Arr; Val : T; N : Positive) return Option with
+  function Search_N
+    (A   : T_Arr;
+     Val : T;
+     N   : Positive)
+     return Option with
      Pre            => A'First <= A'Last and then A'Last < Positive'Last,
      Contract_Cases =>
      (Has_Constant_Subrange (A, Val, N) =>
-        Search_N'Result.Exists
-        and then Search_N'Result.Value >= A'First
+        Search_N'Result.Exists and then Search_N'Result.Value >= A'First
         and then Search_N'Result.Value <= A'Last - N + 1
         and then Constant_Range_From_Location
-  	(A,
-  	 Val,
-  	 Search_N'Result.Value,
-  	 N)
+  	(A, Val, Search_N'Result.Value, N)
         and then
-        (if
-  	 Search_N'Result.Value > A'First
-         then
+        (if Search_N'Result.Value > A'First then
   	 not Has_Constant_Subrange
-  	   (A (A'First .. Search_N'Result.Value - 1),
-  	    Val,
-  	    N)),
+  	   (A (A'First .. Search_N'Result.Value - 1), Val, N)),
       others => not Search_N'Result.Exists);
 #+END_SRC
 
@@ -101,7 +98,12 @@ The specification of ~Search_N~ is rather easy to express:
 The implementation of ~Search_N~ is the following:
 
 #+BEGIN_SRC ada
-  function Search_N (A : T_Arr; Val : T; N : Positive) return Option is
+  function Search_N
+    (A   : T_Arr;
+     Val : T;
+     N   : Positive)
+     return Option
+  is
      Result : Option   := (Exists => False);
      Start  : Positive := A'First;
   begin
@@ -121,9 +123,7 @@ The implementation of ~Search_N~ is the following:
         pragma Loop_Invariant (not Result.Exists);
         pragma Loop_Invariant (Start in A'First .. I + 1);
         pragma Loop_Invariant
-  	(if
-  	   Start <= I
-  	 then
+  	(if Start <= I then
   	   Constant_Range_From_Location (A, Val, Start, I + 1 - Start));
         pragma Loop_Invariant
   	(not Has_Constant_Subrange (A (A'First .. I), Val, N));

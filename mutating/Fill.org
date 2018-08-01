@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 16:38
+# Created 2018-08-01 Wed 16:47
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Fill.org
 
@@ -13,7 +13,8 @@ value. Here is its signature:
 
 ~A~ needs of course to be passed as a ~out~ parameter as it will be
 modified, but also as an ~in~ parameter because it will be used
-with the ~Constant_Range_From_Location~ function which requires a
+with the ~Constant_Range_From_Location~ predicate defined with the
+[[file:../non-mutating/Search_N.org][Search_N]] algorithm and ~Constant_Range_From_Location~ requires a
 ~in~ parameter.
 
 ** Specification of Fill
