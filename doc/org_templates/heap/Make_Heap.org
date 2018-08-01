@@ -1,4 +1,4 @@
-#+EXPORT_FILE_NAME: ../../../heap/Heap.org
+#+EXPORT_FILE_NAME: ../../../heap/Make_Heap.org
 #+OPTIONS: author:nil title:nil toc:nil
 * The Make_Heap algorithm
 
@@ -14,7 +14,7 @@
 	#+INCLUDE: ../../../heap/make_heap_p.ads :src ada :range-begin "function Make_Heap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-21"
 
    The function takes in entry an array with its length less than the maximum size
-   of a heap. 
+   of a heap.
    - If this array is empty, the returned heap will be also empty.
    - If this array is not empty, the returned heap will have the same size from
      the array and its array will be a permutation of the entry array.
@@ -84,7 +84,7 @@
 
     Its implementation is:
 	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :range-begin "procedure New_Element" :range-end "End New_Element;" :lines "35-39"
- 
+
 *** Final implementation of Make_Heap
 
     This final implementation is:
