@@ -1,32 +1,33 @@
-#+EXPORT_FILE_NAME: ../../../maxmin/README.org
+# Created 2018-08-01 Wed 12:07
 #+OPTIONS: author:nil title:nil toc:nil
+#+EXPORT_FILE_NAME: ../../../maxmin/README.org
 
 * Maxmin algorithms
 
-  This directory contains the specification and implementation files
-  for the following algorithms: ~Min_Element~, ~Max_Element~ and
-  ~Max_Seq~. As usual, ghost functions used in specifications are
-  located in the ~spec~ directory at project root.
+This directory contains the specification and implementation files
+for the following algorithms: ~Max_Element~, ~Max_Seq~ and
+~Min_Element~.  As usual, ghost functions used in specifications are
+located in the ~spec~ directory at project root.
 
-  The functions and the corresponding files are presented in the
-  following table (click on the link to have more details one the
-  specification/implementation of each function):
+The functions and the corresponding files are presented in the
+following table (click on the link to have more details on the
+specification/implementation of each function):
 
 
-| function    | files                          | comments                       |
-|-------------+--------------------------------+--------------------------------|
-| [[file:Min_Element.org][Min_Element]] | ~../spec/lower_bound_p.ads~    |                                |
-|             | ~min_element_p.ads~            |                                |
-|             | ~min_element_p.adb~            |                                |
-|-------------+--------------------------------+--------------------------------|
-| [[file:Max_Element.org][Max_Element]] | ~../spec/uuper_bound_p.ads~    |                                |
-|             | ~max_element_p.ads~            | version without ghost function |
-|             | ~max_element_p.adb~            |                                |
-|             | ~max_element_with_ghost_p.ads~ | version with ghost function    |
-|             | ~max_element_with_ghost_p.adb~ |                                |
-|-------------+--------------------------------+--------------------------------|
-| [[file:Max_Seq.org][Max_Seq]]     | ~../spec/has_value_p.ads~      |                                |
-|             | ~../spec/upper_bound_p.ads~    |                                |
-|             | ~max_seq_p.ads~                |                                |
-|             | ~max_seq_p.adb~                |                                |
-|-------------+--------------------------------+--------------------------------|
+| function                              | files                        | comments                       |
+|---------------------------------------+------------------------------+--------------------------------|
+| [[file:Max_Element.org][Max_Element]] | ~../spec/upper_bound_p.ads~  |                                |
+|                                       | ~max_element_wo_ghost_p.ads~ | version without ghost function |
+|                                       | ~max_element_wo_ghost_p.adb~ |                                |
+|                                       | ~max_element_p.ads~          | version with ghost function    |
+|                                       | ~max_element_p.adb~          |                                |
+|---------------------------------------+------------------------------+--------------------------------|
+| [[file:Max_Seq.org][Max_Seq]]         | ~../spec/has_value_p.ads~    |                                |
+|                                       | ~../spec/upper_bound_p.ads~  |                                |
+|                                       | ~max_seq.ads~                |                                |
+|                                       | ~max_sequence.adb~           |                                |
+|---------------------------------------+------------------------------+--------------------------------|
+| [[file:Min_Element.org][Min_Element]] | ~../spec/lower_bound_p.ads~  |                                |
+|                                       | ~min_element_p.ads~          |                                |
+|                                       | ~min_element_p.adb~          |                                |
+|---------------------------------------+------------------------------+--------------------------------|
