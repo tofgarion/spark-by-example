@@ -5,8 +5,11 @@
 
   This directory contains the specification and implementation files
   for the following algorithms: ~Search_Lower_Bound~,
-  ~Search_Upper_Bound~, ~Search_Equal_Ranges~ and ~Binary_Search~. As
-  usual, ghost functions used in specifications are located in the
+  ~Search_Upper_Bound~, ~Search_Equal_Ranges~ and
+  ~Binary_Search~. These algorithms take sorted arrays as
+  parameters. The classic binary search is presented in this chapter.
+
+  As usual, ghost functions used in specifications are located in the
   ~spec~ directory at project root.
 
   The functions and the corresponding files are presented in the

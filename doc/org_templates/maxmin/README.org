@@ -5,8 +5,11 @@
 
   This directory contains the specification and implementation files
   for the following algorithms: ~Max_Element~, ~Max_Seq~ and
-  ~Min_Element~.  As usual, ghost functions used in specifications are
-  located in the ~spec~ directory at project root.
+  ~Min_Element~. They are simple algorithms to find the max/min
+  element in an array.
+
+  As usual, ghost functions used in specifications are located in the
+  ~spec~ directory at project root.
 
   The functions and the corresponding files are presented in the
   following table (click on the links to have more details on the

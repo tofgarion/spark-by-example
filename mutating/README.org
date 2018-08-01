@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 16:32
+# Created 2018-08-01 Wed 16:35
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/README.org
 
@@ -12,7 +12,8 @@ algorithms are particular, as they modify at least one of their
 parameters.
 
 As usual, ghost functions used in specifications are located in the
-~spec~ directory at project root.
+~spec~ directory at project root. Lemmas needed to prove properties
+are located in the ~lemmas~ directory at project root.
 
 The functions and the corresponding files are presented in the
 following table (click on the link to have more details one the

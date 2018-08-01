@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 14:09
+# Created 2018-08-01 Wed 16:35
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/README.org
 
@@ -7,8 +7,11 @@
 This directory contains the specification and implementation files
 for the following algorithms: ~Find~, ~Find_First_Of~,
 ~Adjacent_Find~, ~Equal~, ~Search~, ~Search_N~, ~Find_End~ and
-~Count~. As usual, ghost functions used in specifications are
-located in the ~spec~ directory at project root.
+~Count~. These algorithms deal with arrays, but do not modify their
+parameters.
+
+As usual, ghost functions used in specifications are located in the
+~spec~ directory at project root.
 
 The functions and the corresponding files are presented in the
 following table (click on the links to have more details on the
