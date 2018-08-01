@@ -52,7 +52,7 @@
 
   1. [[./non-mutating/README.org][non mutating algorithms]]
   2. [[file:maxmin/README.org][maxmin algorithms]]
-  3. [[file:binary-search/README.org][binary-search algorithms]]
+  3. [[file:binary-search/README.org][binary search algorithms]]
   4. [[file:mutating/README.org][mutating algorithms]]
   5. [[file:numeric/README.org][numeric algorithms]]
   6. [[file:heap/README.org][heap algorithms]]
