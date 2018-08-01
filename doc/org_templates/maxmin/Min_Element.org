@@ -11,9 +11,14 @@
    #+END_SRC
 
    ~Min_Element~ will return an option containing the first index ~I~
-   of ~A~ such as for all ~K~ in ~A'First .. A'Last~, ~A(I) <= A(K)~.
+   of ~A~ such as for all ~K~ in ~A'First .. A'Last~, ~A(I) <=
+   A(K)~. It is of course an algorithm very similar to ~Max_Element~.
 
 *** Predicates used for specification
+
+    As for ~Max_Element~, we will first define predicates to help
+    readability of specification.
+
 **** The Lower_Bound predicate
 
      The ~Lower_Bound~ predicate will be used to assert that the

@@ -4,8 +4,8 @@
 * Maxmin algorithms
 
   This directory contains the specification and implementation files
-  for the following algorithms: ~Min_Element~, ~Max_Element~ and
-  ~Max_Seq~.  As usual, ghost functions used in specifications are
+  for the following algorithms: ~Max_Element~, ~Max_Seq~ and
+  ~Min_Element~.  As usual, ghost functions used in specifications are
   located in the ~spec~ directory at project root.
 
   The functions and the corresponding files are presented in the
@@ -14,10 +14,6 @@
 
 
   | function    | files                          | comments                       |
-  |-------------+--------------------------------+--------------------------------|
-  | [[file:Min_Element.org][Min_Element]] | ~../spec/lower_bound_p.ads~    |                                |
-  |             | ~min_element_p.ads~            |                                |
-  |             | ~min_element_p.adb~            |                                |
   |-------------+--------------------------------+--------------------------------|
   | [[file:Max_Element.org][Max_Element]] | ~../spec/upper_bound_p.ads~    |                                |
   |             | ~max_element_p.ads~            | version without ghost function |
@@ -29,4 +25,8 @@
   |             | ~../spec/upper_bound_p.ads~    |                                |
   |             | ~max_seq.ads~                  |                                |
   |             | ~max_sequence.adb~             |                                |
+  |-------------+--------------------------------+--------------------------------|
+  | [[file:Min_Element.org][Min_Element]] | ~../spec/lower_bound_p.ads~    |                                |
+  |             | ~min_element_p.ads~            |                                |
+  |             | ~min_element_p.adb~            |                                |
   |-------------+--------------------------------+--------------------------------|

@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 10:52
+# Created 2018-08-01 Wed 11:02
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Min_Element.org
 
@@ -12,9 +12,14 @@ Its signature can be expressed as:
 #+END_SRC
 
 ~Min_Element~ will return an option containing the first index ~I~
-of ~A~ such as for all ~K~ in ~A'First .. A'Last~, ~A(I) <= A(K)~.
+of ~A~ such as for all ~K~ in ~A'First .. A'Last~, ~A(I) <=
+   A(K)~. It is of course an algorithm very similar to ~Max_Element~.
 
 ** Predicates used for specification
+
+As for ~Max_Element~, we will first define predicates to help
+readability of specification.
+
 *** The Lower_Bound predicate
 
 The ~Lower_Bound~ predicate will be used to assert that the
@@ -79,12 +84,12 @@ Here, the post conditions are expressed through 2 contract cases:
 #+BEGIN_SRC ada
   function Min_Element (A : T_Arr) return Option is
      Result : Option := (Exists => False);
-  
   begin
      if A'Length = 0 then
         return Result;
      else
         Result := (Exists => True, Value => A'First);
+  
         for I in A'First .. A'Last loop
   	 if A (I) < A (Result.Value) then
   	    Result.Value := I;

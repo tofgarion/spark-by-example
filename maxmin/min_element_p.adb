@@ -3,12 +3,12 @@ package body Min_Element_P with
 
    function Min_Element (A : T_Arr) return Option is
       Result : Option := (Exists => False);
-
    begin
       if A'Length = 0 then
          return Result;
       else
          Result := (Exists => True, Value => A'First);
+
          for I in A'First .. A'Last loop
             if A (I) < A (Result.Value) then
                Result.Value := I;

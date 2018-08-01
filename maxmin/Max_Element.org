@@ -1,18 +1,18 @@
-# Created 2018-06-20 Wed 13:05
+# Created 2018-08-01 Wed 11:02
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Max_Element.org
 
 * The Max_Element algorithm
 
-The ~Max_Element~ algorithm finds the index of the maximum value
-of an array. Its signature can be expressed as :
+The ~Max_Element~ algorithm finds the index of the maximum value of
+an array. Its signature can be expressed as:
 
 #+BEGIN_SRC ada
   function Max_Element (A : T_Arr) return Option
 #+END_SRC
 
-~Max_Element~ will return the first index where the maximum is located
-if the array is not empty.
+~Max_Element~ will return the first index where the maximum is
+located if the array is not empty.
 
 ** A first version of Max_Element without ghost functions for specification
 
@@ -107,7 +107,7 @@ less than the maximum value.
 #+END_SRC
 
 The two functions are the same as in the specification
-of the specification of ~Max_Element~ previously 
+of the specification of ~Max_Element~ previously
 showed, except for the fact that we check for the entire
 array given in entry.
 
@@ -129,7 +129,7 @@ With the previously defined predicates, the specification of Max_Element is:
   	 A (Max_Element_With_Ghost'Result.Value)));
 #+END_SRC
 
-Because in the predicates we check for the entire array, we split the array ~A~ 
+Because in the predicates we check for the entire array, we split the array ~A~
 to write the postconditions.
 
 *** Implementation of Max_Element
