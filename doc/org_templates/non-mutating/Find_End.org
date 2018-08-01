@@ -22,21 +22,21 @@
     finding the last occurence. For this reason, the specification of
     ~Find_End~ will re-use many of the ghost functions defined for the
     specification of ~Search~. We still need to add two new ghost
-    function: ~Has_Subrange_In_Postfix~ and
+    functions: ~Has_Subrange_In_Postfix~ and
     ~Has_Not_Subrange_In_Prefix~.
 
     ~Has_Subrange_In_Postfix~ checks if the if the subsequence
     represented by the array ~B~ can be found in the array ~A~
     starting after the index ~J~ and is defined as:
 
-    #+INCLUDE: "../../../spec/has_subrange_p.ads" :src ada :range-begin "function Has_Subrange_In_Postfix" range-begin "function Equal_Ranges\\n" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "48-58"
+    #+INCLUDE: "../../../spec/has_subrange_p.ads" :src ada :range-begin "function Has_Subrange_In_Postfix" range-begin "function Equal_Ranges\\n" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "62-71"
 
     ~Has_Not_Subrange_In_Prefix~ checks if a subsequence represented
     by an array ~B~ does *not* appears in array ~A~. Subsequences of
     ~A~ to be checked will start in a certain range of indices ~Start
     .. Last~:
 
-    #+INCLUDE: "../../../spec/has_subrange_p.ads" :src ada :range-begin "function Has_Subrange_In_Prefix" range-begin "function Equal_Ranges\\n" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "20-28"
+    #+INCLUDE: "../../../spec/has_subrange_p.ads" :src ada :range-begin "function Has_Subrange_In_Prefix" range-begin "function Equal_Ranges\\n" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "26-34"
 
     ~Has_Not_Subrange_In_Prefix~ will be mainly used to hide
     quantifiers for the provers as already done for [[./Search.org][Search]].
@@ -45,7 +45,7 @@
 
     The specification of ~Find_End~ is as follows:
 
-    #+INCLUDE: "../../../non-mutating/find_end_p.ads" :src ada :range-begin "function Find_End" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-23"
+    #+INCLUDE: "../../../non-mutating/find_end_p.ads" :src ada :range-begin "function Find_End" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-24"
 
     - the precondition expresses
       - the fact that the last index of ~A~ is less than the last ~Positive~
@@ -71,7 +71,7 @@
 
 *** Implementation of Find_End
 
-    #+INCLUDE: "../../../non-mutating/find_end_p.adb" :src ada :range-begin "function Find_End" :range-end "end Find_End;" :lines "6-39"
+    #+INCLUDE: "../../../non-mutating/find_end_p.adb" :src ada :range-begin "function Find_End" :range-end "end Find_End;" :lines "7-40"
 
     - the implementation is rather simple: we range over ~A~ indexes
       trying to find a subsequence equal to ~B~, each time we do find

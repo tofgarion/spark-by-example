@@ -1,31 +1,36 @@
-# Created 2018-06-20 Wed 13:06
+# Created 2018-08-01 Wed 18:06
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Swap.org
 
 * The Swap algorithm
 
-The ~swap~ algorithm exchanges the contents of two variables. 
-Its signature can be expressed as:
-~procedure Swap (P : in out T; Q : in out T)~
+The ~Swap~ algorithm exchanges the contents of two variables. Its
+signature can be expressed as: ~procedure Swap (P : in out T; Q :
+   in out T)~
 
 ** Specification of Swap
 
 The specification of ~Swap~ is the following:
 
 #+BEGIN_SRC ada
-  procedure Swap (P : in out T; Q : in out T) with
-     Post => P = Q'Old and then Q = P'Old;
+  is
+    procedure Swap
 #+END_SRC
 
-The postcondition expresses the fact that the two variables have actually been
-exchanged, using the ~'Old~ attribute available in SPARK. This attribute stores the state of the variables *before* the excecution of the procedure.
+The postcondition expresses the fact that the two variables have
+actually been exchanged, using the ~'Old~ attribute available in
+SPARK. This attribute stores the state of the variables *before*
+the excecution of the procedure.
 
 ** Implementation of Swap
 
 The implementation of ~Swap~ is:
 
 #+BEGIN_SRC ada
-  procedure Swap (P : in out T; Q : in out T) is
+  procedure Swap
+    (P : in out T;
+     Q : in out T)
+  is
      Save : T := P;
   begin
      P := Q;
@@ -33,5 +38,5 @@ The implementation of ~Swap~ is:
   end Swap;
 #+END_SRC
 
-A memory variable is used to store the value of ~P~.
-Using ~GNATprove~, everything is proved.
+A memory variable is used to store the value of ~P~. Using
+~GNATprove~, everything is proved.

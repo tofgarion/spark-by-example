@@ -14,7 +14,7 @@ package Find_End_P with
       Pre            => A'Last < Positive'Last and then B'First <= B'Last,
       Contract_Cases => (B'Length = 0 => not Find_End'Result.Exists,
        A'Length < B'Length => not Find_End'Result.Exists,
-       A'Length >= B'Length and then Has_Subrange (A, B) =>
+       A'Length >= B'Length and then Has_Subrange_2 (A, B) =>
          Find_End'Result.Exists
          and then Equal_Subrange (A, Find_End'Result.Value, B)
          and then
