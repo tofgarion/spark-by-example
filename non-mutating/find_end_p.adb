@@ -19,33 +19,19 @@ package body Find_End_P with
          if A (I .. I - 1 + B'Length) = B then
             Result := (Exists => True, Value => I);
 
-            Pragma Assert (Has_Subrange (A, B));
+            pragma Assert (I - 1 + B'Length = Last (I, B));
          end if;
 
-
-         --  Pragma Loop_Invariant
-         --    (If Result.Exists Then Result.Value <= I);
-         Pragma Loop_Invariant
-           (If Result.Exists Then Result.Value In A'First .. A'Last + 1 - B'Length);
-         Pragma Loop_Invariant
-           (If Result.Exists Then Has_Subrange (A, B));
-         Pragma Loop_Invariant
-           (If Result.Exists Then Equal_Subrange (A, Result.Value, B));
-         Pragma Loop_Invariant
-           (If Result.Exists And then Result.Value < I Then Not Has_Subrange (A (Result.Value + 1 .. I - 1 + B'Length), B));
-
-         Pragma Loop_Invariant
-           (If (not Result.Exists) Then Not Has_Subrange (A (A'First .. I - 1 + B'Length), B));
-         --  pragma Loop_Invariant
-         --    (if Result.Exists then
-         --       Equal_Subrange (A, Result.Value, B)
-         --       and then Result.Value in A'First .. A'Last - B'Length + 1
-         --       and then Result.Value <= I
-         --       and then
-         --       (if Result.Value < I then
-         --          (Has_Not_Subrange_In_Range (A, Result.Value + 1, I, B))
-         --        else True)
-         --     else not Has_Subrange_In_Prefix (A, I, B));
+         pragma Loop_Invariant
+           (if Result.Exists then
+              Result.Value in A'First .. A'Last + 1 - B'Length
+              and then Has_Subrange (A, B)
+              and then Equal_Subrange (A, Result.Value, B)
+              and then
+              (if Result.Value < I then
+                 not Has_Subrange
+                   (A (Result.Value + 1 .. I - 1 + B'Length), B))
+            else not Has_Subrange (A (A'First .. I - 1 + B'Length), B));
 
       end loop;
 

@@ -53,10 +53,10 @@ package Has_Subrange_P with
 
    function Has_Subrange_2
      (A : T_Arr;
-      B : T_Arr) return Boolean is
+      B : T_Arr)
+      return Boolean is
      (Has_Subrange_In_Prefix (A, A'Last + 1 - B'Length, B)) with
-      Pre => A'Length > 0
-      and then A'Length >= B'Length
+      Pre => A'Length > 0 and then A'Length >= B'Length
       and then A'Last < Positive'Last;
 
    function Has_Subrange_In_Postfix
