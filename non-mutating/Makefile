@@ -29,13 +29,12 @@ LEVEL_SEARCH_WO_GHOST   = 4
 LEVEL_SEARCH_WITH_GHOST = 4
 LEVEL_SEARCH            = 1
 LEVEL_SEARCH_N          = 1
-LEVEL_FIND_END          = 4
+LEVEL_FIND_END          = 1
 LEVEL_COUNT             = 0
 
 # specific timeouts
 TIMEOUT_SEARCH_WO_GHOST   = "TIMEOUT=5"
 TIMEOUT_SEARCH_WITH_GHOST = "TIMEOUT=5"
-TIMEOUT_SEARCH            = "TIMEOUT=5"
 
 # all proof targets
 ALL_PROOF_TARGETS = naive_find naive_find_contract_pb find find_first_of adjacent_find \
@@ -82,7 +81,7 @@ search_with_ghost: $(call GENERATE_DEP,search_with_ghost) $(SPEC_SEARCH_WO_GHOST
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SEARCH_WITH_GHOST) $(TIMEOUT_SEARCH_WITH_GHOST)
 
 search: $(call GENERATE_DEP,search) $(SPEC_SEARCH)
-	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SEARCH) $(TIMEOUT_SEARCH)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SEARCH) $(NON_MUTATING_DEFAULT_TIMEOUT)
 
 # Search_N
 search_n: $(call GENERATE_DEP,search_n) $(SPEC_SEARCH_N)

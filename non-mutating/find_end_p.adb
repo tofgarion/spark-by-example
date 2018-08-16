@@ -15,23 +15,23 @@ package body Find_End_P with
          return Result;
       end if;
 
-      for I in A'First .. A'Last - B'Length + 1 loop
-         if A (I .. I - 1 + B'Length) = B then
-            Result := (Exists => True, Value => I);
+      for J in A'First .. A'Last - B'Length + 1 loop
+         if A (J .. J - 1 + B'Length) = B then
+            Result := (Exists => True, Value => J);
 
-            pragma Assert (I - 1 + B'Length = Last (I, B));
+            pragma Assert (J - 1 + B'Length = Last (J, B));
          end if;
 
          pragma Loop_Invariant
            (if Result.Exists then
-              Result.Value in A'First .. A'Last + 1 - B'Length
-              and then Has_Subrange (A, B)
+              Has_Subrange (A, B)
+              and then Result.Value in A'First .. A'Last + 1 - B'Length
               and then Equal_Subrange (A, Result.Value, B)
               and then
-              (if Result.Value < I then
+              (if Result.Value < J then
                  not Has_Subrange
-                   (A (Result.Value + 1 .. I - 1 + B'Length), B))
-            else not Has_Subrange (A (A'First .. I - 1 + B'Length), B));
+                   (A (Result.Value + 1 .. J - 1 + B'Length), B))
+            else not Has_Subrange (A (A'First .. J - 1 + B'Length), B));
 
       end loop;
 
