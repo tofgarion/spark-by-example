@@ -3,36 +3,36 @@
 
 ** The Swap_Ranges algorithm
 
-   The ~swap_ranges~ algorithm exchanges the contents of two arrays.
-   Its signature reads:
-   
+   The ~Swap_Ranges~ algorithm exchanges the contents of two arrays.
+   Its signature is the following:
+
    ~procedure Swap_Ranges(A : in out T_Arr; B: in out T_Arr)~
-   
+
 *** Specification of Swap_Ranges
 
     The specification of ~swap_ranges~ is the following:
 
-	#+INCLUDE: ../../../mutating/swap_ranges_p.ads :src ada :range-begin "procedure Swap_Ranges" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-9"
+    #+INCLUDE: ../../../mutating/swap_ranges_p.ads :src ada :range-begin "procedure Swap_Ranges" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-9"
 
-    The precondition expresses the fact that ~A~ and ~B~ must have the same length.
-    The postcondition expresses the fact that the values in ~A~ and ~B~ have actually
-    been exchanged.
+    The precondition expresses the fact that ~A~ and ~B~ must have the
+    same length. The postcondition expresses the fact that the values
+    in ~A~ and ~B~ have actually been exchanged. Using SPARK syntax
+    for arrays, the assertion are easy to write.
 
 *** Implementation of Swap_Ranges
 
-	#+INCLUDE: ../../../mutating/swap_ranges_p.adb :src ada :range-begin "procedure Swap_Ranges" :range-end "End Swap_Ranges;" :lines "3-33"
+    #+INCLUDE: ../../../mutating/swap_ranges_p.adb :src ada :range-begin "procedure Swap_Ranges" :range-end "End Swap_Ranges;" :lines "3-33"
 
-    ~SPARK~ encounters a few problems using sliced arrays in the loop invariants.
-    ~range check~ exceptions might appear if you use variables as boundaries
-    for the sliced arrays. To workaround these issues, you can used local
-    constants, with the ~declare~ - ~begin~ - ~end;~ syntax, to create
-    local constant in your loop and therefore, slice you arrays with them.
+    Provers encounters a few problems using sliced arrays in the loop
+    invariants. ~range check~ exceptions might appear if you use
+    expressions using variables as boundaries such as ~A'First + J~
+    for the sliced arrays. To workaround these issues, we use local
+    constants ~K~ and ~L~ to store the corresponding expressions and
+    use them as boundaries in the arrays slices.
 
-    The loop invariants specify that :
-      - the two local constants have the right value.
-      - the ~J~ first values of the arrays have been exchanged.
-      - the next values are still the same and they can be exchanged in the next
-	entry in loop.
+    The loop invariants specify that:
+      - the two local constants have the right value
+      - the ~J~ first values of the arrays have been exchanged
+      - the next values in the arrays have not been swapped yet
 
-     Using ~GNATprove~, everything is proved.
-     
+    Using ~GNATprove~, everything is proved.
