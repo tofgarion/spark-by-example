@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 16:35
+# Created 2018-08-17 Fri 14:24
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/README.org
 
@@ -32,6 +32,8 @@ specification/implementation of each function):
 |                                                   | ~swap_p.adb~                          |                                                      |
 |                                                   | ~swap_ranges_p.ads~                   |                                                      |
 |                                                   | ~swap_ranges_p.adb~                   |                                                      |
+|                                                   | ~swap_ranges_index_p.ads~             | a more SPARKish implementation                       |
+|                                                   | ~swap_ranges_index_p.adb~             |                                                      |
 |---------------------------------------------------+---------------------------------------+------------------------------------------------------|
 | [[file:./Copy.org][Copy]]                         | ~../binary-search/equal_ranges_p.ads~ |                                                      |
 |                                                   | ~../binary-search/equal_ranges_p.adb~ |                                                      |
