@@ -1,4 +1,4 @@
-# Created 2018-08-17 Fri 13:43
+# Created 2018-08-17 Fri 13:56
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Swap_Ranges.org
 
@@ -14,9 +14,11 @@ Its signature is the following:
 The specification of ~swap_ranges~ is the following:
 
 #+BEGIN_SRC ada
-  is
-    procedure Swap_Ranges
-      (A : in out T_Arr;
+  procedure Swap_Ranges
+    (A : in out T_Arr;
+     B : in out T_Arr) with
+     Pre  => A'Length = B'Length,
+     Post => A'Old = B and then B'Old = A;
 #+END_SRC
 
 The precondition expresses the fact that ~A~ and ~B~ must have the
@@ -27,48 +29,40 @@ for arrays, the assertion are easy to write.
 ** Implementation of Swap_Ranges
 
 #+BEGIN_SRC ada
+  procedure Swap_Ranges
+    (A : in out T_Arr;
+     B : in out T_Arr)
   is
-    procedure Swap_Ranges
-      (A : in out T_Arr;
-       B : in out T_Arr)
-    is
-    begin
+  begin
   
-       for J in 0 .. A'Length - 1 loop
-  	declare
-  	   K : constant Positive := A'First + J;
-  	   L : constant Positive := B'First + J;
-  	begin
+     for J in 0 .. A'Length - 1 loop
+        Swap (A (A'First + J), B (B'First + J));
   
-  	   Swap (A (K), B (L));
-  
-  	   pragma Loop_Invariant (K = A'First + J and L = B'First + J);
-  	   pragma Loop_Invariant
-  	     (B'Loop_Entry (B'First .. L) = A (A'First .. K));
-  	   pragma Loop_Invariant
-  	     (A'Loop_Entry (A'First .. K) = B (B'First .. L));
-  	   pragma Loop_Invariant
-  	     (if L < B'Last then
-  		B'Loop_Entry (L + 1 .. B'Last) = B (L + 1 .. B'Last));
-  	   pragma Loop_Invariant
-  	     (if K < A'Last then
-  		A'Loop_Entry (K + 1 .. A'Last) = A (K + 1 .. A'Last));
-  	end;
-  
-       end loop;
-    end Swap_Ranges;
+        pragma Loop_Invariant
+  	(B'Loop_Entry (B'First .. B'First + J) =
+  	 A (A'First .. A'First + J));
+        pragma Loop_Invariant
+  	(A'Loop_Entry (A'First .. A'First + J) =
+  	 B (B'First .. B'First + J));
+        pragma Loop_Invariant
+  	(if B'First + J < B'Last then
+  	   B'Loop_Entry (B'First + J + 1 .. B'Last) =
+  	   B (B'First + J + 1 .. B'Last));
+        pragma Loop_Invariant
+  	(if A'First + J < A'Last then
+  	   A'Loop_Entry (A'First + J + 1 .. A'Last) =
+  	   A (A'First + J + 1 .. A'Last));
+     end loop;
+  end Swap_Ranges;
 #+END_SRC
 
-Provers encounters a few problems using sliced arrays in the loop
-invariants. ~range check~ exceptions might appear if you use
-expressions using variables as boundaries such as ~A'First + J~
-for the sliced arrays. To workaround these issues, we use local
-constants ~K~ and ~L~ to store the corresponding expressions and
-use them as boundaries in the arrays slices.
-
 The loop invariants specify that:
-- the two local constants have the right value
 - the ~J~ first values of the arrays have been exchanged
 - the next values in the arrays have not been swapped yet
+
+Notice that we cannot use the ~Old~ attribute to refer to the
+previous state of the arrays, as ~Old~ is only available in
+postconditions. We therefore use the ~Loop_Entry~ attribute that
+refers to the value of the arrays before entering the loop.
 
 Using ~GNATprove~, everything is proved.

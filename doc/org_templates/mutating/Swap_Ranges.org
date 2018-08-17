@@ -12,7 +12,7 @@
 
     The specification of ~swap_ranges~ is the following:
 
-    #+INCLUDE: ../../../mutating/swap_ranges_p.ads :src ada :range-begin "procedure Swap_Ranges" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-9"
+    #+INCLUDE: "../../../mutating/swap_ranges_p.ads" :src ada :range-begin "procedure Swap_Ranges" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-12"
 
     The precondition expresses the fact that ~A~ and ~B~ must have the
     same length. The postcondition expresses the fact that the values
@@ -21,18 +21,15 @@
 
 *** Implementation of Swap_Ranges
 
-    #+INCLUDE: ../../../mutating/swap_ranges_p.adb :src ada :range-begin "procedure Swap_Ranges" :range-end "End Swap_Ranges;" :lines "3-33"
-
-    Provers encounters a few problems using sliced arrays in the loop
-    invariants. ~range check~ exceptions might appear if you use
-    expressions using variables as boundaries such as ~A'First + J~
-    for the sliced arrays. To workaround these issues, we use local
-    constants ~K~ and ~L~ to store the corresponding expressions and
-    use them as boundaries in the arrays slices.
+    #+INCLUDE: "../../../mutating/swap_ranges_p.adb" :src ada :range-begin "procedure Swap_Ranges" :range-end "End Swap_Ranges;" :lines "4-29"
 
     The loop invariants specify that:
-      - the two local constants have the right value
       - the ~J~ first values of the arrays have been exchanged
       - the next values in the arrays have not been swapped yet
+
+    Notice that we cannot use the ~Old~ attribute to refer to the
+    previous state of the arrays, as ~Old~ is only available in
+    postconditions. We therefore use the ~Loop_Entry~ attribute that
+    refers to the value of the arrays before entering the loop.
 
     Using ~GNATprove~, everything is proved.
