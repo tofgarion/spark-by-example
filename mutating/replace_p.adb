@@ -7,17 +7,17 @@ package body Replace_P with
       Rep :        T)
    is
    begin
-      for I in A'Range loop
-         if A (I) = Val then
-            A (I) := Rep;
+      for J in A'Range loop
+         if A (J) = Val then
+            A (J) := Rep;
          end if;
 
          pragma Loop_Invariant
            (Is_Replaced
-              (A'Loop_Entry (A'First .. I), A (A'First .. I), Val, Rep));
+              (A'Loop_Entry (A'First .. J), A (A'First .. J), Val, Rep));
          pragma Loop_Invariant
-           (if I < A'Last then
-              A'Loop_Entry (I + 1 .. A'Last) = A (I + 1 .. A'Last));
+           (if J < A'Last then
+              A'Loop_Entry (J + 1 .. A'Last) = A (J + 1 .. A'Last));
       end loop;
    end Replace;
 end Replace_P;

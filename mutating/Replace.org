@@ -1,21 +1,28 @@
-# Created 2018-06-20 Wed 13:06
+# Created 2018-08-17 Fri 18:31
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Replace.org
 
 * The Replace algorithm
 
-The ~replace~ algorithm replaces all the occurences of a value ~V~ with another value ~W~.
-It is the same as [[Replace_Copy.org][Replace_Copy]] except for the fact that it does it in the same array.
-Its signature reads:
-~procedure Replace ( A : in out T_Arr; Val : T ; Rep : T)~
+The ~replace~ algorithm replaces all the occurrences of a value ~V~
+with another value ~W~. As for ~Rotate~ and ~Rotate_Copy~, it is
+the same as [[Replace_Copy.org][Replace_Copy]] except for the fact that it does not store
+the result in another array but uses the same array.
+
+#+BEGIN_SRC ada
+  procedure Replace (A : in out T_Arr; Val : T ; Rep : T)
+#+END_SRC
 
 ** Specification of Replace
 
-We will use the function ~Is_Replaced~ defined in the previous algorithm.
-The specification of the ~replace~ algorithm can be expressed as:
+We use the function ~Is_Replaced~ defined in the previous
+algorithm for the specification:
 
 #+BEGIN_SRC ada
-  procedure Replace (A : in out T_Arr; Val : T; Rep : T) with
+  procedure Replace
+    (A   : in out T_Arr;
+     Val :        T;
+     Rep :        T) with
      Post => Is_Replaced (A'Old, A, Val, Rep);
 #+END_SRC
 
@@ -24,31 +31,31 @@ The specification of the ~replace~ algorithm can be expressed as:
 The implementation of ~replace~ is:
 
 #+BEGIN_SRC ada
-  procedure Replace (A : in out T_Arr; Val : T; Rep : T) is
+  procedure Replace
+    (A   : in out T_Arr;
+     Val :        T;
+     Rep :        T)
+  is
   begin
-     for I in A'Range loop
-        if A (I) = Val then
-  	 A (I) := Rep;
+     for J in A'Range loop
+        if A (J) = Val then
+  	 A (J) := Rep;
         end if;
   
         pragma Loop_Invariant
   	(Is_Replaced
-  	   (A'Loop_Entry (A'First .. I),
-  	    A (A'First .. I),
-  	    Val,
-  	    Rep));
+  	   (A'Loop_Entry (A'First .. J), A (A'First .. J), Val, Rep));
         pragma Loop_Invariant
-  	(if
-  	   I < A'Last
-  	 then
-  	   A'Loop_Entry (I + 1 .. A'Last) = A (I + 1 .. A'Last));
+  	(if J < A'Last then
+  	   A'Loop_Entry (J + 1 .. A'Last) = A (J + 1 .. A'Last));
      end loop;
   end Replace;
 #+END_SRC
 
-The first loop invariant specifies the same thing as the loop invariant in ~replace_copy~.
-The second is necessary because we have an ~out~ parameter, meaning that the values after ~I~
-could be changed in the loop. We specify in this loop invariant that ~A~ has not been changed
-after index ~I~.
+The first loop invariant specifies the same thing as the loop
+invariant in ~Replace_Copy~. The second is necessary because we
+have an ~out~ parameter, meaning that the values after ~J~ could
+be changed in the loop. We specify in this second loop invariant
+that ~A~ has not been changed after index ~J~.
 
 Using ~GNATprove~, everything is proved.

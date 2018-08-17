@@ -3,27 +3,36 @@
 
 ** The Replace algorithm
 
-   The ~replace~ algorithm replaces all the occurences of a value ~V~ with another value ~W~.
-   It is the same as [[Replace_Copy.org][Replace_Copy]] except for the fact that it does it in the same array.
-   Its signature reads:
-   ~procedure Replace ( A : in out T_Arr; Val : T ; Rep : T)~
+   The ~replace~ algorithm replaces all the occurrences of a value ~V~
+   with another value ~W~. As for ~Rotate~ and ~Rotate_Copy~, it is
+   the same as [[Replace_Copy.org][Replace_Copy]] except for the fact that it does not store
+   the result in another array but uses the same array.
+
+   #+BEGIN_SRC ada
+        procedure Replace (A : in out T_Arr; Val : T ; Rep : T)
+   #+END_SRC
 
 *** Specification of Replace
 
-    We will use the function ~Is_Replaced~ defined in the previous algorithm.
-    The specification of the ~replace~ algorithm can be expressed as:
+    We use the function ~Is_Replaced~ defined in the previous
+    algorithm for the specification:
 
-	#+INCLUDE: ../../../mutating/replace_p.ads :src ada :range-begin "procedure Replace" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-8"
+    #+INCLUDE: "../../../mutating/replace_p.ads" :src ada :range-begin "procedure Replace" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-12"
 
 *** Implementation of Replace
 
     The implementation of ~replace~ is:
 
-	#+INCLUDE: ../../../mutating/replace_p.adb :src ada :range-begin "procedure Replace" :range-end "end Replace;" :lines "3-23"
+    #+INCLUDE: "../../../mutating/replace_p.adb" :src ada :range-begin "procedure Replace" :range-end "end Replace;" :lines "4-23"
 
-    The first loop invariant specifies the same thing as the loop invariant in ~replace_copy~.
-    The second is necessary because we have an ~out~ parameter, meaning that the values after ~I~
-    could be changed in the loop. We specify in this loop invariant that ~A~ has not been changed
-    after index ~I~.
+    The first loop invariant specifies the same thing as the loop
+    invariant in ~Replace_Copy~. The second is necessary because we
+    have an ~out~ parameter, meaning that the values after ~J~ could
+    be changed in the loop. We specify in this second loop invariant
+    that ~A~ has not been changed after index ~J~.
 
     Using ~GNATprove~, everything is proved.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:
