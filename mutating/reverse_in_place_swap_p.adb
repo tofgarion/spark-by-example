@@ -1,4 +1,4 @@
-package body Reverse_In_Place_P with
+package body Reverse_In_Place_Swap_P with
    Spark_Mode
  is
 
@@ -8,7 +8,6 @@ package body Reverse_In_Place_P with
            A'First + (A'Last - A'First) / 2 -
            (if A'Length mod 2 = 0 then 0 else 1)
          else 1);
-      T1 : T;
    begin
 
       if A'Length <= 1 then
@@ -16,9 +15,9 @@ package body Reverse_In_Place_P with
       end if;
 
       for J in 0 .. Half - A'First loop
-         T1              := A (A'First + J);
-         A (A'First + J) := A (A'Last - J);
-         A (A'Last - J)  := T1;
+
+         pragma Assert (A'First + J /= A'Last - J);
+         Swap (A (A'First + J), A (A'Last - J));
 
          pragma Loop_Variant (Increases => J);
          pragma Loop_Invariant
@@ -36,4 +35,4 @@ package body Reverse_In_Place_P with
       end loop;
 
    end Reverse_In_Place;
-end Reverse_In_Place_P;
+end Reverse_In_Place_Swap_P;

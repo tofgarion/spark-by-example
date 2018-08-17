@@ -46,6 +46,8 @@
   | [[./Reverse_In_Place.org][Reverse_In_Place]] | ~../spec/is_reversed_p.ads~           |                                                      |
   |                  | ~swap_p.ads~                          |                                                      |
   |                  | ~swap_p.adb~                          |                                                      |
+  |                  | ~reverse_in_place_swap_p.ads~         | a first version using Swap                           |
+  |                  | ~reverse_in_place_swap_p.adb~         |                                                      |
   |                  | ~reverse_in_place_p.ads~              |                                                      |
   |                  | ~reverse_in_place_p.adb~              |                                                      |
   |------------------+---------------------------------------+------------------------------------------------------|

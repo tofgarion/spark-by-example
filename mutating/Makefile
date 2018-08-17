@@ -15,7 +15,8 @@ SPEC_SWAP_RANGES  		= $(SPEC_TYPES) $(call GENERATE_DEP,swap)
 SPEC_SWAP_RANGES_INDEX  	= $(SPEC_TYPES) $(call GENERATE_DEP,swap)
 SPEC_COPY 			= $(SPEC_TYPES) ../spec/equal_ranges_p.ads
 SPEC_REVERSE_COPY 		= $(SPEC_TYPES) ../spec/is_reversed_p.ads
-SPEC_REVERSE_IN_PLACE 		= $(SPEC_REVERSE_COPY) $(call GENERATE_DEP, swap)
+SPEC_REVERSE_IN_PLACE 		= $(SPEC_REVERSE_COPY)
+SPEC_REVERSE_IN_PLACE_SWAP 	= $(SPEC_REVERSE_COPY) $(call GENERATE_DEP, swap)
 SPEC_ROTATE_COPY 		= $(SPEC_TYPES) $(call GENERATE_DEP,copy)
 SPEC_ROTATE 			= $(SPEC_TYPES) $(call GENERATE_DEP,reverse_in_place)
 SPEC_REPLACE_COPY 		= $(SPEC_TYPES) ../spec/is_replaced_p.ads
@@ -31,6 +32,7 @@ LEVEL_SWAP_RANGES_INDEX = 1
 LEVEL_COPY              = 0
 LEVEL_REVERSE_COPY      = 0
 LEVEL_REVERSE_IN_PLACE  = 1
+LEVEL_REVERSE_IN_PLACE_SWAP  = 4
 LEVEL_ROTATE_COPY       = 1
 LEVEL_ROTATE            = 1
 LEVEL_REPLACE_COPY      = 1
@@ -67,6 +69,10 @@ reverse_copy: $(call GENERATE_DEP, reverse_copy) $(SPEC_REVERSE_COPY)
 # Reverse_In_Place
 reverse_in_place: $(call GENERATE_DEP, reverse_in_place) $(SPEC_REVERSE_IN_PLACE)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REVERSE_IN_PLACE) $(MUTATING_DEFAULT_TIMEOUT)
+
+# Reverse_In_Place_Swap
+reverse_in_place_swap: $(call GENERATE_DEP, reverse_in_place_swap) $(SPEC_REVERSE_IN_PLACE_SWAP)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REVERSE_IN_PLACE_SWAP) $(MUTATING_DEFAULT_TIMEOUT)
 
 # Rotate_Copy
 rotate_copy: $(call GENERATE_DEP, rotate_copy) $(SPEC_ROTATE_COPY)
