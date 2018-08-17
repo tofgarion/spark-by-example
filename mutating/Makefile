@@ -9,32 +9,32 @@ ALL_PROOF_TARGET = copy fill random_shuffle remove_copy replace_copy replace rev
 #specification dependencies for each function
 SPEC_TYPES       		= ../spec/types.ads
 SPEC_LEMMAS 			= ../lemmas/classic_lemmas.ads
-SPEC_COPY 			= $(SPEC_TYPES) ../spec/equal_ranges_p.ads
 SPEC_FILL 			= $(SPEC_TYPES) ../spec/has_constant_subrange_p.ads
-SPEC_RANDOM_SHUFFLE 		= $(SPEC_TYPES) $(SPEC_LEAMMAS) ../spec/multiset_predicates.ads $(call GENERATE_DEP, random) $(call GENERATE_DEP, swap_array)
-SPEC_REMOVE_COPY 		= $(SPEC_TYPES) ../spec/multiset_predicates.ads ../spec/occ_p.ads ../spec/occ_def_p.ads ../lemmas/remove_copy_lemmas.ads $(call GENERATE_DEP, remove_copy)
-SPEC_REPLACE_COPY 		= $(SPEC_TYPES) ../spec/is_replaced_p.ads
-SPEC_REPLACE 			= $(SPEC_REPLACE_COPY)
+SPEC_SWAP 			= $(SPEC_TYPES)
+SPEC_SWAP_RANGES  		= $(SPEC_TYPES) $(call GENERATE_DEP,swap)
+SPEC_COPY 			= $(SPEC_TYPES) ../spec/equal_ranges_p.ads
 SPEC_REVERSE_COPY 		= $(SPEC_TYPES) ../spec/is_reversed_p.ads
 SPEC_REVERSE_IN_PLACE 		= $(SPEC_REVERSE_COPY) $(call GENERATE_DEP, swap)
 SPEC_ROTATE_COPY 		= $(SPEC_TYPES) $(call GENERATE_DEP,copy)
 SPEC_ROTATE 			= $(SPEC_TYPES) $(call GENERATE_DEP,reverse_in_place)
-SPEC_SWAP 			= $(SPEC_TYPES)
-SPEC_SWAP_RANGES  		= $(SPEC_TYPES) $(call GENERATE_DEP,swap)
+SPEC_REPLACE_COPY 		= $(SPEC_TYPES) ../spec/is_replaced_p.ads
+SPEC_REPLACE 			= $(SPEC_REPLACE_COPY)
+SPEC_REMOVE_COPY 		= $(SPEC_TYPES) ../spec/multiset_predicates.ads ../spec/occ_p.ads ../spec/occ_def_p.ads ../lemmas/remove_copy_lemmas.ads $(call GENERATE_DEP, remove_copy)
+SPEC_RANDOM_SHUFFLE 		= $(SPEC_TYPES) $(SPEC_LEAMMAS) ../spec/multiset_predicates.ads $(call GENERATE_DEP, random) $(call GENERATE_DEP, swap_array)
 
 #proof level for each function
-LEVEL_COPY             = 0
 LEVEL_FILL             = 0
-LEVEL_RANDOM_SHUFFLE   = 1
-LEVEL_REMOVE_COPY      = 1
-LEVEL_REPLACE_COPY     = 1
-LEVEL_REPLACE          = 1
+LEVEL_SWAP             = 0
+LEVEL_SWAP_RANGES      = 1
+LEVEL_COPY             = 0
 LEVEL_REVERSE_COPY     = 0
 LEVEL_REVERSE_IN_PLACE = 1
 LEVEL_ROTATE_COPY      = 1
 LEVEL_ROTATE           = 1
-LEVEL_SWAP             = 0
-LEVEL_SWAP_RANGES      = 0
+LEVEL_REPLACE_COPY     = 1
+LEVEL_REPLACE          = 1
+LEVEL_REMOVE_COPY      = 1
+LEVEL_RANDOM_SHUFFLE   = 1
 
 include ../Makefile-common
 
