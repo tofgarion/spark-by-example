@@ -1,4 +1,4 @@
-# Created 2018-08-17 Fri 14:27
+# Created 2018-08-17 Fri 14:41
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Copy.org
 
@@ -12,30 +12,31 @@ array. Its signature is the following:
 #+END_SRC
 
 The usefulness of this procedure could be doubted in ADA, since the
-simple command ~A := B~ achieves the same goal for arrays of same
-length. Our procedure only works with arrays of same length, since
-copying part of an array into another can be achived through
-slicing.
-
-The purpose of this document being to prove classicals algorithms, and compare what can be done in ADA
- with what was done in C++ in *ACSL by Example*, where this procedure makes sense.
+simple command ~A := B~ achieves the same goal for arrays with same
+length. The purpose of this document being to prove classic
+algorithms defined in [[https://github.com/fraunhoferfokus/acsl-by-example][ACSL by Example]] for the C language, we choose
+to keep ~Copy~.
 
 ** Specification of Copy
 
-~Copy~ specification is:
+~Copy~ specification is the following:
 
 #+BEGIN_SRC ada
   procedure Copy
     (A :        T_Arr;
+     B : in out T_Arr) with
+     Pre  => A'Length = B'Length,
+     Post => B = A;
 #+END_SRC
 
-
-The precondition expresses the fact that ~A~ and ~B~ should be of the same size.
-The post condition expresses that ~A~ and ~B~ are equal element-wise.
+The precondition expresses the fact that ~A~ and ~B~ should be of
+the same size. This is not a limitation, as copying part of an
+array can be achieved through slicing. The postcondition expresses
+that ~A~ and ~B~ are equal element-wise.
 
 ** Implementation of Copy
 
-One implementation for Copy is:
+A possible implementation for ~Copy~ is the following:
 
 #+BEGIN_SRC ada
   procedure Copy
@@ -43,14 +44,24 @@ One implementation for Copy is:
      B : in out T_Arr)
   is
   begin
-     for I in A'Range loop
-        B (B'First + (I - A'First)) := A (I);
+     for J in A'Range loop
+        declare
+  	 K : Positive := B'First + (J - A'First);
+        begin
+  	 B (K) := A (J);
   
-        pragma Loop_Variant (Increases => I);
-        pragma Loop_Invariant
+  	 pragma Loop_Invariant (A (A'First .. J) = B (B'First .. K));
+  
+        end;
+     end loop;
+  end Copy;
 #+END_SRC
 
-Here the loop variant is classicaly ~I~, and the loop invariant specifies that for all indexes ~K~ lesser
-than ~I~, then ~A(K) = B(B'First +(K - A'First))~, i.e. we have a partial copy of the first ~I-A'First~ indexes of ~A~ in ~B~.
+We have defined a local variable ~K~ to hold the result of
+~B'First + J - A'First~, i.e. the corresponding index of ~B~, for
+readability. The loop invariant specifies that for all indexes ~L~
+lesser than ~J~, then ~A(L) = B(K)~, i.e. the first ~I-A'First~
+indexes of ~A~ have been copied in ~B~.
 
-With this specification and implementation, when using ~GNATprove~ everything is proved.
+With this specification and implementation, when using ~GNATprove~
+everything is proved.

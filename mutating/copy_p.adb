@@ -7,13 +7,15 @@ package body Copy_P with
       B : in out T_Arr)
    is
    begin
-      for I in A'Range loop
-         B (B'First + (I - A'First)) := A (I);
+      for J in A'Range loop
+         declare
+            K : Positive := B'First + (J - A'First);
+         begin
+            B (K) := A (J);
 
-         pragma Loop_Variant (Increases => I);
-         pragma Loop_Invariant
-           (A (A'First .. I) = B (B'First .. B'First + (I - A'First)));
+            pragma Loop_Invariant (A (A'First .. J) = B (B'First .. K));
 
+         end;
       end loop;
    end Copy;
 end Copy_P;

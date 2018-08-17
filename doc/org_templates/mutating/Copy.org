@@ -3,36 +3,45 @@
 
 ** The Copy Algorithm
 
-The ~Copy~ procedure copies the content of an array into another array. Its signature is :
+   The ~Copy~ procedure copies the content of an array into another
+   array. Its signature is the following:
 
-#+BEGIN_SRC ada
-procedure Copy(A : T_Arr; B : in out T_Arr)
-#+END_SRC
+   #+BEGIN_SRC ada
+     procedure Copy (A : T_Arr; B : in out T_Arr)
+   #+END_SRC
 
-The usefulness of this procedure could be doubted in ADA, since the simple commande ~A := B~ achieves 
-the same goal for arrays of same length. Our procedure only works with arrays of same length, since copying 
-part of an array into another can be achived through slicing.
-
-The purpose of this document being to prove classicals algorithms, and compare what can be done in ADA
- with what was done in C++ in *ACSL by Example*, where this procedure makes sense.
+   The usefulness of this procedure could be doubted in ADA, since the
+   simple command ~A := B~ achieves the same goal for arrays with same
+   length. The purpose of this document being to prove classic
+   algorithms defined in [[https://github.com/fraunhoferfokus/acsl-by-example][ACSL by Example]] for the C language, we choose
+   to keep ~Copy~.
 
 *** Specification of Copy
 
-~Copy~ specification is:
+    ~Copy~ specification is the following:
 
-	#+INCLUDE: ../../../mutating/copy_p.ads :src ada :range-begin "procedure Copy" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-10"
+    #+INCLUDE: "../../../mutating/copy_p.ads" :src ada :range-begin "procedure Copy" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-13"
 
-
-The precondition expresses the fact that ~A~ and ~B~ should be of the same size.
-The post condition expresses that ~A~ and ~B~ are equal element-wise.
+    The precondition expresses the fact that ~A~ and ~B~ should be of
+    the same size. This is not a limitation, as copying part of an
+    array can be achieved through slicing. The postcondition expresses
+    that ~A~ and ~B~ are equal element-wise.
 
 *** Implementation of Copy
 
-One implementation for Copy is:
+    A possible implementation for ~Copy~ is the following:
 
-#+INCLUDE: ../../../mutating/copy_p.adb :src ada :range-begin "procedure Copy" :range-end "End Copy;" :lines "4-15"
+    #+INCLUDE: "../../../mutating/copy_p.adb" :src ada :range-begin "procedure Copy" :range-end "End Copy;" :lines "5-21"
 
-Here the loop variant is classicaly ~I~, and the loop invariant specifies that for all indexes ~K~ lesser
-than ~I~, then ~A(K) = B(B'First +(K - A'First))~, i.e. we have a partial copy of the first ~I-A'First~ indexes of ~A~ in ~B~.
+    We have defined a local variable ~K~ to hold the result of
+    ~B'First + J - A'First~, i.e. the corresponding index of ~B~, for
+    readability. The loop invariant specifies that for all indexes ~L~
+    lesser than ~J~, then ~A(L) = B(K)~, i.e. the first ~I-A'First~
+    indexes of ~A~ have been copied in ~B~.
 
-With this specification and implementation, when using ~GNATprove~ everything is proved.
+    With this specification and implementation, when using ~GNATprove~
+    everything is proved.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:
