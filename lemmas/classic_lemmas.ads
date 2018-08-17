@@ -8,7 +8,7 @@ package Classic_Lemmas with
    Spark_Mode
  is
 
-   procedure Occ_Eq
+   procedure Occ_Equal
      (A : T_Arr;
       B : T_Arr;
       E : T) with

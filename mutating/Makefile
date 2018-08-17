@@ -17,28 +17,32 @@ SPEC_COPY 			= $(SPEC_TYPES) ../spec/equal_ranges_p.ads
 SPEC_REVERSE_COPY 		= $(SPEC_TYPES) ../spec/is_reversed_p.ads
 SPEC_REVERSE_IN_PLACE 		= $(SPEC_REVERSE_COPY)
 SPEC_REVERSE_IN_PLACE_SWAP 	= $(SPEC_REVERSE_COPY) $(call GENERATE_DEP, swap)
-SPEC_ROTATE_COPY 		= $(SPEC_TYPES) $(call GENERATE_DEP,copy)
-SPEC_ROTATE 			= $(SPEC_TYPES) $(call GENERATE_DEP,reverse_in_place)
+SPEC_ROTATE_COPY 		= $(SPEC_TYPES) $(call GENERATE_DEP, copy)
+SPEC_ROTATE 			= $(SPEC_TYPES) $(call GENERATE_DEP, reverse_in_place)
 SPEC_REPLACE_COPY 		= $(SPEC_TYPES) ../spec/is_replaced_p.ads
 SPEC_REPLACE 			= $(SPEC_REPLACE_COPY)
-SPEC_REMOVE_COPY 		= $(SPEC_TYPES) ../spec/multiset_predicates.ads ../spec/occ_p.ads ../spec/occ_def_p.ads ../lemmas/remove_copy_lemmas.ads $(call GENERATE_DEP, remove_copy)
+SPEC_REMOVE_COPY 		= $(SPEC_TYPES) ../spec/multiset_predicates.ads ../spec/occ_p.ads ../spec/occ_def_p.ads ../lemmas/remove_copy_lemmas.ads
+SPEC_REMOVE_COPY_FIRST 		= $(SPEC_TYPES) ../spec/multiset_predicates.ads ../spec/occ_p.ads ../spec/occ_def_p.ads
+SPEC_REMOVE_COPY_SECOND 	= $(SPEC_TYPES) ../spec/multiset_predicates.ads ../spec/occ_p.ads ../spec/occ_def_p.ads ../lemmas/remove_copy_lemmas.ads
 SPEC_RANDOM_SHUFFLE 		= $(SPEC_TYPES) $(SPEC_LEAMMAS) ../spec/multiset_predicates.ads $(call GENERATE_DEP, random) $(call GENERATE_DEP, swap_array)
 
 #proof level for each function
-LEVEL_FILL              = 0
-LEVEL_SWAP              = 0
-LEVEL_SWAP_RANGES       = 1
-LEVEL_SWAP_RANGES_INDEX = 1
-LEVEL_COPY              = 0
-LEVEL_REVERSE_COPY      = 0
-LEVEL_REVERSE_IN_PLACE  = 1
+LEVEL_FILL                   = 0
+LEVEL_SWAP                   = 0
+LEVEL_SWAP_RANGES            = 1
+LEVEL_SWAP_RANGES_INDEX      = 1
+LEVEL_COPY                   = 0
+LEVEL_REVERSE_COPY           = 0
+LEVEL_REVERSE_IN_PLACE       = 1
 LEVEL_REVERSE_IN_PLACE_SWAP  = 4
-LEVEL_ROTATE_COPY       = 1
-LEVEL_ROTATE            = 1
-LEVEL_REPLACE_COPY      = 1
-LEVEL_REPLACE           = 1
-LEVEL_REMOVE_COPY       = 1
-LEVEL_RANDOM_SHUFFLE    = 1
+LEVEL_ROTATE_COPY            = 1
+LEVEL_ROTATE                 = 1
+LEVEL_REPLACE_COPY           = 1
+LEVEL_REPLACE                = 1
+LEVEL_REMOVE_COPY            = 1
+LEVEL_REMOVE_COPY_FIRST      = 4
+LEVEL_REMOVE_COPY_SECOND     = 4
+LEVEL_RANDOM_SHUFFLE         = 1
 
 include ../Makefile-common
 
@@ -93,6 +97,14 @@ replace: $(call GENERATE_DEP, replace) $(SPEC_REPLACE)
 # Remove_Copy
 remove_copy: $(call GENERATE_DEP, remove_copy) $(SPEC_REMOVE_COPY)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REMOVE_COPY) $(MUTATING_DEFAULT_TIMEOUT)
+
+# Remove_Copy_First
+remove_copy_first: $(call GENERATE_DEP, remove_copy_first) $(SPEC_REMOVE_COPY_FIRST)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REMOVE_COPY_FIRST) $(MUTATING_DEFAULT_TIMEOUT)
+
+# Remove_Copy_Second
+remove_copy_second: $(call GENERATE_DEP, remove_copy_second) $(SPEC_REMOVE_COPY_SECOND)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_REMOVE_COPY_SECOND) $(MUTATING_DEFAULT_TIMEOUT)
 
 # Random_Shuffle
 random_shuffle: $(call GENERATE_DEP, random_shuffle) $(SPEC_RANDOM_SHUFFLE)

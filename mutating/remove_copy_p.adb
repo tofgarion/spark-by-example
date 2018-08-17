@@ -9,7 +9,7 @@ package body Remove_Copy_P with
       K   : in out Natural)
    is
       J      : Integer := A'First - 1;
-      B_Save : T_Arr   := B;
+      B_Save : T_Arr   := B with Ghost;
 
    begin
       if A'Length > 0 then
@@ -20,7 +20,7 @@ package body Remove_Copy_P with
                B_Save := B;
                B (K)  := A (J);
                if K > B'First then
-                  No_Changes
+                  Multiset_Retain_Rest_Equal
                     (A (A'First .. J - 1), B_Save (B'First .. K - 1),
                      B (B'First .. K - 1), Val);
                end if;

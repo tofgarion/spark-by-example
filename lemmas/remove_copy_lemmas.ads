@@ -5,23 +5,15 @@ with Multiset_Predicates; use Multiset_Predicates;
 with Classic_Lemmas;      use Classic_Lemmas;
 
 package Remove_Copy_Lemmas with
-   Spark_Mode
+   Spark_Mode,
+   Ghost
  is
-   procedure Lemma
-     (A      : T_Arr;
-      E, Val : T) with
-      Ghost,
-
+   procedure Unique_Value
+     (A   : T_Arr;
+      E   : T;
+      Val : T) with
       Pre => (for all L in A'First .. A'Last => A (L) = Val) and then E /= Val,
       Post => Occ (A, E) = 0;
-
-   procedure No_Changes
-     (A, B, C : T_Arr;
-      Val     : T) with
-      Ghost,
-      Pre => A'Length > 0 and then B = C
-      and then Multiset_Retain_Rest (A, B, Val),
-      Post => Multiset_Retain_Rest (A, C, Val);
 
    procedure Make_Prove_Multiset
      (A   : T_Arr;
@@ -34,5 +26,14 @@ package Remove_Copy_Lemmas with
        else Multiset_Retain_Rest (Remove_Last (A), Remove_Last (B), Val))
       and then A (A'Last) = B (B'Last),
       Post => Multiset_Retain_Rest (A, B, Val);
+
+   procedure Multiset_Retain_Rest_Equal
+     (A   : T_Arr;
+      B   : T_Arr;
+      C   : T_Arr;
+      Val : T) with
+      Pre => A'Length > 0 and then B = C
+      and then Multiset_Retain_Rest (A, B, Val),
+      Post => Multiset_Retain_Rest (A, C, Val);
 
 end Remove_Copy_Lemmas;

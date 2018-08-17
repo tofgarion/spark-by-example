@@ -162,7 +162,7 @@ package body Pop_Heap_P with
         (Interm =
          H.A);  -- verify that swap approach and hole approcach give same result
       for V in T loop
-         Occ_Eq (Interm, H.A, V);
+         Occ_Equal (Interm, H.A, V);
          pragma Loop_Invariant
            (for all F in T'First .. V =>
               Occ (Interm, F) =

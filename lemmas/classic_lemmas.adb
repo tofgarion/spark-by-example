@@ -2,7 +2,7 @@ package body Classic_Lemmas with
    Spark_Mode
  is
 
-   procedure Occ_Eq
+   procedure Occ_Equal
      (A : T_Arr;
       B : T_Arr;
       E : T)
@@ -18,8 +18,8 @@ package body Classic_Lemmas with
          pragma Assert (B (B'Last) /= E);
       end if;
 
-      Occ_Eq (Remove_Last (A), Remove_Last (B), E);
-   end Occ_Eq;
+      Occ_Equal (Remove_Last (A), Remove_Last (B), E);
+   end Occ_Equal;
 
    procedure Occ_Set
      (A    : T_Arr;
@@ -34,10 +34,10 @@ package body Classic_Lemmas with
       end if;
 
       if I = A'Last then
-         Occ_Eq (Tmp, Remove_Last (B), E);
+         Occ_Equal (Tmp, Remove_Last (B), E);
       else
          Tmp (I) := V;
-         Occ_Eq (Remove_Last (B), Tmp, E);
+         Occ_Equal (Remove_Last (B), Tmp, E);
          Occ_Set (Remove_Last (A), Tmp, I, V, E);
       end if;
    end Occ_Set;
@@ -127,7 +127,7 @@ package body Classic_Lemmas with
    procedure Equal_Implies_Multiset_Unchanged (A, B : T_Arr) is
    begin
       for V in T loop
-         Occ_Eq (A, B, V);
+         Occ_Equal (A, B, V);
          pragma Loop_Invariant
            (for all E in T'First .. V => Occ (A, E) = Occ (B, E));
       end loop;

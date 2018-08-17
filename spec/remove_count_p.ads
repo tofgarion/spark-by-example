@@ -11,4 +11,5 @@ package Remove_Count_P with
       return Natural is (A'Length - Occ (A, Val)) with
       Pre  => A'Length > 0,
       Post => Remove_Count'Result in 0 .. A'Length;
+
 end Remove_Count_P;

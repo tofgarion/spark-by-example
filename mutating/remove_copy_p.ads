@@ -15,13 +15,14 @@ package Remove_Copy_P with
       Val :        T;
       K   : in out Natural) with
       Pre            => B'Length = A'Length and then B'Last < Positive'Last,
-      Contract_Cases => (A'Length = 0 => (B'Old = B and then K'Old = K),
-       A'Length > 0 =>
+      Contract_Cases =>
+      (A'Length > 0 =>
          (K in B'First - 1 .. B'Last
           and then K = B'First + Remove_Count (A, Val) - 1
           and then (for all L in B'First .. K => B (L) /= Val)
           and then (for all L in K + 1 .. B'Last => B (L) = B'Old (L))
           and then
           (if K >= B'First then
-             Multiset_Retain_Rest (A, B (B'First .. K), Val))));
+             Multiset_Retain_Rest (A, B (B'First .. K), Val))),
+       others => (B'Old = B and then K'Old = K));
 end Remove_Copy_P;

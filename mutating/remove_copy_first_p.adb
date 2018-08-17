@@ -32,6 +32,7 @@ package body Remove_Copy_First_P with
             pragma Loop_Invariant
               (for all L in K .. B'Last => B (L) = B'Loop_Entry (L));
          end loop;
+
          K := K - 1;
       end if;
 

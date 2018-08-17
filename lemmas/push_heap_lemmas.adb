@@ -9,7 +9,7 @@ package body Push_Heap_Lemmas with
    is
    begin
       for E in T loop
-         Occ_Eq (A, A_Save, E);
+         Occ_Equal (A, A_Save, E);
          pragma Loop_Invariant
            (for all F in T'First .. E => Occ (A, F) = Occ (A_Save, F));
       end loop;
