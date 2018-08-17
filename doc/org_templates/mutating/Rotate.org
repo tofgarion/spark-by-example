@@ -3,27 +3,37 @@
 
 ** The Rotate algorithm
 
-The ~Rotate~ Algorithm aims to achieve the same goal as the [[Rotate_Copy.org][Rotate_Copy]] algorithm, but instead of storing the result in another array,
-it does so in-place. Its signature reads:
+   The ~Rotate~ Algorithm aims to achieve the same goal as the
+   [[Rotate_Copy.org][Rotate_Copy]] algorithm, but instead of storing the result in another
+   array, it does the shift in place:
 
-#+BEGIN_SRC ada
-procedure Rotate(A : in out T_Arr, N : Positive)
-#+END_SRC
+   #+BEGIN_SRC ada
+     procedure Rotate (A : in out T_Arr, N : Positive)
+   #+END_SRC
 
 *** Specification of Rotate
 
-Since ~Rotate~ is quite similar to ~Rotate_Copy~, their specifications do not differ greatly. 
-~Rotate~ can be specified as follows:
+    Since ~Rotate~ is quite similar to ~Rotate_Copy~, their
+    specifications do not differ greatly. ~Rotate~ can be specified
+    as follows:
 
-	#+INCLUDE: ../../../mutating/rotate_p.ads :src ada :range-begin "procedure Rotate" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-12"
+    #+INCLUDE: "../../../mutating/rotate_p.ads" :src ada :range-begin "procedure Rotate" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-15"
 
-The postcondition expresses that the first ~N~ elments of ~A~ before the procedure become the last
-~N~ elements after the call, and the ~A'Length - N~ last elements of ~A~ before the procedure becomme the first after the procedure.
+    The postcondition expresses that the first ~N~ elments of ~A~
+    before the procedure become the last ~N~ elements after the call,
+    and the ~A'Length - N~ last elements of ~A~ before the procedure
+    become the N first after the procedure.
 
 *** Implementation of Rotate
 
-Rotate is implemented in a way to benefit from the [[Reverse_In_Place.org][Reverse_In_Place]] procedure, making the procedure easy and compact:
+    As in [[https://github.com/fraunhoferfokus/acsl-by-example][ACSL by Example]], ~Rotate~ is implemented to benefit from the
+    [[Reverse_In_Place.org][Reverse_In_Place]] procedure, making the procedure easy and compact:
 
-	#+INCLUDE: ../../../mutating/rotate_p.adb :src ada :range-begin "procedure Rotate" :range-end "end Rotate;" :lines "4-10"
+    #+INCLUDE: "../../../mutating/rotate_p.adb" :src ada :range-begin "procedure Rotate" :range-end "end Rotate;" :lines "5-14"
 
-~GNATprove~ doesn't need any additional annotations in order to prove everything.
+    ~GNATprove~ doesn't need any additional annotations in order to
+    prove everything.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:
