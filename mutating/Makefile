@@ -12,6 +12,7 @@ SPEC_LEMMAS 			= ../lemmas/classic_lemmas.ads
 SPEC_FILL 			= $(SPEC_TYPES) ../spec/has_constant_subrange_p.ads
 SPEC_SWAP 			= $(SPEC_TYPES)
 SPEC_SWAP_RANGES  		= $(SPEC_TYPES) $(call GENERATE_DEP,swap)
+SPEC_SWAP_RANGES_INDEX  	= $(SPEC_TYPES) $(call GENERATE_DEP,swap)
 SPEC_COPY 			= $(SPEC_TYPES) ../spec/equal_ranges_p.ads
 SPEC_REVERSE_COPY 		= $(SPEC_TYPES) ../spec/is_reversed_p.ads
 SPEC_REVERSE_IN_PLACE 		= $(SPEC_REVERSE_COPY) $(call GENERATE_DEP, swap)
@@ -23,18 +24,19 @@ SPEC_REMOVE_COPY 		= $(SPEC_TYPES) ../spec/multiset_predicates.ads ../spec/occ_p
 SPEC_RANDOM_SHUFFLE 		= $(SPEC_TYPES) $(SPEC_LEAMMAS) ../spec/multiset_predicates.ads $(call GENERATE_DEP, random) $(call GENERATE_DEP, swap_array)
 
 #proof level for each function
-LEVEL_FILL             = 0
-LEVEL_SWAP             = 0
-LEVEL_SWAP_RANGES      = 1
-LEVEL_COPY             = 0
-LEVEL_REVERSE_COPY     = 0
-LEVEL_REVERSE_IN_PLACE = 1
-LEVEL_ROTATE_COPY      = 1
-LEVEL_ROTATE           = 1
-LEVEL_REPLACE_COPY     = 1
-LEVEL_REPLACE          = 1
-LEVEL_REMOVE_COPY      = 1
-LEVEL_RANDOM_SHUFFLE   = 1
+LEVEL_FILL              = 0
+LEVEL_SWAP              = 0
+LEVEL_SWAP_RANGES       = 1
+LEVEL_SWAP_RANGES_INDEX = 1
+LEVEL_COPY              = 0
+LEVEL_REVERSE_COPY      = 0
+LEVEL_REVERSE_IN_PLACE  = 1
+LEVEL_ROTATE_COPY       = 1
+LEVEL_ROTATE            = 1
+LEVEL_REPLACE_COPY      = 1
+LEVEL_REPLACE           = 1
+LEVEL_REMOVE_COPY       = 1
+LEVEL_RANDOM_SHUFFLE    = 1
 
 include ../Makefile-common
 
@@ -47,8 +49,12 @@ swap: $(call GENERATE_DEP,swap) $(SPEC_SWAP)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SWAP) $(MUTATING_DEFAULT_TIMEOUT)
 
 # Swap_Ranges
-swap_ranges: $(call GENERATE_DEP,swap_ranges) $(SPEC_SWAP)
+swap_ranges: $(call GENERATE_DEP,swap_ranges) $(SPEC_SWAP_RANGES)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SWAP_RANGES) $(MUTATING_DEFAULT_TIMEOUT)
+
+# Swap_Ranges_Index
+swap_ranges_index: $(call GENERATE_DEP,swap_ranges_index) $(SPEC_SWAP_RANGES_INDEX)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SWAP_RANGES_INDEX) $(MUTATING_DEFAULT_TIMEOUT)
 
 # Copy
 copy: $(call GENERATE_DEP, copy) $(SPEC_COPY)

@@ -33,3 +33,16 @@
     refers to the value of the arrays before entering the loop.
 
     Using ~GNATprove~, everything is proved.
+
+*** A new implementation of Swap_Ranges
+
+    The ~swap_ranges_index_p.adb~ file contains a more "SPARKish" (at
+    least to our point of view) implementation of ~Swap_Ranges~:
+
+    #+INCLUDE: "../../../mutating/swap_ranges_index_p.adb" :src ada :range-begin "procedure Swap_Ranges" :range-end "End Swap_Ranges;" :lines "4-31"
+
+    In this implementation, we will not use an offset as loop
+    variable, but range over ~A'Range~. A local variable is defined
+    for readibility to define the corresponding index for ~B~.
+
+    Again, everything is proved using ~GNATprove~.

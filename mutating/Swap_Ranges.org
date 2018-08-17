@@ -1,4 +1,4 @@
-# Created 2018-08-17 Fri 14:16
+# Created 2018-08-17 Fri 14:21
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Swap_Ranges.org
 
@@ -66,3 +66,44 @@ postconditions. We therefore use the ~Loop_Entry~ attribute that
 refers to the value of the arrays before entering the loop.
 
 Using ~GNATprove~, everything is proved.
+
+** A new implementation of Swap_Ranges
+
+The ~swap_ranges_index_p.adb~ file contains a more "SPARKish" (at
+least to our point of view) implementation of ~Swap_Ranges~:
+
+#+BEGIN_SRC ada
+  procedure Swap_Ranges
+    (A : in out T_Arr;
+     B : in out T_Arr)
+  is
+  begin
+  
+     for J in A'Range loop
+        declare
+  	 K : Positive := B'First + (J - A'First);
+        begin
+  	 Swap (A (J), B (K));
+  
+  	 pragma Loop_Invariant
+  	   (B'Loop_Entry (B'First .. K) = A (A'First .. J));
+  	 pragma Loop_Invariant
+  	   (A'Loop_Entry (A'First .. J) =
+  	    B (B'First .. B'First + (J - A'First)));
+  	 pragma Loop_Invariant
+  	   (if K < B'Last then
+  	      B'Loop_Entry (K + 1 .. B'Last) = B (K + 1 .. B'Last));
+  	 pragma Loop_Invariant
+  	   (if J < A'Last then
+  	      A'Loop_Entry (J + 1 .. A'Last) = A (J + 1 .. A'Last));
+  
+        end;
+     end loop;
+  end Swap_Ranges;
+#+END_SRC
+
+In this implementation, we will not use an offset as loop
+variable, but range over ~A'Range~. A local variable is defined
+for readibility to define the corresponding index for ~B~.
+
+Again, everything is proved using ~GNATprove~.
