@@ -67,7 +67,7 @@
          ~Val~.
     - otherwise ~A~ is empty and then ~B~ and ~K~ do not change
 
-*** Implementations of Remove_Copy
+*** Implementation of Remove_Copy
 
 **** A first implementation
 
@@ -183,30 +183,30 @@
       unique value ~Val~. The loop invariant is dedicated to store the
       proofs already established for the previous values.
 
-*** A second implementation
+**** A second proof attempt for Remove_Copy
 
-    We can now use the ~Make_Prove_Multiset~ in the implementation of
-    ~Remove_Copy~ by instantiating it in the main loop of the
-    algorithm:
+     We can now use the ~Make_Prove_Multiset~ in the implementation of
+     ~Remove_Copy~ by instantiating it in the main loop of the
+     algorithm:
 
-    #+INCLUDE: "../../../mutating/remove_copy_second_p.adb" :src ada :range-begin "procedure Remove_Copy_Second" :range-end "end Remove_Copy_Second;" :lines "4-51"
+     #+INCLUDE: "../../../mutating/remove_copy_second_p.adb" :src ada :range-begin "procedure Remove_Copy_Second" :range-end "end Remove_Copy_Second;" :lines "4-51"
 
-    Using ~GNATprove~ with this implementation, a ~precondition might
-    fail~ appears when instantiating the lemma in the loop. With the
-    help of some assertions, we see that the precondition that is not
-    verified is the ~Multiset_Retain_Rest~ one. Indeed, the prover may
-    consider that after the line with the affectation ~B (K) := A
-    (J)~, the state of ~B~ has changed, particularly for values before
-    index ~K~. Therefore, even if the predicate is about the values in
-    range ~B'First .. K - 1~ and we changed the ~K~th value of ~B~,
-    the prover does not consider ~Multiset_Retain_Rest (A (A'First
-    .. J), B (B'First .. K - 1), Val))~ to hold.
+     Using ~GNATprove~ with this implementation, a ~precondition might
+     fail~ appears when instantiating the lemma in the loop. With the
+     help of some assertions, we see that the precondition that is not
+     verified is the ~Multiset_Retain_Rest~ one. Indeed, the prover may
+     consider that after the line with the affectation ~B (K) := A
+     (J)~, the state of ~B~ has changed, particularly for values before
+     index ~K~. Therefore, even if the predicate is about the values in
+     range ~B'First .. K - 1~ and we changed the ~K~th value of ~B~,
+     the prover does not consider ~Multiset_Retain_Rest (A (A'First
+     .. J), B (B'First .. K - 1), Val))~ to hold.
 
-    A classic idea to solve such problem is to create a ghost variable
-    to save the state of ~B~ before the affectation and prove
-    ~Multiset_Retain_Rest (A (A'First .. J), B (B'First .. K - 1),
-    Val))~ first with this ghost variable, and then with the real
-    value of ~B~.
+     A classic idea to solve such problem is to create a ghost variable
+     to save the state of ~B~ before the affectation and prove
+     ~Multiset_Retain_Rest (A (A'First .. J), B (B'First .. K - 1),
+     Val))~ first with this ghost variable, and then with the real
+     value of ~B~.
 
 **** The Occ_Equal and Multiset_Retain_Rest_Equal lemmas
 
