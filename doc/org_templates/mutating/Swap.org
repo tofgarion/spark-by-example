@@ -16,7 +16,7 @@
     The postcondition expresses the fact that the two variables have
     actually been exchanged, using the ~'Old~ attribute available in
     SPARK. This attribute stores the state of the variables *before*
-    the excecution of the procedure.
+    the execution of the procedure.
 
 *** Implementation of Swap
 
