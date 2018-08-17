@@ -3,39 +3,48 @@
 
 ** The Rotate_Copy algorithm
 
-The ~Rotate_Copy~ algorithm executes a rotation on the elements of an array, and stores the result in another array.
+   The ~Rotate_Copy~ algorithm executes a rotation on the elements of
+   an array, and stores the result in another array:
 
-Its signature reads:
+   #+BEGIN_SRC ada
+     procedure Rotate_Copy (A : T_Arr; N : Positive; B : in out T_Arr)
+   #+END_SRC
 
-#+BEGIN_SRC ada 
- procedure Rotate_Copy(A : T_Arr; N : Positive; B : in out T_Arr)
-#+END_SRC
+   The resulting array ~B~ is defined as follows:
+   - the first ~N~ elements of ~A~ become the last ~N~ elements of ~B~
+   - the ~A'Length - N~ last elements of ~A~ become the first
+     ~B'Length - N~ elements of ~B~.
 
-The resulting array ~B~ is defined as follows:
-- The first ~N~ elements of ~A~ become the last ~N~ elements of ~B~
-- The ~A'Length - N~ last elements of ~A~ become the first ~B'Length - N~ elements of ~B~.
-
-This is equivalent to shifting all the elements of ~A~ N places to the left.
-
+   This is of course equivalent to shifting all the elements of ~A~
+   ~N~ places to the left.
 
 *** Specification of Rotate_Copy
 
-The specification of ~Rotate_Copy~ is:
+    The specification of ~Rotate_Copy~ is:
 
-	#+INCLUDE: ../../../mutating/rotate_copy_p.ads :src ada :range-begin "procedure Rotate_Copy" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-11"
+    #+INCLUDE: "../../../mutating/rotate_copy_p.ads" :src ada :range-begin "procedure Rotate_Copy" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-15"
 
-The precondtition express:
-- That ~A~ and ~B~ should be of same length
-- That ~N~ should be less than the length of ~A~. Using a number greater than ~A'Length~ would yield the same result as using ~N mod A'Length~.
+    The precondition express that:
+    - ~A~ and ~B~ should be of same length
+    - ~N~ should be less than the length of ~A~. Using a number
+      greater than ~A'Length~ would yield the same result as using ~N
+      mod A'Length~.
 
-The postconditions ensure that:
-- The last ~N~ elements of ~B~ are equal to the first ~N~ elements of ~A~
-- The ~A'Length - N~ last elements of ~A~ become the first ~B'Length - N~ elements of ~B~.
+    The postconditions ensure that:
+    - the last ~N~ elements of ~B~ are equal to the first ~N~ elements
+      of ~A~
+    - the ~A'Length - N~ last elements of ~A~ become the first
+      ~B'Length - N~ elements of ~B~.
 
 *** Implementation of Rotate_Copy
 
-Rotate copy is implemented using the [[Copy.org][Copy]] function defined previously:
+    Rotate copy is implemented using the [[Copy.org][Copy]] function defined previously:
 
-	#+INCLUDE: ../../../mutating/rotate_copy_p.adb :src ada :range-begin "procedure Rotate_Copy" :range-end "End Rotate_Copy;" :lines "4-9"
+    #+INCLUDE: "../../../mutating/rotate_copy_p.adb" :src ada :range-begin "procedure Rotate_Copy" :range-end "End Rotate_Copy;" :lines "5-14"
 
-~GNATprove~ does not require additional annotations in order to prove this program.
+    ~GNATprove~ does not require additional annotations in order to
+    prove this program.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

@@ -1,53 +1,65 @@
-# Created 2018-06-20 Wed 13:06
+# Created 2018-08-17 Fri 18:14
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Rotate_Copy.org
 
 * The Rotate_Copy algorithm
 
-The ~Rotate_Copy~ algorithm executes a rotation on the elements of an array, and stores the result in another array.
-
-Its signature reads:
+The ~Rotate_Copy~ algorithm executes a rotation on the elements of
+an array, and stores the result in another array:
 
 #+BEGIN_SRC ada
-  procedure Rotate_Copy(A : T_Arr; N : Positive; B : in out T_Arr)
+  procedure Rotate_Copy (A : T_Arr; N : Positive; B : in out T_Arr)
 #+END_SRC
 
 The resulting array ~B~ is defined as follows:
-- The first ~N~ elements of ~A~ become the last ~N~ elements of ~B~
-- The ~A'Length - N~ last elements of ~A~ become the first ~B'Length - N~ elements of ~B~.
+- the first ~N~ elements of ~A~ become the last ~N~ elements of ~B~
+- the ~A'Length - N~ last elements of ~A~ become the first
+  ~B'Length - N~ elements of ~B~.
 
-This is equivalent to shifting all the elements of ~A~ N places to the left.
-
+This is of course equivalent to shifting all the elements of ~A~
+~N~ places to the left.
 
 ** Specification of Rotate_Copy
 
 The specification of ~Rotate_Copy~ is:
 
 #+BEGIN_SRC ada
-  procedure Rotate_Copy (A : T_Arr; N : Positive; B : in out T_Arr) with
+  procedure Rotate_Copy
+    (A :        T_Arr;
+     N :        Positive;
+     B : in out T_Arr) with
      Pre  => A'Length = B'Length and then N < A'Length,
      Post => A (A'First .. A'First + (N - 1)) = B (B'Last - (N - 1) .. B'Last)
      and then A (A'First + N .. A'Last) = B (B'First .. B'Last - N);
 #+END_SRC
 
-The precondtition express:
-- That ~A~ and ~B~ should be of same length
-- That ~N~ should be less than the length of ~A~. Using a number greater than ~A'Length~ would yield the same result as using ~N mod A'Length~.
+The precondition express that:
+- ~A~ and ~B~ should be of same length
+- ~N~ should be less than the length of ~A~. Using a number
+  greater than ~A'Length~ would yield the same result as using ~N
+        mod A'Length~.
 
 The postconditions ensure that:
-- The last ~N~ elements of ~B~ are equal to the first ~N~ elements of ~A~
-- The ~A'Length - N~ last elements of ~A~ become the first ~B'Length - N~ elements of ~B~.
+- the last ~N~ elements of ~B~ are equal to the first ~N~ elements
+  of ~A~
+- the ~A'Length - N~ last elements of ~A~ become the first
+  ~B'Length - N~ elements of ~B~.
 
 ** Implementation of Rotate_Copy
 
 Rotate copy is implemented using the [[Copy.org][Copy]] function defined previously:
 
 #+BEGIN_SRC ada
-  procedure Rotate_Copy (A : T_Arr; N : Positive; B : in out T_Arr) is
+  procedure Rotate_Copy
+    (A :        T_Arr;
+     N :        Positive;
+     B : in out T_Arr)
+  is
   begin
      Copy (A (A'First + N .. A'Last), B (B'First .. B'Last - N));
      Copy (A (A'First .. A'First + (N - 1)), B (B'Last - (N - 1) .. B'Last));
   end Rotate_Copy;
 #+END_SRC
 
-~GNATprove~ does not require additional annotations in order to prove this program.
+~GNATprove~ does not require additional annotations in order to
+prove this program.
