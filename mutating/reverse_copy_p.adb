@@ -7,13 +7,12 @@ package body Reverse_Copy_P with
       B : in out T_Arr)
    is
    begin
-      for I in B'Range loop
-         B (I) := A (A'Last - (I - B'First));
+      for J in B'Range loop
+         B (J) := A (A'Last - (J - B'First));
 
-         pragma Loop_Variant (Increases => I);
          pragma Loop_Invariant
            (Is_Reversed
-              (B (B'First .. I), A (A'Last - (I - B'First) .. A'Last)));
+              (B (B'First .. J), A (A'Last - (J - B'First) .. A'Last)));
 
       end loop;
    end Reverse_Copy;
