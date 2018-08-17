@@ -33,3 +33,7 @@
     in ~A~.
 
     Everything is easily proved with ~GNATprove~.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

@@ -17,7 +17,7 @@
 
 *** Specification of Max_Seq
 
-    #+INCLUDE: "../../../maxmin/max_seq_p.ads" :src ada :range-begin "function Max_Seq" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-12"
+    #+INCLUDE: "../../../maxmin/max_seq_p.ads" :src ada :range-begin "function Max_Seq" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-15"
 
     Because we are going to use the function ~Max_Element~
     on ~A~ and want to use the ~Value~ field of option, we forbid the
@@ -30,7 +30,11 @@
 
 *** Implementation of Max_Seq
 
-    #+INCLUDE: "../../../maxmin/max_seq_p.adb" :src ada :range-begin "function Max_Seq" :range-end "End Max_Seq;" :lines "3-7"
+    #+INCLUDE: "../../../maxmin/max_seq_p.adb" :src ada :range-begin "function Max_Seq" :range-end "End Max_Seq;" :lines "4-11"
 
     The specification of ~Max_Element~ is sufficient to prove the
     ~Max_Seq~ algorithm with ~GNATprove~.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

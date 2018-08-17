@@ -6,7 +6,7 @@
    The ~Swap_Ranges~ algorithm exchanges the contents of two arrays.
    Its signature is the following:
 
-   ~procedure Swap_Ranges(A : in out T_Arr; B: in out T_Arr)~
+   ~procedure Swap_Ranges (A : in out T_Arr; B: in out T_Arr)~
 
 *** Specification of Swap_Ranges
 
@@ -46,3 +46,7 @@
     for readibility to define the corresponding index for ~B~.
 
     Again, everything is proved using ~GNATprove~.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

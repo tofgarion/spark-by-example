@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 14:46
+# Created 2018-08-17 Fri 14:27
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Max_Element.org
 
@@ -25,9 +25,10 @@ here.
 *** Specification of Max_Element without ghost functions
 
 #+BEGIN_SRC ada
-  function Max_Element (A : T_Arr) return Option with
-     Contract_Cases =>
-     (A'Length = 0 => not Max_Element'Result.Exists,
+  function Max_Element
+    (A : T_Arr)
+     return Option with
+     Contract_Cases => (A'Length = 0 => not Max_Element'Result.Exists,
       A'Length > 0 =>
         Max_Element'Result.Value >= A'First
         and then (Max_Element'Result.Value <= A'Last)
@@ -59,7 +60,10 @@ to find an element greater than ~A (Result.Value)~. If we find
 such an element, we replace ~Result.Value~ by its index.
 
 #+BEGIN_SRC ada
-  function Max_Element (A : T_Arr) return Option is
+  function Max_Element
+    (A : T_Arr)
+     return Option
+  is
      Result : Option := (Exists => False);
   begin
      if A'Length = 0 then
@@ -133,12 +137,12 @@ With the previously defined predicates, the specification of
 ~Max_Element~ is:
 
 #+BEGIN_SRC ada
-  function Max_Element (A : T_Arr) return Option with
-     Contract_Cases =>
-     (A'Length = 0 => not Max_Element'Result.Exists,
+  function Max_Element
+    (A : T_Arr)
+     return Option with
+     Contract_Cases => (A'Length = 0 => not Max_Element'Result.Exists,
       A'Length > 0 =>
-        Max_Element'Result.Exists
-        and then Max_Element'Result.Value >= A'First
+        Max_Element'Result.Exists and then Max_Element'Result.Value >= A'First
         and then Max_Element'Result.Value <= A'Last
         and then Upper_Bound (A, A (Max_Element'Result.Value))
         and then Strict_Upper_Bound
@@ -151,7 +155,10 @@ With the previously defined predicates, the specification of
 The implementation is almost the same as before:
 
 #+BEGIN_SRC ada
-  function Max_Element (A : T_Arr) return Option is
+  function Max_Element
+    (A : T_Arr)
+     return Option
+  is
      Result : Option := (Exists => False);
   begin
      if A'Length = 0 then
@@ -168,12 +175,9 @@ The implementation is almost the same as before:
   	 pragma Loop_Invariant
   	   (Upper_Bound (A (A'First .. I), A (Result.Value)));
   	 pragma Loop_Invariant
-  	   (if
-  	      Result.Value > A'First
-  	    then
+  	   (if Result.Value > A'First then
   	      Strict_Upper_Bound
-  		(A (A'First .. Result.Value - 1),
-  		 A (Result.Value)));
+  		(A (A'First .. Result.Value - 1), A (Result.Value)));
         end loop;
   
         return Result;

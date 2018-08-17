@@ -26,3 +26,7 @@
 
     A memory variable is used to store the value of ~P~. Using
     ~GNATprove~, everything is proved.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

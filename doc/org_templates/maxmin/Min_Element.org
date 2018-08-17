@@ -25,7 +25,7 @@
      return value is a lower bound for the values of ~A (A'First
      .. N)~, where ~N~ is given:
 
-     #+INCLUDE: "../../../spec/lower_bound_p.ads" :src ada :range-begin "function Lower_Bound" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-11"
+     #+INCLUDE: "../../../spec/lower_bound_p.ads" :src ada :range-begin "function Lower_Bound" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-12"
 
 **** The Strict_Lower_Bound predicate
 
@@ -34,13 +34,13 @@
      expresses the fact that all the values of ~A~ before index ~N~
      are strictly lesser than ~V~:
 
-     #+INCLUDE: "../../../spec/lower_bound_p.ads" :src ada :range-begin "function Strict_Lower_Bound" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-16"
+     #+INCLUDE: "../../../spec/lower_bound_p.ads" :src ada :range-begin "function Strict_Lower_Bound" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "13-17"
 
 *** The Specification of Min_Element
 
     The specification of ~Min_Element~ can be expressed as follows:
 
-    #+INCLUDE: "../../../maxmin/min_element_p.ads" :src ada :range-begin "function Min_Element" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-22"
+    #+INCLUDE: "../../../maxmin/min_element_p.ads" :src ada :range-begin "function Min_Element" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-21"
 
     Here, the post conditions are expressed through 2 contract cases:
 
@@ -54,7 +54,7 @@
 
 *** Implementation of Min_Element
 
-    #+INCLUDE: "../../../maxmin/min_element_p.adb" :src ada :range-begin "function Min_Element" :range-end "End Min_Element;" :lines "4-35"
+    #+INCLUDE: "../../../maxmin/min_element_p.adb" :src ada :range-begin "function Min_Element" :range-end "End Min_Element;" :lines "5-36"
 
     The implementation is quite similar to the one of [[Max_Element.org][Max_Element]] with
     predicates. Here the loop invariants specify that
@@ -67,3 +67,7 @@
 
     When using ~GNATprove~ on this specification and implementation,
     everything is proved.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

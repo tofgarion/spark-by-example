@@ -23,7 +23,7 @@
 
 *** Specification of Max_Element without ghost functions
 
-    #+INCLUDE: "../../../maxmin/max_element_wo_ghost_p.ads" :src ada :range-begin "function Max_Element" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-18"
+    #+INCLUDE: "../../../maxmin/max_element_wo_ghost_p.ads" :src ada :range-begin "function Max_Element" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-20"
 
     The postconditions are expressed through contract cases:
 
@@ -44,7 +44,7 @@
     to find an element greater than ~A (Result.Value)~. If we find
     such an element, we replace ~Result.Value~ by its index.
 
-    #+INCLUDE: "../../../maxmin/max_element_wo_ghost_p.adb" :src ada :range-begin "function Max_Element" :range-end "End Max_Element;" :lines "4-28"
+    #+INCLUDE: "../../../maxmin/max_element_wo_ghost_p.adb" :src ada :range-begin "function Max_Element" :range-end "End Max_Element;" :lines "5-32"
 
     As usual with ~For~ loops in SPARK, no variant is needed. The loop
     invariants specify that:
@@ -83,13 +83,13 @@
     With the previously defined predicates, the specification of
     ~Max_Element~ is:
 
-    #+INCLUDE: "../../../maxmin/max_element_p.ads" :src ada :range-begin "function Max_Element" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-18"
+    #+INCLUDE: "../../../maxmin/max_element_p.ads" :src ada :range-begin "function Max_Element" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-19"
 
 *** Implementation of Max_Element
 
      The implementation is almost the same as before:
 
-     #+INCLUDE: "../../../maxmin/max_element_p.adb" :src ada :range-begin "function Max_Element" :range-end "End Max_Element;" :lines "4-32"
+     #+INCLUDE: "../../../maxmin/max_element_p.adb" :src ada :range-begin "function Max_Element" :range-end "End Max_Element;" :lines "5-33"
 
      The last predicate has been modified: we first check if ~A'First~
      is less than ~Result.Value~. If we do not so, we would face a
@@ -99,3 +99,7 @@
      .. A'Last - 1)~).
 
      With this implementation, everything is proved with ~GNATprove~.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:
