@@ -234,7 +234,7 @@
       number of occurences of a given value are equal in both
       arrays. Its specification is the following:
 
-      #+INCLUDE: "../../../lemmas/classic_lemmas.ads" :src ada :range-begin "procedure Occ_Equal" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-18"
+      #+INCLUDE: "../../../lemmas/classic_lemmas.ads" :src ada :range-begin "procedure Occ_Equal" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-18"
 
       To prove the lemma, we give an implementation:
 
@@ -279,7 +279,7 @@
 
      The final implementation for ~Remove_Copy~ is the following:
 
-     #+INCLUDE: "../../../mutating/remove_copy_p.adb" :src ada :range-begin "procedure Remove_Copy" :range-end "end Remove_Copy;" :lines "5-49"
+     #+INCLUDE: "../../../mutating/remove_copy_p.adb" :src ada :range-begin "procedure Remove_Copy" :range-end "end Remove_Copy;" :lines "5-51"
 
      We use a ghost variable ~B_Save~ to store the value of ~B~ before
      changing one of its element. We instantiate the

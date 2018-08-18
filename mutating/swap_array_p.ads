@@ -9,13 +9,13 @@ package Swap_Array_P with
 
    procedure Swap_Array
      (A : in out T_Arr;
-      I :        Positive;
-      J :        Positive) with
-      Pre  => A'Length >= 1 and then I in A'Range and then J in A'Range,
-      Post => A'Old (I) = A (J) and then A'Old (J) = A (I)
+      J :        Positive;
+      K :        Positive) with
+      Pre  => A'Length >= 1 and then J in A'Range and then K in A'Range,
+      Post => A'Old (J) = A (K) and then A'Old (K) = A (J)
       and then
-      (for all K in A'Old'Range =>
-         (if I /= K and then J /= K then A'Old (K) = A (K)))
+      (for all L in A'Old'Range =>
+         (if J /= K and then K /= K then A'Old (L) = A (L)))
       and then Multiset_Unchanged (A'Old, A);
 
 end Swap_Array_P;

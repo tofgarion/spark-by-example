@@ -4,44 +4,45 @@ package body Swap_Array_P with
 
    procedure Swap_Array
      (A : in out T_Arr;
-      I :        Positive;
-      J :        Positive)
+      J :        Positive;
+      K :        Positive)
    is
-      Init : T_Arr (A'Range) := A;
-      Temp : T               := A (I);
+      A_Init : T_Arr (A'Range) := A;
+      Temp   : T               := A (J);
 
-      --ghost variables
+      -- ghost variable
 
-      Interm : T_Arr (A'Range) with
+      A_After_First : T_Arr (A'Range) with
          Ghost;
 
          -- ghost procedure
 
       procedure Prove_Perm with
          Ghost,
-         Pre => I in A'Range and then J in A'Range
-         and then Is_Set (Init, I, Init (J), Interm)
-         and then Is_Set (Interm, J, Init (I), A),
-         Post => Multiset_Unchanged (Init, A)
+         Pre => J in A'Range and then K in A'Range
+         and then Is_Set (A_Init, J, A_Init (K), A_After_First)
+         and then Is_Set (A_After_First, K, A_Init (J), A),
+         Post => Multiset_Unchanged (A_Init, A)
        is
       begin
          for V in T loop
-            Occ_Set (Init, Interm, I, Init (J), V);
-            Occ_Set (Interm, A, J, Init (I), V);
+            Occ_Set (A_Init, A_After_First, J, A_Init (K), V);
+            Occ_Set (A_After_First, A, K, A_Init (J), V);
             pragma Loop_Invariant
-              (for all F in T'First .. V => Occ (Init, F) = Occ (A, F));
+              (for all F in T'First .. V => Occ (A_Init, F) = Occ (A, F));
          end loop;
       end Prove_Perm;
 
    begin
-      A (I)  := A (J);
-      Interm := A; -- ghost
+      A (J)         := A (K);
+      A_After_First := A; -- ghost code
 
-      pragma Assert (Is_Set (Init, I, Init (J), Interm));
+      pragma Assert (Is_Set (A_Init, J, A_Init (K), A_After_First));
 
-      A (J) := Temp;
+      A (K) := Temp;
 
-      pragma Assert (Is_Set (Interm, J, Init (I), A));
-      Prove_Perm; --ghost
+      pragma Assert (Is_Set (A_After_First, K, A_Init (J), A));
+      Prove_Perm; -- ghost code
+
    end Swap_Array;
 end Swap_Array_P;

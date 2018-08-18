@@ -9,7 +9,8 @@ package body Remove_Copy_P with
       K   : in out Natural)
    is
       J      : Integer := A'First - 1;
-      B_Save : T_Arr   := B with Ghost;
+      B_Save : T_Arr   := B with
+         Ghost;
 
    begin
       if A'Length > 0 then
@@ -42,6 +43,7 @@ package body Remove_Copy_P with
             pragma Loop_Invariant
               (for all L in K .. B'Last => B (L) = B'Loop_Entry (L));
          end loop;
+
          K := K - 1;
       end if;
 

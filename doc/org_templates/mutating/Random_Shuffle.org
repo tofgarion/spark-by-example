@@ -3,186 +3,282 @@
 
 ** The Random_Shuffle algorithm
 
-The ~Random_Shuffle~ algorithms aims to randomly rearranges the elements of an array. Its signature reads:
+   The ~Random_Shuffle~ algorithms aims to randomly rearranges the
+   elements of an array. Its signature is:
 
-#+BEGIN_SRC ada
-procedure Random_Shuffle(A : in out T_Arr)
-#+END_SRC
+   #+BEGIN_SRC ada
+     procedure Random_Shuffle (A : in out T_Arr)
+   #+END_SRC
 
 *** Formal specification and predicates used
 
-In this part we will give a formal specification for ~Random_Shuffle~ and define several predicates that will
-help us in the proof of this function.
-
-**** Formal specification of Random_Shuffle
-
-As mentionned earlier, ~Random_Shuffle~ should rearrange the elements of ~A~ in a "random" order.
-That being said, it is not easy to mathematically define what a true random rearrangement is, so we will only require 
-that ~Random_Shuffle~ acts as a permutation, i.e. the number of occurences of each element of ~A~ remains constant when calling ~Random_Shuffle~.
-With this consideration in mind, we can write a specification for ~Random_Shuffle~:
-
-	#+INCLUDE: ../../../mutating/random_shuffle_p.ads :src ada :range-begin "procedure Random_Shuffle" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-12"
-
-The postcondition ensures that the elements of ~A~ are simply permuted by ~Random_Shuffle~.
+    We will first give a formal specification for ~Random_Shuffle~ and
+    define several predicates that will help us in the proof of this
+    function.
 
 **** The predicate Multiset_Unchanged
 
-The predicate ~Multiset_Unchanged~ which is used in the specification of ~Random_Shuffle~ checks whether two arrays are a permutation of eachother, 
-i.e. each element of the first array appears the same number of time in the second array, but not necessarly in the same order. This is done with the help of
-the ~Occ~  predicate, defined in chapter 3 for the function [[../non-mutating/Count.org][Count]]. ~Multiset_Unchanged~ is defined as follows:
+     As mentioned earlier, ~Random_Shuffle~ should rearrange the
+     elements of ~A~ in a "random" order. That being said, it is not
+     easy to mathematically define what a true random rearrangement
+     is, so we will only require that ~Random_Shuffle~ acts as a
+     permutation: the number of occurrences of each element of ~A~
+     remains constant when calling ~Random_Shuffle~.
 
-	#+INCLUDE: ../../../spec/multiset_predicates.ads :src ada :range-begin "function Multiset_Unchanged" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "22-27"
+     We define a predicate ~Multiset_Unchanged~ which checks whether
+     two arrays are a permutation of each other, i.e. each element of
+     the first array have the same occurrences in the second array,
+     but not necessarily in the same order. The predicate is defined
+     with the help of the ~Occ~ predicate, defined in chapter 3 for
+     the [[../non-mutating/Count.org][Count]] function. ~Multiset_Unchanged~ is defined as follows:
 
-Here we simply check that for two arrays of same length the number of occurences of a given ~T~ is the same for both arrays.
-It is important to do the check on all elements of ~T~ and not only on the elements of ~A~, otherwise the solvers cannot determine that 
-we can obtain ~B~ by permuting the elements of ~A~ and vice-versa.
+     #+INCLUDE: "../../../spec/multiset_predicates.ads" :src ada :range-begin "function Multiset_Unchanged" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "25-30"
+
+     Here we simply check that given two arrays ~A~ and ~B~ of same
+     length, the number of occurrences of a given ~T~ value is the
+     same for both arrays. It is important to check the property on
+     all elements of ~T~ and not only on the elements of ~A~,
+     otherwise the solvers cannot determine that we can obtain ~B~ by
+     permuting the elements of ~A~ and vice-versa.
+
+**** Formal specification of Random_Shuffle
+
+     Given ~Multiset_Unchanged~, the specification of ~Random_Shuffle~
+     is the following:
+
+     #+INCLUDE: "../../../mutating/random_shuffle_p.ads" :src ada :range-begin "procedure Random_Shuffle" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-13"
+
+     The postcondition ensures that the elements of ~A~ are simply
+     permuted by ~Random_Shuffle~.
 
 *** Implementations of Random_Shuffle
 
-In this section we will give several implementations for ~Random_Shuffle~, starting by the easiest one, 
-which cannot be proved by the SMT solvers, and will progressively explain what can be done in order to help the 
-automatic provers to prove everything.
+    In this section we give several implementations for
+    ~Random_Shuffle~, starting by the easiest one, which cannot be
+    proved by the SMT solvers, and we progressively explain what can
+    be done in order to help the automatic provers to prove
+    everything.
 
-**** First Implementation
+**** First implementation
 
-The first implementation makes use of the [[Swap.Org][Swap]] function proved earlier in this chapter.
-We also assume that we have a function ~Random_Number~ which returns a number selecter randomly between 
-two given bounds. As mentionned earlier, we won't focus much on this function, as our specification for ~Random_Shuffle~
-has no real constraints on the "randomness" of the function.
-Our first implementation is as follows:
+     The first implementation makes use of the [[Swap.Org][Swap]] function proved
+     earlier in this chapter. We also assume that we have a function
+     ~Random_Number~ which returns a number selected randomly between
+     two given bounds. As mentioned earlier, we will not focus on this
+     function, as our specification for ~Random_Shuffle~ has no real
+     constraints on the "randomness" of the function. Our first
+     implementation is defined as follows:
 
-#+BEGIN_SRC ada
-procedure Random_Shuffle (A : in out T_Arr) is
-      J : Positive;
-   begin
-      
-      for I in A'Range loop
-	 J := Random_Number(A'First, I);
-     
-	Swap(A(I),A(J));
-	pragma Loop_Invariant(Multiset_Unchanged(A,A'Loop_Entry));
+     #+BEGIN_SRC ada
+       procedure Random_Shuffle (A : in out T_Arr) is
+             J : Positive;
+          begin
 
-      end loop;
-end Random_Shuffle;
-#+END_SRC
+             for I in A'Range loop
+                J := Random_Number(A'First, I);
+                Swap(A(I),A(J));
 
-There are a few issues with this implementation:
-- The use of ~Swap~ on an array introduces aliasing warnings
-- The solvers cannot automatically prove that swapping two elements of an array is a permutation, so the only loop invariant cannot be proved.
+                pragma Loop_Invariant(Multiset_Unchanged(A,A'Loop_Entry));
 
-We have already encountered the first solution, and an easy workaround is to manualy do the swap with
-an intermediary variable. This solution however does not permit the proof of the loop invariant. We will have
-to help the solvers understand that swapping two values in an array is a permutation.
+             end loop;
+       end Random_Shuffle;
+     #+END_SRC
 
-**** Second implementation : Manual proof
-We will here help the solvers prove our function by adding a manual proof in the form of ghost code. This section makes
-use of the examples given in the [[https://docs.adacore.com/spark2014-docs/html/ug/GNATprove_by_example/manual_proof.html#manual-proof-using-ghost-code][SPARK 2014 User's Guide]].
+     There are a few issues with this implementation:
+     - using of ~Swap~ on an array introduces aliasing warnings
+     - solvers cannot automatically prove that swapping two elements
+       of an array is a permutation, so the only loop invariant cannot
+       be proved.
+
+     We have already encountered the first problem, and an easy
+     workaround is to manually do the swap with an intermediary
+     variable. However, it does not help to prove the loop
+     invariant. We have to write lemmas to help the solvers understand
+     that swapping two values in an array is a permutation.
+
+**** Manual proof with lemmas
+
+     We here help the solvers prove our function by adding a manual
+     proof in the form of ghost code. This section makes use of the
+     examples given in the SPARK User's Guide on [[http://docs.adacore.com/spark2014-docs/html/ug/gnatprove_by_example/manual_proof.html#manual-proof-using-user-lemmas][Manual Proof
+     Examples]].
 
 ***** The Swap_Array procedure
 
-In order to proove the loop invariant, we would like to write a procedure which takes an array and two indexes as
-parameters, and swaps the two values found at these indexes, and which would prove that this operation is a 
-permutation on the array.
-Its specification would then be:
+      In order to prove the loop invariant, we want to write a
+      procedure which takes an array and two indexes as parameters,
+      swaps the two values found at these indexes, and prove that this
+      operation is a permutation on the array. Its specification would
+      then be:
 
-	#+INCLUDE: ../../../mutating/swap_array_p.ads :src ada :range-begin "procedure Swap_Array" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-17"
+      #+INCLUDE: "../../../mutating/swap_array_p.ads" :src ada :range-begin "procedure Swap_Array" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-20"
 
-The precondition simply express that ~I~ and ~J~ are valid indexes; the postconditions express that:
-  - The values at indexes ~I~ and ~J~ were swapped
-  - All values found a indexes different to ~I~ and ~J~ remain unchanged
-  - The resulting array is a permutation of the input array.
+      The precondition simply expresses that ~J~ and ~K~ are valid
+      indexes. The postconditions express that:
+      - the values at indexes ~J~ and ~K~ were swapped
+      - all values found a indexes different to ~J~ and ~K~ remain
+        unchanged
+      - the resulting array is a permutation of the input array
 
-The implementation (without SPARK annotations) is quite straightforward:
+      The implementation (without SPARK annotations) is quite straightforward:
 
-#+BEGIN_SRC ada 
-function Swap_Array(A : T_Arr; I : Positive; J : Positive)return T_Arr is
-      Temp : T := A(I);
-   begin
-      A(I) := A(J);
-      A(J) := Temp;
-   end Swap_Array;
-#+END_SRC
+      #+BEGIN_SRC ada
+        function Swap_Array (A : T_Arr; I : Positive;
+                             J : Positive) return T_Arr is
+              Temp : T := A(I);
+           begin
+              A(I) := A(J);
+              A(J) := Temp;
+           end Swap_Array;
+      #+END_SRC
 
-With this current implementation, the desired result is achieved, but the last postcondition is still not proved.
+      With this current implementation, the desired result is
+      achieved, but the last postcondition on ~Multiset_Unchanged~ is
+      still not proved. We have to write a lemma that will help
+      solvers to prove this property.
 
 ***** The Is_Set predicate
 
-The ~Is_Set~ predicate is defined as follows:
+      We define first the ~Is_Set~ predicate as follows:
 
-	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :range-begin "function Is_Set" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "15-26"
+      #+INCLUDE: "../../../lemmas/classic_lemmas.ads" :src ada :range-begin "function Is_Set" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "19-28"
 
-The ~Is_Set~ predicates verifies that ~B~ is equal to ~A~, except for the value found at index ~I~, which should
-be equal to ~V~. This predicate will be useful when comparing the occurences of certain values before and 
-after an array has its vales changed (when swapping two values for instance).
+      The ~Is_Set~ predicate verifies that ~B~ is equal to ~A~, except
+      for the value found at index ~I~, which should be equal to
+      ~V~. This predicate will be useful when comparing the
+      occurrences of some values before and after an array has changed
+      (when swapping two values for instance).
 
 ***** The Occ_Set lemma
 
-~Occ_Set~ gives the relation between the occurences of a given value in an array before and after changing one of its indexes.
-It's specification is as follows:
+      ~Occ_Set~ is a lemma defining the relation between the
+      occurrences of a given value in an array before and after
+      changing one of its indexes. Its specification is as follows:
 
-	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :range-begin "procedure Occ_Set" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "27-35"
+      #+INCLUDE: "../../../lemmas/classic_lemmas.ads" :src ada :range-begin "procedure Occ_Set" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "29-41"
 
-The precondition expresses the fact that ~B~ should be equal to ~A~, to the exception of the value at index ~I~,
-which should be equal to ~V~.
-The postconditions are the mathematical relations we expect to find concerning the number of occurences of ~E~ in ~A~ and ~B~.
+      The precondition expresses the fact that ~B~ should be equal to
+      ~A~, except for the value at index ~J~ which should be equal to
+      ~V~. The postconditions are the mathematical relations we expect
+      to find concerning the number of occurrences of a given value
+      ~E~ in ~A~ and ~B~:
 
-The proof being:
+      - if ~V~ is the value of ~A (J)~, then nothing has changed for
+        ~E~
+      - if ~E~ is in fact ~V~, then there is an extra occurrence of
+        ~E~ in ~B~
+      - if ~E~ is the value of ~A (J)~, then ~B~ lose one occurrence
+        of ~E~
+      - otherwise nothing has changed for ~E~
 
-	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :range-begin "procedure Occ_Set" :range-end "End Occ_Set;" :lines "19-34"
+      The proof of the lemma is given in its implementation:
 
-The proof is once again inductive:
-- If ~A~ is empty then there is nothing to prove
-- If ~I~ is equal to ~A'Last~, i.e. ~A~ and ~B~ only differ by the last index, then we verify that the number of occurences of ~E~ is equal on both arrays on the rest of the indexes, the provers can then deduce the postconditions depending on the values of ~E~ and ~V~.
-- If ~I~ isn't equal to ~A'Last~, then we call ~Occ_Eq~ on the first indexes of ~B~ and on the first indexes of ~A~, but with the value at index ~I~ equal to ~V~ (the array ~tmp~). This tells the solvers that ~Tmp = Remove_Last(B)~, and can deduce that hte contribution of the last index is the same in ~Occ(A,E)~ and ~Occ(B,E)~. We then proceed to prove the property on the rest of the indexes.
+      #+INCLUDE: "../../../lemmas/classic_lemmas.adb" :src ada :range-begin "procedure Occ_Set" :range-end "End Occ_Set;" :lines "24-45"
 
-With these lemmas proved, we can now move on to the proof of the las postcondition of ~Swap_Array~.
+      The proof is once again inductive and use ~Remove_Last~ as
+      usual:
+      - if ~A~ is empty then there is nothing to prove
+      - if ~J~ is equal to ~A'Last~, i.e. ~A~ and ~B~ only differ on
+        their last index, then we verify that the number of occurrences
+        of ~E~ is equal on both arrays on the rest of the indexes. The
+        provers can then deduce the postconditions depending on the
+        values of ~E~ and ~V~.
+      - If ~J~ isn't equal to ~A'Last~, then we call ~Occ_Eq~ on the
+        first indexes of ~B~ and on the first indexes of ~A~, but with
+        the value at index ~J~ equal to ~V~ (see the array
+        ~Tmp~). This tells the solvers that ~Tmp = Remove_Last (B)~,
+        and can deduce that the contribution of the last index is the
+        same in ~Occ(A,E)~ and ~Occ(B,E)~. We then proceed to prove
+        the property on the rest of the indexes.
+
+      With this lemmas proved, we can now move on to the proof of the
+      last postcondition of ~Swap_Array~.
 
 ***** The Prove_Perm procedure
 
-We will write a ghost procedure in the declarative part of ~Swap_Array~ which will guide the automatic solvers to verify our last psotcondition.
-We write this procedure in the declarative part of ~Swap_Array~ so we can access all the parameters and intermediate variables used in the 
-function, but we could have written it in another package, it would simply have required that we give the working arrays as parameters to the ghost procedure.
+      We will write a ghost procedure which will guide the automatic
+      solvers to verify our last postcondition. This procedure will be
+      written in the declarative part of ~Swap_Array~ so it can access
+      all the parameters and intermediate variables used in the
+      function. Notice that it could have been written in another
+      package. In this case, we would have to give the working arrays
+      as parameters to the ghost procedure.
 
-Since we wrote the procedure in the declarative part of ~Swap_Array~ to be able to use all the working variables,
-we need to look at the full implementation of ~Swap_Array~ in order to understand how it functions:
+      Since we wrote the procedure in the declarative part of
+      ~Swap_Array~ to be able to use all the working variables, we
+      need to look at the full implementation of ~Swap_Array~ in order
+      to understand how it works:
 
-	#+INCLUDE: ../../../mutating/swap_array_p.adb :src ada :range-begin "procedure Prove_Perm" :range-end "End Prove_Perm;" :lines "15-30"
+      #+INCLUDE: "../../../mutating/swap_array_p.adb" :src ada :range-begin "procedure Prove_Perm" :range-end "End Prove_Perm;" :lines "20-35"
 
-We first declare a ghost variable ~Interm~ which will hold the state of the ~Array~ on which we do the swap, after the first value assingment.
+      We first declare a ghost variable ~A_After_First~ which will
+      hold the state of the array ~A~ on which we do the swap, after
+      the first value assignment. An array ~A_Init~ is a copy of ~A~
+      at the beginning of the procedure.
 
-The proof procedure, called here ~Prove_Perm~ requires that ~I~ and ~J~ are valid indexes, and that ~Interm~ should be equal to ~A~,
-to the exception of the index ~I~ which should have the value ~A(J)~, and that ~Result~ should be equal to ~Interm~,
-to the exception of the value at index ~J~ which should be equal to ~A(I)~.
-The prostcondition of this procedure is what we are trying to prove.
+      The proof procedure, called here ~Prove_Perm~ requires that ~J~
+      and ~K~ are valid indexes, that ~A_After_First~ should be equal
+      to ~A_Init~, except for index ~J~ which should have the value
+      ~A_Init (K)~, and that ~A~ should be equal to ~A_After_First~,
+      except for the value at index ~K~ which should be equal to
+      ~A_Init (J)~. The postcondition of this procedure is what we are
+      trying to prove, i.e. that ~A~ is now a permutation of ~A_Init~.
 
-To do so we will manualy apply our lemma on all values ~V~ of ~T~ concerning the number of occurences of ~V~ in the arrays.
-This is done with the ~for~ loop, and the loop invariant is here to accumulate the results of our lemmas. Note that when the loop reaches its end, then ~V = T'Last~ and the loop invariant is
-~for all E in T'First .. T'Last then Occ(Result,E) = Occ(A,E)~ which is exactly the poscondition we are trying to prove.
+      To establish the postcondition, we will manually apply the
+      ~Occ_Set~ lemma on all values ~V~ of ~T~ concerning the number
+      of occurrences of ~V~ in the arrays.  This is done inside the
+      ~for~ loop, and the loop invariant is here to accumulate the
+      results of our lemmas. Notice that when the loop reaches its
+      end, then ~V = T'Last~ and the loop invariant is ~for all E in
+      T'First .. T'Last then Occ(Result,E) = Occ(A,E)~ which is
+      exactly the postcondition we are trying to prove.
 
-In the body of ~Swap_Array~ we then initialize ~Interm~ to the correct value, assert the preconditions of the proof procedure, and then call the proof procedure so that the solvers apply our proof to ~Swap_Array~.
+      In the body of ~Swap_Array~ we then initialize ~A_After_First~
+      to the correct value, assert the preconditions of the proof
+      procedure, and then call the proof procedure so that the solvers
+      apply our proof to ~Swap_Array~.
 
 ***** Final implementation of Random_Shuffle
 
-With all of our lemmas and pghost proof procedure we can give a somewhat condensed and simple implementation of ~Random_Shuffle~:
+      We can now give somewhat condensed and simple implementation of
+      ~Random_Shuffle~:
 
-	#+INCLUDE: ../../../mutating/random_shuffle_p.adb :src ada :range-begin "procedure Random_Shuffle" :range-end "End Random_Shuffle;" :lines "4-16"
+      #+INCLUDE: "../../../mutating/random_shuffle_p.adb" :src ada :range-begin "procedure Random_Shuffle" :range-end "End Random_Shuffle;" :lines "5-17"
 
-Here we simply replace the ~swap~ procedure by our newly coded ~Swap_Array~ function, and the only loop_invariant is that the ~A~ is a permutation of ~A'Loop_Entry~, which is eaxactly the postcondition of our procedure at the exit of the loop.
+      We simply replace the ~Swap~ procedure by our newly coded
+      ~Swap_Array~ function, and the only loop_invariant specify that
+      ~A~ is a permutation of ~A'Loop_Entry~, which is exactly the
+      postcondition of our proof procedure ~Prove_Perm~ at the exit of
+      the loop.
 
-With this implementation and theses ghost procedures, ~GNATprove~ manages to prove everything.
+      With this implementation, ~GNATprove~ manages to prove
+      everything.
 
 **** A word on the implementation of Random_Number
 
-For the purpose of our exercise we didn't look in detail how the random number generator is specified and implemented, nevertheless we present here a 
-crude version of a random number generator, using the Ada numerics package. It should be noted that the [[http://docs.adacore.com/spark2014-docs/html/lrm/the-standard-library.html#random-number-generation-a-5-2][SPARK 2014 reference manual]] indicates that using the 
-package ~Ada.Numerics.Discrete_Random~ isn't forbiddent in SPAKR 2014, but the associated functions have side effects and cannot therfore be formaly prooved.
-A better solution would be to manualy code a random number generator, as it was done in [[https://github.com/fraunhoferfokus/acsl-by-example/blob/master/StandardAlgorithms/mutating/random_shuffle/random_number.c][ACSL by Example]]. Nevertheless our specification and implementation is:
+     We did not look in detail how the random number generator is
+     specified and implemented when proving ~Random_Shuffle~.
+     Nevertheless, we present here a crude version of a random number
+     generator using the Ada numerics package. It should be noted that
+     the [[http://docs.adacore.com/spark2014-docs/html/lrm/the-standard-library.html#random-number-generation-a-5-2][SPARK 2014 reference manual]] indicates that using the package
+     ~Ada.Numerics.Discrete_Random~ isn't forbidden in SPAKR 2014, but
+     the associated functions have side effects and cannot therefore
+     be formally proved. A better solution would be to manualy code a
+     random number generator, as it is done in [[https://github.com/fraunhoferfokus/acsl-by-example/blob/master/StandardAlgorithms/mutating/random_shuffle/random_number.c][ACSL by Example]]. Our
+     specification and implementation of ~Random_Number~ are:
 
-	#+INCLUDE: ../../../mutating/random_p.ads :src ada :lines "7-12"
+     #+INCLUDE: "../../../random_p.ads" :src ada :range-begin "function Random_Number" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-14"
 
-	#+INCLUDE: ../../../mutating/random_p.adb :src ada :lines "4-28"
+     #+INCLUDE: "../../../random_p.adb" :src ada :range-begin "function Random_Number" :range-end "End Random_Number;" :lines "4-29"
 
-This implementation uses the package ~Ada.Numerics.Discrete_Random~ out of conveniance, and declares a new
-andom generator at each call of the function, which isn't ideal beacause two calls with same arguments close enough in time would yield the same result, but since two consecutive calls to this function should be with different parameters 
-there should be no issues.
+     This implementation uses the package
+     ~Ada.Numerics.Discrete_Random~ out of convenience and declares a
+     new random generator at each call of the function. This is
+     clearly not ideal because two calls with the same arguments close
+     enough in time would yield to the same result. Since two
+     consecutive calls to this function should be with different
+     parameters, we consider that this is not an issue.
 
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

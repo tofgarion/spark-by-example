@@ -22,10 +22,11 @@ package body Classic_Lemmas with
    end Occ_Equal;
 
    procedure Occ_Set
-     (A    : T_Arr;
-      B    : T_Arr;
-      I    : Positive;
-      V, E : T)
+     (A : T_Arr;
+      B : T_Arr;
+      J : Positive;
+      V : T;
+      E : T)
    is
       Tmp : T_Arr := Remove_Last (A);
    begin
@@ -33,12 +34,12 @@ package body Classic_Lemmas with
          return;
       end if;
 
-      if I = A'Last then
+      if J = A'Last then
          Occ_Equal (Tmp, Remove_Last (B), E);
       else
-         Tmp (I) := V;
+         Tmp (J) := V;
          Occ_Equal (Remove_Last (B), Tmp, E);
-         Occ_Set (Remove_Last (A), Tmp, I, V, E);
+         Occ_Set (Remove_Last (A), Tmp, J, V, E);
       end if;
    end Occ_Set;
 
