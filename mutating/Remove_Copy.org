@@ -1,12 +1,12 @@
-# Created 2018-08-17 Fri 20:27
+# Created 2018-08-18 Sat 13:08
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Remove_Copy.org
 
 * The Remove_Copy algorithm
 
 The ~Remove_Copy~ algorithm copies the values of an array in
-another array but deletes every occurrence of a given value.
-It also modifies an argument which will be the last index
+another array but deletes every occurrence of a given value when
+copying.  It also modifies an argument which will be the last index
 at which the second array has been modified:
 
 #+BEGIN_SRC ada
@@ -14,9 +14,10 @@ at which the second array has been modified:
 #+END_SRC
 
 Implementing and proving this procedure is not obvious as you will
-see in the following.
+see. We will introduce in this section manual proofs with lemmas in
+SPARK.
 
-** Predicates used
+** Predicates used for specification
 
 We first define two predicates to ease assertion writing.
 
@@ -24,7 +25,8 @@ We first define two predicates to ease assertion writing.
 
 First, we need to define a predicate to check if two arrays have
 the same number of occurrences of each of their values except for
-a given value. The ~Multiset_Retain_Rest~ can be expressed as:
+a given value. The ~Multiset_Retain_Rest~ predicate can be
+expressed as:
 
 #+BEGIN_SRC ada
   function Multiset_Retain_Rest
@@ -36,8 +38,8 @@ a given value. The ~Multiset_Retain_Rest~ can be expressed as:
 #+END_SRC
 
 The predicate will return true if and only if for each value in
-~T~ different from ~Val~, the number of occurrences of this value
-in the two arrays are the same.
+type ~T~ different from ~Val~, the number of occurrences of this
+value in the two arrays ~A~ and ~B~ is the same.
 
 *** The Remove_Count predicate
 
@@ -53,8 +55,8 @@ The ~Remove_Count~ predicate is quite simple:
 #+END_SRC
 
 This predicate returns the number of indexes in a given array
-such that the values at these indexes is different from a given
-value.
+such that the values at these indexes are different from a given
+value ~Val~.
 
 ** Specification of Remove_Copy
 
@@ -85,8 +87,8 @@ length, and that ~B'Last~ is strictly less than ~Positive'Last~
 
 The contract cases express the following facts:
 - if ~A~ is not empty then:
-  1. ~K~ is in ~B'First - 1 .. B'Last~. It corresponds with the
-     last index at which ~B~ has been modified. If ~K~ is equal to
+  1. ~K~ is in ~B'First - 1 .. B'Last~. It corresponds to the last
+     index at which ~B~ has been modified. If ~K~ is equal to
      ~B'First - 1~, it means that ~B~ has not been changed.
   2. the range in which ~B~ has been modified has a length equal
      to the number of values different from ~Val~ in ~A~
@@ -103,7 +105,7 @@ The contract cases express the following facts:
 
 *** A first implementation
 
-A first implementation of ~Remove_Copy~ could be:
+A first implementation of ~Remove_Copy~ could be the following:
 
 #+BEGIN_SRC ada
   procedure Remove_Copy_First
@@ -150,27 +152,28 @@ The loop invariants specify that:
 - if ~K~ has not been increased, then each value of ~A~ at index
   less or equal than ~J~ is equal to ~Val~.
 - if ~K~ has been increased, then the predicate
-  ~Multiset_Retain_Rest~ is verified for the sub-arrays given
+  ~Multiset_Retain_Rest~ is verified for the subarrays given
 - each value of ~B~ that has been modified is different from
   ~Val~
 - each value of ~B~ that has not been modified is the same as
   before
 
-  With this specification and implementation, ~GNATprove~ cannot
-  prove the loop invariant with ~Multiset_Retain_Rest~. Indeed,
-  the predicate checks a recursive property for each value of
-  ~T~. We will need to help the prover to manage to prove the
-  function using *lemmas*.
+With this specification and implementation, ~GNATprove~ cannot
+prove the loop invariant with ~Multiset_Retain_Rest~, which is
+the most difficult to prove. Indeed, the predicate checks a
+recursive property for each value of ~T~, which is not provable
+for the SMT solvers used with ~GNATprove~. We will need to help
+the provers using *lemmas*.
 
-*** The Make_Prove_Multiset procedure and its lemmas
+*** The Make_Prove_Multiset lemma
 
-When proving difficult properties, the only solution may be to
-use manual proof. Manual proof of a property can be done using a
-proof assistant, such as Coq, or using *lemmas* (see section
-7.9.3 of SPARK User's Guide on [[http://docs.adacore.com/spark2014-docs/html/ug/gnatprove_by_example/manual_proof.html#manual-proof-using-user-lemmas][Manual Proof Examples]]). Lemmas are
-ghost procedures representing properties that will be
-instantiated as assertions to help the solvers. Such a procedure
-can be viewed as a mathematical lemma:
+When trying to prove difficult properties, the only solution may
+be to attempt a manual proof. Manual proof of a property can be
+done using a proof assistant, such as Coq, or using *lemmas* (see
+section 7.9.3 of SPARK User's Guide on [[http://docs.adacore.com/spark2014-docs/html/ug/gnatprove_by_example/manual_proof.html#manual-proof-using-user-lemmas][Manual Proof
+Examples]]). Lemmas are ghost procedures representing properties
+that will be instantiated as assertions to help the solvers. Such
+a procedure can be viewed as a mathematical lemma:
 
 - the preconditions of the procedure are the premises of the
   lemma
@@ -178,25 +181,25 @@ can be viewed as a mathematical lemma:
   lemma
 
 Lemmas have of course to be proved. In order to do so, SPARK
-requires lemmas to have an implementation. Intuitively, the lemma
-implementation is a sketch of the proof of the lemma.
+requires lemmas to have an implementation. You can think of the
+implementation of a lemma as a sketch of the proof.
 
-Notice that the lemma implementation can be ~null~ and in this
+Notice that the lemma implementation may be ~null~ and in this
 case, the postcondition of the lemma is not proved. It can
 nevertheless be justified or proved by a proof assistant.
 
 We noted here that the prover had a problem with the invariant
-concerning ~Multiset_Retain_Res~ when the first values of ~A~
-were ~Val~. We will present in the following two lemmas and their
-implementations useful to overcome this difficulty.
+concerning ~Multiset_Retain_Rest~ when the first values of ~A~
+were ~Val~ by examining the counterexamples. We will present in
+the following two lemmas useful to overcome this difficulty.
 
 **** The Unique_Value lemma
 
-A first lemma will be defined: it states that if each value of
-an array ~A~ is equal to ~Val~, then for a value ~E~ different
-from ~Val~, ~Occ(A,E) = 0~. Given the fact that ~GNATprove~ and
-its associated solvers does not yet use inductive reasoning, we
-need to help it prove the lemma.
+A first lemma is defined: it states that if each value of an
+array ~A~ is equal to ~Val~, then for a value ~E~ different from
+~Val~, ~Occ(A,E) = 0~. Given the fact that ~GNATprove~ and its
+associated solvers does not yet use inductive reasoning, we need
+to help it prove the lemma.
 
 Its specification is rather simple:
 
@@ -225,14 +228,14 @@ Its implementation is the following:
   end Unique_Value;
 #+END_SRC
 
-Remember that the implementation represents a sketch of proof
-for the lemma. First, we specify the stop condition, which is
-when ~A~ is empty.  Then, the idea is to use the lemma on the
-same array without its last value as we know that the array
-contains only ~Val~ values. We will thus prove the property for
-~Remove_Last (A)~ and with the definition of ~Occ_Def~ (~if A
-      (A'Last) /= E then Result = Occ_Def (Remove_Last (A), E)~), it
-will prove the lemma for ~A~.
+Remember that the implementation of ~Unique_Value~ represents a
+sketch of proof for the lemma. First, we specify the final
+condition, which is the case when ~A~ is empty.  Then, the idea
+is to use the lemma on the same array without its last value as
+we know that the array contains only ~Val~ values. We will thus
+prove the property for ~Remove_Last (A)~ and with the definition
+of ~Occ_Def~ (~if A (A'Last) /= E then Result = Occ_Def
+      (Remove_Last (A), E)~), the lemma is proved for ~A~.
 
 **** The Make_Prove_Multiset lemma
 
@@ -241,8 +244,9 @@ prove properties using ~Multiset_Retain_Rest~ by distinguishing
 two cases for two arrays ~A~ and ~B~ with the same last element:
 either ~B~ has only one element, and then all elements of ~A~
 are equal to ~Val~, either ~Multiset_Retain_Rest (Remove_Last
-      (A), Remove_Last(B), Val)~ should hold. This will of course help
-the solvers with the inductive part of the proof.
+      (A), Remove_Last(B), Val)~ should hold. We can conclude in both
+cases that ~Multiset_Retain_Rest (A, B, Val)~ holds. This will
+of course help the solvers with the inductive part of the proof.
 
 The lemma is written as follows:
 
@@ -306,7 +310,10 @@ proofs already established for the previous values.
 
 We can now use the ~Make_Prove_Multiset~ in the implementation of
 ~Remove_Copy~ by instantiating it in the main loop of the
-algorithm:
+algorithm, thus helping the provers by stating that
+~Multiset_Retain_Rest (A (A'First .. J), B (B'First .. K - 1),
+     Val)~ when finding a value different from ~Val~ (and therefore
+incrementing ~K~):
 
 #+BEGIN_SRC ada
   procedure Remove_Copy_Second
@@ -360,31 +367,31 @@ algorithm:
 
 Using ~GNATprove~ with this implementation, a ~precondition might
      fail~ appears when instantiating the lemma in the loop. With the
-help of some assertions, we see that the precondition that is not
-verified is the ~Multiset_Retain_Rest~ one. Indeed, the prover may
-consider that after the line with the affectation ~B (K) := A
-     (J)~, the state of ~B~ has changed, particularly for values before
-index ~K~. Therefore, even if the predicate is about the values in
-range ~B'First .. K - 1~ and we changed the ~K~th value of ~B~,
-the prover does not consider ~Multiset_Retain_Rest (A (A'First
-     .. J), B (B'First .. K - 1), Val))~ to hold.
+help of some assertions (added in the previous source code), we
+see that the precondition that is not verified is the
+~Multiset_Retain_Rest~ one. The prover may consider that after
+the line with the affectation ~B (K) := A (J)~, the state of ~B~
+has changed, particularly for values before index ~K~. Therefore,
+even if the predicate is about the values in range ~B'First
+     .. K - 1~ and we changed the ~K~ th value of ~B~, the prover does
+not consider ~Multiset_Retain_Rest (A (A'First .. J), B (B'First
+     .. K - 1), Val))~ to hold.
 
-A classic idea to solve such problem is to create a ghost variable
-to save the state of ~B~ before the affectation and prove
-~Multiset_Retain_Rest (A (A'First .. J), B (B'First .. K - 1),
-     Val))~ first with this ghost variable, and then with the real
-value of ~B~.
+A classic idea to solve such problem is to create a ghost
+variable to save the state of ~B~ before the affectation and
+prove ~Multiset_Retain_Rest (A (A'First .. J), B (B'First .. K -
+     1), Val))~ first with this ghost variable, and then with the
+actual value of ~B~.
 
 *** The Occ_Equal and Multiset_Retain_Rest_Equal lemmas
 
 The main lemma we will define is ~Multiset_Retain_Rest_Equal~. It
 will state that if ~B~ and ~C~ are two identical arrays, then if
 ~Multiset_Retain_Rest (A, B, Val))~ holds then
-~Multiset_Retain_Rest (A, C, Val))~ holds. To show that
-properties, we will use the following property: if two arrays are
-equal, then the number of occurrences of a value is the same in
-both arrays. This property will be represented by the ~Occ_Equal~
-lemma.
+~Multiset_Retain_Rest (A, C, Val))~ holds. To show that property,
+we will use another lemma: if two arrays are equal, then the
+number of occurrences of a value is the same in both arrays. This
+property will be represented by the ~Occ_Equal~ lemma.
 
 **** The Occ_Equal lemma
 
@@ -404,7 +411,7 @@ arrays. Its specification is the following:
      Post => Occ (A, E) = Occ (B, E);
 #+END_SRC
 
-To prove the lemma, we will give an implementation to it:
+To prove the lemma, we give an implementation:
 
 #+BEGIN_SRC ada
   procedure Occ_Equal
@@ -493,55 +500,55 @@ values.
 
 The final implementation for ~Remove_Copy~ is the following:
 
-#+BEGIN_range-begin
-procedure Remove_Copy
-  (A   :        T_Arr;
-   B   : in out T_Arr;
-   Val :        T;
-   K   : in out Natural)
-is
-   J      : Integer := A'First - 1;
-   B_Save : T_Arr   := B with Ghost;
+#+BEGIN_SRC ada
+  procedure Remove_Copy
+    (A   :        T_Arr;
+     B   : in out T_Arr;
+     Val :        T;
+     K   : in out Natural)
+  is
+     J      : Integer := A'First - 1;
+     B_Save : T_Arr   := B with Ghost;
+  
+  begin
+     if A'Length > 0 then
+        K := B'First;
+  
+        for J in A'Range loop
+  	 if A (J) /= Val then
+  	    B_Save := B;
+  	    B (K)  := A (J);
+  	    if K > B'First then
+  	       Multiset_Retain_Rest_Equal
+  		 (A (A'First .. J - 1), B_Save (B'First .. K - 1),
+  		  B (B'First .. K - 1), Val);
+  	    end if;
+  	    K := K + 1;
+  	    Make_Prove_Multiset
+  	      (A (A'First .. J), B (B'First .. K - 1), Val);
+  	 end if;
+  
+  	 pragma Loop_Invariant
+  	   (if K = B'First then (for all L in A'First .. J => A (L) = Val));
+  	 pragma Loop_Invariant
+  	   (K = B'First + Remove_Count (A (A'First .. J), Val));
+  	 pragma Loop_Invariant
+  	   (if K > B'First then
+  	      Multiset_Retain_Rest
+  		(A (A'First .. J), B (B'First .. K - 1), Val));
+  	 pragma Loop_Invariant
+  	   (for all L in B'First .. K - 1 => B (L) /= Val);
+  	 pragma Loop_Invariant
+  	   (for all L in K .. B'Last => B (L) = B'Loop_Entry (L));
+        end loop;
+        K := K - 1;
+     end if;
+  
+  end Remove_Copy;
+#+END_SRC
 
-begin
-   if A'Length > 0 then
-      K := B'First;
-
-for J in A'Range loop
-   if A (J) /= Val then
-      B_Save := B;
-      B (K)  := A (J);
-      if K > B'First then
-	 Multiset_Retain_Rest_Equal
-	   (A (A'First .. J - 1), B_Save (B'First .. K - 1),
-	    B (B'First .. K - 1), Val);
-      end if;
-      K := K + 1;
-      Make_Prove_Multiset
-	(A (A'First .. J), B (B'First .. K - 1), Val);
-   end if;
-
-      pragma Loop_Invariant
-	(if K = B'First then (for all L in A'First .. J => A (L) = Val));
-      pragma Loop_Invariant
-	(K = B'First + Remove_Count (A (A'First .. J), Val));
-      pragma Loop_Invariant
-	(if K > B'First then
-	   Multiset_Retain_Rest
-	     (A (A'First .. J), B (B'First .. K - 1), Val));
-      pragma Loop_Invariant
-	(for all L in B'First .. K - 1 => B (L) /= Val);
-      pragma Loop_Invariant
-	(for all L in K .. B'Last => B (L) = B'Loop_Entry (L));
-   end loop;
-   K := K - 1;
-end if;
-
-end Remove_Copy;
-#+END_range-begin
-
-Now, we use a ghost variable ~B_Save~ to store the value of ~B~
-before changing one of its element. We instantiate the
+We use a ghost variable ~B_Save~ to store the value of ~B~ before
+changing one of its element. We instantiate the
 ~Multiset_Retain_Rest_Equal~ procedure when ~K > B'First~ (which
 means that one or more values have been changed in ~B~) to state
 that ~B~ respect the ~Multiset_Retain_Rest~ property until index
