@@ -1,4 +1,4 @@
-# Created 2018-08-18 Sat 13:08
+# Created 2018-08-18 Sat 23:26
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Remove_Copy.org
 
@@ -406,7 +406,6 @@ arrays. Its specification is the following:
     (A : T_Arr;
      B : T_Arr;
      E : T) with
-     Ghost,
      Pre  => A = B,
      Post => Occ (A, E) = Occ (B, E);
 #+END_SRC
@@ -508,7 +507,8 @@ The final implementation for ~Remove_Copy~ is the following:
      K   : in out Natural)
   is
      J      : Integer := A'First - 1;
-     B_Save : T_Arr   := B with Ghost;
+     B_Save : T_Arr   := B with
+        Ghost;
   
   begin
      if A'Length > 0 then
@@ -541,6 +541,7 @@ The final implementation for ~Remove_Copy~ is the following:
   	 pragma Loop_Invariant
   	   (for all L in K .. B'Last => B (L) = B'Loop_Entry (L));
         end loop;
+  
         K := K - 1;
      end if;
   

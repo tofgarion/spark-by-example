@@ -267,9 +267,9 @@
      random number generator, as it is done in [[https://github.com/fraunhoferfokus/acsl-by-example/blob/master/StandardAlgorithms/mutating/random_shuffle/random_number.c][ACSL by Example]]. Our
      specification and implementation of ~Random_Number~ are:
 
-     #+INCLUDE: "../../../random_p.ads" :src ada :range-begin "function Random_Number" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-14"
+     #+INCLUDE: "../../../mutating/random_p.ads" :src ada :range-begin "function Random_Number" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-14"
 
-     #+INCLUDE: "../../../random_p.adb" :src ada :range-begin "function Random_Number" :range-end "End Random_Number;" :lines "4-29"
+     #+INCLUDE: "../../../mutating/random_p.adb" :src ada :range-begin "function Random_Number" :range-end "End Random_Number;" :lines "4-29"
 
      This implementation uses the package
      ~Ada.Numerics.Discrete_Random~ out of convenience and declares a

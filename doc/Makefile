@@ -33,7 +33,7 @@ HEAP_ORG_FILES = $(patsubst %, ../heap/%, $(_HEAP_ORG_FILES))
 SORTING_ORG_FILES = $(patsubst %, ../sorting/%, $(_SORTING_ORG_FILES))
 CLASSIC_SORTING_ORG_FILES = $(patsubst %, ../classic-sorting/%, $(_CLASSIC_SORTING_ORG_FILES))
 
-# targets to generat Org files
+# targets to generate Org files
 ../non-mutating/%.org: org_templates/non-mutating/%.org
 	echo "$^" | emacs --batch -l ./generate-org.el -f generate-org-from-org
 
