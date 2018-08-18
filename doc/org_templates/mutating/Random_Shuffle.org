@@ -233,10 +233,13 @@
       T'First .. T'Last then Occ(Result,E) = Occ(A,E)~ which is
       exactly the postcondition we are trying to prove.
 
-      In the body of ~Swap_Array~ we then initialize ~A_After_First~
-      to the correct value, assert the preconditions of the proof
-      procedure, and then call the proof procedure so that the solvers
-      apply our proof to ~Swap_Array~.
+      We now have to use ~Prove_Perm~ in the body of ~Swap_Array~. We
+      just have to initialize ~A_After_First~ to the correct value,
+      assert the preconditions of the proof procedure, and then call
+      the proof procedure so that the solvers apply our proof
+      procedure to ~Swap_Array~:
+
+      #+INCLUDE: "../../../mutating/swap_array_p.adb" :src ada :range-begin "procedure Swap_Array" :range-end "End Swap_Array;" :lines "5-48"
 
 ***** Final implementation of Random_Shuffle
 
