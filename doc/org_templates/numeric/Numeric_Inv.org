@@ -106,17 +106,18 @@
      (and we add the relation between ~A~ and ~Acc_Def(B ...)~), then
      the postcondition is not verified.
 
-     This is due to a limitation of automatic solvers on arithmetic in
-     universally quantified assertions. If we take a look at the
+     This is due to a limitation of automatic solvers on arithmetic
+     with universally quantified assertions. If we look at the
      preconditions of [[Partial_Sum.org][Partial_Sum]] we can see that the quantified
      variable ~J~ is in ~A'Range~ and that we verify that ~Acc_Def (A,
      A'First, J, 0).OK~ holds. When trying to verify this
      precondition, the solvers will range over the previous assertions
-     with a universally quantified variable to try and match the
+     with a universally quantified variable to try to match the
      precondition, but all the assertions in our invariants are in the
-     form of ~Acc_Def (B, B'First, J - A'First + B'First, 0)~. That is
-     why adding the third loop invariant, which seems to prove what
-     was already proven by the second loop invariant, is not
+     form of ~Acc_Def (B, B'First, J - A'First + B'First, 0)~, which
+     cannot be matched with the quantified variable. That is why
+     adding the third loop invariant, which seems to prove what was
+     already proven by the second loop invariant, is not
      redundant. Proving the equality of the arrays has the same issue,
      because proving that ~A = A'Old~ is equivalent to proving that
      ~for all J in A'Range => A(J) = A'Old(J)~, and ranging over the
