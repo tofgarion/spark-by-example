@@ -2,37 +2,51 @@
 #+OPTIONS: author:nil title:nil toc:nil
 ** The Iota algorithm
 
-The ~iota~ algorithm assign increasing values to an array, where the initial
-value is specified by the user. Its signature reads:
-~procedure Iota(A : in out T_Arr ; Val : T)~
+   The ~Iota~ algorithm assign increasing values to an array, where
+   the initial value is specified by the user. Its signature is the
+   following:
+
+   #+BEGIN_SRC ada
+     procedure Iota (A : in out T_Arr ; Val : T)
+   #+END_SRC
+
+   For instance, let us suppose that ~A~ is an ~T~ array of size ~5~,
+   then after a call ~Iota (A, 3)~, ~A~ will be ~(3, 4, 5, 6,
+   7)~. Notice that the incrementation step in not precised in the
+   function signature.
 
 *** The predicate Is_Iota
 
-The predicate ~Is_Iota~ will be used to verify the fact that an array
-has increasing values starting at a certain value.
-It is defined as follows:
+    The predicate ~Is_Iota~ is be used to verify that an array has
+    increasing values starting at a certain value. It is defined as
+    follows:
 
-	#+INCLUDE: ../../../spec/is_iota_p.ads :src ada :range-begin "function Is_Iota" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-11"
+    #+INCLUDE: "../../../spec/is_iota_p.ads" :src ada :range-begin "function Is_Iota" :range-end "\\s-*(\\([^()]*?\\(?:\\n[^()]*\\)*?\\)*)\\s-*\\([^;]*?\\(?:\\n[^;]*\\)*?\\)*;" :lines "6-11"
 
-
-Notice that the precondition ensures that no overflow will happen.
+    Notice that the precondition ensures that no overflow will happen
+    (~T (A'Length)~ is the ~A'Length~ th value of type ~T~).
 
 *** Specification of Iota
 
-The specification of ~iota~ is rather simple:
+    The specification of ~iota~ is rather simple:
 
-	#+INCLUDE: ../../../numeric/iota_p.ads :src ada :range-begin "procedure Iota" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-9"
+    #+INCLUDE: "../../../numeric/iota_p.ads" :src ada :range-begin "procedure Iota" :range-end "\\s-*(\\([^()]*?\\(?:\\n[^()]*\\)*?\\)*)\\s-*\\([^;]*?\\(?:\\n[^;]*\\)*?\\)*;" :lines "6-9"
 
-The precondition is necessary to prevent possible overflows.
+    The precondition is necessary to prevent possible overflows, as we
+    are dealing with numerical values.
 
 *** Implementation of Iota
 
-The implementation of ~iota~ is the following.
+    The implementation of ~iota~ is the following.
 
-	#+INCLUDE: ../../../numeric/iota_p.adb :src ada :range-begin "procedure Iota" :range-end "End Iota;" :lines "3-13"
+    #+INCLUDE: "../../../numeric/iota_p.adb" :src ada :range-begin "procedure Iota" :range-end "End Iota;" :lines "3-13"
 
-The loop invariants specify the fact that:
-   - ~count~ is indeed a counter starting at ~Val~ and has the right value
-   - the predicate ~Is_Iota~ is verified for the sliced array ~A(A'First .. I)~.
+    The loop invariants specify the fact that:
+    - ~Count~ is indeed a counter starting at ~Val~ and has the right value
+    - the predicate ~Is_Iota~ is verified for the sliced array ~A(A'First .. I)~.
 
-Using ~GNATprove~, everything is proved.
+    Using ~GNATprove~, everything is proved.
+
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

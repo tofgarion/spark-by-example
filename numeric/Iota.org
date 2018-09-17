@@ -1,28 +1,37 @@
-# Created 2018-06-20 Wed 13:06
+# Created 2018-09-17 Mon 13:27
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Iota.org
 * The Iota algorithm
 
-The ~iota~ algorithm assign increasing values to an array, where the initial
-value is specified by the user. Its signature reads:
-~procedure Iota(A : in out T_Arr ; Val : T)~
+The ~Iota~ algorithm assign increasing values to an array, where
+the initial value is specified by the user. Its signature is the
+following:
+
+#+BEGIN_SRC ada
+  procedure Iota (A : in out T_Arr ; Val : T)
+#+END_SRC
+
+For instance, let us suppose that ~A~ is an ~T~ array of size ~5~,
+then after a call ~Iota (A, 3)~, ~A~ will be ~(3, 4, 5, 6,
+   7)~. Notice that the incrementation step in not precised in the
+function signature.
 
 ** The predicate Is_Iota
 
-The predicate ~Is_Iota~ will be used to verify the fact that an array
-has increasing values starting at a certain value.
-It is defined as follows:
+The predicate ~Is_Iota~ is be used to verify that an array has
+increasing values starting at a certain value. It is defined as
+follows:
 
 #+BEGIN_SRC ada
-  function Is_Iota
-    (A   : T_Arr;
-     Val : T) return Boolean is
-    (for all I in A'Range => A (I) = Val + T (I - A'First)) with
-     Pre => Val + T (A'Length) <= T'Last;
+  is
+    function Is_Iota
+      (A   : T_Arr;
+       Val : T)
+       return Boolean is
 #+END_SRC
 
-
-Notice that the precondition ensures that no overflow will happen.
+Notice that the precondition ensures that no overflow will happen
+(~T (A'Length)~ is the ~A'Length~ th value of type ~T~).
 
 ** Specification of Iota
 
@@ -34,7 +43,8 @@ The specification of ~iota~ is rather simple:
      Post => Is_Iota (A, Val);
 #+END_SRC
 
-The precondition is necessary to prevent possible overflows.
+The precondition is necessary to prevent possible overflows, as we
+are dealing with numerical values.
 
 ** Implementation of Iota
 
@@ -54,7 +64,7 @@ The implementation of ~iota~ is the following.
 #+END_SRC
 
 The loop invariants specify the fact that:
-- ~count~ is indeed a counter starting at ~Val~ and has the right value
+- ~Count~ is indeed a counter starting at ~Val~ and has the right value
 - the predicate ~Is_Iota~ is verified for the sliced array ~A(A'First .. I)~.
 
 Using ~GNATprove~, everything is proved.
