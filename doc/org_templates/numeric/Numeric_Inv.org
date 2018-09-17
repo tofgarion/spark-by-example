@@ -48,7 +48,7 @@
 
      Our implementation of ~Partial_Sum_Inv~ is the following:
 
-     #+INCLUDE: "../../../numeric/numeric_inv.adb" :src "ada" :range-begin "procedure Partial_Sum_Inv" :range-end "End Partial_Sum_Inv;" :lines "4-26"
+     #+INCLUDE: "../../../numeric/numeric_inv.adb" :src ada :range-begin "procedure Partial_Sum_Inv" :range-end "End Partial_Sum_Inv;" :lines "4-26"
 
      We simply assert here that if the length of ~A~ is greater or
      equal to ~1~ (nothing needs to be proven otherwise) then after
@@ -72,7 +72,7 @@
 
      ~Adjacent_Difference_Inv~ can be specified in the following way:
 
-     #+INCLUDE: "../../../numeric/numeric_inv.ads" :src "ada" :range-begin "procedure Adjacent_Difference_Inv" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "15-21"
+     #+INCLUDE: "../../../numeric/numeric_inv.ads" :src ada :range-begin "procedure Adjacent_Difference_Inv" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "15-21"
 
      The preconditions are those of ~Adjacent_Difference~. The
      postcondition once again ensures that ~A~ remains unmodified.
@@ -81,7 +81,7 @@
 
      The implementation of ~Adjacent_Difference_Inv~ is the following:
 
-     #+INCLUDE: "../../../numeric/numeric_inv.adb" :src "ada" :range-begin "procedure Adjacent_Difference_Inv" :range-end "End Adjacent_Difference_Inv;" :lines "27-62"
+     #+INCLUDE: "../../../numeric/numeric_inv.adb" :src ada :range-begin "procedure Adjacent_Difference_Inv" :range-end "End Adjacent_Difference_Inv;" :lines "27-62"
 
      There are more things to annotate in this function, because the
      preconditions of ~Partial_Sum~ are more constraining than the

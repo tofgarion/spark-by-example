@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 15:10
+# Created 2018-09-17 Mon 15:11
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Numeric_Inv.org
 
@@ -54,7 +54,7 @@ remain unchanged.
 
 Our implementation of ~Partial_Sum_Inv~ is the following:
 
-#+BEGIN_SRC "ada"
+#+BEGIN_SRC ada
   procedure Partial_Sum_Inv (A, B : in out T_Arr) is
      Init : T_Arr := A with Ghost;  -- not used anywhere, but somehow helps prove the loop invariants.
   begin
@@ -101,7 +101,7 @@ the function representing the property is:
 
 ~Adjacent_Difference_Inv~ can be specified in the following way:
 
-#+BEGIN_SRC "ada"
+#+BEGIN_SRC ada
   procedure Adjacent_Difference_Inv (A, B : in out T_Arr) with
      Pre => A'Length = B'Length
      and then
@@ -117,7 +117,7 @@ postcondition once again ensures that ~A~ remains unmodified.
 
 The implementation of ~Adjacent_Difference_Inv~ is the following:
 
-#+BEGIN_SRC "ada"
+#+BEGIN_SRC ada
   procedure Adjacent_Difference_Inv (A, B : in out T_Arr) is
      Tmp : T with
         Ghost;
