@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 13:27
+# Created 2018-09-17 Mon 13:30
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Iota.org
 * The Iota algorithm
@@ -23,11 +23,12 @@ increasing values starting at a certain value. It is defined as
 follows:
 
 #+BEGIN_SRC ada
-  is
-    function Is_Iota
-      (A   : T_Arr;
-       Val : T)
-       return Boolean is
+  function Is_Iota
+    (A   : T_Arr;
+     Val : T)
+     return Boolean is
+    (for all I in A'Range => A (I) = Val + T (I - A'First)) with
+     Pre => Val + T (A'Length) <= T'Last;
 #+END_SRC
 
 Notice that the precondition ensures that no overflow will happen

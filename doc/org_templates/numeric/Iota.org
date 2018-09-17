@@ -21,7 +21,7 @@
     increasing values starting at a certain value. It is defined as
     follows:
 
-    #+INCLUDE: "../../../spec/is_iota_p.ads" :src ada :range-begin "function Is_Iota" :range-end "\\s-*(\\([^()]*?\\(?:\\n[^()]*\\)*?\\)*)\\s-*\\([^;]*?\\(?:\\n[^;]*\\)*?\\)*;" :lines "6-11"
+    #+INCLUDE: "../../../spec/is_iota_p.ads" :src ada :range-begin "function Is_Iota" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-13"
 
     Notice that the precondition ensures that no overflow will happen
     (~T (A'Length)~ is the ~A'Length~ th value of type ~T~).
@@ -30,7 +30,7 @@
 
     The specification of ~iota~ is rather simple:
 
-    #+INCLUDE: "../../../numeric/iota_p.ads" :src ada :range-begin "procedure Iota" :range-end "\\s-*(\\([^()]*?\\(?:\\n[^()]*\\)*?\\)*)\\s-*\\([^;]*?\\(?:\\n[^;]*\\)*?\\)*;" :lines "6-9"
+    #+INCLUDE: "../../../numeric/iota_p.ads" :src ada :range-begin "procedure Iota" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-9"
 
     The precondition is necessary to prevent possible overflows, as we
     are dealing with numerical values.
