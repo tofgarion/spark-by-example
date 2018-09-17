@@ -9,44 +9,52 @@
   As usual, ghost functions used in specifications are
   located in the ~spec~ directory at project root.
 
+  The algorithms presented in this chapter do not introduce any real
+  difficulties when proving them, except for one point: the absence of
+  overflow issues during computations.
+
   The functions and the corresponding files are presented in the
   following table (click on the link to have more details one the
   specification/implementation of each function):
 
-| function            | files                          | comments                               |
-|---------------------+--------------------------------+----------------------------------------|
-| [[file:Iota.org][Iota]]                | ~../spec/is_iota_p.ads~        |                                        |
-|                     | ~iota_p.ads~                   |                                        |
-|                     | ~iota_p.adb~                   |                                        |
-|---------------------+--------------------------------+----------------------------------------|
-| [[file:Accumulate.org][Accumulate]]          | ~../spec/acc_def_p.ads~        | Two implementations are provided       |
-|                     | ~accumulate_p.ads~             | for this function:                     |
-|                     | ~accumulate_p.adb~             | one without proper overflow handeling, |
-|                     | ~../spec/overflow.ads~         | and a correct implementation.          |
-|                     | ~accumulate_naive.ads~         |                                        |
-|                     | ~accumulate_naive.adb~         |                                        |
-|---------------------+--------------------------------+----------------------------------------|
-| [[file:Inner_Product.org][Inner_Product]]       | ~../spec/inner_prod_def_p.ads~ |                                        |
-|                     | ~../spec/overflow.ads~         |                                        |
-|                     | ~inner_product_p.ads~          |                                        |
-|                     | ~inner_product_p.adb~          |                                        |
-|---------------------+--------------------------------+----------------------------------------|
-| [[file:Partial_Sum.org][Partial_Sum]]         | ~../spec/acc_def_p.ads~        |                                        |
-|                     | ~../spec/overflow.ads~         |                                        |
-|                     | ~partial_sum_p.ads~            |                                        |
-|                     | ~partial_sum_p.adb~            |                                        |
-|---------------------+--------------------------------+----------------------------------------|
-| [[file:Adjacent_Difference.org][Adjacent_Difference]] | ~../spec/overflow~             |                                        |
-|                     | ~adjacent_difference_p.ads~    |                                        |
-|                     | ~adjacent_difference_p.adb~    |                                        |
-|---------------------+--------------------------------+----------------------------------------|
-| [[file:Numeric_Inv.org][Numeric_Inv]]         | ~../spec/acc_def_p.ads~        |                                        |
-|                     | ~../spec/overflow.ads~         |                                        |
-|                     | ~adjacent_difference_p.ads~    |                                        |
-|                     | ~adjacent_difference_p.adb~    |                                        |
-|                     | ~partial_sum_p.ads~            |                                        |
-|                     | ~partial_sum_p.adb~            |                                        |
-|                     | ~numeric_inv.ads~              |                                        |
-|                     | ~unmeric_inv.adb~              |                                        |
-|---------------------+--------------------------------+----------------------------------------|
+  | function            | files                          | comments                                              |
+  |---------------------+--------------------------------+-------------------------------------------------------|
+  | [[file:Iota.org][Iota]]                | ~../spec/is_iota_p.ads~        |                                                       |
+  |                     | ~iota_p.ads~                   |                                                       |
+  |                     | ~iota_p.adb~                   |                                                       |
+  |---------------------+--------------------------------+-------------------------------------------------------|
+  | [[file:Accumulate.org][Accumulate]]          | ~../spec/acc_def_naive_p.ads~  |                                                       |
+  |                     | ~accumulate_naive.ads~         | naive implementation without proper overflow handling |
+  |                     | ~accumulate_naive.adb~         |                                                       |
+  |                     | ~../spec/acc_def_p.ads~        |                                                       |
+  |                     | ~../spec/overflow.ads~         |                                                       |
+  |                     | ~accumulate_p.ads~             | correct implementation with proper overflow handling  |
+  |                     | ~accumulate_p.adb~             |                                                       |
+  |---------------------+--------------------------------+-------------------------------------------------------|
+  | [[file:Inner_Product.org][Inner_Product]]       | ~../spec/inner_prod_def_p.ads~ |                                                       |
+  |                     | ~../spec/overflow.ads~         |                                                       |
+  |                     | ~inner_product_p.ads~          |                                                       |
+  |                     | ~inner_product_p.adb~          |                                                       |
+  |---------------------+--------------------------------+-------------------------------------------------------|
+  | [[file:Partial_Sum.org][Partial_Sum]]         | ~../spec/acc_def_p.ads~        |                                                       |
+  |                     | ~../spec/overflow.ads~         |                                                       |
+  |                     | ~partial_sum_p.ads~            |                                                       |
+  |                     | ~partial_sum_p.adb~            |                                                       |
+  |---------------------+--------------------------------+-------------------------------------------------------|
+  | [[file:Adjacent_Difference.org][Adjacent_Difference]] | ~../spec/overflow.ads~         |                                                       |
+  |                     | ~adjacent_difference_p.ads~    |                                                       |
+  |                     | ~adjacent_difference_p.adb~    |                                                       |
+  |---------------------+--------------------------------+-------------------------------------------------------|
+  | [[file:Numeric_Inv.org][Numeric_Inv]]         | ~../spec/acc_def_p.ads~        |                                                       |
+  |                     | ~../spec/overflow.ads~         |                                                       |
+  |                     | ~adjacent_difference_p.ads~    |                                                       |
+  |                     | ~adjacent_difference_p.adb~    |                                                       |
+  |                     | ~partial_sum_p.ads~            |                                                       |
+  |                     | ~partial_sum_p.adb~            |                                                       |
+  |                     | ~numeric_inv.ads~              |                                                       |
+  |                     | ~numeric_inv.adb~              |                                                       |
+  |---------------------+--------------------------------+-------------------------------------------------------|
 
+# Local Variables:
+# ispell-dictionary: "english"
+# End:
