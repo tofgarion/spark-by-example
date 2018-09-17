@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 14:02
+# Created 2018-09-17 Mon 14:09
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/README.org
 
@@ -24,10 +24,11 @@ specification/implementation of each function):
 |                                                       | ~iota_p.ads~                   |                                                       |
 |                                                       | ~iota_p.adb~                   |                                                       |
 |-------------------------------------------------------+--------------------------------+-------------------------------------------------------|
-| [[file:Accumulate.org][Accumulate]]                   | ~../spec/acc_def_p.ads~        |                                                       |
-|                                                       | ~../spec/overflow.ads~         |                                                       |
+| [[file:Accumulate.org][Accumulate]]                   | ~../spec/acc_def_naive_p.ads~  |                                                       |
 |                                                       | ~accumulate_naive.ads~         | naive implementation without proper overflow handling |
 |                                                       | ~accumulate_naive.adb~         |                                                       |
+|                                                       | ~../spec/acc_def_p.ads~        |                                                       |
+|                                                       | ~../spec/overflow.ads~         |                                                       |
 |                                                       | ~accumulate_p.ads~             | correct implementation with proper overflow handling  |
 |                                                       | ~accumulate_p.adb~             |                                                       |
 |-------------------------------------------------------+--------------------------------+-------------------------------------------------------|

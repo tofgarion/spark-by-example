@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 14:06
+# Created 2018-09-17 Mon 14:09
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Accumulate.org
 

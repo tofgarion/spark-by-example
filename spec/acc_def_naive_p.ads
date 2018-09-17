@@ -1,6 +1,6 @@
 with Types; use Types;
 
-package Acc_Def_Naive with
+package Acc_Def_Naive_P with
    Spark_Mode,
    Ghost
  is
@@ -20,4 +20,4 @@ package Acc_Def_Naive with
       Init : T)
       return T is (Acc_Def_Rec (A, Init));
 
-end Acc_Def_Naive;
+end Acc_Def_Naive_P;
