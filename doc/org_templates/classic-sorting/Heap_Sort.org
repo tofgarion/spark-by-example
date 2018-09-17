@@ -49,3 +49,6 @@ proves the last postcondition, the first simply being given by the postcondition
 When using GNATprove with this specification and implementation everything is proved.
 
 
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

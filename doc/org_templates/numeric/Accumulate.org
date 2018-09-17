@@ -110,3 +110,6 @@ The assertion here checks that there are no overflow when adding ~A(J)~ to the i
 The loop invariant ensures we are doing the right calculations.
 
 With this specification and implementation everything is proved by ~GNATprove~.
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

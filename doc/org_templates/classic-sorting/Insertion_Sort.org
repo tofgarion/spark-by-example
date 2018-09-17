@@ -76,3 +76,6 @@ With this specification and implementation ~GNATprove~ proves everything.
 
 
 
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

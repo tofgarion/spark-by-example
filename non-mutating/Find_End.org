@@ -1,4 +1,4 @@
-# Created 2018-08-16 Thu 17:40
+# Created 2018-09-17 Mon 13:23
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Find_End.org
 

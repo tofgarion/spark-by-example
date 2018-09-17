@@ -1,4 +1,4 @@
-# Created 2018-06-20 Wed 13:05
+# Created 2018-09-17 Mon 13:23
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Find_First_Of.org
 
@@ -22,10 +22,10 @@ In order to specify ~Find_First_Of~, we first define the
 predicate:
 
 #+BEGIN_SRC ada
-  function Has_Value_Of
-    (A : T_Arr;
-     B : T_Arr) return Boolean is
-    (for some I in A'Range => Has_Value (B, A (I)));
+  is
+    function Has_Value_Of
+      (A : T_Arr;
+       B : T_Arr)
 #+END_SRC
 
 Again, ~Has_Value_Of~ is defined in a package with the ~Ghost~
@@ -40,14 +40,13 @@ Using ~Has_Value~ and ~Has_Value_Of~, the specification of
 ~Find_First_Of~ can be written as
 
 #+BEGIN_SRC ada
-  function Find_First_Of (A : T_Arr; B : T_Arr) return Option with
+  function Find_First_Of
+    (A : T_Arr;
+     B : T_Arr)
+     return Option with
      Contract_Cases =>
      (Has_Value_Of (A, B) =>
         (Find_First_Of'Result.Exists = True)
-        and then (Has_Value (B, A (Find_First_Of'Result.Value)))
-        and then
-        (not Has_Value_Of (A (A'First .. Find_First_Of'Result.Value - 1), B)),
-      others => Find_First_Of'Result.Exists = False);
 #+END_SRC
 
 There are two behaviors for ~Find_First_Of~ (defined here by two
@@ -65,7 +64,11 @@ contract cases):
 The implementation of Find_First_Of is the following:
 
 #+BEGIN_SRC ada
-  function Find_First_Of (A : T_Arr; B : T_Arr) return Option is
+  function Find_First_Of
+    (A : T_Arr;
+     B : T_Arr)
+     return Option
+  is
      Result : Option := (Exists => False);
   begin
      for I in A'Range loop
@@ -76,11 +79,6 @@ The implementation of Find_First_Of is the following:
         end if;
   
         pragma Loop_Invariant (not Has_Value_Of (A (A'First .. I), B));
-        pragma Loop_Invariant (not Result.Exists);
-     end loop;
-  
-     return Result;
-  end Find_First_Of;
 #+END_SRC
 
 We use the ~Find~ algorithm on each element of ~A~ to check if it

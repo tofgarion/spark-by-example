@@ -46,3 +46,6 @@
 |                | ~../lemmas/classic_lemmas.ads~              |          |
 |                | ~../lemmas/classic_lemmas.adb~              |          |
 |----------------+---------------------------------------------+----------|
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

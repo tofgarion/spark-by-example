@@ -162,3 +162,6 @@ where we can put the value ~V~. Its implementation is the following:
      Its implementation is:
 	#+INCLUDE: ../../../lemmas/push_heap_lemmas.adb :src ada :range-begin "procedure Make_Prove_Epilogue" :range-end "end Make_Prove_Epilogue;" :lines "49-63"
      Using ~GNATprove~, the implementations and the specifications, everything is now proved.
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

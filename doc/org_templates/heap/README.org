@@ -57,3 +57,6 @@
   |           | ~sort_heap_p.ads~                 |                                           |
   |           | ~sort_heap_p.adb~                 |                                           |
   |-----------+-----------------------------------+-------------------------------------------|
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

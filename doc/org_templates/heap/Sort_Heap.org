@@ -49,3 +49,6 @@ with those annotations, when using ~GNATprove~ everything is proved. The proof i
 
 
 
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

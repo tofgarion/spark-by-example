@@ -32,3 +32,6 @@
   |             | ~min_element_p.ads~            |                                |
   |             | ~min_element_p.adb~            |                                |
   |-------------+--------------------------------+--------------------------------|
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

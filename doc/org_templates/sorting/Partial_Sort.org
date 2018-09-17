@@ -171,3 +171,6 @@ to prove the ~Multiset_Unchanged~ preservation.
 
 Using this implementation and specification, ~GNATprove~
 proves the ~Partial_Sort~ algorithm.
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

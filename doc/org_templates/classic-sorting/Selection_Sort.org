@@ -37,3 +37,6 @@ that we've only applied permutations to our array, and that the first ~J-A'First
 
 
 With this specification and implementation everything is proved.
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

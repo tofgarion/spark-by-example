@@ -84,3 +84,6 @@
 
    Using this implementation and specification, ~GNATprove~ manages to prove
    everything except for the termination of ~Inner_Prod_Def_Rec~, as usual.
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

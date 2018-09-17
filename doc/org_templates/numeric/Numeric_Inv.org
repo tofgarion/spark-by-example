@@ -100,3 +100,6 @@ to proving that ~for all J in A'Range => A(J) = A'Old(J)~, and ranging over the 
 if we only kept the third invariant.
 
 With this loop, and the invariants everything is prooved.
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

@@ -45,3 +45,6 @@ won't generate any overflow, and the loop invariants verify that we are doing th
 of ~B~ is constant.
 
 With this specification and implementation, ~GNATprove~ proves everything.
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

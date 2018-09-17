@@ -31,3 +31,6 @@ This implementation is quite similar to the one of [[Accumulate.org][Accumulate]
 and the loop invariant verifies that our calculations are correct.
 
 With this implementation and specification everything is proved by ~GNATprove~.
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

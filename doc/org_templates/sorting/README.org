@@ -41,3 +41,6 @@
 |              | ~../lemmas/partial_sort_lemmas.ads~ |          |
 |              | ~../lemmas/partial_sort_lemmas.adb~ |          |
 |--------------+-------------------------------------+----------|
+# Local Variables:
+# ispell-dictionary: "english"
+# End:

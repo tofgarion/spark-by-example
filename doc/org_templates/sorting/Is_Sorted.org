@@ -41,3 +41,6 @@
 
     Using this implementation and specification,
     ~GNATprove~ proves the function.
+# Local Variables:
+# ispell-dictionary: "english"
+# End:
