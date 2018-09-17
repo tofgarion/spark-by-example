@@ -1,46 +1,57 @@
-# Created 2018-06-20 Wed 13:06
+# Created 2018-09-17 Mon 14:02
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Accumulate.org
+
 * The Accumulate algorithm
 
-The ~Accumulate~ algorithm will compute the sum of the elements of an array. Its signature reads:
+The ~Accumulate~ algorithm will compute the sum of the elements of
+an array. Its signature reads:
 
 #+BEGIN_SRC ada
-  function Accumulate(A : T_Arr; Init : T) return T
+  function Accumulate (A : T_Arr; Init : T) return T
 #+END_SRC
 
-The algorithm will return ~Init+A(A'First)+A(A'First+1)+ ... + A(A'Last)~.
+The algorithm will return ~Init + A (A'First) + A (A'First+1) +
+   ... + A (A'Last)~.
 
-The algorithms presented in this chapter do not introduce any real difficulties when comes time to prove them,
-except for one aspect, which is the proof that there won't be overflow issues. We will present two 
-versions of this algorithm, one which tries to "naïvely" handle the overflow checks, and another version
-which deals with overflow proof correctly.
+This algorithm is the first in this chapter to present difficulties
+when proving that no overflow may happen. We will present two
+versions of this algorithm, one which tries to "naïvely" handle the
+overflow checks, and another version which correctly deals with
+overflows.
 
-** A naïve accumulate
-
+** A naïve Accumulate
 *** Predicates used
 
-To be able to write the preconditions and postconditions of ~accumulate we first need to write a 
-predicate defining what the result of our function should be:
+To be able to write the preconditions and postconditions of
+~Accumulate~ we first need to write a predicate defining what the
+result of our function should be:
 
 #+BEGIN_SRC ada
   function Acc_Def_Rec
     (A    : T_Arr;
-     Init : T) return T is
-    (case A'Length is
-       when 0      => Init,
-       when others =>
+     Init : T)
+     return T is
+    (case A'Length is when 0 => Init,
+       when others           =>
          Acc_Def_Rec (A (A'First .. A'Last - 1), Init) + A (A'Last));
 #+END_SRC
+
 #+BEGIN_SRC ada
   function Acc_Def_Rec
     (A    : T_Arr;
-     Init : T) return T is
-    (case A'Length is
-       when 0      => Init,
-       when others =>
+     Init : T)
+     return T is
+    (case A'Length is when 0 => Init,
+       when others           =>
          Acc_Def_Rec (A (A'First .. A'Last - 1), Init) + A (A'Last));
 #+END_SRC
+
+As usual with a recursive function, we encapsulate the call to
+the recursive function into a simple function in order to be able
+to use it as a postcondition. A ~pragma Annotate~ for
+~Acc_Def_Rec~ is also defined to assert that the recursive
+function terminates.
 
 *** Specification of Accumulate
 
@@ -52,13 +63,13 @@ With the given predicates we can write a specification for ~Accumulate~:
      Post => Accumulate_Naive'Result = Acc_Def (A, Init);
 #+END_SRC
 
-Here the precondition expresses that all the intermediary sums we are going to
-evaluate should not overflow. The postcondition expresses that our algorithm 
-returns the correct value.
+The precondition expresses that all the intermediary sums we are
+going to evaluate should not overflow. The postcondition
+expresses that our algorithm returns the correct value.
 
 *** Implementation of Accumulate
 
-One implementation satifying our specification is:
+An implementation satifying our specification is the following
 
 #+BEGIN_SRC ada
   function Accumulate_Naive (A : T_Arr; Init : T) return T is
@@ -76,29 +87,42 @@ One implementation satifying our specification is:
   end Accumulate_Naive;
 #+END_SRC
 
-Here the assertion in the loop verifies that there won't be any overflows during the sum, and the loop
-invariant ensures that we have donne the correct calculations.
+The assertion in the loop verifies that there will not be any
+overflows during the sum, and the loop invariant ensures that the
+sum is correct for the considered sub-array. Notice that the
+assertion cannot be replaced by a loop invariant, as it should be
+placed after the assignment to ~Result~ and the absence of
+overflow when adding ~Result~ and ~A (I)~ could not be proved.
 
-With this implementation the assertion, the loop invariant and the postcondition is proved.
-Nevertheless, ~GNATprove~ outputs two ~mediums~:
-#+BEGIN_SRC
+With this implementation, the assertion, the loop invariant and
+the postcondition are proved. Nevertheless, ~GNATprove~ outputs
+two errors:
+
+#+BEGIN_SRC shell
   acc_def_naive.ads:8:13: medium: subprogram "Acc_Def_Rec" might not terminate, terminating annotation could be incorrect
-  acc_def_naive.ads:14:54: medium: overflow check might fail
+  acc_def_naive.ads:14:57: medium: overflow check might fail
 #+END_SRC
 
-The first one is simply due to the recursive nature of ~Acc_Ref_Rec~. 
-The second line makes reference to the line of ~Acc_Def_Rec~ where the sum occurs. Indeed at this point
-SPARK has no way of knowing wether the sum will overflow or not. This is why we need to rewrite our functions to avoid
-any potential overflow in any part of the code.
+The first error is simply due to the recursive nature of
+~Acc_Ref_Rec~, which is solved with our annotation ~pragma~. The
+second error makes reference to the line of ~Acc_Def_Rec~ where
+the sum occurs. At this point SPARK cannot prove whether the sum
+will overflow or not. We therefore need to rewrite our functions
+to avoid any potential overflow in *any part of the code*.
 
 ** A correct version of Accumulate
 
-As mentionned before we need to take care of the overflows in ~Acc_Def_Rec~.
-The solution proposed here was proposed by Claire Dross from Adacore.
+As mentionned before we need to take care of the overflows in
+~Acc_Def_Rec~. Thanks to Claire Dross from Adacore for the
+following solution.
 
 *** Predicates used
 
-To be able to specify that the sums we will compute do not generate any overflow we will first introduce a new option type:
+To be able to specify that the sums we will compute do not
+generate any overflow we will first introduce a new option type
+that contains ~T~ values (this type is the same as the ~Option~
+type defined in [[file:../non-mutating/README.org][Chapter 3]], only the type of the encapsulated
+value changes):
 
 #+BEGIN_SRC ada
   type T_Option (OK : Boolean) is record
@@ -111,57 +135,79 @@ To be able to specify that the sums we will compute do not generate any overflow
   end record;
 #+END_SRC
 
-The working principle is the same as the ~Option~ type defined in [[file:../non-mutating/README.org][Chapter 3]].
-
-The next function may be the most important of our new version, as it will enable us to verify that no overflow occur:
+The next function may be the most important of our new version,
+as it will enable us to verify that no overflow occur:
 
 #+BEGIN_SRC ada
   function Add_No_Overflow
-    (X, Y : T) return Boolean is
-    (Y = 0
-     or else (Y > 0 and then T'Last - Y >= X)
+    (X, Y : T)
+     return Boolean is
+    (Y = 0 or else (Y > 0 and then T'Last - Y >= X)
      or else (Y < 0 and then T'First - Y <= X));
 #+END_SRC
 
-In this function we verify that the sum of ~X~ and ~Y~ will not generate an overflow. We cannot check directly the result
-of ~X+Y~, so in order to make the verification we only make operations we know that the won't overflow. That is why we separate 
-our check in two cases: if ~Y~ is positive, then we need to make sure that ~X+Y~ is less than ~T'Last~ mathematicaly, which is equivalent to 
-verifying that ~X <= T'Last-Y~. This last comparison only contains expressions that won't trigger any overflow. The same methos applies for the case ~Y<0~.
+In this function, we verify that the sum of ~X~ and ~Y~ will not
+generate an overflow. We cannot check directly the result of ~X +
+     Y~, we only allow operations that do not overflow.
 
-We now have a function that will check wether there will be an overflow or not, so with our new type and our new function we give the folowing 
-rewrite of ~Acc_Def_Rec~:
+The function checks three cases:
+
+1. if ~Y~ is equal to ~0~, then no overflow can occur
+2. if ~Y~ is stricly positive, then we need to make sure that
+   ~X + Y~ is less than ~T'Last~. Mathematically, this is
+   equivalent to verifying that ~X <= T'Last - Y~. It is
+   important to note that this last comparison only contains
+   expressions that will not trigger any overflow.
+3. the same
+   method is applied when ~Y < 0~.
+
+We now have a function that will check if there will be an
+overflow when adding two values of type ~T~. ~Acc_Def_Rec~ and
+~Acc_Def~ are now rewritten as follows:
 
 #+BEGIN_SRC ada
   function Acc_Def_Rec
     (A    : T_Arr;
      F, L : Integer;
-     Init : T) return T_Option is
+     Init : T)
+     return T_Option is
     (if L < F then (True, Init)
      else
        (if
   	Acc_Def_Rec (A, F, L - 1, Init).OK
   	and then Add_No_Overflow
-  	  (Acc_Def_Rec (A, F, L - 1, Init).Value,
-  	   A (L))
-        then
-  	(True, Acc_Def_Rec (A, F, L - 1, Init).Value + A (L))
+  	  (Acc_Def_Rec (A, F, L - 1, Init).Value, A (L))
+        then (True, Acc_Def_Rec (A, F, L - 1, Init).Value + A (L))
         else (OK => False))) with
      Pre => (if L >= F then L in A'Range and F in A'Range);
 #+END_SRC
+
 #+BEGIN_SRC ada
-  function Acc_Def
+  function Acc_Def_Rec
     (A    : T_Arr;
      F, L : Integer;
-     Init : T) return T_Option is
-    (Acc_Def_Rec (A, F, L, Init)) with
+     Init : T)
+     return T_Option is
+    (if L < F then (True, Init)
+     else
+       (if
+  	Acc_Def_Rec (A, F, L - 1, Init).OK
+  	and then Add_No_Overflow
+  	  (Acc_Def_Rec (A, F, L - 1, Init).Value, A (L))
+        then (True, Acc_Def_Rec (A, F, L - 1, Init).Value + A (L))
+        else (OK => False))) with
      Pre => (if L >= F then L in A'Range and F in A'Range);
 #+END_SRC
 
-~Acc_Def_Rec~ has been updated to return a ~T_Option~ whith ~Value~ containing the sum of the elements 
-of ~A~ from index ~F~ to index ~L~, if no overflow happened during the calculation, or will be empty otherwise.
+~Acc_Def_Rec~ has been updated to return a ~T_Option~ with
+~Value~ containing the sum of the elements of ~A~ from index ~F~
+to index ~L~, only if no overflow happened during the
+calculation. Otherwise, the ~T_Option~ is be empty.
 
-The working principle of the algorithm is the same, we simply make sure that there are no overflows in the 
-previous calculations, and that the sum of the result of ~Acc_Def_Rec(A,F,L-1,Init) + A(L)~ does not overflow.
+Notice that the working principle of the algorithm is the same,
+we simply make sure that there are no overflows in the previous
+calculations, and that the sum of the result of ~Acc_Def_Rec (A,
+     F, L - 1, Init) + A (L)~ does not overflow.
 
 *** Specification of Accumulate
 
@@ -173,13 +219,15 @@ We can now rewrite the specification for ~Accumulate~:
      Post => Accumulate'Result = Acc_Def (A, A'First, A'Last, Init).Value;
 #+END_SRC
 
-
-The precondition and postcondition are virtually the same, the simply make use of the new return type
-of ~Acc_Def_Rec~. We do not need to check that ~Acc_Def(A,A'First,A'Last,Init).Value~ exists in the precondition, since this is already ensured by the precondition.
+The precondition and postcondition are virtually the same, they
+simply make use of the new return type of ~Acc_Def_Rec~. We do
+not need to check that ~Acc_Def (A, A'First, A'Last, Init).Value~
+exists in the precondition, since this is already ensured by the
+precondition.
 
 *** Implementation of Accumulate
 
-An implementation deriving from the previous specification can be:
+An implementation deriving from the previous specification is:
 
 #+BEGIN_SRC ada
   function Accumulate (A : T_Arr; Init : T) return T is
@@ -196,7 +244,9 @@ An implementation deriving from the previous specification can be:
   end Accumulate;
 #+END_SRC
 
-The assertion here checks that there are no overflow when adding ~A(J)~ to the intermediary result.
-The loop invariant ensures we are doing the right calculations.
+The assertion inside the loop checks that there are no overflow
+when adding ~A(J)~ to the intermediary result. The loop invariant
+ensures we are doing the right calculations.
 
-With this specification and implementation everything is proved by ~GNATprove~.
+With this specification and implementation everything is proved
+by ~GNATprove~.

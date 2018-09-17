@@ -1,6 +1,7 @@
-# Created 2018-09-17 Mon 13:30
+# Created 2018-09-17 Mon 14:02
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Iota.org
+
 * The Iota algorithm
 
 The ~Iota~ algorithm assign increasing values to an array, where
