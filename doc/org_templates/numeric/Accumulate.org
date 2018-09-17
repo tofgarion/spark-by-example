@@ -28,7 +28,7 @@
 
      #+INCLUDE: "../../../spec/acc_def_naive.ads" :src ada :range-begin "function Acc_Def_Rec" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-15"
 
-     #+INCLUDE: "../../../spec/acc_def_naive.ads" :src ada :range-begin "function Acc_Def" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-15"
+     #+INCLUDE: "../../../spec/acc_def_naive.ads" :src ada :range-begin "function Acc_Def$" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "18-22"
 
      As usual with a recursive function, we encapsulate the call to
      the recursive function into a simple function in order to be able
@@ -103,7 +103,7 @@
      The function checks three cases:
 
      1. if ~Y~ is equal to ~0~, then no overflow can occur
-     2. if ~Y~ is stricly positive, then we need to make sure that
+     2. if ~Y~ is strictly positive, then we need to make sure that
         ~X + Y~ is less than ~T'Last~. Mathematically, this is
         equivalent to verifying that ~X <= T'Last - Y~. It is
         important to note that this last comparison only contains
@@ -117,7 +117,7 @@
 
      #+INCLUDE: "../../../spec/acc_def_p.ads" :src ada :range-begin "function Acc_Def_Rec" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-26"
 
-     #+INCLUDE: "../../../spec/acc_def_p.ads" :src ada :range-begin "function Acc_Def" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-26"
+     #+INCLUDE: "../../../spec/acc_def_p.ads" :src ada :range-begin "function Acc_Def$" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "28-34"
 
      ~Acc_Def_Rec~ has been updated to return a ~T_Option~ with
      ~Value~ containing the sum of the elements of ~A~ from index ~F~
