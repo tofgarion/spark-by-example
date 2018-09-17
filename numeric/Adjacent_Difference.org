@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 14:50
+# Created 2018-09-17 Mon 14:54
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Adjacent_Difference.org
 
@@ -61,15 +61,19 @@ We can now give a specification for ~Adjacent_Difference~:
   	 B (B'First + J - A'First) = A (J) - A (J - 1)));
 #+END_SRC
 
-The precondition state that there should be no overflow when substracting any value to the one following,
-and that both arrays should be of same length.
+The precondition states that there should be no overflow when
+subtracting any value to the one following, and that both arrays
+should be of same length.
 
-The postcondition ensures that The first elements of both arrays are equal, and that each element of ~B~
-is the result of the substraction of the corresponding element and the previous one in ~A~.
+The postcondition ensures that the first elements of both arrays
+are equal, and that each element of ~B~ is the result of the
+subtraction of the corresponding element and the previous one in
+~A~.
 
 ** Implementation of Adjacent_Difference
 
-with this specification we can write an implementation for the procedure:
+We can write an implementation for the procedure respecting the
+previous specification easily:
 
 #+BEGIN_SRC ada
   procedure Adjacent_Difference (A : T_Arr; B : in out T_Arr) is
@@ -97,8 +101,10 @@ with this specification we can write an implementation for the procedure:
   end Adjacent_Difference;
 #+END_SRC
 
-The algorithm is really simple, the only annotations are the assertion, which checks that our computation
-won't generate any overflow, and the loop invariants verify that we are doing the correct calculation, and that the first index
-of ~B~ is constant.
+The algorithm is really simple. There is only one assertion inside
+the loop to check that there is no overflow when computing the
+difference of ~A (J)~ and ~A (J - 1)~. The loop invariants verify
+that we are doing the correct calculation, and that the first
+index of ~B~ is constant.
 
-With this specification and implementation, ~GNATprove~ proves everything.
+This implementation is proved by ~GNATprove~.
