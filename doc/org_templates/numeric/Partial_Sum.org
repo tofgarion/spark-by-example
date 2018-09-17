@@ -33,7 +33,7 @@
 
     Given its specification, ~Partial_Sum~ can be implemented as follows:
 
-    #+INCLUDE: partial_sum_p.adb :src ada :range-begin "procedure Partial_Sum" :range-end "End Partial_Sum;" :lines "4-23"
+    #+INCLUDE: "../../../numeric/partial_sum_p.adb" :src ada :range-begin "procedure Partial_Sum" :range-end "End Partial_Sum;" :lines "4-23"
 
     This implementation is quite similar to the one of [[Accumulate.org][Accumulate]], the
     assertions ensures that there are no overflows and the loop

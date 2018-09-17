@@ -1,16 +1,22 @@
-# Created 2018-06-20 Wed 13:06
+# Created 2018-09-17 Mon 14:50
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Partial_Sum.org
+
 * The Partial_Sum algorithm
 
-The partial sum algorithm will compute the consecutive partial sums of an array. Its signature reads:
+The ~Partial_Sum~ algorithm computes the consecutive partial
+sums of an array. Its signature reads:
+
 #+BEGIN_SRC ada
-  procedure Partial_Sum(A : T_Arr; B : in out T_Arr)
+  procedure Partial_Sum (A : T_Arr; B : in out T_Arr)
 #+END_SRC
 
-The result of the algorithm will be stored in ~B~, and for all ~K~ in ~(0 .. A'Length-1)~ then 
-~B(B'First+K) = A(A'First) + A(A'First +1)+ .. + A(A'First +K)~. This can also be expressed with
-the algorithm [[Accumulate.org][Accumulate]]: for all ~K~ in ~0 .. A'Length-1~ then ~B(B'First + K) = Accumulate(A(A'First .. A'First+K),0)~
+The result of the algorithm will be stored in ~B~, and for all ~K~
+in ~(0 .. A'Length - 1)~, ~B(B'First+K) = A (A'First) + A (A'First
+- 1) + .. + A(A'First + K)~. This can also be expressed with the
+previously defined [[Accumulate.org][Accumulate]] algorithm: for all ~K~ in ~0
+   .. A'Length-1~ then ~B (B'First + K) = Accumulate (A (A'First
+   .. A'First + K), 0)~.
 
 ** Specification of Partial_Sum
 
@@ -25,13 +31,15 @@ Partial sum can be specified as follows:
         B (B'First + (J - A'First)) = Acc_Def (A, A'First, J, 0).Value);
 #+END_SRC
 
-The preconditions express that ~A~ and ~B~ must be of same length, and that there should be no overflows 
-whith the sum we will compute.
-The postcondition expresses the fact that the element found at index ~J~ in ~B~ is equal to the sum of the ~J~ first elements of ~A~.
+The preconditions express that ~A~ and ~B~ must be of same length,
+and that there should be no overflows during the computation of
+the sum. The postcondition expresses the fact that the element
+found at index ~J~ in ~B~ is equal to the sum of the ~J~ first
+elements of ~A~.
 
 ** Implementation of Partial_Sum
 
-Given its specification, ~Partial_Sum~ can be implemented in the folowing way:
+Given its specification, ~Partial_Sum~ can be implemented as follows:
 
 #+BEGIN_SRC ada
   procedure Partial_Sum (A : T_Arr; B : in out T_Arr) is
@@ -55,7 +63,9 @@ Given its specification, ~Partial_Sum~ can be implemented in the folowing way:
   end Partial_Sum;
 #+END_SRC
 
-This implementation is quite similar to the one of [[Accumulate.org][Accumulate]], the assertions ensures that there are no overflows,
-and the loop invariant verifies that our calculations are correct.
+This implementation is quite similar to the one of [[Accumulate.org][Accumulate]], the
+assertions ensures that there are no overflows and the loop
+invariant verifies that the computed values are correct.
 
-With this implementation and specification everything is proved by ~GNATprove~.
+With this implementation and specification, everything is proved
+by ~GNATprove~.

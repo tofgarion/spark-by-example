@@ -1,35 +1,44 @@
-# Created 2018-06-20 Wed 13:06
+# Created 2018-09-17 Mon 14:50
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Adjacent_Difference.org
+
 * The Adjacent_Difference algorithm
 
-The ~Adjacent_Difference~ algorithm will compute for each index ~J~ of an array,
-the difference between the value at index ~J~ and the value at index ~J-1~. Its signature reads:
+The ~Adjacent_Difference~ algorithm will compute for each index ~J~
+of an array ~A~ the difference between the value at index ~J~ and the
+value at index ~J - 1~. The results are stored in another array
+~B~. Its signature is the following:
 
 #+BEGIN_SRC ada
   procedure Adjacent_Difference (A : T_Arr; B : in out T_Arr)
 #+END_SRC
 
-** Specification of Adjacent_Difference
+** Predicate used
 
-To be able to properly specify this algorithm we will need to write an overflow verification function 
-for substractions. One could argue that using the function ~Add_No_Overflow~ defined along function [[Accumulate.org][Accumulate]]
-with a minus sign in front of the second argument: ~Add_No_Overflow(X,-Y)~, but if our function 
-must work with the entire range of ~T~, which is the entire range of Ada ~Integer~, then there is one case in which 
-executing ~-Y~ triggers and overflow, since there is one more negative Integer than positive integers.
+To be able to properly specify this algorithm, we need to write an
+overflow verification function for substractions. One could argue
+that using the function ~Add_No_Overflow~ defined for function
+[[Accumulate.org][Accumulate]] with a minus sign in front of the second argument is
+sufficient, but our function must work with the entire range of
+~T~, which is the entire range of Ada ~Integer~. There is
+therefore one case in which executing ~- Y~ triggers an overflow,
+since there is one more negative value in ~Integer~ than positive
+values.
 
-We then write a new function ~Minus_No_Overflow~:
+The function ~Minus_No_Overflow~ is defined as follows:
 
 #+BEGIN_SRC ada
   function Minus_No_Overflow
-    (X, Y : T) return Boolean is
-    (Y = 0
-     or else (Y < 0 and then T'Last + Y >= X)
+    (X, Y : T)
+     return Boolean is
+    (Y = 0 or else (Y < 0 and then T'Last + Y >= X)
      or else (Y > 0 and then T'First + Y <= X));
 #+END_SRC
 
+Of course, this function is implemented and specified like
+~Add_No_Overflow~.
 
-The working principle of this function is the same than the one of ~Add_No_Overflow~.
+** Specification of Adjacent_Difference
 
 We can now give a specification for ~Adjacent_Difference~:
 
@@ -89,7 +98,7 @@ with this specification we can write an implementation for the procedure:
 #+END_SRC
 
 The algorithm is really simple, the only annotations are the assertion, which checks that our computation
-won't generate any overflow, and the loop invariants verify that we are doing the correct calculation, and that the first index 
+won't generate any overflow, and the loop invariants verify that we are doing the correct calculation, and that the first index
 of ~B~ is constant.
 
 With this specification and implementation, ~GNATprove~ proves everything.
