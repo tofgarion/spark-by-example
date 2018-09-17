@@ -1,22 +1,69 @@
-# Created 2018-06-20 Wed 13:06
+# Created 2018-09-17 Mon 17:01
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Is_Heap.org
+
 * The Is_Heap function
 
-The ~Is_Heap~ functions verifies that the data given as parameter to the function respects the properties definig the heap data structure. 
-Its signature reads:
+The ~Is_Heap~ function verifies that the given parameter respects
+the properties defining the [[https://en.wikipedia.org/wiki/Heap_(data_structure)][heap data structure]]. Its signature is:
 
 #+BEGIN_SRC ada
-  function Is_Heap(H : Heap) return Boolean
+  function Is_Heap (H : Heap) return Boolean
+#+END_SRC
+
+** The Heap type and the associated predicates
+
+Heaps are usually represented by complete binary trees, but as
+SPARK prevents the use of access types, we choose another classic
+representation using an array. A heap is therefore simply
+represented by a record containing an array of type ~T_Arr~ and a
+natural number representing the actual size of the heap. We have
+chosen here to limit the capacity of the heap: the indexes of the
+array belong to the range ~1 .. MAX_SIZE~ where ~MAX_SIZE~ is a
+constant defined in ~types.ads~ whose value is ~1000~. The type
+definition is as follows:
+
+#+BEGIN_SRC ada
+  type Heap is record
+     A    : T_Arr (1 .. MAX_SIZE) := (others => 0);
+     Size : Natural               := 0;
+  end record;
+#+END_SRC
+
+We have to define predicates to compute the array index of the
+parent, the left child and the right child of a given node of the
+tree represented by its index in the array:
+
+#+BEGIN_SRC ada
+  function Heap_Parent
+    (I : Positive)
+     return Positive is (I / 2) with
+     Pre => I > 1;
+#+END_SRC
+
+#+BEGIN_SRC ada
+  function Heap_Left
+    (I : Positive)
+     return Positive is (2 * I) with
+     Pre => I <= (Positive'Last) / 2;
+#+END_SRC
+
+#+BEGIN_SRC ada
+  function Heap_Right
+    (I : Positive)
+     return Positive is (2 * I + 1) with
+     Pre => I <= (Positive'Last - 1) / 2;
 #+END_SRC
 
 ** The Is_Heap_Def predicate
 
-In order to specify our function we need to write a predicate formally defining what a correct heap is:
+In order to specify our function we need to write a predicate
+formally defining what a correct heap is:
 
 #+BEGIN_SRC ada
   function Is_Heap_Def
-    (H : Heap) return Boolean is
+    (H : Heap)
+     return Boolean is
     (H.Size <= H.A'Last
      and then
      (H.Size = 0
@@ -24,8 +71,11 @@ In order to specify our function we need to write a predicate formally defining 
       (for all I in 2 .. H.Size => H.A (I) <= H.A (Heap_Parent (I)))));
 #+END_SRC
 
-This predicate checks that the last valid index of our record is less than the actual (fixed) sized of the array,
-and that our heap is either empty or that for all index ~I~ greater than two, then the value at index ~I~ is less than the value at the parent of ~I~.
+This predicate checks that the actual size of the heap is less
+than the last index of the array storing the heap and that the
+heap is either empty or that for all index ~I~ greater than two,
+then the value at index ~I~ is less than the value of the parent
+of ~I~.
 
 ** Specification of Is_Heap
 
@@ -36,11 +86,13 @@ The ~Is_Heap~ can be specified as follows:
      Post => Is_Heap'Result = Is_Heap_Def (H);
 #+END_SRC
 
-There is no precondition on our ~Heap~ record, and the only postcondition is that ~Is_Heap~ returns the same result as our formaly defined predicate.
+There is no precondition on our ~Heap~ record, and the only
+postcondition is that ~Is_Heap~ returns the same result as our
+previously defined predicate.
 
 ** Implementation of Is_Heap
 
-Is heap can be implemented in the following way:
+~Is_Heap~ can be implemented in the following way:
 
 #+BEGIN_SRC ada
   function Is_Heap (H : Heap) return Boolean is
@@ -63,12 +115,13 @@ Is heap can be implemented in the following way:
   	       and then Child <= H.Size);
   	    pragma Loop_Invariant (Parent = Heap_Parent (Child));
   	    pragma Loop_Invariant (Is_Heap_Def ((A => H.A, Size => Child)));
-  
+  	    pragma Assert(if Child = H.Size then Is_Heap_Def(H)); 
   	    if Child mod 2 = 1 then
   	       Parent := Parent + 1;
   	    end if;
   
   	 end loop;
+  	 pragma Assert(Is_Heap_Def(H));
         end if;
   
         return True;
@@ -77,14 +130,18 @@ Is heap can be implemented in the following way:
   end Is_Heap;
 #+END_SRC
 
-We first check that the membe ~Size~ of ~H~ is valid, i.e. less that the length of the array,
-and then we verify that for each index that can be a child (~Child >=2~), the value found at its parent's index is greater thatn the value found at the child's index.
+We first check that the member ~Size~ of ~H~ is valid, i.e. less
+that the length of the record array. We then verify that for each
+index that can be a child (~Child >=2~) the value found at its
+parent's index is greater that the value found at the child's
+index.
 
-
-Here the loop invariants specify that:
-- the variables ~parent~ and ~child~ are in the corect range, and order
+The loop invariants specify that:
+- the variables ~Parent~ and ~Child~ are in the correct range and
+  that ~Parent~ is less than ~Child~
 - that ~Child~ is indeed a child of ~Parent~
-- that the ~Heap~ record constituted of the original array, but with size set to ~Child~ is a heap. This checks that the fisrt ~Child~ values of ~H.A~ form a heap.
-
+- that the ~Heap~ record constituted of the original array, but
+  with size set to ~Child~ is a heap. This checks that the first
+  ~Child~ values of ~H.A~ form a heap.
 
 With this specification and implementation, ~GNATprove~ proves everything.
