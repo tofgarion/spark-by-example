@@ -1,53 +1,63 @@
-# Created 2018-06-20 Wed 13:06
+# Created 2018-09-17 Mon 14:33
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Inner_Product.org
+
 * The Inner_Product algorithm
 
-The ~Inner_Product~ algorithm applies the scalar product between two vectors ~A~ and ~B~ and adds
-it to an initial value ~Init~.
-Its signature reads:
-~function Inner_Product (A : T_Arr; B : T_Arr; Init : T) return T~
+The ~Inner_Product~ algorithm computes the scalar product of two
+vectors ~A~ and ~B~ and adds it to an initial value ~Init~. Its
+signature is:
+
+#+BEGIN_SRC ada
+  function Inner_Product (A : T_Arr; B : T_Arr; Init : T) return T
+#+END_SRC
 
 ** The predicates used
 *** The Multiply_No_Overflow predicate
 
-This predicate will check if there will be an overflow due to te multiplication of two
-~T~ values. Thanks to Claire Dross from AdaCore for the help and solution provided to
-prove the function below.
+This predicate will check if there will be an overflow due to the
+multiplication of two ~T~ values. Again, we should thank Claire
+Dross from AdaCore for the help and solution provided.
 
-The specification of ~Multiply_No_Overflow~ is:
+Looking at the ~Add_No_Overflow~ function [[file:./Accumulate.org][previously defined]], the
+specification of ~Multiply_No_Overflow~ could be:
+
 #+BEGIN_SRC ada
   function Multiply_No_Overflow
-    (X, Y : T) return Boolean is
-    (case X is
-        when 0              => True,
-        when -1             => Y /= T'First,
-        when T'First .. - 2 => Y in T'Last / X .. T'First / X,
-        when 1 .. T'Last    => Y in T'First / X .. T'Last / X)
-  with
-      Contract_Cases =>
-        ((X * Y in T) => Multiply_No_Overflow'Result = True,
-         others       => Multiply_No_Overflow'Result = False);
+    (X, Y : T)
+     return Boolean is
+    (case X is when 0     => True,
+       when -1            => Y /= T'First,
+       when T'First .. -2 => Y in T'Last / X .. T'First / X,
+       when 1 .. T'Last   => Y in T'First / X .. T'Last / X) with
+     Contract_Cases => ((X * Y in T) => Multiply_No_Overflow'Result = True,
+      others => Multiply_No_Overflow'Result = False);
 #+END_SRC
 
-With just this specification, ~GNATprove~ does not prove the function. This is
-due to the fact that the properties we are trying to prove are non-linear
-arithmetics properties. Therefore, we need to write an implementation to help
-it proving the contract cases.
+Unfortunately, ~GNATprove~ cannot prove the contract of
+~Multiply_No_Overflow~. This is due to the fact that the
+properties we are trying to prove concern non-linear arithmetic
+and SMT solvers are not good at proving non-linear properties.
+We therefore need to write a complete implementation of
+~Multiply_No_Overflow~ to help the proof of the contract cases.
 
-The new specification is:
+The new specification of ~Multiply_No_Overflow~ is:
 
 #+BEGIN_SRC ada
-  function Multiply_No_Overflow (X, Y : T) return Boolean with
-     Contract_Cases =>
-     ((X * Y in T) => Multiply_No_Overflow'Result = True,
-      others       => Multiply_No_Overflow'Result = False);
+  function Multiply_No_Overflow
+    (X, Y : T)
+     return Boolean with
+     Contract_Cases => ((X * Y in T) => Multiply_No_Overflow'Result = True,
+      others => Multiply_No_Overflow'Result = False);
 #+END_SRC
 
-And its implementation is:
+And the corresponding implementation is:
 
 #+BEGIN_SRC ada
-  function Multiply_No_Overflow (X, Y : T) return Boolean is
+  function Multiply_No_Overflow
+    (X, Y : T)
+     return Boolean
+  is
      Res : Boolean;
   begin
      case X is
@@ -68,19 +78,30 @@ And its implementation is:
   end Multiply_No_Overflow;
 #+END_SRC
 
-Using this implementation and specification, ~GNATprove~ proves the contract cases.
-We will also use the ~Add_No_Overflow~ predicate defined in the ~Accumulate~ algorithm.
+The cases when ~X~ is equal to ~0~ or ~-1~ are simple and do not
+need extra assertions. Let us consider the case when ~X~ is in
+the range ~T'First .. -2~. Then we should check if ~Y~ is in the
+range ~T'Last / X .. T'First / X~. The assertions guides the
+provers: if ~Y < T'Last / X~ then ~X * Y > T'Last~ which allows
+the prover to detect that we are in the second contract cases and
+must return ~False~ which is the case. The same reasoning applies
+for the case when ~X~ is in the range ~1 .. T'Last~.
 
-*** The Inner_Prod_Def_Rec function
+Using this implementation and specification, ~GNATprove~ proves
+the contract cases of ~Multiply_No_Overflow~.
 
-Based on the ~Acc_Def_Rec~ function, we can write a similar function to
-calculate recursively the scalar product.
+*** The Inner_Prod_Def_Rec and Inner_Prod_Def functions
+
+Based on the ~Acc_Def_Rec~ function, we can write a similar
+function to calculate recursively the scalar product of two
+arrays.
 
 #+BEGIN_SRC ada
   function Inner_Prod_Def_Rec
     (A, B : T_Arr;
      F, L : Integer;
-     Init : T) return T_Option is
+     Init : T)
+     return T_Option is
     (if L < F then (True, Init)
      else
        (if
@@ -99,28 +120,25 @@ calculate recursively the scalar product.
      (if L >= F then L in 0 .. A'Length - 1 and F in 0 .. A'Length - 1);
 #+END_SRC
 
+The function is very similar, except for the fact that we have to
+first check if there is no overflow when multiplying the two
+values in the array before checking that there is no overflow
+when adding the product and the previous result.
 
-The function is very similar, except for the fact that we have to check
-first the fact that there is no overflow when multiplying the two values in the
-array before checking the fact that there is no overflow when adding the product
-and the previous result.
-
-*** The Inner_Prod_Def function
-
-Therefore, we can define the ~Inner_Prod_Def~ function that calls the recursive function.
+As usual, the recursive call is encapsulated in a wrapper function:
 
 #+BEGIN_SRC ada
   function Inner_Prod_Def
     (A, B : T_Arr;
      F, L : Integer;
-     Init : T) return T_Option is
-    (Inner_Prod_Def_Rec (A, B, F, L, Init)) with
+     Init : T)
+     return T_Option is (Inner_Prod_Def_Rec (A, B, F, L, Init)) with
      Pre => A'Length = B'Length
      and then
      (if L >= F then L in 0 .. A'Length - 1 and F in 0 .. A'Length - 1);
 #+END_SRC
 
-** Specification of ~Inner_Product~
+** Specification of Inner_Product
 
 The specification of ~Inner_Product~ is the following:
 
@@ -133,13 +151,14 @@ The specification of ~Inner_Product~ is the following:
      Inner_Prod_Def (A, B, 0, A'Length - 1, Init).Value;
 #+END_SRC
 
+The preconditions check that no overflow will occur during the
+algorithm. The postcondition checks that the result has to be the
+same than the one computed by the function ~Inner_Prod_Def~.
 
-We check first that no overflow will occur during the algorithm. The postcondition
-is the fact that the result has to be the same as the one recursively calculated.
-
-** Implementation of ~Inner_Product~
+** Implementation of Inner_Product
 
 The implementation of ~Inner_Product~ is quite simple:
+
 #+BEGIN_SRC ada
   function Inner_Product (A : T_Arr; B : T_Arr; Init : T) return T is
      Result : T := Init;
@@ -157,8 +176,9 @@ The implementation of ~Inner_Product~ is quite simple:
   end Inner_Product;
 #+END_SRC
 
-As in ~Accumulate~, the assertion is here to help the prover
-with the overflow checks.
+As in ~Accumulate~, the assertion inside the loop is here to help
+the prover with the overflow checks.
 
-Using this implementation and specification, ~GNATprove~ manages to prove
-everything except for the termination of ~Inner_Prod_Def_Rec~, as usual.
+Using this implementation and specification, ~GNATprove~ manages
+to prove everything (except the termination of
+~Inner_Prod_Def_Rec~ as usual).
