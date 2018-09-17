@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 14:09
+# Created 2018-09-17 Mon 14:40
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Accumulate.org
 
@@ -16,11 +16,11 @@ The algorithm will return ~Init + A (A'First) + A (A'First+1) +
 
 This algorithm is the first in this chapter to present difficulties
 when proving that no overflow may happen. We will present two
-versions of this algorithm, one which tries to "naïvely" handle the
+versions of this algorithm, one which tries to "naively" handle the
 overflow checks, and another version which correctly deals with
 overflows.
 
-** A naïve Accumulate
+** A naive Accumulate
 *** Predicates used
 
 To be able to write the preconditions and postconditions of

@@ -1,36 +1,47 @@
 #+EXPORT_FILE_NAME: ../../../numeric/Partial_Sum.org
 #+OPTIONS: author:nil title:nil toc:nil
+
 ** The Partial_Sum algorithm
 
-The partial sum algorithm will compute the consecutive partial sums of an array. Its signature reads:
-#+BEGIN_SRC ada
-procedure Partial_Sum(A : T_Arr; B : in out T_Arr)
-#+END_SRC
+   The ~Partial_Sum~ algorithm computes the consecutive partial
+   sums of an array. Its signature reads:
 
-The result of the algorithm will be stored in ~B~, and for all ~K~ in ~(0 .. A'Length-1)~ then 
-~B(B'First+K) = A(A'First) + A(A'First +1)+ .. + A(A'First +K)~. This can also be expressed with
-the algorithm [[Accumulate.org][Accumulate]]: for all ~K~ in ~0 .. A'Length-1~ then ~B(B'First + K) = Accumulate(A(A'First .. A'First+K),0)~
+   #+BEGIN_SRC ada
+     procedure Partial_Sum (A : T_Arr; B : in out T_Arr)
+   #+END_SRC
+
+   The result of the algorithm will be stored in ~B~, and for all ~K~
+   in ~(0 .. A'Length - 1)~, ~B(B'First+K) = A (A'First) + A (A'First
+   + 1) + .. + A(A'First + K)~. This can also be expressed with the
+   previously defined [[Accumulate.org][Accumulate]] algorithm: for all ~K~ in ~0
+   .. A'Length-1~ then ~B (B'First + K) = Accumulate (A (A'First
+   .. A'First + K), 0)~.
 
 *** Specification of Partial_Sum
 
-Partial sum can be specified as follows:
+    Partial sum can be specified as follows:
 
-#+INCLUDE: ../../../numeric/partial_sum_p.ads :src ada :lines "8-14"
+    #+INCLUDE: "../../../numeric/partial_sum_p.ads" :src ada :range-begin "procedure Partial_Sum" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-14"
 
-The preconditions express that ~A~ and ~B~ must be of same length, and that there should be no overflows 
-whith the sum we will compute.
-The postcondition expresses the fact that the element found at index ~J~ in ~B~ is equal to the sum of the ~J~ first elements of ~A~.
+    The preconditions express that ~A~ and ~B~ must be of same length,
+    and that there should be no overflows during the computation of
+    the sum. The postcondition expresses the fact that the element
+    found at index ~J~ in ~B~ is equal to the sum of the ~J~ first
+    elements of ~A~.
 
 *** Implementation of Partial_Sum
 
-Given its specification, ~Partial_Sum~ can be implemented in the folowing way:
+    Given its specification, ~Partial_Sum~ can be implemented as follows:
 
-#+INCLUDE: ../../../numeric/partial_sum_p.adb :src ada :lines "4-23"
+    #+INCLUDE: partial_sum_p.adb :src ada :range-begin "procedure Partial_Sum" :range-end "End Partial_Sum;" :lines "4-23"
 
-This implementation is quite similar to the one of [[Accumulate.org][Accumulate]], the assertions ensures that there are no overflows,
-and the loop invariant verifies that our calculations are correct.
+    This implementation is quite similar to the one of [[Accumulate.org][Accumulate]], the
+    assertions ensures that there are no overflows and the loop
+    invariant verifies that the computed values are correct.
 
-With this implementation and specification everything is proved by ~GNATprove~.
+    With this implementation and specification, everything is proved
+    by ~GNATprove~.
+
 # Local Variables:
 # ispell-dictionary: "english"
 # End:

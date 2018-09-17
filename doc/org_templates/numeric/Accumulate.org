@@ -15,11 +15,11 @@
 
    This algorithm is the first in this chapter to present difficulties
    when proving that no overflow may happen. We will present two
-   versions of this algorithm, one which tries to "naïvely" handle the
+   versions of this algorithm, one which tries to "naively" handle the
    overflow checks, and another version which correctly deals with
    overflows.
 
-*** A naïve Accumulate
+*** A naive Accumulate
 **** Predicates used
 
      To be able to write the preconditions and postconditions of
