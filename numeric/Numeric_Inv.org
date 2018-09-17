@@ -1,35 +1,38 @@
-# Created 2018-06-20 Wed 13:06
+# Created 2018-09-17 Mon 15:10
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Numeric_Inv.org
+
 * Inverting Partial_Sum and Adjacent_Difference
 
-With our specifications for [[Partial_Sum.org][Partial_Sum]] and [[Adjacent_Difference.org][Adjacent_Difference]] we can easily show that
-calling them one after the other in the following way:
+With our specifications for [[Partial_Sum.org][Partial_Sum]] and [[Adjacent_Difference.org][Adjacent_Difference]], we
+can easily show that calling them one after the other in the
+following way:
 
 #+BEGIN_SRC ada
-  Partial_Sum(A,B);
-  Adjacent_Difference(B,A);
+  Partial_Sum (A, B);
+  Adjacent_Difference (B, A);
 #+END_SRC
 
 or
 
 #+BEGIN_SRC ada
-  Adjacent_Difference(A,B);
-  Partial_Sum(B,A);
+  Adjacent_Difference (A, B);
+  Partial_Sum (B, A);
 #+END_SRC
 
-will leave ~A~ unchanged. But since we just finished proving these functions with SPARK, we can also
-prove these properties with SPARK.
+will leave ~A~ unchanged. But as we have proved these functions
+with SPARK, we can also prove these *properties* with SPARK.
 
 ** Inverting Partial_Sum with Adjacent_Difference
 
-We will first show that we can invert ~Partial_Sum~ with ~Adjacent_Difference~. In order to do this
-we will write a procedure with a unique postcondition, being that our input array is left unmodified, 
-and that should only call ~Partial_Sum~ and ~Adjacent_Difference~ in its implementation (except for
-the SPARK annotations). Its signature is:
+We will first show that we can invert ~Partial_Sum~ with
+~Adjacent_Difference~. In order to prove this, we write a
+procedure with a unique postcondition, being that our input array
+is left unmodified, and that should only call ~Partial_Sum~ and
+~Adjacent_Difference~ in its implementation. Its signature is:
 
 #+BEGIN_SRC ada
-  Partial_Sum_Inv(A,B : in out T_Arr);
+  Partial_Sum_Inv (A, B : in out T_Arr);
 #+END_SRC
 
 *** Specification of Partial_Sum_Inv
@@ -43,14 +46,15 @@ the SPARK annotations). Its signature is:
      Post => A = A'Old;
 #+END_SRC
 
-The precondition express the preconditions of Partial_Sum, the postcondition the fact that ~A~ should
+The preconditions are the same than the preconditions of
+Partial_Sum. The postcondition expresses the fact that ~A~ should
 remain unchanged.
 
 *** Implementation of Partial_Sum_Inv
 
-Our implementation of ~Partial_Sum_Inv~ is as follows:
+Our implementation of ~Partial_Sum_Inv~ is the following:
 
-#+BEGIN_SRC ada
+#+BEGIN_SRC "ada"
   procedure Partial_Sum_Inv (A, B : in out T_Arr) is
      Init : T_Arr := A with Ghost;  -- not used anywhere, but somehow helps prove the loop invariants.
   begin
@@ -60,30 +64,44 @@ Our implementation of ~Partial_Sum_Inv~ is as follows:
   
   
      Partial_Sum (A, B);
-     pragma Assert(A(A'First) = B(B'First));
+     pragma Assert(A (A'First) = B (B'First));
   
      if A'Length >1 then
+        pragma assert
+  	(for all J in B'First + 1 .. B'Last =>
+  	   B (J) = B (J - 1) + A (A'First + (J - B'First)));
+        pragma Assert
+  	(for all J in A'First + 1 .. A'Last =>
+  	   A(J) = B(B'First + (J - A'First)) - B (B'First + (J - 1 - A'First)));
+     end if;
+  
+     Adjacent_Difference (B, A);
+  end Partial_Sum_Inv;
 #+END_SRC
 
-Here we simply verify that if the length of ~A~ is greater or equal to one (nothing needs to be proven
-otherwise) then after calling ~Partial_Sum~ the preconditions of ~Adjacent_Difference~ are respected.
-We do this by exhibiting a relation between ~B(J)~ and ~B(J-1)~, which then enables the solvers to 
-prove the precondition. The relation between the elements of ~B~ in the assertion also enables the
-solvers to prove that ~Adjacent_Difference~ does indeed return ~A~ to its original state.
+We simply assert here that if the length of ~A~ is greater or
+equal to ~1~ (nothing needs to be proven otherwise) then after
+calling ~Partial_Sum~ the preconditions of ~Adjacent_Difference~
+are respected. We exhibit a relation between ~B (J)~ and ~B (J -
+     1)~, which then enables the solvers to prove the
+precondition. The relation between the elements of ~B~ in the
+assertion also enables the solvers to prove that
+~Adjacent_Difference~ does return ~A~ to its original state.
 
 ** Inverting Adjacent_Difference with Partial_Sum
 
-The methodology is the same for this proof. The signature of the "identity" function is:
+The methodology is the same as the previous one.. The signature of
+the function representing the property is:
 
 #+BEGIN_SRC ada
-  procedure Adjacent_Difference_Inv(A,B : in out T_Arr)
+  procedure Adjacent_Difference_Inv (A, B : in out T_Arr)
 #+END_SRC
 
-*** Specification of Adjcacent_Difference_Inv
+*** Specification of Adjacent_Difference_Inv
 
 ~Adjacent_Difference_Inv~ can be specified in the following way:
 
-#+BEGIN_SRC ada
+#+BEGIN_SRC "ada"
   procedure Adjacent_Difference_Inv (A, B : in out T_Arr) with
      Pre => A'Length = B'Length
      and then
@@ -92,25 +110,14 @@ The methodology is the same for this proof. The signature of the "identity" func
      Post => A = A'Old;
 #+END_SRC
 
-The preconditions are those of ~Adjacent_Difference~; The postcondition once again ensures that ~A~ remains unmodified.
+The preconditions are those of ~Adjacent_Difference~. The
+postcondition once again ensures that ~A~ remains unmodified.
 
 *** Implementation of Adjacent_Difference_Inv
 
-The implementation of ~Adjacent_Difference_Inv~ is as follows:
+The implementation of ~Adjacent_Difference_Inv~ is the following:
 
-#+BEGIN_SRC ada
-  	 pragma Loop_Invariant
-  	   (for all J in B'First + 1 .. B'Last =>
-  	      B (J) = B (J - 1) + A (A'First + (J - B'First)));
-  	 pragma Loop_Invariant
-  	   (for all J in A'First + 1 .. A'Last =>
-  	      A(J) = B(B'First + (J - A'First)) - B (B'First + (J - 1 - A'First)));
-        end loop;
-     end if;
-  
-     Adjacent_Difference (B, A);
-  end Partial_Sum_Inv;
-  
+#+BEGIN_SRC "ada"
   procedure Adjacent_Difference_Inv (A, B : in out T_Arr) is
      Tmp : T with
         Ghost;
@@ -134,31 +141,60 @@ The implementation of ~Adjacent_Difference_Inv~ is as follows:
   	 pragma Loop_Invariant (Tmp = A (J));
   	 pragma Loop_Invariant
   	   (for all K in A'First .. J =>
+  	      Acc_Def (B, B'First, K - A'First + B'First, 0).OK
+  	      and then
+  		Acc_Def (B, B'First, K - A'First + B'First, 0).Value =
+  		A (K));
+  	 pragma Loop_Invariant
+  	   (for all K in B'First .. J - A'First + B'First =>
+  	      Acc_Def (B, B'First, K, 0).OK);
+        end loop;
+     end if;
+     Partial_Sum (B, A);
+  
+  end Adjacent_Difference_Inv;
 #+END_SRC
 
-There are more things to annotate in this function, because the preconditions of ~Partial_Sum~ are 
-more constraining than the ones of ~Adjacent difference~.
-In order to prove the Preconditions of ~Partial_Sum~ we will use a Ghost variable, ~Tmp~, which
-will through a loop compute the partial sums of ~B~. Because we can annotate the loop with loop invariants
-we can verify that in each iteration there is a relation between the elements of B, the ones of A and Tmp,
-thus ensuring there is no overflow when computing the next partial sum, and the relations found help
-prove that ~A~ will return to its initial state after executing ~Partial_Sort(B,A)~.
+There are more things to annotate in this function, because the
+preconditions of ~Partial_Sum~ are more constraining than the
+ones of ~Adjacent difference~. In order to prove the
+preconditions of ~Partial_Sum~, we use a ghost variable, ~Tmp~,
+which computes the partial sums of ~B~ inside the loop. As we can
+annotate the loop with loop invariants, we can verify that in
+each iteration that there is a relation between the elements of
+~B~, the elements of ~A~ and ~Tmp~. This ensures that there is no
+overflow when computing the next partial sum, and the relations
+found help prove that ~A~ will return to its initial state after
+executing ~Partial_Sort(B,A)~.
 
-There is one important thing that needs to be pointed out in this code though. The second loop invariant
-mathematicaly implies the third, as the main difference is the range used for the quantified variable ~K~.
-In the second loop_invariant ~K~ ranges over indexes of ~A~ whereas in the third loop invariant ~K~
-ranges over indexes of ~B~. Both are proved just fine, but if we only keep the second loop invariant then
-the preconditions of ~Partial_Sum~ isn't verified, and if we only keep the third (and we add the 
-relation between ~A~ and ~Acc_Def(B ...)~ then the postcondition isn't verified.
+There is one important thing that needs to be pointed out in this
+code. The second loop invariant mathematically implies the third,
+as the main difference is the range used for the quantified
+variable ~K~. In the second loop_invariant ~K~ ranges over
+indexes of ~A~ whereas in the third loop invariant ~K~ ranges
+over indexes of ~B~. Both are proved just fine, but if we only
+keep the second loop invariant then the preconditions of
+~Partial_Sum~ are not verified, and if we only keep the third
+(and we add the relation between ~A~ and ~Acc_Def(B ...)~), then
+the postcondition is not verified.
 
-This is due to an issue with automatic solvers and arithmetics in universally quantified assertions.
-If we take a look at the preconditions of [[Partial_Sum.org][Partial_Sum]] we can see that the quantified variable ~J~ is in ~A'Range~ and that 
-we verify that ~Acc_Def(A,A'First,J,0).OK~ holds true. When trying to verify this precondition the solvers
-will range over the previous assertions with a universally quantified variable to try and match 
-the precondition, but all the assertions in our programm are in the form of ~Acc_Def(B,B'First,J-A'First+B'First,0)~.
-That is why adding the third loop invariant, proving what was already proven by the second loop invariant 
-is not redunant. Proving the equality of the arrays has the same issue, because proving that ~A=A'Old~ amounts
-to proving that ~for all J in A'Range => A(J) = A'Old(J)~, and ranging over the indexes of ~B~ would  introduces the same issues
-if we only kept the third invariant.
+This is due to a limitation of automatic solvers on arithmetic in
+universally quantified assertions. If we take a look at the
+preconditions of [[Partial_Sum.org][Partial_Sum]] we can see that the quantified
+variable ~J~ is in ~A'Range~ and that we verify that ~Acc_Def (A,
+     A'First, J, 0).OK~ holds. When trying to verify this
+precondition, the solvers will range over the previous assertions
+with a universally quantified variable to try and match the
+precondition, but all the assertions in our invariants are in the
+form of ~Acc_Def (B, B'First, J - A'First + B'First, 0)~. That is
+why adding the third loop invariant, which seems to prove what
+was already proven by the second loop invariant, is not
+redundant. Proving the equality of the arrays has the same issue,
+because proving that ~A = A'Old~ is equivalent to proving that
+~for all J in A'Range => A(J) = A'Old(J)~, and ranging over the
+indexes of ~B~ would introduces the same issues if we only keep
+the third invariant.
 
-With this loop, and the invariants everything is prooved.
+~GNATprove~ proves that this implementation is correct with
+respect to the specification. We have therefore proved the
+desired property.

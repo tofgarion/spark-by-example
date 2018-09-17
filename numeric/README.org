@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 14:09
+# Created 2018-09-17 Mon 15:10
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/README.org
 
@@ -42,7 +42,7 @@ specification/implementation of each function):
 |                                                       | ~partial_sum_p.ads~            |                                                       |
 |                                                       | ~partial_sum_p.adb~            |                                                       |
 |-------------------------------------------------------+--------------------------------+-------------------------------------------------------|
-| [[file:Adjacent_Difference.org][Adjacent_Difference]] | ~../spec/overflow~             |                                                       |
+| [[file:Adjacent_Difference.org][Adjacent_Difference]] | ~../spec/overflow.ads~         |                                                       |
 |                                                       | ~adjacent_difference_p.ads~    |                                                       |
 |                                                       | ~adjacent_difference_p.adb~    |                                                       |
 |-------------------------------------------------------+--------------------------------+-------------------------------------------------------|

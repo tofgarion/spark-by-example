@@ -7,20 +7,20 @@ package body Numeric_Inv with
       if A'Length = 0 then
          return;
       end if;
-      
-      
+
+
       Partial_Sum (A, B);
-      pragma Assert(A(A'First) = B(B'First));
-      
+      pragma Assert(A (A'First) = B (B'First));
+
       if A'Length >1 then
 	 pragma assert
 	   (for all J in B'First + 1 .. B'Last =>
 	      B (J) = B (J - 1) + A (A'First + (J - B'First)));
-	 pragma Assert 
+	 pragma Assert
 	   (for all J in A'First + 1 .. A'Last =>
 	      A(J) = B(B'First + (J - A'First)) - B (B'First + (J - 1 - A'First)));
       end if;
-      
+
       Adjacent_Difference (B, A);
    end Partial_Sum_Inv;
 
