@@ -1,16 +1,35 @@
-# Created 2018-06-20 Wed 13:06
+# Created 2018-09-20 Thu 15:57
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Push_Heap.org
+
 * The Push_Heap algorithm
 
-The ~Push_Heap~ algorithm takes a ~Heap~ with any value at the last index
-and pushes it into the heap to match the property ~Is_Heap~. Its signature
-reads :
-~procedure Push_Heap (H : in out Heap)~
+When adding (/pushing/) a new value ~V~ into a heap represented by
+a complete binary tree, the idea is to put ~V~ at the first
+available place in the tree and to make ~V~ "go up" on the path to
+the root of the tree to find its place. The same principle will be
+applied on our array representation of the heap.
+
+The ~Push_Heap~ algorithm takes a ~Heap~ with the value to be added
+placed at the first available index of the array and makes the
+value go up into the heap to match the property ~Is_Heap~. Its
+signature is the following:
+
+#+BEGIN_SRC ada
+  procedure Push_Heap (H : in out Heap)
+#+END_SRC
 
 ** Specification of Push_Heap
 
-The specification of ~Push_Heap~ is rather simple to express.
+In order to specify ~Push_Heap~, we must be able to express that
+the elements contained in the array up to index ~Size~ are the
+same up to a permutation. As the array encapsulated in the ~Heap~
+record type can be viewed as a multiset of ~T~ values and such
+properties can be expressed on multisets, we use the predicates
+already defined when proving the [[file:../mutating/Remove_Copy.org][Remove_Copy]] algorithm,
+particularly the ~Multiset_Unchanged~ predicate
+
+The specification of ~Push_Heap~ is rather simple to express:
 
 #+BEGIN_SRC ada
   procedure Push_Heap (H : in out Heap) with
@@ -26,68 +45,89 @@ The specification of ~Push_Heap~ is rather simple to express.
      and then H.Size = H'Old.Size;
 #+END_SRC
 
-The preconditions express the fact that:
-- the heap is not full.
-- the heap without its last value verifies the properties of a heap.
-The postconditions express the fact that:
-- the entire heap verifies the properties of a heap.
-- the array in the out heap is just a permutation of the array in
-  the in heap.
-- the size of the heap has not been modified.
+The preconditions express the following assertions:
+- the heap is not full
+- the heap without its last value verifies the properties of a
+  heap. Notice that our array representation is rather simple as
+  we only have to consider the array up to index ~Size - 1~ to
+  have the heap without the last value
 
-** New Multiset predicates
+The postconditions express the following assertions:
+- the array up to index ~Size~ verifies the properties of a heap
+- the array in the heap after the call is just a permutation of
+  the array in the heap before the call, i.e. the elements in the
+  array after the call are exactly the same than the ones before
+  the call.
+- the size of the heap has not been modified
 
-Three new multiset predicates will be used in our implementation.
+** New predicates on multisets
+
+In order to easily express properties on heaps, particularly
+properties on permutations, three new multiset predicates will be
+defined.
 
 *** The Multiset_Add and Multiset_Minus predicates
 
-The ~Multiset_Add~ and ~Multiset_Minus~ predicates will be used with
-the same array but at different points of the algorithm. It will check whether
-the number of occurences of a certain value has increased or decreased.
+The ~Multiset_Add~ and ~Multiset_Minus~ predicates are used to
+check whether the number of occurrences of a given value ~Val~
+has increased or decreased.
 
 #+BEGIN_SRC ada
   function Multiset_Add
     (A   : T_Arr;
      B   : T_Arr;
-     Val : T) return Boolean is
-    (Occ (B, Val) = Occ (A, Val) + 1) with
+     Val : T)
+     return Boolean is (Occ (B, Val) = Occ (A, Val) + 1) with
      Pre => A'Length < Positive'Last;
 #+END_SRC
+
 #+BEGIN_SRC ada
   function Multiset_Minus
     (A   : T_Arr;
      B   : T_Arr;
-     Val : T) return Boolean is
-    (Occ (B, Val) = Occ (A, Val) - 1);
+     Val : T)
+     return Boolean is (Occ (B, Val) = Occ (A, Val) - 1);
 #+END_SRC
 
-Note that the precondition on ~Multiset_Add~ is used to prevent overflows.
+The precondition on ~Multiset_Add~ is used to prevent possible
+overflows.
 
-*** An other Multiset_Retain_Rest predicate
+*** An other Multiset_Retain_Rest_Double predicate
 
-As we will see later, we will use another form of ~Multiset_Retain_Rest~ defined
-in ~Remove_Copy~, but this time with two values. Its expression is not that different
-from the first one.
+We have already defined predicates on multisets for the
+[[file:../mutating/Remove_Copy.org][Remove_Copy]] algorithm, particularly a predicate
+~Multiset_Retain_Rest~ to check if two arrays are equal up to a
+permutation except for a particular value. As we will see later,
+we will need another form of ~Multiset_Retain_Rest~, but this
+time with two excluded values. The definition of
+~Multiset_Retain_Rest_Double~ is not that different from
+~Multiset_Retain_Rest~:
 
 #+BEGIN_SRC ada
-  function Multiset_Retain_Rest
-    (A   : T_Arr;
-     B   : T_Arr;
-     Val : T) return Boolean is
-    (for all X in T => (if X /= Val then Occ (A, X) = Occ (B, X)));
+  function Multiset_Retain_Rest_Double
+    (A    : T_Arr;
+     B    : T_Arr;
+     Val1 : T;
+     Val2 : T)
+     return Boolean is
+    (for all X in T =>
+       (if X /= Val1 and then X /= Val2 then Occ (A, X) = Occ (B, X)));
 #+END_SRC
 
 ** Implementation of Push_Heap
 
-The implementation of ~Push_Heap~ in ASCL By Example is splitted in
-three parts. We will do the same in the implementation in ADA, presenting
-the implementation and the lemmas helping the prover to prove the parts.
+The implementation of ~Push_Heap~ in ACSL By Example is split in
+three parts: the prologue, the main act and the epilogue. We
+follow the same architecture in our implementation in SPARK,
+presenting the implementation and the lemmas helping the prover to
+prove the parts. The main idea of the algorithm is to make the
+value at index ~Size~ in the array "go up" through the heap until
+it finds a correct place.
 
 *** Prologue
-
 **** Implementation of Prologue
 
-The first part of the implementation is the following:
+The prologue part of the implementation is the following:
 
 #+BEGIN_SRC ada
   procedure Push_Heap (H : in out Heap) is
@@ -104,51 +144,73 @@ The first part of the implementation is the following:
         Ghost;
   
   begin
+  
      if 1 < H.Size then
   
         Hole := Heap_Parent (H.Size);
   
         if H.A (Hole) < V then
   
+  	 -- beginning of Prologue
+  
   	 H.A (H.Size) := H.A (Hole);
   	 Make_Prove_Prologue (H.A, A_Old, V, H.Size);
+  
   	 -- end of Prologue
 #+END_SRC
 
-The only variables that we use here are ~Hole~ and ~A_Old~. If the size of the heap is
-~1~, there's no need to do anything. Else, we modify the array (if necessary) to make
-a heap, and we store the value at the end because we are going to rearrange the array
-and put it back in the epilogue.
+The only variables used here are ~V~, ~Hole~ and ~A_Old~. ~V~ is
+the value at the index ~Size~ in the array, i.e. the value to be
+added. ~Hole~ represent the index in the heap being currently
+checked for heap consistency. ~A_Old~ is a ghost variable
+containing the state of the heap array before the call.
+
+Let us briefly explain what happens in the prologue:
+
+- if the size of the heap is ~1~, there's no need to do
+  anything, so we jump directly to the en of the procedure
+- otherwise we assign ~Hole~ with the index of the parent of
+  index ~Size~ in the array and if the value of the parent node
+  is less than ~V~, we store this value at index ~Size~.
+
+  Notice that at this point, the slice ~H.A (1 .. H.Size)~
+  respects the properties of a heap and that the value of the
+  parent node of node at index ~Size~ is duplicated.
 
 **** The Make_Prove_Prologue procedure
 
-The ~Make_Prove_Prologue~ is a lemma we use in the prologue. As we've seen before,
-we will write an implementation to help the prover prove it. 
+We want to prove the previous property at the end of the
+prologue: ~H.A (1 .. H.Size)~ is a heap, ~H.A (Hole)~ is
+duplicated and ~V~ has lost one occurrence in ~A~. The
+~Make_Prove_Prologue~ represents this property:
 
 #+BEGIN_SRC ada
   procedure Make_Prove_Prologue
     (A, A_Old : T_Arr;
      V        : T;
      Hole     : Positive) with
-     Ghost,
-     Pre => A'First = A_Old'First
-     and then A'Last = A_Old'Last
-     and then Hole in A'Range
-     and then A'Last < Positive'Last
-     and then Is_Set (A_Old, Hole, A (Hole), A)
-     and then A_Old (Hole) = V
+     Pre => A'First = A_Old'First and then A'Last = A_Old'Last
+     and then Hole in A'Range and then A'Last < Positive'Last
+     and then Is_Set (A_Old, Hole, A (Hole), A) and then A_Old (Hole) = V
      and then A (Hole) /= V,
      Post => Multiset_Add (A_Old, A, A (Hole))
      and then Multiset_Minus (A_Old, A, V)
      and then Multiset_Retain_Rest_Double (A_Old, A, V, A (Hole));
 #+END_SRC
 
-In the prologue, we replaced the last value of ~A~ by its parent's (and the two values
-were different). As usual, we have to guide the prover to prove the assertions with
-~Multiset~ predicates.
+The postcondition of ~Make_Prove_Prologue~ correctly represents
+what is expected at the end of the prologue. Notice that the
+preconditions are valid at this state of the procedure.
+
+As usual, we have to give an implementation of the lemma to
+guide the provers:
 
 #+BEGIN_SRC ada
-  procedure Make_Prove_Prologue (A, A_Old : T_Arr; V : T; Hole : Positive) is
+  procedure Make_Prove_Prologue
+    (A, A_Old : T_Arr;
+     V        : T;
+     Hole     : Positive)
+  is
   begin
      for E in T loop
         Occ_Set (A_Old, A, Hole, A (Hole), E);
@@ -161,23 +223,28 @@ were different). As usual, we have to guide the prover to prove the assertions w
   end Make_Prove_Prologue;
 #+END_SRC
 
-The implementation is quite basic for this kind of lemma, except for the loop invariant
-which is a bit different from the previous ones, because of the new predicates.
+The implementation is quite basic for this kind of lemma (we
+loop on ~T~ values), except for the loop invariant which is a
+bit different from the previous ones, because of the new
+predicates: we want to show that ~V~ has lost an occurrence and
+~A (Hole)~ has one extra occurrence.
 
-With this implementation and specification, ~GNATprove~ proves the lemma and the
-assertions at the end of the prologue, that are :
-- the array is now a heap
+With this implementation and specification, ~GNATprove~ proves
+the lemma and the assertions at the end of the prologue, i.e.:
+- the array is now a heap (because ~A (1 .. Size - 1)~ was a
+  heap
 - the multiset predicates are verified
 
 *** Main act
-
 **** Implementation of Main Act
 
-In the main act we go up in the tree representating the heap to find the index
-where we can put the value ~V~. Its implementation is the following:
+In the main act we go up in the tree representating the heap to
+find the index where we can put the value ~V~. Of course we will
+switch values accordingly. The implementation of the Main Act is
+the following:
 
 #+BEGIN_SRC ada
-  -- beginning of Main act
+  -- beginning of Main Act
   
   if 1 < Hole then
   
@@ -220,50 +287,64 @@ where we can put the value ~V~. Its implementation is the following:
   	(Multiset_Retain_Rest_Double (A_Old, H.A, H.A (Hole), V));
      end loop;
   end if;
-  -- end of Main act
+  
+  -- end of Main Act
 #+END_SRC
 
-The actual code is not that long : in this loop we modify the position
-of the hole (it goes up in the heap) to find the final index where we
-will insert ~V~. In order to prove the loop, we use a ~A_Save~ array
-which is a save of ~A~ at the beginning of each iteration. Since we
-just modify one value in ~A~ at each iteration, we can use the ~Is_Set~
-predicate to calculate the new occurences of the values in ~A~ with the
-occurences in ~A_Save~. Therefore, we call ~Make_Prove_Loop~ which
-will calculate the ~Multiset~ predicates between ~A~ and ~A_Old~,
-considering the predicates between ~A~ and ~A_Save~, and between
-~A_Save~ and ~A_Old~ (the loop invariant).
+The actual code is not that long: we modify in the llop the
+position of the ~Hole~ index (we go up in the heap) to find the
+final index where we will insert ~V~ in the Epilogue phase of
+the algorithm. When going up, we exchange the value of the
+current node (represented by the ~Hole~ index) with the value of
+its parent.
+
+In order to prove the loop, we use a ~A_Save~ array which is a
+copy of ~A~ at the beginning of each iteration (notice that
+~A_Save~ is a ghost variable, hence does not impact the
+performance of the algorithm). Since we just modify one value in
+~A~ at each iteration, we can use the ~Is_Set~ predicate
+previously defined to compare ~A~ with ~A_Save~.
+
+As for the Prologue, we define a ~Make_Prove_Loop~ lemma which
+calculates the ~Multiset~ properties that hold between ~A~ and
+~A_Old~, considering the predicates between ~A~ and ~A_Save~ and
+between ~A_Save~ and ~A_Old~. The next subsections detail
+~Make_Prove_Loop~.
 
 The loop invariants specify the fact that:
 - ~Hole~ is in the right range.
 - ~H~ is a heap.
 - ~Parent~ is the parent of ~Hole~ if ~Hole > 1~.
-- the multiset predicates are verified.
+- the multiset predicates are verified: the number of
+  occurrences of ~H.A (Hole)~ has been incremented by one
+  (remember that ~Hole~ is the index of the parent node!), ~V~
+  has lost an occurrence compared to ~A_Old~ and the occurrences
+  of the other values have not changed
 
 **** The No_Changes lemma
 
-The ~No_Changes~ lemma is similar to the ~No_Changes~ lemma in
-~Remove_Copy~. It takes one first array and two equal arrays in entry.
-Some multiset predicates are verified for the first array and one of
-the two arrays. The lemma will prove the multiset predicates
-the first array and the other of the two arrays. In the case of the
-~Push_Heap~ algorithm, 
-Its specification here is:
+The ~No_Changes~ lemma is similar to the ~No_Changes~ defined to
+prove ~Remove_Copy~. It takes three arrays as parameters: ~A~,
+~A_Old~ and ~A_Save~. Its goal is to prove that if ~A~ and
+~A_Save~ are identical arrays, then if some multiset properties
+are true on ~A~ and ~A_Hold~, then they also hold on ~A_Old~ and
+~A_Save~. Of course, the multiset properties mainly concern the
+number of occurrences of the value contained at a certain
+position ~Hole~. It is used to state that at the beginning of
+the ~While~ loop, ~A~, ~A_Old~ and ~A_Save~ are "identical" up
+to a value.
+
+The definition of the ~No_Changes~ lemma is the following:
+
 #+BEGIN_SRC ada
   procedure No_Changes
     (A_Old, A, A_Save : T_Arr;
      V, V_Old         : T;
      Hole             : Positive) with
-     Ghost,
-     Pre => A'Last < Positive'Last
-     and then A'First = A_Save'First
-     and then A'First = A_Old'First
-     and then A'Last = A_Save'Last
-     and then A'Last = A_Old'Last
-     and then Hole in A'Range
-     and then A_Save = A
-     and then V_Old = A (Hole)
-     and then Multiset_Add (A_Old, A, A (Hole))
+     Pre => A'Last < Positive'Last and then A'First = A_Save'First
+     and then A'First = A_Old'First and then A'Last = A_Save'Last
+     and then A'Last = A_Old'Last and then Hole in A'Range and then A_Save = A
+     and then V_Old = A (Hole) and then Multiset_Add (A_Old, A, A (Hole))
      and then Multiset_Minus (A_Old, A, V)
      and then Multiset_Retain_Rest_Double (A_Old, A, A (Hole), V),
      Post => Multiset_Add (A_Old, A_Save, V_Old)
@@ -271,7 +352,8 @@ Its specification here is:
      and then Multiset_Retain_Rest_Double (A_Old, A_Save, V_Old, V);
 #+END_SRC
 
-Its implementation is:
+The implementation of ~No_Changes~ is the following:
+
 #+BEGIN_SRC ada
   procedure No_Changes
     (A_Old, A, A_Save : T_Arr;
@@ -279,46 +361,49 @@ Its implementation is:
      Hole             : Positive)
   is
   begin
-    for E in T loop
-       Occ_Eq (A, A_Save, E);
-      pragma Loop_Invariant
+     for E in T loop
+        Occ_Equal (A, A_Save, E);
+        pragma Loop_Invariant
   	(for all F in T'First .. E => Occ (A, F) = Occ (A_Save, F));
-      end loop;
+     end loop;
   end No_Changes;
 #+END_SRC
 
+As usual, the lemma is proved by showing the expected property
+for all possible values in ~T~.
+
 **** The Make_Prove_Loop lemma
 
-This lemma will help proving the multiset predicates between ~A~ and ~A_Old~
-considering those between ~A_Old~ and ~A_Save~ and between ~A~ and ~A_Save~.
-As we did before, we specify the hypothesis and conclusions in the
-specification, and the conclusions in the implementation.
-Its specification is:
+This lemma helps proving the multiset predicates between ~A~ and
+~A_Old~ considering the predicates holding between ~A_Old~ and
+~A_Save~ and between ~A~ and ~A_Save~. Its specification is:
+
 #+BEGIN_SRC ada
-  (A, A_Save, A_Old : T_Arr;
-   V_Old, V         : T;
-   Hole             : Positive) with
-   Ghost,
-   Pre => A'Last < Positive'Last
-   and then A'First = A_Save'First
-   and then A'First = A_Old'First
-   and then A'Last = A_Save'Last
-   and then A'Last = A_Old'Last
-   and then Hole in A'Range
-   and then A_Save (Hole) = V_Old
-   and then A (Hole) /= V
-   and then Multiset_Add (A_Old, A_Save, V_Old)
-   and then Multiset_Minus (A_Old, A_Save, V)
-   and then Multiset_Retain_Rest_Double (A_Old, A_Save, V_Old, V)
-   and then Is_Set (A_Save, Hole, A (Hole), A),
-   Post => Multiset_Add (A_Old, A, A (Hole))
-   and then Multiset_Minus (A_Old, A, V)
-   and then Multiset_Retain_Rest_Double (A_Old, A, A (Hole), V);
+  procedure Make_Prove_Loop
+    (A, A_Save, A_Old : T_Arr;
+     V_Old, V         : T;
+     Hole             : Positive) with
+     Pre => A'Last < Positive'Last and then A'First = A_Save'First
+     and then A'First = A_Old'First and then A'Last = A_Save'Last
+     and then A'Last = A_Old'Last and then Hole in A'Range
+     and then A_Save (Hole) = V_Old and then A (Hole) /= V
+     and then Multiset_Add (A_Old, A_Save, V_Old)
+     and then Multiset_Minus (A_Old, A_Save, V)
+     and then Multiset_Retain_Rest_Double (A_Old, A_Save, V_Old, V)
+     and then Is_Set (A_Save, Hole, A (Hole), A),
+     Post => Multiset_Add (A_Old, A, A (Hole))
+     and then Multiset_Minus (A_Old, A, V)
+     and then Multiset_Retain_Rest_Double (A_Old, A, A (Hole), V);
 #+END_SRC
 
 Its implementation is:
+
 #+BEGIN_SRC ada
-  procedure Make_Prove_Prologue (A, A_Old : T_Arr; V : T; Hole : Positive) is
+  procedure Make_Prove_Prologue
+    (A, A_Old : T_Arr;
+     V        : T;
+     Hole     : Positive)
+  is
   begin
      for E in T loop
         Occ_Set (A_Old, A, Hole, A (Hole), E);
@@ -331,20 +416,22 @@ Its implementation is:
   end Make_Prove_Prologue;
 #+END_SRC
 
-The only thing to do during the loop is to calculate the number of occurences of the values
-in ~A~, considering the number of occurences in ~A_Save~ (only one value differs in ~A~
-and ~A_Save~.
+The only thing to do during the loop is to calculate the number
+of occurrences of the values in ~A~, considering the number of
+occurrences in ~A_Save~ (only one value differs between ~A~ and
+~A_Save~ at this point of the algorithm).
 
-Using the lemmas, ~GNATprove~ manages to prove the main act.
+Using the lemmas, ~GNATprove~ proves the main act.
 
 *** Epilogue
-
 **** Implementation of Epilogue
 
-Now that we found the final index where ~V~ can be, we have to insert
-it in the array. The implementation is:
+Now that the final index where ~V~ can be has been found, we just have to insert
+~V~ in the array. The implementation of the Epilogue is:
+
 #+BEGIN_SRC ada
   	 -- beginning of Epilogue
+  
   	 A_Save := H.A;
   	 V_Old  := H.A (Hole);
   	 No_Changes (A_Old, H.A, A_Save, V, H.A (Hole), Hole);
@@ -352,37 +439,39 @@ it in the array. The implementation is:
   
   	 Make_Prove_Epilogue (H.A, A_Save, A_Old, V, Hole);
   
+  	 -- end of Epilogue
+  
         end if;
      end if;
   end Push_Heap;
 #+END_SRC
 
-We need to make a final save of our array, to prove the ~Multiset_Unchanged~ predicate
-between ~A~ and ~A_Old~.
+We need to make a final backup ~A_Save~ of the array to prove
+the ~Multiset_Unchanged~ predicates between ~A~ and ~A_Old~.
 
 **** The Make_Prove_Epilogue lemma
 
-This lemma is very similar to the others. Its specification is:
+The lemma is very similar to the two others and is just here to
+finalize the proof after the Epilogue. Its specification is:
+
 #+BEGIN_SRC ada
-  (A, A_Save, A_Old : T_Arr;
-   V                : T;
-   Hole             : Positive) with
-   Ghost,
-   Pre => A'Last < Positive'Last
-   and then A'First = A_Save'First
-   and then A'First = A_Old'First
-   and then A'Last = A_Save'Last
-   and then A'Last = A_Old'Last
-   and then Hole in A'Range
-   and then A (Hole) = V
-   and then Multiset_Add (A_Old, A_Save, A_Save (Hole))
-   and then Multiset_Minus (A_Old, A_Save, V)
-   and then Multiset_Retain_Rest_Double (A_Old, A_Save, A_Save (Hole), V)
-   and then Is_Set (A_Save, Hole, V, A),
-   Post => Multiset_Unchanged (A, A_Old);
+  procedure Make_Prove_Epilogue
+    (A, A_Save, A_Old : T_Arr;
+     V                : T;
+     Hole             : Positive) with
+     Pre => A'Last < Positive'Last and then A'First = A_Save'First
+     and then A'First = A_Old'First and then A'Last = A_Save'Last
+     and then A'Last = A_Old'Last and then Hole in A'Range
+     and then A (Hole) = V
+     and then Multiset_Add (A_Old, A_Save, A_Save (Hole))
+     and then Multiset_Minus (A_Old, A_Save, V)
+     and then Multiset_Retain_Rest_Double (A_Old, A_Save, A_Save (Hole), V)
+     and then Is_Set (A_Save, Hole, V, A),
+     Post => Multiset_Unchanged (A, A_Old);
 #+END_SRC
 
 Its implementation is:
+
 #+BEGIN_SRC ada
   procedure Make_Prove_Epilogue
     (A, A_Save, A_Old : T_Arr;
@@ -399,4 +488,6 @@ Its implementation is:
      end loop;
   end Make_Prove_Epilogue;
 #+END_SRC
-Using ~GNATprove~, the implementations and the specifications, everything is now proved.
+
+Using ~GNATprove~, the implementations and the specifications,
+everything is now proved.

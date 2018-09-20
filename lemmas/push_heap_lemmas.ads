@@ -5,14 +5,14 @@ with Occ_Def_P;           use Occ_Def_P;
 with Classic_Lemmas;      use Classic_Lemmas;
 
 package Push_Heap_Lemmas with
-   Spark_Mode
- is
+   Spark_Mode,
+   Ghost
+  is
 
    procedure No_Changes
      (A_Old, A, A_Save : T_Arr;
       V, V_Old         : T;
       Hole             : Positive) with
-      Ghost,
       Pre => A'Last < Positive'Last and then A'First = A_Save'First
       and then A'First = A_Old'First and then A'Last = A_Save'Last
       and then A'Last = A_Old'Last and then Hole in A'Range and then A_Save = A
@@ -27,7 +27,6 @@ package Push_Heap_Lemmas with
      (A, A_Old : T_Arr;
       V        : T;
       Hole     : Positive) with
-      Ghost,
       Pre => A'First = A_Old'First and then A'Last = A_Old'Last
       and then Hole in A'Range and then A'Last < Positive'Last
       and then Is_Set (A_Old, Hole, A (Hole), A) and then A_Old (Hole) = V
@@ -40,7 +39,6 @@ package Push_Heap_Lemmas with
      (A, A_Save, A_Old : T_Arr;
       V_Old, V         : T;
       Hole             : Positive) with
-      Ghost,
       Pre => A'Last < Positive'Last and then A'First = A_Save'First
       and then A'First = A_Old'First and then A'Last = A_Save'Last
       and then A'Last = A_Old'Last and then Hole in A'Range
@@ -57,7 +55,6 @@ package Push_Heap_Lemmas with
      (A, A_Save, A_Old : T_Arr;
       V                : T;
       Hole             : Positive) with
-      Ghost,
       Pre => A'Last < Positive'Last and then A'First = A_Save'First
       and then A'First = A_Old'First and then A'Last = A_Save'Last
       and then A'Last = A_Old'Last and then Hole in A'Range
