@@ -1,4 +1,4 @@
-# Created 2018-09-21 Fri 13:18
+# Created 2018-09-21 Fri 14:42
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Pop_Heap.org
 
@@ -256,8 +256,78 @@ containing the lemmas (as it is done in the [[https://github.com/AdaCore/spark20
 
 ** Implementation of Pop_Heap
 
-With all these lemmas and predicates, we can now give an
-implementation for ~Pop_Heap~:
+The code with all the annotations is quite difficult to read, it
+might be better to look at the code without annotations to
+understand the working principle of the algorithm:
+
+#+BEGIN_SRC shell
+  python3 ../../../scripts/remove_assertions.py ../../../heap/pop_heap_p.adb Upper_Bound_Heap Heap_Set C1 Sizes H_Init Save "for V in T loop" "if Child.Exists then" "loop on all values" "if H.Size >= 1"
+#+END_SRC
+
+#+BEGIN_SRC ada
+  procedure Pop_Heap (H : in out Heap) is
+     V  : T := H.A (1);
+     Hole  : Positive         := 1;
+     Child  : Option;
+     Interm : T_Arr (H.A'Range) :=
+       H.A;  -- should be ghost, but there are some operations done this variables.
+  begin
+     if H.A (H.Size) <
+       V
+     then  --nothing to be done otherwise (H.A is "constant")
+        Child := Maximum_Heap_Child (H, Hole);
+        while Child.Exists
+  	and then Child.Value < H.Size
+  	and then H.A (H.Size) < H.A (Child.Value)
+        loop
+  
+  	 Swap_Array
+  	   (Interm,
+  	    Hole,
+  	    Child
+  	      .Value); -- permutation approach: preserves multiset but not heap structure
+  
+  	 H.A (Hole) :=
+  	   H.A
+  	     (Child
+  		.Value);  -- moving "hole" approach: preserves heap structure but not multiset structure.
+  
+  	 Hole := Child.Value;
+  	 Child := Maximum_Heap_Child (H, Hole);
+  
+        end loop;
+  
+        H.A (Hole) := H.A (H.Size);
+  
+        H.A (H.Size) := V;
+        Swap_Array (Interm, Hole, H.Size);
+  
+     end if;
+  
+     H.Size := H.Size - 1;
+  
+  end Pop_Heap;
+#+END_SRC
+
+The idea behind the procedure is the following:
+
+1. the first value of the heap (which will be removed) is stored
+   in ~V~. There is now a "hole" in the heap, represented by index
+   ~Hole~, that needs to go down, while preserving the heap
+   structure
+2. the child of maximum value of the hole is exchanged with the
+   hole in order to guarantee the heap property. This step is
+   repeated until the value of the next child is less than the
+   value of the last element (to be sure to rebalance the whole
+   heap)
+3. when exiting the loop, the hole is replaced by the last element
+   of the heap. We then consider that the heap has only ~H.Size-1~
+   elements, and the element removed at the begining of the
+   algorithm is placed at the index ~H.Size~ and can thus be
+   retrieved by the caller.
+
+The implementation for ~Pop_Heap~ with all necessary assertions
+is the following:
 
 #+BEGIN_SRC ada
   procedure Pop_Heap (H : in out Heap) is
@@ -269,13 +339,13 @@ implementation for ~Pop_Heap~:
         Ghost;
      Child  : Option;
      Interm : T_Arr (H.A'Range) :=
-       H.A;  -- should be ghost, but there are a few  erations done this variables.
-     Init : T_Arr (H.A'Range) := H.A with
+       H.A;  -- should be ghost, but there are some operations done this variables.
+     H_Init : T_Arr (H.A'Range) := H.A with
         Ghost; -- initial array
      Save : Heap := H with
         Ghost;  -- intermediary ghost heap.
   begin
-     pragma Assert (V = Init (1));
+     pragma Assert (V = H_Init (1));
      if H.A (H.Size) <
        V
      then  --nothing to be done otherwise (H.A is "constant")
@@ -316,7 +386,7 @@ implementation for ~Pop_Heap~:
   	 pragma Assert (Child.Exists);
   	 pragma Assert (C1 <= H.Size);
   	 pragma Assert (C1 >= 2 and then 1 = Heap_Parent (C1));
-  	 pragma Assert (H.A (1) = Init (C1));
+  	 pragma Assert (H.A (1) = H_Init (C1));
   	 pragma Assert (Is_Set (Save.A, Hole, Save.A (Child.Value), H.A));
   	 Heap_Set
   	   (Save,
@@ -351,7 +421,7 @@ implementation for ~Pop_Heap~:
   	 pragma Loop_Invariant (Heap_Maximum_Child (H, Hole, Child.Value));
   	 pragma Loop_Invariant (H.Size in H.A'Range);
   	 pragma Loop_Invariant (Upper_Bound (H.A (1 .. Sizes), V));
-  	 pragma Loop_Invariant (Multiset_Unchanged (Init, Interm));
+  	 pragma Loop_Invariant (Multiset_Unchanged (H_Init, Interm));
   	 pragma Loop_Invariant (Is_Set (H.A, Child.Value, V, Interm));
   	 pragma Loop_Invariant (Is_Heap_Def (H));
   	 pragma Loop_Variant (Decreases => H.Size - Hole);
@@ -387,7 +457,7 @@ implementation for ~Pop_Heap~:
   	(if
   	   Sizes /= H.A'Last
   	 then
-  	   (for all J in H.Size + 1 .. H.A'Last => H.A (J) = Init (J)));
+  	   (for all J in H.Size + 1 .. H.A'Last => H.A (J) = H_Init (J)));
   
   	 else
   	    pragma Assert(H.A(H.Size) >= H.A(1));
@@ -424,114 +494,141 @@ implementation for ~Pop_Heap~:
   end Pop_Heap;
 #+END_SRC
 
-The code with all the annotations is quite difficult to read, it
-might be better to look at the code without annotations to
-understand the working principle of the algorithm:
+We have first to define some ghost variables to help us with the
+lemmas in the implementation:
 
-#+BEGIN_SRC shell
-  python3 ../../../scripts/remove_assertions.py ../../../heap/pop_heap_p.adb Upper_Bound_Heap Heap_Set C1 Sizes Init Save "for V in T loop" "if Child.Exists then" "loop on all values" "if H.Size >= 1"
-#+END_SRC
+- ~C1~ holds the maximum child of the first element. It is useful
+  when proving that the first element of ~H~ remains constant
+  through the loop
+- ~Sizes~ simply holds the size of ~H~. It is used to fix an issue
+  with an array index check
+- ~Interm~ is used to compare the approach of swapping the
+  elements at indexes ~Hole~ and ~Child.Value~, which acts as a
+  permutation, instead of simply replacing the value of the hole
+  by the one of it's child, which preserves the heap structure
+- ~Init~ holds the state of ~H~ before the execution of the
+  algorithm
+- ~Save~ is used as a temporary variable to compare the state of
+  the heap between various points of the algorithm
 
-#+BEGIN_SRC ada
-  procedure Pop_Heap (H : in out Heap) is
-     V  : T := H.A (1);
-     Hole  : Positive         := 1;
-     Child  : Option;
-     Interm : T_Arr (H.A'Range) :=
-       H.A;  -- should be ghost, but there are a few  erations done this variables.
-  begin
-     if H.A (H.Size) <
-       V
-     then  --nothing to be done otherwise (H.A is "constant")
-        Child := Maximum_Heap_Child (H, Hole);
-        while Child.Exists
-  	and then Child.Value < H.Size
-  	and then H.A (H.Size) < H.A (Child.Value)
-        loop
-  
-  	 Swap_Array
-  	   (Interm,
-  	    Hole,
-  	    Child
-  	      .Value); -- permutation approach: preserves multiset but not heap structure
-  
-  	 H.A (Hole) :=
-  	   H.A
-  	     (Child
-  		.Value);  -- moving "hole" approach: preserves heap structure but not multiset structure.
-  
-  	 Hole := Child.Value;
-  	 Child := Maximum_Heap_Child (H, Hole);
-  
-        end loop;
-  
-        H.A (Hole) := H.A (H.Size);
-  
-        H.A (H.Size) := V;
-        Swap_Array (Interm, Hole, H.Size);
-  
-     end if;
-  
-     H.Size := H.Size - 1;
-  
-  end Pop_Heap;
-#+END_SRC
+The implementation is full of assertions, most of them helping to
+verify the preconditions of the lemmas and predicates that are
+used in assertions. The following paragraphs explain the process
+guiding the prove of the program.
 
-The idea behing the procedure is to remove the first element,
-thus creating a "hole" in the heap. We then proceed to move the
-hole down the heap wile taking care to preserve the heap
-structure, until it reaches the en of the heap, where we reinsert
-the removed value. More specificaly the procedure is as follows:
-1. We store the first value of the heap (which will be removed). We now consider that there is a "Hole" in the heap, that needs to go down, while preserving the heap structure.
-2. we find the child of maximum value of the hole, and we exchange them. This guarantees that the heap structure is preserved. This step is repeated as many times as needed, until the value of the next child is less than the value of the last element
-3. when exiting the loop, the hole is replaced by the last element of the heap. We then consider that the heap has only ~H.Size-1~ elements, and the element removed at the begining of the algorithm is placed at the index ~H.Size~.
+The first thing to notice is that the working principle of the
+algorithm is quite similar to [[Push_Heap.org][Push_Heap]], so the same approach
+could have been taken to prove the postcondition
+~Multiset_Unchanged (H'Old.A, A)~ with the help of the predicates
+~Multiset_Add~ and ~Multiset_Minus~. This approach was necessary
+in [[Push_Heap.org][Push_Heap]] because when moving the "hole" up the heap, the
+number of occurrences varies but the heap structure is preserved.
 
-As for the annotations to help SPARK prove the program, we will first need a few ghost variables:
-- ~C1~, which will hold the maximum Child of the first element. It will come in handy when proving that the first element of H remains constant through the loop
-- ~Sizes~ which will simply hold the size of ~H~. It will be used to fix ann issue of array index check.
-- ~Interm~ This variable will be used to compare the approcah of swapping the elements at indexes ~Hole~ and ~Child.Value~, which acts as a permutation, instead of simply replacing the value of the hole by the one of it's child, which preserves the heap structure.
-- ~Init~ which as it's name suggests holds the state of ~H~ before the execution of the algorithm
-- ~Save~ which will be used as a temporary save to compare the state of the heap between various points of the Algorithm.
+This is no more the case here. To prove the postcondition, we
+duplicate the array at the beginning of the algorithm, and at each
+iteration we swap the values found at indexes ~Child.Value~ and
+~Hole~. This approach does not preserve the structure of heap, but
+verifies that only permutations are applied to the array.
 
+Let us take a look at the ~while~ loop. First, we save the value
+of ~H~ in ~Save~. This is necessary to help the solvers assess the
+changes that will occur during the loop. We then swap the values
+at indexes ~Hole~ and ~Child.Value~ for ~Interm~ and replace the
+value found at index ~Hole~ by the one found at
+~Child.Value~. Remember that ~Interm~ is a copy of the array in
+~H~. As mentioned before, this "swap" approach aims to prove the
+~Multiset_Unchanged~ postcondition. The ~Swap_Array~ procedure
+ensures this through its postconditions, so there is no need to
+annotate this part of the code.
 
-The implementation is rich in asssertions, most of them help verify the preconditions to the lemmas and predicates we will use. The following section will nevertheless explain the thought process
-behind the annotation of the program:
-
-The first thing to notice is that the working principle of the algorithm is quite similar to [[Push_Heap.org][Push_Heap]], so we could have taken the same approach
-to prove the postcondition ~Multiset_Unchanged(H'Old.A,A)~ with the help of the predicates ~Multiset_Add~ and ~Multiset_Minus~. This approach was necessary because when moving the "hole" around the number of occurences
-varies but the structure of heap is preserved. Here to prove this postcondition we will duplicate the array at the begining, and at each iteration we will swap the values found at indexes ~Child.Value~ and ~Hole~. This approach does not preserve the structure of heap, but verifies that
-only permutations are applied to the array.
-
-Let's take a look at the ~while~ loop. We first save the state of ~H~ in order to be able to help the solvers assess the changes that will occur during the loop. We then swap the values at indexes ~Hole~ and ~Child.Value~ for ~Interm~
-and replace the value found at index ~Hole~ by the one found at ~Child.Value~. As mentionned before, the "swap" approach aims to prove the ~multiset_unchanged~ postcondition. The ~swap prcedure ensures this through it's postconditions, so there is no need to annotate this part of the code.
-    On the other hand when simply replacing the value found at the index ~Hole~, SPARK does not manage to prove that the heap structure is preserved. That is why we then proced to call the lemma ~Heap_Set~. All the preceeding assertions are hrer to verify the hypothesis to the lemma. Now that
-we know that ~H~ is still a heap, we can use the order properties of the heap data structure in order to proove that the element removed at the begining of the procedure is an upper bound for the heap. This is done by calling the lemma ~Upper_Bound_Heap~. With these two lemmas
-instanciated we have everything we need in order to prove the loop invariants.
+The value at ~Hole~ and its child are then really swapped in ~H~,
+~GNATprove~ does not manage to prove that the heap structure is
+preserved. In order to help the provers prove that the heap
+property is preserved, we call the lemma ~Heap_Set~. All the
+preceding assertions are here to verify the hypothesis of the
+lemma. Now that it is proved that ~H~ is still a heap, we can use
+the order properties of the heap data structure in order to prove
+that the element removed at the begining of the procedure is an
+upper bound for the heap. This is done by calling the lemma
+~Upper_Bound_Heap~. With these two instantiated lemmas we have
+everything we need in order to prove the loop invariants.
 
 The loop invariants (in order of appearance) ensure that:
-1. All the values found at indexes greater than ~H.Size~ remain unchanged
-2. The first element of the heap remains constant after the first swap. This is useful to prove that the element we removed is greater than all the elements left in the heap
-3. The loop invariants 3 to 10 check that various preconditions to the predicates used later hold true *at this point* in the loop
-4. ~V~ is an upperbound for the remaining elements in the Heap. It should be noted that in the call to ~Upper_Bound~ we use ~Sizes~ and not ~H.Size~ (which are equal in value throughout the loop) to avoid an an ~range check might fail~ error from GNATprove.
+1. all the values found at indexes greater than ~H.Size~ remain
+   unchanged
+2. the first element of the heap remains constant after the first
+   swap. This is useful to prove that the element we removed is
+   greater than all the elements left in the heap
+3. the next 8 loop invariants check that various preconditions to
+   the predicates used later hold true *at this point* in the loop
+4. ~V~ is an upper-bound for the remaining elements in the
+   Heap. Notice that in the call to ~Upper_Bound~ we use ~Sizes~
+   and not ~H.Size~ (which are equal in value throughout the loop)
+   to avoid an an ~range check might fail~ error from GNATprove
 5. ~Interm~ is a permutation of the initial array
-6. ~Interm~ is equal to ~H.A~ to the exception of index ~Child.Value~, which is equal to ~V~. This loop invariant helps the solvers keep track of the differences between ~Interm~ and ~H.A~
+6. ~Interm~ is equal to ~H.A~ to the exception of index
+   ~Child.Value~, which is equal to ~V~. This loop invariant helps
+   the solvers keep track of the differences between ~Interm~ and
+   ~H.A~
 7. ~H~ has a heap structure
 
-The only remaining thing left in the loop is the update of ~Child~ and of ~Hole~. Since we use a ~while~ loop we need to specify that ~Child.Value~ decreases as a loop variant.
+The only remaining thing left in the loop is the update of ~Child~
+and ~Hole~. Since we use a ~while~ loop we need to specify that
+~H.Size - Hole~ decreases as a loop variant.
 
-After exiting the loop, we are left with three variable assignments, and yet without annotating them the proof of the postconditions is impossible. The reason behind this issue is that there are multiple causes for exiting the wile loop,
-and the exit conditions have non trivial implications on the values of ~Hole~, ~Child~ and the state of the heap. We will detail what the exit conditions are, what they implicate and the annotations that were added to help the solvers understand
-what is going on. When exiting the loop, ~Child~ is the ~Maximum_Heap_Child~ of ~Hole~. One thing that is alwas true when exiting the loop is that ~H.A(Hole) > H.A(H.Size)~ (otherwise, the loop would have exited in the previous iteration). This ensures that when executing ~H.A(Hole) := H.A(H.Size)~ the heap structure is preserved.
-The case when we exit the loop with ~Child.Exists~ equal to ~False~ corresponds to the case where the "hole" has no children. The solvers can keep track of what is happening, so there is no need to add any assertions. When we exit the loop with ~Child.Exists = True~ and ~Child.Value = H.Size~ then
-the affectation acts as if we did one more iteration of the loop, so there is nothing to add here, but when we exit the loop with
-~Child.Exists = True~, ~Child.Value < H.Size~, then ~H.A(Child.Value) <= H.A(H.Size)~. In that case the solvers need a bit of guidance to understand that replacing the value found at ~Hole~ by the one found at ~H.Size~ will preserve the heap structure. This is due to the fact that the automatic proof does not remember that in the
-previous iteration, the parent of ~Hole~ had a value strictly greater than the value found at ~H.Size~. This is corrected with the assertion right after the loop
+After exiting the loop, we are left with three variable
+assignments, and without annotating them the proof of the
+postconditions is impossible. The reason is that there are
+multiple causes for exiting the wile loop, and the exit conditions
+have non trivial implications on the values of ~Hole~, ~Child~ and
+the state of the heap. We detail what the exit conditions are,
+what they implicate and the annotations that were added to help
+the solvers understand what is going on.
 
-We then proceed to replace the value found at index ~Hole~, the two following assertions help prove the conservation of the heap structure. We then proceed to replace the value found at index ~H.Size~ by the value saved at the begining of the algorithm, and to swap the values found at indexes ~Hole~ and ~H.Size~ in ~Interm~, which is equivalent to the two previous affectations donne in ~H.A~.
-We check that the other indexes were not modified, and this concludes the modifications that will be donne to the arrays.
+When exiting the loop, ~Child~ is the ~Maximum_Heap_Child~ of
+~Hole~. It is always true that ~H.A(Hole) > H.A(H.Size)~ when
+exiting the loop (otherwise, the loop would have exited in the
+previous iteration). This ensures that executing ~H.A(Hole) :=
+    H.A(H.Size)~ preserves the heap structure. The case when the loop
+is exited because ~Child.Exists~ is equal to ~False~ corresponds
+to the case where ~Hole~ has no children. The solvers can keep
+track of what is happening, so there is no need to add any
+assertions.
 
-The "else" case of the main condition verifies that if we do not have ~H.A(1) > H.A(H.Size)~ at the begining of the algorithm, then ~H.A(1) = H.A(H.Size))~. (This is true, because wi the properties of a heap we can demonstrate that the array is constant)
+When we exit the loop with ~Child.Exists~ holding and ~Child.Value
+    = H.Size~ then the affectation acts as if we did one more
+iteration of the loop, so there is nothing to add here. When the
+loop is exited because ~Child.Exists~ holds and ~Child.Value <
+    H.Size~, then ~H.A(Child.Value) <= H.A(H.Size)~. In that case, the
+solvers need a bit of guidance to understand that replacing the
+value found at ~Hole~ by the one found at ~H.Size~ will preserve
+the heap structure. This is due to the fact ~GNATprove~ does not
+remember that in the previous iteration the parent of ~Hole~ had a
+value strictly greater than the value found at ~H.Size~. This is
+corrected with the assertion right after the loop
 
-What is left to check is that our two approaches (swaping and replacing) give the same end result, and with a similar technique used in the proof of [[file:../mutating/Random_Shuffle.org][Swap_Array]] we prove the ~multiset_unchaged~ postcondition. The last few annotations verify the ~Max_Element~ postcondition.
+We then replace the value found at index ~Hole~. The two following
+assertions help prove the conservation of the heap structure. The
+value found at index ~H.Size~ is then replaced by the value saved
+at the begining of the algorithm, the values found at indexes
+~Hole~ and ~H.Size~ in ~Interm~ are swapped, which is equivalent
+to the two previous affectations donne in ~H.A~. We check that the
+other indexes were not modified, and this concludes the
+modifications that will be done to the arrays.
 
-This concludes our implementation of ~Pop_Heap~. This implementation is completly proved by ~GNATprove~, but requires the use of a high level of proof (level 4) and requires 5 minutes of pooving time, due to the amout of verification conditions being generated by GNATprove.
+The ~else~ case of the main condition verifies that if we do not
+have ~H.A(1) > H.A(H.Size)~ at the beginning of the algorithm,
+then ~H.A(1) = H.A(H.Size))~. (This is true because the array is
+constant and this can be proved with the heap properties).
+
+What is left to check is that our two manipulations (swapping on
+~Interm~ and replacing on ~H~) give the same result. With a
+similar technique used in the proof of [[file:../mutating/Random_Shuffle.org][Swap_Array]] we prove the
+~Multiset_Unchanged~ postcondition. The last few annotations
+verify the ~Max_Element~ postcondition.
+
+This concludes our implementation of ~Pop_Heap~. This
+implementation is fully proved by ~GNATprove~, but requires the
+use of a high level of proof (level 4) and requires 5 minutes of
+pooving time, due to the amount of verification conditions being
+generated by GNATprove.

@@ -29,13 +29,13 @@ package body Pop_Heap_P with
          Ghost;
       Child  : Option;
       Interm : T_Arr (H.A'Range) :=
-        H.A;  -- should be ghost, but there are a few opperations done this variables.
-      Init : T_Arr (H.A'Range) := H.A with
+        H.A;  -- should be ghost, but there are some operations done this variables.
+      H_Init : T_Arr (H.A'Range) := H.A with
          Ghost; -- initial array
       Save : Heap := H with
          Ghost;  -- intermediary ghost heap.
    begin
-      pragma Assert (V = Init (1));
+      pragma Assert (V = H_Init (1));
       if H.A (H.Size) <
         V
       then  --nothing to be done otherwise (H.A is "constant")
@@ -63,7 +63,7 @@ package body Pop_Heap_P with
               (Interm,
                Hole,
                Child
-                 .Value); -- permutation approach : preserves multiset but not heap structure
+                 .Value); -- permutation approach: preserves multiset but not heap structure
 
             pragma Assert (Is_Heap_Def (Save));
             pragma Assert (H.A (Hole) >= H.A (Child.Value));
@@ -71,12 +71,12 @@ package body Pop_Heap_P with
             H.A (Hole) :=
               H.A
                 (Child
-                   .Value);  -- moving "hole" approcach : preserves heap structure but not multiset structure.
+                   .Value);  -- moving "hole" approach: preserves heap structure but not multiset structure.
 
             pragma Assert (Child.Exists);
             pragma Assert (C1 <= H.Size);
             pragma Assert (C1 >= 2 and then 1 = Heap_Parent (C1));
-            pragma Assert (H.A (1) = Init (C1));
+            pragma Assert (H.A (1) = H_Init (C1));
             pragma Assert (Is_Set (Save.A, Hole, Save.A (Child.Value), H.A));
             Heap_Set
               (Save,
@@ -111,7 +111,7 @@ package body Pop_Heap_P with
             pragma Loop_Invariant (Heap_Maximum_Child (H, Hole, Child.Value));
             pragma Loop_Invariant (H.Size in H.A'Range);
             pragma Loop_Invariant (Upper_Bound (H.A (1 .. Sizes), V));
-            pragma Loop_Invariant (Multiset_Unchanged (Init, Interm));
+            pragma Loop_Invariant (Multiset_Unchanged (H_Init, Interm));
             pragma Loop_Invariant (Is_Set (H.A, Child.Value, V, Interm));
             pragma Loop_Invariant (Is_Heap_Def (H));
             pragma Loop_Variant (Decreases => H.Size - Hole);
@@ -147,7 +147,7 @@ package body Pop_Heap_P with
            (if
               Sizes /= H.A'Last
             then
-              (for all J in H.Size + 1 .. H.A'Last => H.A (J) = Init (J)));
+              (for all J in H.Size + 1 .. H.A'Last => H.A (J) = H_Init (J)));
 
 	    else
 	       pragma Assert(H.A(H.Size) >= H.A(1));
@@ -160,7 +160,7 @@ package body Pop_Heap_P with
 
       pragma Assert
         (Interm =
-         H.A);  -- verify that swap approach and hole approcach give same result
+         H.A);  -- verify that swap approach and hole approach give same result
       for V in T loop
          Occ_Equal (Interm, H.A, V);
          pragma Loop_Invariant
@@ -169,7 +169,8 @@ package body Pop_Heap_P with
               Occ
                 (H.A,
                  F));  --verify that Interm and H.A represent same the same set of values
-      end loop;
+      end loop; -- loop on all values of T
+
       pragma Assert (Multiset_Unchanged (Interm, H.A));
 
       pragma Assert (V = H.A (H.Size));
