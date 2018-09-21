@@ -3,44 +3,47 @@
 
 ** The Is_Sorted algorithm
 
-   The ~Is_Sorted~ algorithm states if an array is sorted or not.
-   Its signature reads:
-   ~ function Is_Sorted (A : T_Arr) return Boolean ~
+   The ~Is_Sorted~ algorithm states if an array is sorted or not.  Its
+   signature is the following:
+
+   #+BEGIN_SRC ada
+     function Is_Sorted (A : T_Arr) return Boolean
+   #+END_SRC
 
 *** Specification of Is_Sorted
 
     The specification is simple to write:
 
-	#+INCLUDE: ../../../sorting/is_sorted_p.ads :src ada :range-begin "function Is_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-16"
+    #+INCLUDE: "../../../sorting/is_sorted_p.ads" :src ada :range-begin "function Is_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-16"
 
 *** The Weakly_Sorted predicate and its lemma
 
-    The ~Weakly_Sorted~ predicate checks only the fact that
-    each element (except for the last one) is less than
-    the element just after it. It can be expressed:
+    The ~Weakly_Sorted~ predicate checks only the fact that each
+    element (except the last one) is less than the element just
+    after it. It can be expressed as follows:
 
-	#+INCLUDE: ../../../spec/sorted_p.ads :src ada :range-begin "function Weakly_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-13"
+    #+INCLUDE: "../../../spec/sorted_p.ads" :src ada :range-begin "function Weakly_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-13"
 
-    The ~Weakly_Sorted~ predicate implies the ~Sorted~ predicate,
-    but the prover cannot prove it on its own.
-    We have to write a lemma to prove it:
+    The ~Weakly_Sorted~ predicate implies the ~Sorted~ predicate, but
+    the prover cannot prove this implication on its own. We have to
+    write a lemma to prove it:
 
-	#+INCLUDE: ../../../sorting/is_sorted_p.ads :src ada :range-begin "procedure Weakly_To_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-11"
+    #+INCLUDE: "../../../sorting/is_sorted_p.ads" :src ada :range-begin "procedure Weakly_To_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-11"
 
-    Its implementation is as simple:
+    Its implementation is classic:
 
-	#+INCLUDE: ../../../sorting/is_sorted_p.adb :src ada :range-begin "procedure Weakly_To_Sorted" :range-end "End Weakly_To_Sorted;" :lines "4-11"
+    #+INCLUDE: "../../../sorting/is_sorted_p.adb" :src ada :range-begin "procedure Weakly_To_Sorted" :range-end "End Weakly_To_Sorted;" :lines "4-11"
 
 *** Implementation of Is_Sorted
 
-    The implementation will check whether the array is
-    weakly sorted or not. If it is, we will apply our
-    previous lemma and return ~True~:
+    The implementation will check whether the array is weakly sorted
+    or not. If this is the case, we will apply our previous lemma and
+    return ~True~:
 
-	#+INCLUDE: ../../../sorting/is_sorted_p.adb :src ada :range-begin "function Is_Sorted" :range-end "End Is_Sorted;" :lines "12-27"
+    #+INCLUDE: "../../../sorting/is_sorted_p.adb" :src ada :range-begin "function Is_Sorted" :range-end "End Is_Sorted;" :lines "12-29"
 
-    Using this implementation and specification,
-    ~GNATprove~ proves the function.
+    Everything is proved by ~GNATprove~.
+
 # Local Variables:
 # ispell-dictionary: "english"
 # End:

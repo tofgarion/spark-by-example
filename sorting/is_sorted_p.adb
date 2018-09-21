@@ -21,7 +21,9 @@ package body Is_Sorted_P with
 
          end loop;
       end if;
+
       Weakly_To_Sorted (A);
+
       return True;
    end Is_Sorted;
 
