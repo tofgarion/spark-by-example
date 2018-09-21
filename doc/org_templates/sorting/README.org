@@ -6,41 +6,43 @@
   This directory contains the specification and implementation files
   for the following algorithms: ~Is_Sorted~ and ~Partial_Sort~.  As
   usual, ghost functions used in specifications are located in the
-  ~spec~ directory at project root.
+  ~spec~ directory at project root. The lemmas written for these
+  functions are located in the ~lemmas~ directory at project root.
 
   The functions and the corresponding files are presented in the
   following table (click on the link to have more details one the
   specification/implementation of each function):
 
-| function     | files                               | comments |
-|--------------+-------------------------------------+----------|
-| [[./Is_Sorted.org][Is_Sorted]]    | ~is_sorted_p.ads~                   |          |
-|              | ~is_sorted_p.adb~                   |          |
-|              | ~../spec/sorted_p.ads~              |          |
-|--------------+-------------------------------------+----------|
-| [[./Partial_Sort.org][Partial_Sort]] | ~partial_sort_p.ads~                |          |
-|              | ~partial_sort_p.adb~                |          |
-|              | ~../heap/push_heap_p.ads~           |          |
-|              | ~../heap/push_heap_p.adb~           |          |
-|              | ~../heap/pop_heap_p.ads~            |          |
-|              | ~../heap/pop_heap_p.adb~            |          |
-|              | ~../heap/sort_heap_p.ads~           |          |
-|              | ~../heap/sort_heap_p.adb~           |          |
-|              | ~../heap/make_heap_p.ads~           |          |
-|              | ~../heap/make_heap_p.adb~           |          |
-|              | ~../mutating/swap_array_p.ads~      |          |
-|              | ~../mutating/swap_array_p.adb~      |          |
-|              | ~../spec/multiset_predicates.ads~   |          |
-|              | ~../spec/upper_bound_p.ads~         |          |
-|              | ~../spec/lower_bound_p.ads~         |          |
-|              | ~../spec/heap_predicates.ads~       |          |
-|              | ~../spec/partition_p.ads~           |          |
-|              | ~../spec/sorted_p.ads~              |          |
-|              | ~../lemmas/classic_lemmas.ads~      |          |
-|              | ~../lemmas/classic_lemmas.adb~      |          |
-|              | ~../lemmas/partial_sort_lemmas.ads~ |          |
-|              | ~../lemmas/partial_sort_lemmas.adb~ |          |
-|--------------+-------------------------------------+----------|
+  | function     | files                               | comments |
+  |--------------+-------------------------------------+----------|
+  | [[./Is_Sorted.org][Is_Sorted]]    | ~../spec/sorted_p.ads~              |          |
+  |              | ~is_sorted_p.ads~                   |          |
+  |              | ~is_sorted_p.adb~                   |          |
+  |--------------+-------------------------------------+----------|
+  | [[./Partial_Sort.org][Partial_Sort]] | ~../heap/push_heap_p.ads~           |          |
+  |              | ~../heap/push_heap_p.adb~           |          |
+  |              | ~../heap/pop_heap_p.ads~            |          |
+  |              | ~../heap/pop_heap_p.adb~            |          |
+  |              | ~../heap/sort_heap_p.ads~           |          |
+  |              | ~../heap/sort_heap_p.adb~           |          |
+  |              | ~../heap/make_heap_p.ads~           |          |
+  |              | ~../heap/make_heap_p.adb~           |          |
+  |              | ~../mutating/swap_array_p.ads~      |          |
+  |              | ~../mutating/swap_array_p.adb~      |          |
+  |              | ~../spec/multiset_predicates.ads~   |          |
+  |              | ~../spec/upper_bound_p.ads~         |          |
+  |              | ~../spec/lower_bound_p.ads~         |          |
+  |              | ~../spec/heap_predicates.ads~       |          |
+  |              | ~../spec/partition_p.ads~           |          |
+  |              | ~../spec/sorted_p.ads~              |          |
+  |              | ~../lemmas/classic_lemmas.ads~      |          |
+  |              | ~../lemmas/classic_lemmas.adb~      |          |
+  |              | ~../lemmas/partial_sort_lemmas.ads~ |          |
+  |              | ~../lemmas/partial_sort_lemmas.adb~ |          |
+  |              | ~partial_sort_p.ads~                |          |
+  |              | ~partial_sort_p.adb~                |          |
+  |--------------+-------------------------------------+----------|
+
 # Local Variables:
 # ispell-dictionary: "english"
 # End:
