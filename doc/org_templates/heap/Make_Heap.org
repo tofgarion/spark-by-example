@@ -27,12 +27,7 @@
       heap
 
 *** Implementation of Make_Heap
-**** First implementation
-
-     A first implementation of ~Make_Heap~ is the following:
-
-*** Implementation of Make_Heap
-**** First implementation
+**** Implementation without lemmas
 
     The implementation of ~Make_Heap~ is the following:
 

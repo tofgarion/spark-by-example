@@ -1,4 +1,4 @@
-# Created 2018-09-21 Fri 15:28
+# Created 2018-09-21 Fri 15:29
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Make_Heap.org
 
@@ -39,12 +39,7 @@ through contract cases:
   heap
 
 ** Implementation of Make_Heap
-*** First implementation
-
-A first implementation of ~Make_Heap~ is the following:
-
-** Implementation of Make_Heap
-*** First implementation
+*** Implementation without lemmas
 
 The implementation of ~Make_Heap~ is the following:
 
