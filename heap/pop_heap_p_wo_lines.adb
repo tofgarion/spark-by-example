@@ -25,7 +25,9 @@ package body Pop_Heap_P with
       Hole  : Positive         := 1;
       Child  : Option;
       Interm : T_Arr (H.A'Range) :=
-        H.A;  -- should be ghost, but there are some operations done this variables.
+        H.A;  -- should be ghost, but there are some operations done with this variable
+      A_Init : T_Arr (H.A'Range) := H.A with
+         Ghost;  -- initial array backup
    begin
       if H.A (H.Size) <
         V
@@ -57,6 +59,7 @@ package body Pop_Heap_P with
          H.A (H.Size) := V;
          Swap_Array (Interm, Hole, H.Size);
 
+	    else
       end if;
 
       H.Size := H.Size - 1;
