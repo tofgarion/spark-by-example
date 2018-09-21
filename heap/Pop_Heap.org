@@ -1,22 +1,28 @@
-# Created 2018-06-20 Wed 13:06
+# Created 2018-09-21 Fri 13:18
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Pop_Heap.org
+
 * The Pop_Heap algorithm
 
-The ~Pop_Heap~ procedure will remove the root (and greatest) element of the heap, and rearange the other elements to preserve the heap structure.
-Its signature reads:
+The ~Pop_Heap~ procedure will remove the root (and thus the
+greatest) element of the heap, and rearrange the other elements to
+preserve the heap structure. Its signature is the following:
 
 #+BEGIN_SRC ada
-  procedure Pop_Heap(H : in out Heap)
+  procedure Pop_Heap (H : in out Heap)
 #+END_SRC
 
-** Specififcation of Pop_Heap
+** Specification of Pop_Heap
 
-We now give a more precise definition of what this procedure should do. ~Pop_Heap~ will remove the first element of the heap,
-rearange the ~H.Size-1~ remaining elements so that the heap structure is preserved on those elements, which will then occupy the ~H.Size-1~ indexes of the array.
-The procedure will then reinsert the removed element at index ~H.Size~, which was no longer used. 
+We first present the specification of the algorithm. ~Pop_Heap~
+should remove the first element of the heap, rearrange the
+~H.Size-1~ remaining elements so that the heap structure is
+preserved on those elements, which will then occupy the ~H.Size-1~
+indexes of the array.  The procedure will then reinsert the
+removed element at index ~H.Size~, which was no longer used.
 
-With these considerations in mind, one specification for ~Pop_Heap~ is:
+With these considerations in mind, the specification for
+~Pop_Heap~ is:
 
 #+BEGIN_SRC ada
   procedure Pop_Heap (H : in out Heap) with
@@ -33,29 +39,39 @@ With these considerations in mind, one specification for ~Pop_Heap~ is:
      and then Max_Element_Def (H.A (1 .. H.Size + 1), H.Size + 1);
 #+END_SRC
 
-The preconditions state that in order to remove an element from the heap, thisone must not be empty, and the record of type ~Heap~ 
-we will be working on must represent a heap data structure.
-the postconditions express that:
-- The number of occurences of each element of ~T~ in ~H~ will not have change when calling the procedure
-- The size of the elements in the heap data structure will be one less than when entering the procedure
-- ~H~ will still represent a heap data structure containing the remaining elements.
-- The first element of ~H.A~ will be place at index ~H.Size+1~, bearing in mind that ~H.Size~ has been decreased by one during the procedure.
-- The elementas found at indexes greater than ~H'Old.Size~ will remain unchanged.
-- The element found at index ~H.Size+1~ after the procedure will be the greatest element amond the ~H.Size+1~ first elements of ~H~.
+The preconditions state that in order to remove an element from
+the heap, the heap must not be empty, and the record of type ~Heap~
+used as parameter must be a correct heap data structure.
+
+The postconditions express that:
+- the number of occurrences of each element of ~T~ in ~H~ have not
+  changed
+- the number of elements in the heap data structure is one less
+- ~H~ still represents a correct heap data structure
+- the first element of ~H'Old.A~ will be placed at index
+  ~H.Size+1~, bearing in mind that ~H.Size~ has been decreased by
+  one during the procedure
+- the element found at indexes greater than ~H'Old.Size~ are
+  unchanged
+- the element found at index ~H.Size+1~ after the procedure will
+  be the greatest element among the ~H.Size+1~ first elements of
+  ~H~ (the greatest value has been removed)
 
 ** Predicates and lemmas used
 
-In order to correctly specify and implement ~Pop_Heap~ we need to write a few lemmas and predicates.
+In order to correctly specify and implement ~Pop_Heap~ we need to
+write a few lemmas and predicates.
 
 *** The Max_Element_Def predicate
 
-This predicate defines if a given index corrrespnds to the maximum element of a given array:
+This predicate defines if a given index contains the maximum
+element of a given array:
 
 #+BEGIN_SRC ada
   function Max_Element_Def
     (A   : T_Arr;
-     Max : Natural) return Boolean is
-    (Max in A'Range and then Upper_Bound (A, A (Max)));
+     Max : Natural)
+     return Boolean is (Max in A'Range and then Upper_Bound (A, A (Max)));
 #+END_SRC
 
 *** The predicate Heap_Maximum_Child
@@ -64,27 +80,31 @@ This predicate defines if a given index corrrespnds to the maximum element of a 
   function Heap_Maximum_Child
     (H : Heap;
      P : Positive;
-     C : Positive) return Boolean is
-    (Is_Heap_Def (H)
-     and then H.Size in 2 .. Positive'Last - 1
-     and then P in 1 .. H.Size / 2
-     and then C in 2 .. H.Size
+     C : Positive)
+     return Boolean is
+    (Is_Heap_Def (H) and then H.Size in 2 .. Positive'Last - 1
+     and then P in 1 .. H.Size / 2 and then C in 2 .. H.Size
      and then P = Heap_Parent (C)
      and then (if Heap_Left (P) <= H.Size then H.A (Heap_Left (P)) <= H.A (C))
      and then
      (if Heap_Right (P) <= H.Size then H.A (Heap_Right (P)) <= H.A (C)));
 #+END_SRC
 
+This predicates verifies for a given ~Heap~ record and two
+indexes ~P~ and ~C~ that:
 
-This predicates verifies for a given ~Heap~ record and two indexes ~P~ and ~C~ that:
 - ~H~ represents a heap data structure
-- There are at least two elements in the heap represented by ~H~
-- ~P~ can be a parent, i.e. is in the correct range, and cannot be the last element of the heap,
-- at least one of the children of ~P~ is in the heap (~P <= H.Size/2~) , and then ~C~ must be a child of ~P~, and the value at index ~C~ must be the greatest of the two values found at the indexes of the children of ~P~
+- there are at least two elements in the heap represented by ~H~
+- ~P~ is in the correct range and have children
+- ~C~ represents a children of ~P~ in the heap and the value at
+  index ~C~ must be the greatest of the two values found at the
+  indexes of the children of ~P~
 
 *** The Maximum_Heap_Child function
 
-This function returns an option containing, for a given heap ~H~ and a given index ~P~, the child of P for which the associated value is the greatest if it exists in the heap.
+This function returns an option containing, for a given heap ~H~
+and a given index ~P~, the child of P for which the associated
+value is the greatest *if it such child exists in the heap*.
 
 Its specification is as follows:
 
@@ -102,11 +122,14 @@ Its specification is as follows:
         and then P = Heap_Parent (Maximum_Heap_Child'Result.Value));
 #+END_SRC
 
-The preconditions express that ~H~ represents a heap data structure, the heap represented by ~H~ has at least two elements and that ~P~ is a valid parent index.
-The postconditions are expressed through contract cases:
-- if the children of ~P~ are not represented in ~H~, then there is nothing returned
-- Otherwise the returned value complies with the definitions of the maximum child, given by the previous predicate.
-
+The preconditions express that ~H~ represents a heap data
+structure with at least two elements and that ~P~ is a valid
+parent index. The postconditions are expressed through contract
+cases:
+- if the children of ~P~ are not represented in the heap, then
+  there the returned option value is empty
+- otherwise the returned value complies with the definitions of
+  the maximum child given by the previous predicate
 
 This function can be implemented in the following way:
 
@@ -131,73 +154,110 @@ This function can be implemented in the following way:
   end Maximum_Heap_Child;
 #+END_SRC
 
-The implementation is quite strainghtforward, as there are no loops or calls to other function, the program does not need annotations to be proved.
+The implementation is quite straightforward, as there are no
+loops or calls to other functions. The program does not need
+annotations to be proved.
 
 *** Heap lemmas
 
-We present here two lemmas concerning the properties of heap when modifying an element or concerning the order of the elements.
+We present here two lemmas concerning the properties of heap when
+modifying an element or concerning the order of the elements.
+
+The first one is called ~Heap_Set~:
 
 #+BEGIN_SRC ada
-  procedure Heap_Set (H1 : Heap; H2 : Heap; P : Positive; C : Positive) with
-     Pre => H1.Size = H2.Size
-     and then C in 2 .. H1.Size
-     and then P in 1 .. C
-     and then P = Heap_Parent (C)
-     and then Heap_Maximum_Child (H1, P, C)
-     and then Is_Heap_Def (H1)
-     and then Is_Set (H1.A, P, H1.A (C), H2.A),
+  procedure Heap_Set
+    (H1 : Heap;
+     H2 : Heap;
+     P  : Positive;
+     C  : Positive) with
+     Pre => H1.Size = H2.Size and then C in 2 .. H1.Size and then P in 1 .. C
+     and then P = Heap_Parent (C) and then Heap_Maximum_Child (H1, P, C)
+     and then Is_Heap_Def (H1) and then Is_Set (H1.A, P, H1.A (C), H2.A),
      Post => Is_Heap_Def (H2);
 #+END_SRC
-#+BEGIN_SRC ada
-  procedure Upper_Bound_Heap (H : Heap; V : T) with
-     Pre  => H.Size >= 1 and then Is_Heap_Def (H) and then V >= H.A (1),
-     Post => (for all J in 1 .. H.Size => V >= H.A (J));
-#+END_SRC
 
-In this lemma we prove that replacing the value at index ~P~ in a heap by the value found at the maximum child of ~P~ does not change the heap properties.
-More specificaly here the preconditions, which act as hyposthesis ewpress that:
-- Our two heaps must be of same size,
-- ~C~ is the child of greatest value of ~P~
+In this lemma, we prove that replacing the value at index ~P~ in
+a heap by the value found at the maximum child of ~P~ does not
+change the heap properties. More specifically, here the
+preconditions, which act as hypotheses in the lemma:
+- the two heaps ~H1~ and ~H2~ must have the same size
+- ~C~ is the child of greatest value of ~P~ in ~H1~
 - ~H1~ verifies all the properties of a heap
-- ~H2~ is equal to ~H1~ to the exception of the index ~P~ which is equal to ~H1.A(C)~.
+- ~H2~ is equal to ~H1~ to the exception of the index ~P~ which
+  is equal to ~H1.A(C)~
 
-The postcondition express the fact that if these hypothesis are respected then ~H2~ also respect the properties defining a heap.
+The postcondition expresses the fact that if these hypothesis are
+respected, then ~H2~ should respect the properties defining a
+heap.
 
-The body of the procedure only consists of the instruction ~null;~, as guiding Spark by giving him the rigth hypothesis to work with is enough for him to prove the lemma.
+The body of the procedure only consists of the instruction
+~null;~, as guiding Spark by giving him the rigth hypothesis to
+work with is enough to prove the lemma.
 
 #+BEGIN_SRC ada
-  procedure Heap_Set (H1 : Heap; H2 : Heap; P : Positive; C : Positive) is
+  procedure Heap_Set
+    (H1 : Heap;
+     H2 : Heap;
+     P  : Positive;
+     C  : Positive)
+  is
   begin
      null;
   end Heap_Set;
 #+END_SRC
+
+The second lemma is called ~Upper_Bound_Heap~:
+
 #+BEGIN_SRC ada
-  procedure Upper_Bound_Heap (H : Heap; V : T) is
-  begin
-     for J in 1 .. H.Size loop
-        pragma Loop_Invariant(for all K in 1 .. J => V >= H.A(K));
+  procedure Upper_Bound_Heap
+    (H : Heap;
+     V : T) with
+     Pre  => H.Size >= 1 and then Is_Heap_Def (H) and then V >= H.A (1),
+     Post => (for all J in 1 .. H.Size => V >= H.A (J));
 #+END_SRC
 
-This lemma is here to make the solvers aware that if ~H~ respects the heap properties, and if ~V~ is 
-greater than the first element of ~H~ then ~V~ is greater than all the others elements of ~H~. This can be proved by induction
-with the relations betwen parents and children, but spark can prove this lemma automatically, so the body of the procedure only consits of the ~null;~ instruction.
+This lemma is here to make the solvers aware that if ~H~ respects
+the heap properties, and if ~V~ is greater than the first element
+of ~H~, then ~V~ is greater than all the others elements of
+~H~. This can be proved by induction with the relations between
+parents and children, but ~GNATprove~ can prove this lemma
+automatically, so the body of the procedure only consists of the
+~null;~ instruction. The loop invariant builds the expected
+property:
+
+#+BEGIN_SRC ada
+  procedure Upper_Bound_Heap
+    (H : Heap;
+     V : T)
+  is
+  begin
+     for J in 1 .. H.Size loop
+        pragma Loop_Invariant (for all K in 1 .. J => V >= H.A (K));
+     end loop;
+  end Upper_Bound_Heap;
+#+END_SRC
 
 When proving ~Upper_Bound_Heap~ spark issues a warning:
 
-#+BEGIN_SRC ada
+#+BEGIN_SRC shell
   heap_lemmas.ads:27:06: warning: postcondition does not check the outcome of calling "Upper_Bound_Heap"
 #+END_SRC
 
-This is a know issue of the developpers of Spark, we will supress this warning the same way it is done in the [[https://github.com/AdaCore/spark2014/blob/master/include/spark-constrained_array_lemmas.ads][SPARK Lemma Library]], by adding the following instruction in the package containing the lemmas:
+This is of course true, as all procedure parameters are ~in~ and
+the postcondition only use these parameters. We suppress this
+warning by adding the following instruction in the package
+containing the lemmas (as it is done in the [[https://github.com/AdaCore/spark2014/blob/master/include/spark-constrained_array_lemmas.ads][SPARK Lemma Library]]):
 
 #+BEGIN_SRC ada
   pragma warnings
-       (off, "postcondition does not check the outcome of calling");
+    (off, "postcondition does not check the outcome of calling");
 #+END_SRC
 
 ** Implementation of Pop_Heap
 
-With all these lemmas and predicates we can give an implementation for ~Pop_Heap~
+With all these lemmas and predicates, we can now give an
+implementation for ~Pop_Heap~:
 
 #+BEGIN_SRC ada
   procedure Pop_Heap (H : in out Heap) is
@@ -209,7 +269,7 @@ With all these lemmas and predicates we can give an implementation for ~Pop_Heap
         Ghost;
      Child  : Option;
      Interm : T_Arr (H.A'Range) :=
-       H.A;  -- should be ghost, but there are a few opperations done this variables.
+       H.A;  -- should be ghost, but there are a few  erations done this variables.
      Init : T_Arr (H.A'Range) := H.A with
         Ghost; -- initial array
      Save : Heap := H with
@@ -243,7 +303,7 @@ With all these lemmas and predicates we can give an implementation for ~Pop_Heap
   	   (Interm,
   	    Hole,
   	    Child
-  	      .Value); -- permutation approach : preserves multiset but not heap structure
+  	      .Value); -- permutation approach: preserves multiset but not heap structure
   
   	 pragma Assert (Is_Heap_Def (Save));
   	 pragma Assert (H.A (Hole) >= H.A (Child.Value));
@@ -251,7 +311,7 @@ With all these lemmas and predicates we can give an implementation for ~Pop_Heap
   	 H.A (Hole) :=
   	   H.A
   	     (Child
-  		.Value);  -- moving "hole" approcach : preserves heap structure but not multiset structure.
+  		.Value);  -- moving "hole" approach: preserves heap structure but not multiset structure.
   
   	 pragma Assert (Child.Exists);
   	 pragma Assert (C1 <= H.Size);
@@ -340,16 +400,17 @@ With all these lemmas and predicates we can give an implementation for ~Pop_Heap
   
      pragma Assert
        (Interm =
-        H.A);  -- verify that swap approach and hole approcach give same result
+        H.A);  -- verify that swap approach and hole approach give same result
      for V in T loop
-        Occ_Eq (Interm, H.A, V);
+        Occ_Equal (Interm, H.A, V);
         pragma Loop_Invariant
   	(for all F in T'First .. V =>
   	   Occ (Interm, F) =
   	   Occ
   	     (H.A,
   	      F));  --verify that Interm and H.A represent same the same set of values
-     end loop;
+     end loop; -- loop on all values of T
+  
      pragma Assert (Multiset_Unchanged (Interm, H.A));
   
      pragma Assert (V = H.A (H.Size));
@@ -359,43 +420,68 @@ With all these lemmas and predicates we can give an implementation for ~Pop_Heap
      if H.Size >= 1 then
         Upper_Bound_Heap (H, H.A (H.Size + 1));
      end if;
+  
+  end Pop_Heap;
 #+END_SRC
 
-The code with all the annotations is quite difficult to read, it might be better to look at the code without annotations to understand the working principle of this algorithm:
+The code with all the annotations is quite difficult to read, it
+might be better to look at the code without annotations to
+understand the working principle of the algorithm:
+
+#+BEGIN_SRC shell
+  python3 ../../../scripts/remove_assertions.py ../../../heap/pop_heap_p.adb Upper_Bound_Heap Heap_Set C1 Sizes Init Save "for V in T loop" "if Child.Exists then" "loop on all values" "if H.Size >= 1"
+#+END_SRC
 
 #+BEGIN_SRC ada
-  procedure Pop_Heap(H : in out Heap) 
-     is
-        V : T := H.A(1);
-        Hole : Positive := 1;
-        Child : Option;
-     begin
-        if H.A(H.Size) < V then  --nothing to be done otherwise (array is "constant")
-  	 Child := Maximum_Heap_Child(H,Hole);
-  	 if Child.Exists then
-  	    C1 := Child.Value;
-  	 else
-  	    C1 := H.Size+1;
-  	 end if;
+  procedure Pop_Heap (H : in out Heap) is
+     V  : T := H.A (1);
+     Hole  : Positive         := 1;
+     Child  : Option;
+     Interm : T_Arr (H.A'Range) :=
+       H.A;  -- should be ghost, but there are a few  erations done this variables.
+  begin
+     if H.A (H.Size) <
+       V
+     then  --nothing to be done otherwise (H.A is "constant")
+        Child := Maximum_Heap_Child (H, Hole);
+        while Child.Exists
+  	and then Child.Value < H.Size
+  	and then H.A (H.Size) < H.A (Child.Value)
+        loop
   
-  	 while Child.Exists and then Child.Value < H.Size and then  H.A(H.Size) < H.A(Child.Value) loop
+  	 Swap_Array
+  	   (Interm,
+  	    Hole,
+  	    Child
+  	      .Value); -- permutation approach: preserves multiset but not heap structure
   
-  	    H.A(Hole) := H.A(Child.Value); 
-  	    Hole := Child.Value;
-  	    Child := Maximum_Heap_Child(H,Hole);
+  	 H.A (Hole) :=
+  	   H.A
+  	     (Child
+  		.Value);  -- moving "hole" approach: preserves heap structure but not multiset structure.
   
-  	 end loop;
+  	 Hole := Child.Value;
+  	 Child := Maximum_Heap_Child (H, Hole);
   
-  	 H.A(Hole) := H.A(H.Size);
-  	 H.A(H.Size) := V;
+        end loop;
   
-        end if;
-        H.Size := H.Size-1;
+        H.A (Hole) := H.A (H.Size);
   
-     end Pop_Heap;
+        H.A (H.Size) := V;
+        Swap_Array (Interm, Hole, H.Size);
+  
+     end if;
+  
+     H.Size := H.Size - 1;
+  
+  end Pop_Heap;
 #+END_SRC
 
-Here the idea behing the procedure is to remove the first element, thus creating a "hole" in the heap. We then proceed to move the hole down the heap wile taking care to preserve the heap structure, until it reaches the en of the heap, where we reinsert the removed value. More specificaly the procedure is as follows:
+The idea behing the procedure is to remove the first element,
+thus creating a "hole" in the heap. We then proceed to move the
+hole down the heap wile taking care to preserve the heap
+structure, until it reaches the en of the heap, where we reinsert
+the removed value. More specificaly the procedure is as follows:
 1. We store the first value of the heap (which will be removed). We now consider that there is a "Hole" in the heap, that needs to go down, while preserving the heap structure.
 2. we find the child of maximum value of the hole, and we exchange them. This guarantees that the heap structure is preserved. This step is repeated as many times as needed, until the value of the next child is less than the value of the last element
 3. when exiting the loop, the hole is replaced by the last element of the heap. We then consider that the heap has only ~H.Size-1~ elements, and the element removed at the begining of the algorithm is placed at the index ~H.Size~.
@@ -414,15 +500,15 @@ behind the annotation of the program:
 The first thing to notice is that the working principle of the algorithm is quite similar to [[Push_Heap.org][Push_Heap]], so we could have taken the same approach
 to prove the postcondition ~Multiset_Unchanged(H'Old.A,A)~ with the help of the predicates ~Multiset_Add~ and ~Multiset_Minus~. This approach was necessary because when moving the "hole" around the number of occurences
 varies but the structure of heap is preserved. Here to prove this postcondition we will duplicate the array at the begining, and at each iteration we will swap the values found at indexes ~Child.Value~ and ~Hole~. This approach does not preserve the structure of heap, but verifies that
-only permutations are applied to the array. 
+only permutations are applied to the array.
 
 Let's take a look at the ~while~ loop. We first save the state of ~H~ in order to be able to help the solvers assess the changes that will occur during the loop. We then swap the values at indexes ~Hole~ and ~Child.Value~ for ~Interm~
 and replace the value found at index ~Hole~ by the one found at ~Child.Value~. As mentionned before, the "swap" approach aims to prove the ~multiset_unchanged~ postcondition. The ~swap prcedure ensures this through it's postconditions, so there is no need to annotate this part of the code.
-On the other hand when simply replacing the value found at the index ~Hole~, SPARK does not manage to prove that the heap structure is preserved. That is why we then proced to call the lemma ~Heap_Set~. All the preceeding assertions are hrer to verify the hypothesis to the lemma. Now that
-we know that ~H~ is still a heap, we can use the order properties of the heap data structure in order to proove that the element removed at the begining of the procedure is an upper bound for the heap. This is done by calling the lemma ~Upper_Bound_Heap~. With these two lemmas 
+    On the other hand when simply replacing the value found at the index ~Hole~, SPARK does not manage to prove that the heap structure is preserved. That is why we then proced to call the lemma ~Heap_Set~. All the preceeding assertions are hrer to verify the hypothesis to the lemma. Now that
+we know that ~H~ is still a heap, we can use the order properties of the heap data structure in order to proove that the element removed at the begining of the procedure is an upper bound for the heap. This is done by calling the lemma ~Upper_Bound_Heap~. With these two lemmas
 instanciated we have everything we need in order to prove the loop invariants.
 
-The loop invariants (in order of appearance) ensure that: 
+The loop invariants (in order of appearance) ensure that:
 1. All the values found at indexes greater than ~H.Size~ remain unchanged
 2. The first element of the heap remains constant after the first swap. This is useful to prove that the element we removed is greater than all the elements left in the heap
 3. The loop invariants 3 to 10 check that various preconditions to the predicates used later hold true *at this point* in the loop
@@ -442,7 +528,7 @@ the affectation acts as if we did one more iteration of the loop, so there is no
 previous iteration, the parent of ~Hole~ had a value strictly greater than the value found at ~H.Size~. This is corrected with the assertion right after the loop
 
 We then proceed to replace the value found at index ~Hole~, the two following assertions help prove the conservation of the heap structure. We then proceed to replace the value found at index ~H.Size~ by the value saved at the begining of the algorithm, and to swap the values found at indexes ~Hole~ and ~H.Size~ in ~Interm~, which is equivalent to the two previous affectations donne in ~H.A~.
-We check that the other indexes were not modified, and this concludes the modifications that will be donne to the arrays. 
+We check that the other indexes were not modified, and this concludes the modifications that will be donne to the arrays.
 
 The "else" case of the main condition verifies that if we do not have ~H.A(1) > H.A(H.Size)~ at the begining of the algorithm, then ~H.A(1) = H.A(H.Size))~. (This is true, because wi the properties of a heap we can demonstrate that the array is constant)
 
