@@ -1,96 +1,97 @@
 #+EXPORT_FILE_NAME: ../../../heap/Make_Heap.org
 #+OPTIONS: author:nil title:nil toc:nil
-* The Make_Heap algorithm
 
-  The ~Make_Heap~ algorithm will take an array and return a heap
-  with the same values. Its signature reads:
-  #+BEGIN_SRC ada
-  function Make_Heap (A : T_Arr) return Heap
-  #+END_SRC
+** The Make_Heap algorithm
 
-** Specification of Make_Heap
-
-   The specification of ~Make_Heap~ is the following:
-	#+INCLUDE: ../../../heap/make_heap_p.ads :src ada :range-begin "function Make_Heap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-21"
-
-   The function takes in entry an array with its length less than the maximum size
-   of a heap.
-   - If this array is empty, the returned heap will be also empty.
-   - If this array is not empty, the returned heap will have the same size from
-     the array and its array will be a permutation of the entry array.
-
-** Implementation of Make_Heap
-
-*** First implementation
-
-   The implementation of ~Make_Heap~ is the following:
+   The ~Make_Heap~ algorithm takes an array and return a heap
+   with the same values. Its signature is the following:
 
    #+BEGIN_SRC ada
-      function Make_Heap (A : T_Arr) return Heap is
-      Result : Heap;
-   begin
-      if A'Length > 0 then
-
-         Result.A (1) := A (A'First);
-         Result.Size := 1;
-
-
-         for J in A'First + 1 .. A'Last loop
-
-            Result.Size := Result.Size+1;
-            Result.A (J - A'First + 1) := A (J);
-            Push_Heap (Result);
-
-            pragma Loop_Invariant (Result.Size = J - A'First + 1);
-            pragma Loop_Invariant (Is_Heap (Result));
-            pragma Loop_Invariant
-              (Multiset_Unchanged
-                 (A (A'First .. J),
-                  Result.A(1 .. J - A'First + 1)));
-
-         end loop;
-
-      end if;
-      return Result;
+     function Make_Heap (A : T_Arr) return Heap
    #+END_SRC
 
-   The loop invariants specify the fact that:
-     - The size is increasing at each loop.
-     - The heap verifies the properties of a heap.
-     - The partial array of the heap is a permutation of the partial entry array.
+*** Specification of Make_Heap
 
-   As usual, we need to help the prover with some lemmas to prove the multiset predicate.
+    The specification of ~Make_Heap~ is the following:
 
-*** The Unchanged_Transitivity lemma
+    #+INCLUDE: "../../../heap/make_heap_p.ads" :src ada :range-begin "function Make_Heap" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-21"
 
-    This lemma helps proving the transitivity property of ~Multiset_Unchanged~.
-    Its specification is:
-	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :range-begin "procedure Unchanged_Transitivity" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "44-52"
+    The function takes an array that should have a length less than
+    the maximum size of a heap. The postconditions are expresse
+    through contract cases:
 
-    Its implementation is:
-	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :range-begin "procedure Unchanged_Transitivity" :range-end "End Unchanged_Transitivity;" :lines "40-46"
+    - if this array is empty, the returned heap will be also empty
+    - if this array is not empty, the returned heap will have the same
+      size than the array and its encapsulated array will be a
+      permutation of the entry array and respect the properties of a
+      heap
 
-    We use the predicate ~Occ_Eq~ already defined in the case where ~B=C~.
+*** Implementation of Make_Heap
+**** First implementation
 
-*** The New_Element lemma
+     A first implementation of ~Make_Heap~ is the following:
 
-    This lemma is used when we add the ~I~ th element of ~A~ at the end of the array of the heap.
-    The two partial arrays, when their last element is removed, are permutations of each other.
-    This lemma helps proving that when adding the same element at the end, the arrays are
-    still permutations.
+*** Implementation of Make_Heap
+**** First implementation
 
-    Its specification is:
-	#+INCLUDE: ../../../lemmas/classic_lemmas.ads :src ada :range-begin "procedure New_Element" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "36-43"
+    The implementation of ~Make_Heap~ is the following:
 
-    Its implementation is:
-	#+INCLUDE: ../../../lemmas/classic_lemmas.adb :src ada :range-begin "procedure New_Element" :range-end "End New_Element;" :lines "35-39"
+    #+BEGIN_SRC shell :exports none
+      python3 ../../../scripts/remove_assertions.py ../../../heap/make_heap_p.adb "pragma Assert" A_Save Unchanged_Transitivity
+    #+END_SRC
 
-*** Final implementation of Make_Heap
+    #+RESULTS[f9d441eae9ea226ddf97544c7bc6e9b7578a7a41]:
 
-    This final implementation is:
-	#+INCLUDE: ../../../heap/make_heap_p.adb :src ada :range-begin "function Make_Heap" :range-end "End Make_Heap;" :lines "4-62"
+    #+INCLUDE: "../../../heap/make_heap_p_wo_lines.adb" :src ada :range-begin "function Make_Heap" :range-end "end Make_Heap;" :lines "4-33"
 
-    Using ~GNATprove~, this implementation and the specification above, everything is proved.
-# Local Variables:
-# ispell-dictionary: "english"
-# End:
+    The loop invariants specify the fact that:
+    - the size of the heap is increasing at each loop
+    - the encapsulated array verifies the properties of a heap
+    - the current slice of the encapsulated array of the heap is a
+      permutation of the corresponding slice of the input array.
+
+    As usual, we need to help the prover with some lemmas to prove the
+    multiset predicate.
+
+**** The Unchanged_Transitivity lemma
+
+     This lemma helps proving the transitivity property of
+     ~Multiset_Unchanged~. Its specification is:
+
+     #+INCLUDE: "../../../lemmas/classic_lemmas.ads" :src ada :range-begin "procedure Unchanged_Transitivity" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "48-53"
+
+     Its implementation is:
+
+     #+INCLUDE: "../../../lemmas/classic_lemmas.adb" :src ada :range-begin "procedure Unchanged_Transitivity" :range-end "End Unchanged_Transitivity;" :lines "51-57"
+
+     We use the predicate ~Equal_Implies_Multiset_Unchanged~ already
+     defined in the case where ~B=C~.
+
+**** The New_Element lemma
+
+     This lemma is used when we add the ~I~ th element of ~A~ at the
+     end of the array of the heap. when their last element is removed,
+     the two partial arrays are permutations of each other. It helps
+     proving that when adding the same element at the end of both
+     arrays they are still permutations.
+
+     Its specification is:
+
+     #+INCLUDE: "../../../lemmas/classic_lemmas.ads" :src ada :range-begin "procedure New_Element" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "42-47"
+
+     Its trivial implementation is:
+
+     #+INCLUDE: "../../../lemmas/classic_lemmas.adb" :src ada :range-begin "procedure New_Element" :range-end "End New_Element;" :lines "46-50"
+
+**** Final implementation of Make_Heap
+
+     The final implementation of ~Make_Heap~ with all necessary calls
+     to lemmas is:
+
+     #+INCLUDE: "../../../heap/make_heap_p.adb" :src ada :range-begin "function Make_Heap" :range-end "End Make_Heap;" :lines "4-64"
+
+     Everything is proved Using ~GNATprove~.
+
+ # Local Variables:
+ # ispell-dictionary: "english"
+ # End:

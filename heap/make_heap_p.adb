@@ -33,7 +33,9 @@ package body Make_Heap_P with
                   A_Save (1 .. Size - 1),
                   Result.A (1 .. Size - 1));
                New_Element (A (A'First .. J), Result.A (1 .. Size));
+
                A_Save := Result.A;
+
                Unchanged_Transitivity
                  (A (A'First .. J),
                   Result.A (1 .. Size),
