@@ -40,10 +40,13 @@ package body Make_Heap_P with
                  (A (A'First .. J),
                   Result.A (1 .. Size),
                   A_Save (1 .. Size));
+
                Push_Heap (Result);
+
                if Size < MAX_SIZE then
                   Multiset_With_Eq (A_Save, Result.A, Size + 1);
                end if;
+
                Unchanged_Transitivity
                  (A (A'First .. J),
                   A_Save (1 .. Size),

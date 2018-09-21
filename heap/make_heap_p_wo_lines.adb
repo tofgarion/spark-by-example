@@ -14,10 +14,10 @@ package body Make_Heap_P with
                Size : constant Positive := Result.Size + 1;
             begin
                Result.Size := Size;
-               New_Element (A (A'First .. J), Result.A (1 .. Size));
+               Result.A (Size) := A (J);
 
-               if Size < MAX_SIZE then
-               end if;
+               Push_Heap (Result);
+
                pragma Loop_Invariant
                  (Result.Size = J - A'First + 1 and Result.Size = Size);
                pragma Loop_Invariant (Is_Heap_Def (Result));
@@ -27,7 +27,6 @@ package body Make_Heap_P with
 
          end loop;
 
-      end if;
       return Result;
    end Make_Heap;
 end Make_Heap_P;

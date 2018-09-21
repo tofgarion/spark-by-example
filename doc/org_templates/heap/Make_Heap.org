@@ -32,12 +32,12 @@
     The implementation of ~Make_Heap~ is the following:
 
     #+BEGIN_SRC shell :exports none
-      python3 ../../../scripts/remove_assertions.py ../../../heap/make_heap_p.adb "pragma Assert" A_Save Unchanged_Transitivity
+      python3 ../../../scripts/remove_assertions.py ../../../heap/make_heap_p.adb "pragma Assert" New_Element Unchanged_Transitivity Multi_Set_With_Eq "A_Save :" "A_Save      :" "end if;" "if Size < MAX_SIZE"
     #+END_SRC
 
-    #+RESULTS[f9d441eae9ea226ddf97544c7bc6e9b7578a7a41]:
+    #+RESULTS[8d748b62231c92a51325bfdcb47287c2d081853d]:
 
-    #+INCLUDE: "../../../heap/make_heap_p_wo_lines.adb" :src ada :range-begin "function Make_Heap" :range-end "end Make_Heap;" :lines "4-33"
+    #+INCLUDE: "../../../heap/make_heap_p_wo_lines.adb" :src ada :range-begin "function Make_Heap" :range-end "end Make_Heap;" :lines "4-32"
 
     The loop invariants specify the fact that:
     - the size of the heap is increasing at each loop
@@ -83,7 +83,7 @@
      The final implementation of ~Make_Heap~ with all necessary calls
      to lemmas is:
 
-     #+INCLUDE: "../../../heap/make_heap_p.adb" :src ada :range-begin "function Make_Heap" :range-end "End Make_Heap;" :lines "4-64"
+     #+INCLUDE: "../../../heap/make_heap_p.adb" :src ada :range-begin "function Make_Heap" :range-end "End Make_Heap;" :lines "4-67"
 
      Everything is proved Using ~GNATprove~.
 
