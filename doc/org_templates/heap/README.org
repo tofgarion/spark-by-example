@@ -4,59 +4,61 @@
 * Heap algorithms
 
   This directory contains the specification and implementation files
-  for the following algorithms: ~Is_Heap~, ~Push_Heap~,
-  ~Pop_Heap~ and ~Sort_Heap~. As usual, ghost functions used in specifications are
-  located in the ~spec~ directory at project root. The lemmas written for these functions
-  are located in the ~lemmas~ directory at project root.
+  for the following algorithms: ~Is_Heap~, ~Push_Heap~, ~Pop_Heap~ and
+  ~Sort_Heap~. As usual, ghost functions used in specifications are
+  located in the ~spec~ directory at project root. The lemmas written
+  for these functions are located in the ~lemmas~ directory at project
+  root.
 
   The functions and the corresponding files are presented in the
   following table (click on the link to have more details one the
   specification/implementation of each function):
 
-  | function  | files                             | comments                                  |
-  |-----------+-----------------------------------+-------------------------------------------|
-  | [[file:Is_Heap.org][Is_Heap]]   | ~../spec/heap_predicates.ads~     |                                           |
-  |           | ~is_heap_p.ads~                   |                                           |
-  |           | ~is_heap_p.adb~                   |                                           |
-  |-----------+-----------------------------------+-------------------------------------------|
-  | [[file:Push_Heap.org][Push_Heap]] | ~../spec/heap_predicates.ads~     |                                           |
-  |           | ~../spec/multiset_predicates.ads~ |                                           |
-  |           | ~../lemmas/push_heap_lemmas.ads~  |                                           |
-  |           | ~../lemmas/push_heap_lemmas.adb~  |                                           |
-  |           | ~push_heap_p.ads~                 |                                           |
-  |           | ~push_heap_p.adb~                 |                                           |
-  |-----------+-----------------------------------+-------------------------------------------|
-  | [[file:Pop_Heap.org][Pop_Heap]]  | ~../spec/heap_predicates.ads~     | This function reuses the function         |
-  |           | ~../spec/multiset_predicates.ads~ | ~swap_array~ defined in chapter mutating. |
-  |           | ~../spec/upper_bound_p.ads~       |                                           |
-  |           | ~../spec/occ_p.ads~               |                                           |
-  |           | ~../mutating/swap_array_p.ads~    |                                           |
-  |           | ~../mutating/swap_array_p.adb~    |                                           |
-  |           | ~../lemmas/pop_heap_lemmas.ads~   |                                           |
-  |           | ~../lemmas/pop_heap_lemmas.adb~   |                                           |
-  |           | ~pop_heap_p.ads~                  |                                           |
-  |           | ~pop_heap_p.adb~                  |                                           |
-  |-----------+-----------------------------------+-------------------------------------------|
-  | [[file:Make_Heap.org][Make_Heap]] | ~../spec/heap_predicates.ads~     |                                           |
-  |           | ~../spec/multiset_predicates.ads~ |                                           |
-  |           | ~../spec/occ_p.ads~               |                                           |
-  |           | ~../lemmas/classic_lemmas.ads~    |                                           |
-  |           | ~../lemmas/classic_lemmas.adb~    |                                           |
-  |           | ~push_heap_p.ads~                 |                                           |
-  |           | ~push_heap_p.adb~                 |                                           |
-  |           | ~make_heap_p.ads~                 |                                           |
-  |           | ~make_heap_p.adb~                 |                                           |
-  |-----------+-----------------------------------+-------------------------------------------|
-  | [[file:Sort_Heap.org][Sort_Heap]] | ~../spec/heap_predicates.ads~     |                                           |
-  |           | ~../spec/multiset_predicates.ads~ |                                           |
-  |           | ~../spec/upper_bound_p.ads~       |                                           |
-  |           | ~../spec/lower_bound_p.ads~       |                                           |
-  |           | ~../spec/sorted_p.ads~            |                                           |
-  |           | ~pop_heap_p.ads~                  |                                           |
-  |           | ~pop_heap_p.adb~                  |                                           |
-  |           | ~sort_heap_p.ads~                 |                                           |
-  |           | ~sort_heap_p.adb~                 |                                           |
-  |-----------+-----------------------------------+-------------------------------------------|
+  | function  | files                             | comments                                                                                     |
+  |-----------+-----------------------------------+----------------------------------------------------------------------------------------------|
+  | [[file:Is_Heap.org][Is_Heap]]   | ~../spec/heap_predicates.ads~     |                                                                                              |
+  |           | ~is_heap_p.ads~                   |                                                                                              |
+  |           | ~is_heap_p.adb~                   |                                                                                              |
+  |-----------+-----------------------------------+----------------------------------------------------------------------------------------------|
+  | [[file:Push_Heap.org][Push_Heap]] | ~../spec/heap_predicates.ads~     |                                                                                              |
+  |           | ~../spec/multiset_predicates.ads~ |                                                                                              |
+  |           | ~../lemmas/push_heap_lemmas.ads~  |                                                                                              |
+  |           | ~../lemmas/push_heap_lemmas.adb~  |                                                                                              |
+  |           | ~push_heap_p.ads~                 |                                                                                              |
+  |           | ~push_heap_p.adb~                 |                                                                                              |
+  |-----------+-----------------------------------+----------------------------------------------------------------------------------------------|
+  | [[file:Pop_Heap.org][Pop_Heap]]  | ~../spec/heap_predicates.ads~     | This function reuses the function ~swap_array~ defined in the chapter on [[../mutating/README.org][mutating algorithms]] |
+  |           | ~../spec/multiset_predicates.ads~ |                                                                                              |
+  |           | ~../spec/upper_bound_p.ads~       |                                                                                              |
+  |           | ~../spec/occ_p.ads~               |                                                                                              |
+  |           | ~../mutating/swap_array_p.ads~    |                                                                                              |
+  |           | ~../mutating/swap_array_p.adb~    |                                                                                              |
+  |           | ~../lemmas/pop_heap_lemmas.ads~   |                                                                                              |
+  |           | ~../lemmas/pop_heap_lemmas.adb~   |                                                                                              |
+  |           | ~pop_heap_p.ads~                  |                                                                                              |
+  |           | ~pop_heap_p.adb~                  |                                                                                              |
+  |-----------+-----------------------------------+----------------------------------------------------------------------------------------------|
+  | [[file:Make_Heap.org][Make_Heap]] | ~../spec/heap_predicates.ads~     |                                                                                              |
+  |           | ~../spec/multiset_predicates.ads~ |                                                                                              |
+  |           | ~../spec/occ_p.ads~               |                                                                                              |
+  |           | ~../lemmas/classic_lemmas.ads~    |                                                                                              |
+  |           | ~../lemmas/classic_lemmas.adb~    |                                                                                              |
+  |           | ~push_heap_p.ads~                 |                                                                                              |
+  |           | ~push_heap_p.adb~                 |                                                                                              |
+  |           | ~make_heap_p.ads~                 |                                                                                              |
+  |           | ~make_heap_p.adb~                 |                                                                                              |
+  |-----------+-----------------------------------+----------------------------------------------------------------------------------------------|
+  | [[file:Sort_Heap.org][Sort_Heap]] | ~../spec/heap_predicates.ads~     |                                                                                              |
+  |           | ~../spec/multiset_predicates.ads~ |                                                                                              |
+  |           | ~../spec/upper_bound_p.ads~       |                                                                                              |
+  |           | ~../spec/lower_bound_p.ads~       |                                                                                              |
+  |           | ~../spec/sorted_p.ads~            |                                                                                              |
+  |           | ~pop_heap_p.ads~                  |                                                                                              |
+  |           | ~pop_heap_p.adb~                  |                                                                                              |
+  |           | ~sort_heap_p.ads~                 |                                                                                              |
+  |           | ~sort_heap_p.adb~                 |                                                                                              |
+  |-----------+-----------------------------------+----------------------------------------------------------------------------------------------|
+
 # Local Variables:
 # ispell-dictionary: "english"
 # End:
