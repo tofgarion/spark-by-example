@@ -162,7 +162,7 @@
     might be better to look at the code without annotations to
     understand the working principle of the algorithm:
 
-    #+BEGIN_SRC shell :export no
+    #+BEGIN_SRC shell :exports none
       python3 ../../../scripts/remove_assertions.py ../../../heap/pop_heap_p.adb Upper_Bound_Heap Heap_Set C1 Sizes H_Init Save "for V in T loop" "if Child.Exists then" "loop on all values" "if H.Size >= 1"
     #+END_SRC
 

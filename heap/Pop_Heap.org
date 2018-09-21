@@ -1,4 +1,4 @@
-# Created 2018-09-21 Fri 14:42
+# Created 2018-09-21 Fri 14:45
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Pop_Heap.org
 
@@ -259,10 +259,6 @@ containing the lemmas (as it is done in the [[https://github.com/AdaCore/spark20
 The code with all the annotations is quite difficult to read, it
 might be better to look at the code without annotations to
 understand the working principle of the algorithm:
-
-#+BEGIN_SRC shell
-  python3 ../../../scripts/remove_assertions.py ../../../heap/pop_heap_p.adb Upper_Bound_Heap Heap_Set C1 Sizes H_Init Save "for V in T loop" "if Child.Exists then" "loop on all values" "if H.Size >= 1"
-#+END_SRC
 
 #+BEGIN_SRC ada
   procedure Pop_Heap (H : in out Heap) is
