@@ -1,53 +1,63 @@
 #+EXPORT_FILE_NAME: ../../../heap/Sort_Heap.org
 #+OPTIONS: author:nil title:nil toc:nil
+
 ** The Sort_Heap algorithm
 
+   The ~Sort_Heap~ algorithm takes a ~Heap~ representing a heap data
+   structure as parameter and sorts the elements in the heap. ITs
+   signature is the following:
 
-The ~Sort_Heap~ algorithm will convert take a ~Heap~ representing a heap data structure, and will 
-sort the elements in the heap.
-
-Its signature reads 
-#+BEGIN_SRC ada
-procedure Sort_Heap(H : in out Heap)
-#+END_SRC
+   #+BEGIN_SRC ada
+     procedure Sort_Heap (H : in out Heap)
+   #+END_SRC
 
 *** Specification of Sort_Heap
 
-The specification is as follows:
+    The specification of ~Sort_Heap~ is as follows:
 
-	#+INCLUDE: ../../../heap/sort_heap_p.ads :src ada :range-begin "procedure Sort_Heap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-22"
+    #+INCLUDE: "../../../heap/sort_heap_p.ads" :src ada :range-begin "procedure Sort_Heap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-22"
 
-The only precondition is that ~H~ should represent a Heap data structure.
-The postcondition expresses the fact that after the procedure the occurences of each element in ~H.A~ 
-hasn't changed and that ~H.A~ is sorted by ascending order on the indexes constituting the heap *before* the call to the procedure, 
-and that the elements found at indexes greater than ~H'Old.Size~ remain unchanged.
+    The only precondition states that ~H~ should represent a heap data
+    structure. The postcondition expresses that:
+    - the occurrences of each element in ~H.A~ has not changed
+    - ~H.A~ is sorted by ascending order on the indexes constituting
+      the heap *before* the call to the procedure
+    - that the elements found at indexes greater than ~H'Old.Size~
+      remain unchanged.
 
 *** Implementation of Sort_Heap
 
-With the help of the previously coded procedure [[Pop_Heap.org][Pop_Heap]], ~Sort_Heap~ is quite easy to implement:
+    With the help of the previously implemented procedure [[Pop_Heap.org][Pop_Heap]],
+    ~Sort_Heap~ is quite easy to implement:
 
-	#+INCLUDE: ../../../heap/sort_heap_p.adb :src ada :range-begin "procedure Sort_Heap" :range-end "End Sort_Heap;" :lines "4-29"
+    #+INCLUDE: "../../../heap/sort_heap_p.adb" :src ada :range-begin "procedure Sort_Heap" :range-end "End Sort_Heap;" :lines "4-29"
 
-The ghost variable ~Interm~ will be used to compare the state of ~H~ during the execution of the loop with the previous iteration;
-~N~ stores the initial size of the heap, which will be useful to make a ~for~ loop.
+    The ghost variable ~Interm~ will be used to compare the state of
+    ~H~ during the execution of the loop with the previous iteration.
+    ~N~ stores the initial size of the heap, which will be useful to
+    build a ~for~ loop.
 
-The working principle of the algorithm is to call the ~Pop_Heap~ procedure on ~H~ as many times as there are elements in the heap.
+    The working principle of the algorithm is the following: call the
+    ~Pop_Heap~ procedure on ~H~ as many times as there are elements in
+    the heap.
 
-The loop invariants here ensure that:
-- The current element being removed is greater that the new first element of the heap. This loop invariant enables the provers to verify that we are correctly sorting the array.
-- ~H.Size = J-1~ This gives us a relation between ~J~ and ~H.Size~, needed to prove we are working on the correct ranges.
-- ~H~ represents a heap data structure (between indexes ~1~ and ~H.Size~, the other elements are either the sorted array, or unspecified)
-- The array ~H.A~ can be obtained through permutations of the elements of ~H~ at the entry of the loop.
-- ~H.A(J)~ is a lower bound of the array ~H.A(J .. N)~, i.e. a lower bound for the elements already sorted.
-- ~H.A~ is sorted between indexes ~J~ and ~N~
-- The values found at indexes greater than ~N~ remain unchanged.
+    The loop invariants ensure that:
+    - the current element being removed is greater that the new first
+      element of the heap. This loop invariant enables the provers to
+      verify that we are correctly sorting the array
+    - ~H.Size = J-1~ gives a relation between ~J~ and ~H.Size~, needed
+      to prove that the ranges we are looping on are correct
+    - ~H~ represents a heap data structure (between indexes ~1~ and
+      ~H.Size~, the other elements are either the sorted array, or
+      unspecified)
+    - the array ~H.A~ can be obtained through permutations of the
+      elements of ~H~ at the entry of the loop.
+    - ~H.A(J)~ is a lower bound of the array ~H.A(J .. N)~, i.e. a
+      lower bound for the elements already sorted
+    - ~H.A~ is sorted between indexes ~J~ and ~N~
+    - the values found at indexes greater than ~N~ remain unchanged.
 
-with those annotations, when using ~GNATprove~ everything is proved. The proof is again 5 minutes long, because ~GNATprove~ reproves the algorithm [[Pop_Heap.org][Pop_Heap]].
-
-
-
-
-
+    With those annotations, everything is proved by ~GNATprove~.
 
 # Local Variables:
 # ispell-dictionary: "english"
