@@ -15,7 +15,7 @@ package Swap_Array_P with
       Post => A'Old (J) = A (K) and then A'Old (K) = A (J)
       and then
       (for all L in A'Old'Range =>
-         (if J /= K and then K /= K then A'Old (L) = A (L)))
+         (if J /= L and then K /= L then A'Old (L) = A (L)))
       and then Multiset_Unchanged (A'Old, A);
 
 end Swap_Array_P;
