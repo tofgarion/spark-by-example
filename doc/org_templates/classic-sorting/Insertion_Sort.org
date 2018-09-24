@@ -3,78 +3,80 @@
 
 ** The Insertion_Sort algorithm
 
-The ~Insertion_Sort~ algorithm sorts an array in ascending order. Its signature reads
+   The ~Insertion_Sort~ algorithm sorts an array in ascending
+   order. Its signature is the following:
 
-#+BEGIN_SRC ada
-procedure Insertion_Sort(A : in out T_Arr)
-#+END_SRC
+   #+BEGIN_SRC ada
+     procedure Insertion_Sort (A : in out T_Arr)
+   #+END_SRC
 
-The ~Insertion_Sort~ algorithm sorts an array by locating the appropriate index in the sorted array
-for the current value being examined at each iteration. ~Insertion_Sort~ and [[Selection_Sort.org][Selection_Sort]] work in 
-a similar way, the main difference being that ~Insertion_Sort~ performs less comparisons between elements,
-but has to write more values, whereas ~Selection_Sort~ performs more comparisons, and less writes to the memory.
+   The ~Insertion_Sort~ algorithm sorts an array by locating the
+   appropriate index in the sorted array for the current value being
+   examined at each iteration. ~Insertion_Sort~ and [[Selection_Sort.org][Selection_Sort]]
+   work in a similar way, the main difference being that
+   ~Insertion_Sort~ performs less comparisons between elements, but
+   has to write more values.
 
 *** Specification of Insertion_Sort
 
-The specification of ~Insertion_Sort~ is identical to the one of ~Selection_Sort~ (In fact, it should be 
-the case for all sorting algorithms):
+    The specification of ~Insertion_Sort~ is the same as the one of
+    ~Selection_Sort~ (in fact, it should be the case for all sorting
+    algorithms):
 
-	#+INCLUDE: ../../../classic-sorting/insertion_sort_p.ads :src ada :range-begin "procedure Insertion_Sort" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-15"
+    #+INCLUDE: "../../../classic-sorting/insertion_sort_p.ads" :src ada :range-begin "procedure Insertion_Sort" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-15"
+
+    There is only an extra precondition on the last index of ~A~ that
+    should be less than ~Positive'Last~ to avoid possible overflows.
 
 *** Implementation of Insertion_Sort
 
-~Insertion_Sort~ could be implemented with the help of the [[../mutating/Rotate.org][Rotate]] algorithm, as it was done in [[https://github.com/fraunhoferfokus/acsl-by-example/blob/master/StandardAlgorithms/classic-sorting/insertion_sort/insertion_sort.c][ACSL by example]]:
+    ~Insertion_Sort~ could be implemented with the help of the [[../mutating/Rotate.org][Rotate]]
+    algorithm, as it is done in [[https://github.com/fraunhoferfokus/acsl-by-example/blob/master/StandardAlgorithms/classic-sorting/insertion_sort/insertion_sort.c][ACSL by example]]:
 
-#+BEGIN_SRC ada
-procedure Insertion_Sort(A : in out T_Arr)
-   is
-      K : Integer;
-   begin
-      if A'Length = 0 then
-	 return;
-      end if;
-      
-      for J in A'Range loop
-	 K :=(if J = A'First then A'First else Search_Upper_Bound(A(A'First .. J-1),A(J)).Value);
-	 if K < J then
-            Rotate(A(K .. J),J-K);
-         end if;
-      end loop;     
-      
-   end Insertion_Sort;
-#+END_SRC
+    #+INCLUDE: "../../../classic-sorting/insertion_sort_rotate_p.adb" :src ada :range-begin "procedure Insertion_Sort" :range-end "End Insertion_Sort;" :lines "13-30"
 
-This approach, while being concise makes the proof quite difficult since the specification of 
-~Rotate~ only specifies equality of ranges, and we would need to deduce from these equalites that
-the multiset represented by ~A~ has not changed, and that the order of the elements of ~A~ remained
-relatively stable. To make our proof easier we will take another approach, where we emulate the effects
-of ~Rotate~ with a loop of [[../mutating/Random_Shuffle.org#the-swap_array-procedure][Swap_Array]], which we can annotate to our needs:
+    This approach, while being concise, makes the proof quite
+    difficult since the specification of ~Rotate~ only specifies
+    equality of ranges, and we would need to deduce from these
+    equalities that the multiset represented by ~A~ has not changed
+    and that the order of the elements of ~A~ remains relatively
+    stable.
 
-	#+INCLUDE: ../../../classic-sorting/insertion_sort_p.adb :src ada :range-begin "procedure Insertion_Sort" :range-end "End Insertion_Sort;" :lines "4-37"
+    To make the proof easier, we will take another approach: we
+    emulate the effects of ~Rotate~ with a loop of [[../mutating/Random_Shuffle.org#the-swap_array-procedure][Swap_Array]], which
+    can be annotated to our needs:
 
-In this implementation we can see that there is a second loop embedded within the main loop. Its function
-is to insert the element found found at index ~J~ at index ~K~ by shifting all the elements between
-these indexes by one place to the right.
+    #+INCLUDE: "../../../classic-sorting/insertion_sort_p.adb" :src ada :range-begin "procedure Insertion_Sort" :range-end "End Insertion_Sort;" :lines "4-37"
 
-One thing to kepp in mind when analysing the secondary loop is that the value at index ~L~ is constant and equal
-to ~A'Loop_entry(J)~.
+    In this implementation, we can see that there is a second loop
+    embedded within the main loop. Its function is to insert the
+    element found at index ~J~ at index ~K~ by shifting all the
+    elements between these indexes by one place to the right.
 
-The invariants in the secondary loop verify that (in order of appearance):
-- ~A(L-1) <= A(L+1)~, this is used to prove the sorted aspect of the indexes ~K~ through ~J~ at the end of the loop
-- we only apply permutations on ~A~
-- We only modify the indexes higher than ~L~, this helps prove that the begining of the array is sorted.
-- With the previous invariant, we prove that A is sorted from indexes ~A'First~ through ~L-1~
-- We verify that the values at indexes les that ~K-1~ are greater than ~A(L)~. This will be used to prove that the array is sorted on indexes ~A'First~ through ~J~.
-- The two last invariants enable to prove that the array is sorted from indexes ~L~ through ~J~.
+    One thing to kepp in mind when analysing the inner loop is that
+    the value at index ~L~ is constant and equal to ~A'Loop_entry (J)~.
 
-When combining the loop invariants on sorting, and the fifth loop invariant at the exit of the secondary loop
-we can proove the first loop invariant of the main loop. The ~Multiset_Unchanged~ of the main loop is proved 
-with the corresponding invariant of the secondary loop.
+    The invariants in the inner loop verify that:
+    - ~A (L - 1) <= A (L + 1)~, which is used to prove the sorted
+      aspect of the indexes ~K~ through ~J~ at the end of the loop
+    - we only apply permutations on ~A~
+    - we only modify indexes higher than ~L~, this helps prove that
+      the beginning of the array is sorted
+    - with the previous invariant, we prove that ~A~ is sorted from
+      indexes ~A'First~ through ~L - 1~
+    - we verify that the values at indexes less than ~K - 1~ are
+      greater than ~A (L)~. This will be used to prove that the array
+      is sorted on indexes ~A'First~ through ~J~.
+    - the two last invariants enable to prove that the array is sorted
+      from indexes ~L~ through ~J~.
 
+    When combining the loop invariants on sorting and the fifth loop
+    invariant at the exit of the secondary loop we can prove the first
+    loop invariant of the main loop. The ~Multiset_Unchanged~
+    invariant in the main loop is proved with the corresponding
+    invariant of the inner loop.
 
-With this specification and implementation ~GNATprove~ proves everything.
-
-
+    With this specification and implementation ~GNATprove~ proves everything.
 
 # Local Variables:
 # ispell-dictionary: "english"
