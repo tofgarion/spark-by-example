@@ -3,40 +3,48 @@
 
 ** The Selection_Sort algorithm
 
-The ~Selection_Sort~ algorithm sorts an array in ascending order. The working principle of the
-algorithm is to each iteration select the lowest value in the part of the array that has not yet 
-been sorted, and swap it with the value right next to the last sorted index. Its signature reads:
+   The ~Selection_Sort~ algorithm sorts an array in ascending
+   order. The working principle of the algorithm is the following: at
+   each iteration, select the lowest value in the part of the array
+   that has not yet been sorted, and swap it with the value right next
+   to the last sorted index. Its signature is the following:
 
-#+BEGIN_SRC ada
- procedure Selection_Sort(A : in out T_Arr)
-#+END_SRC
+   #+BEGIN_SRC ada
+     procedure Selection_Sort (A : in out T_Arr)
+   #+END_SRC
 
 *** Specification of Selection_Sort
 
-With all the predicates already coded in the previous chapters we have everything needed to specify
-the ~Selection_Sort~ algorithm:
+    With all the predicates already defined in the previous chapters
+    we have everything needed to specify the ~Selection_Sort~
+    algorithm:
 
-	#+INCLUDE: ../../../classic-sorting/selection_sort_p.ads :src ada :range-begin "procedure Selection_Sort" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-13"
+    #+INCLUDE: "../../../classic-sorting/selection_sort_p.ads" :src ada :range-begin "procedure Selection_Sort" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-13"
 
-The algorithm has no preconditions, and the postcondition simply specify that the array must be sorted
-in ascending order, and that the resulting array is a permutation of the original array.
-
+    The algorithm has no preconditions, and the postconditions simply
+    specify that the array must be sorted in ascending order and that
+    the resulting array is a permutation of the original array.
 
 *** Implementation of Selection_Sort
 
-Selection sort can easily be implemented with the functions already coded and proved in previous chapters.
-Its implementation is as follows:
+    Selection sort can easily be implemented with the functions
+    already implemented and proved in previous chapters. Its
+    implementation is as follows:
 
-	#+INCLUDE: ../../../classic-sorting/selection_sort_p.adb :src ada :range-begin "procedure Selection_Sort" :range-end "End Selection_Sort;" :lines "4-21"
+    #+INCLUDE: "../../../classic-sorting/selection_sort_p.adb" :src ada :range-begin "procedure Selection_Sort" :range-end "End Selection_Sort;" :lines "4-21"
 
-The algorithm itself is quite simple, for each iteration of the loop we find the minimum value of
-the array, among the indexes that haven't been sorted yet, and we swap it with the value following the last sorted index.
+    The algorithm is quite simple. For each iteration of the loop we
+    find the minimum value of the array among the indexes that have
+    not been sorted yet, and we swap it with the value following the
+    last sorted index.
 
-The loop invariant verify that the value found at index ~J~ is a lower bound for the unsorted indexes,
-that we've only applied permutations to our array, and that the first ~J-A'First~ indexes are sorted.
+    The loop invariants verify that the value found at index ~J~ is a
+    lower bound for the unsorted indexes, that we have only applied
+    permutations to our array, and that the first ~J - A'First~
+    indexes are sorted.
 
+    With this specification and implementation everything is proved.
 
-With this specification and implementation everything is proved.
 # Local Variables:
 # ispell-dictionary: "english"
 # End:
