@@ -1,4 +1,4 @@
-# Created 2018-09-24 Mon 10:15
+# Created 2018-09-24 Mon 10:44
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../classic-sorting/README.org
 
@@ -13,37 +13,38 @@ The functions and the corresponding files are presented in the
 following table (click on the link to have more details one the
 specification/implementation of each function):
 
-| function                                      | files                                       | comments |
-|-----------------------------------------------+---------------------------------------------+----------|
-| [[file:./Selection_Sort.org][Selection_Sort]] | ~selection_sort_p.ads~                      |          |
-|                                               | ~selection_sort_p.adb~                      |          |
-|                                               | ~../spec/sorted_p.ads~                      |          |
-|                                               | ~../spec/lower_bound_p.ads~                 |          |
-|                                               | ~../spec/multiset_predicates.ads~           |          |
-|                                               | ~../mutating/swap_array_p.ads~              |          |
-|                                               | ~../mutating/swap_array_p.adb~              |          |
-|                                               | ~../maxmin/min_element_p.ads~               |          |
-|                                               | ~../maxmin/min_element_p.adb~               |          |
-|-----------------------------------------------+---------------------------------------------+----------|
-| [[file:./Insertion_Sort.org][Insertion_Sort]] | ~insertion_sort_p.ads~                      |          |
-|                                               | ~insertion_sort_p.adb~                      |          |
-|                                               | ~../spec/sorted_p.ads~                      |          |
-|                                               | ~../spec/multiset_predicates.ads~           |          |
-|                                               | ~../spec/upper_bound_p.ads~                 |          |
-|                                               | ~../spec/lower_bound_p.ads~                 |          |
-|                                               | ~../binary-search/search_upper_bound_p.ads~ |          |
-|                                               | ~../binary-search/search_upper_bound_p.adb~ |          |
-|                                               | ~../mutating/swap_array_p.ads~              |          |
-|                                               | ~../mutating/swap_array_p.adb~              |          |
-|-----------------------------------------------+---------------------------------------------+----------|
-| [[file:./Heap_Sort.org][Heap_Sort]]           | ~heap_sort_p.ads~                           |          |
-|                                               | ~heap_sort_p.adb~                           |          |
-|                                               | ~../heap/make_heap_p.ads~                   |          |
-|                                               | ~../heap/make_heap_p.adb~                   |          |
-|                                               | ~../heap/sort_heap_p.ads~                   |          |
-|                                               | ~../heap/sort_heap_p.adb~                   |          |
-|                                               | ~../spec/multiset_predicates.ads~           |          |
-|                                               | ~../spec/sorted_p.ads~                      |          |
-|                                               | ~../lemmas/classic_lemmas.ads~              |          |
-|                                               | ~../lemmas/classic_lemmas.adb~              |          |
-|-----------------------------------------------+---------------------------------------------+----------|
+| function                                      | files                                       | comments                                                |
+|-----------------------------------------------+---------------------------------------------+---------------------------------------------------------|
+| [[file:./Selection_Sort.org][Selection_Sort]] | ~selection_sort_p.ads~                      |                                                         |
+|                                               | ~selection_sort_p.adb~                      |                                                         |
+|                                               | ~../spec/sorted_p.ads~                      |                                                         |
+|                                               | ~../spec/lower_bound_p.ads~                 |                                                         |
+|                                               | ~../spec/multiset_predicates.ads~           |                                                         |
+|                                               | ~../mutating/swap_array_p.ads~              |                                                         |
+|                                               | ~../mutating/swap_array_p.adb~              |                                                         |
+|                                               | ~../maxmin/min_element_p.ads~               |                                                         |
+|                                               | ~../maxmin/min_element_p.adb~               |                                                         |
+|-----------------------------------------------+---------------------------------------------+---------------------------------------------------------|
+| [[file:./Insertion_Sort.org][Insertion_Sort]] | ~insertion_sort_p.ads~                      |                                                         |
+|                                               | ~insertion_sort_p.adb~                      |                                                         |
+|                                               | ~insertion_sort_rotate_p.adb~               | Version of ~Insertion_Sort~ using ~Rotate~ (not proved) |
+|                                               | ~../spec/sorted_p.ads~                      |                                                         |
+|                                               | ~../spec/multiset_predicates.ads~           |                                                         |
+|                                               | ~../spec/upper_bound_p.ads~                 |                                                         |
+|                                               | ~../spec/lower_bound_p.ads~                 |                                                         |
+|                                               | ~../binary-search/search_upper_bound_p.ads~ |                                                         |
+|                                               | ~../binary-search/search_upper_bound_p.adb~ |                                                         |
+|                                               | ~../mutating/swap_array_p.ads~              |                                                         |
+|                                               | ~../mutating/swap_array_p.adb~              |                                                         |
+|-----------------------------------------------+---------------------------------------------+---------------------------------------------------------|
+| [[file:./Heap_Sort.org][Heap_Sort]]           | ~heap_sort_p.ads~                           |                                                         |
+|                                               | ~heap_sort_p.adb~                           |                                                         |
+|                                               | ~../heap/make_heap_p.ads~                   |                                                         |
+|                                               | ~../heap/make_heap_p.adb~                   |                                                         |
+|                                               | ~../heap/sort_heap_p.ads~                   |                                                         |
+|                                               | ~../heap/sort_heap_p.adb~                   |                                                         |
+|                                               | ~../spec/multiset_predicates.ads~           |                                                         |
+|                                               | ~../spec/sorted_p.ads~                      |                                                         |
+|                                               | ~../lemmas/classic_lemmas.ads~              |                                                         |
+|                                               | ~../lemmas/classic_lemmas.adb~              |                                                         |
+|-----------------------------------------------+---------------------------------------------+---------------------------------------------------------|
