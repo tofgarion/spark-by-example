@@ -9,20 +9,6 @@ package Push_Heap_Lemmas with
    Ghost
   is
 
-   procedure No_Changes
-     (A_Old, A, A_Save : T_Arr;
-      V, V_Old         : T;
-      Hole             : Positive) with
-      Pre => A'Last < Positive'Last and then A'First = A_Save'First
-      and then A'First = A_Old'First and then A'Last = A_Save'Last
-      and then A'Last = A_Old'Last and then Hole in A'Range and then A_Save = A
-      and then V_Old = A (Hole) and then Multiset_Add (A_Old, A, A (Hole))
-      and then Multiset_Minus (A_Old, A, V)
-      and then Multiset_Retain_Rest_Double (A_Old, A, A (Hole), V),
-      Post => Multiset_Add (A_Old, A_Save, V_Old)
-      and then Multiset_Minus (A_Old, A_Save, V)
-      and then Multiset_Retain_Rest_Double (A_Old, A_Save, V_Old, V);
-
    procedure Make_Prove_Prologue
      (A, A_Old : T_Arr;
       V        : T;

@@ -1,4 +1,4 @@
-# Created 2018-09-20 Thu 15:57
+# Created 2018-09-25 Tue 09:40
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Push_Heap.org
 
@@ -92,14 +92,14 @@ has increased or decreased.
 The precondition on ~Multiset_Add~ is used to prevent possible
 overflows.
 
-*** An other Multiset_Retain_Rest_Double predicate
+*** Another Multiset_Retain_Rest_Double predicate
 
 We have already defined predicates on multisets for the
 [[file:../mutating/Remove_Copy.org][Remove_Copy]] algorithm, particularly a predicate
-~Multiset_Retain_Rest~ to check if two arrays are equal up to a
-permutation except for a particular value. As we will see later,
-we will need another form of ~Multiset_Retain_Rest~, but this
-time with two excluded values. The definition of
+~Multiset_Retain_Rest~ to check whether two arrays are equal up
+to a permutation except for a particular value. As we will see
+later, we will need another form of ~Multiset_Retain_Rest~, but
+this time with two excluded values. The definition of
 ~Multiset_Retain_Rest_Double~ is not that different from
 ~Multiset_Retain_Rest~:
 
@@ -254,7 +254,6 @@ the following:
   
         A_Save := H.A;
         V_Old  := H.A (Hole);
-        No_Changes (A_Old, H.A, A_Save, V, V_Old, Hole);
   
         if H.A (Hole) < H.A (Parent) then
   	 H.A (Hole) := H.A (Parent);
@@ -305,10 +304,10 @@ performance of the algorithm). Since we just modify one value in
 ~A~ at each iteration, we can use the ~Is_Set~ predicate
 previously defined to compare ~A~ with ~A_Save~.
 
-As for the Prologue, we define a ~Make_Prove_Loop~ lemma which
-calculates the ~Multiset~ properties that hold between ~A~ and
-~A_Old~, considering the predicates between ~A~ and ~A_Save~ and
-between ~A_Save~ and ~A_Old~. The next subsections detail
+As for the Prologue, we will define a ~Make_Prove_Loop~ lemma
+which calculates the ~Multiset~ properties that hold between ~A~
+and ~A_Old~, considering the predicates between ~A~ and ~A_Save~
+and between ~A_Save~ and ~A_Old~. The next subsections detail
 ~Make_Prove_Loop~.
 
 The loop invariants specify the fact that:
@@ -321,62 +320,12 @@ The loop invariants specify the fact that:
   has lost an occurrence compared to ~A_Old~ and the occurrences
   of the other values have not changed
 
-**** The No_Changes lemma
-
-The ~No_Changes~ lemma is similar to the ~No_Changes~ defined to
-prove ~Remove_Copy~. It takes three arrays as parameters: ~A~,
-~A_Old~ and ~A_Save~. Its goal is to prove that if ~A~ and
-~A_Save~ are identical arrays, then if some multiset properties
-are true on ~A~ and ~A_Hold~, then they also hold on ~A_Old~ and
-~A_Save~. Of course, the multiset properties mainly concern the
-number of occurrences of the value contained at a certain
-position ~Hole~. It is used to state that at the beginning of
-the ~While~ loop, ~A~, ~A_Old~ and ~A_Save~ are "identical" up
-to a value.
-
-The definition of the ~No_Changes~ lemma is the following:
-
-#+BEGIN_SRC ada
-  procedure No_Changes
-    (A_Old, A, A_Save : T_Arr;
-     V, V_Old         : T;
-     Hole             : Positive) with
-     Pre => A'Last < Positive'Last and then A'First = A_Save'First
-     and then A'First = A_Old'First and then A'Last = A_Save'Last
-     and then A'Last = A_Old'Last and then Hole in A'Range and then A_Save = A
-     and then V_Old = A (Hole) and then Multiset_Add (A_Old, A, A (Hole))
-     and then Multiset_Minus (A_Old, A, V)
-     and then Multiset_Retain_Rest_Double (A_Old, A, A (Hole), V),
-     Post => Multiset_Add (A_Old, A_Save, V_Old)
-     and then Multiset_Minus (A_Old, A_Save, V)
-     and then Multiset_Retain_Rest_Double (A_Old, A_Save, V_Old, V);
-#+END_SRC
-
-The implementation of ~No_Changes~ is the following:
-
-#+BEGIN_SRC ada
-  procedure No_Changes
-    (A_Old, A, A_Save : T_Arr;
-     V, V_Old         : T;
-     Hole             : Positive)
-  is
-  begin
-     for E in T loop
-        Occ_Equal (A, A_Save, E);
-        pragma Loop_Invariant
-  	(for all F in T'First .. E => Occ (A, F) = Occ (A_Save, F));
-     end loop;
-  end No_Changes;
-#+END_SRC
-
-As usual, the lemma is proved by showing the expected property
-for all possible values in ~T~.
-
 **** The Make_Prove_Loop lemma
 
-This lemma helps proving the multiset predicates between ~A~ and
-~A_Old~ considering the predicates holding between ~A_Old~ and
-~A_Save~ and between ~A~ and ~A_Save~. Its specification is:
+The ~Make_Prove_Loop~ lemma helps proving the multiset
+predicates between ~A~ and ~A_Old~ considering the predicates
+holding between ~A_Old~ and ~A_Save~ and between ~A~ and
+~A_Save~. Its specification is:
 
 #+BEGIN_SRC ada
   procedure Make_Prove_Loop
@@ -421,7 +370,7 @@ of occurrences of the values in ~A~, considering the number of
 occurrences in ~A_Save~ (only one value differs between ~A~ and
 ~A_Save~ at this point of the algorithm).
 
-Using the lemmas, ~GNATprove~ proves the main act.
+Using ~Make_Prove_Loop~, ~GNATprove~ proves the main act.
 
 *** Epilogue
 **** Implementation of Epilogue
@@ -434,7 +383,6 @@ Now that the final index where ~V~ can be has been found, we just have to insert
   
   	 A_Save := H.A;
   	 V_Old  := H.A (Hole);
-  	 No_Changes (A_Old, H.A, A_Save, V, H.A (Hole), Hole);
   	 H.A (Hole) := V;
   
   	 Make_Prove_Epilogue (H.A, A_Save, A_Old, V, Hole);

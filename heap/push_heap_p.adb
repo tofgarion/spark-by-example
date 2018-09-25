@@ -38,7 +38,6 @@ package body Push_Heap_P with
 
                   A_Save := H.A;
                   V_Old  := H.A (Hole);
-                  No_Changes (A_Old, H.A, A_Save, V, V_Old, Hole);
 
                   if H.A (Hole) < H.A (Parent) then
                      H.A (Hole) := H.A (Parent);
@@ -78,7 +77,6 @@ package body Push_Heap_P with
 
             A_Save := H.A;
             V_Old  := H.A (Hole);
-            No_Changes (A_Old, H.A, A_Save, V, H.A (Hole), Hole);
             H.A (Hole) := V;
 
             Make_Prove_Epilogue (H.A, A_Save, A_Old, V, Hole);

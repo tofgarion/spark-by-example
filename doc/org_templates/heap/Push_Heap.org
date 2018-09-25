@@ -66,14 +66,14 @@
      The precondition on ~Multiset_Add~ is used to prevent possible
      overflows.
 
-**** An other Multiset_Retain_Rest_Double predicate
+**** Another Multiset_Retain_Rest_Double predicate
 
      We have already defined predicates on multisets for the
      [[../mutating/Remove_Copy.org][Remove_Copy]] algorithm, particularly a predicate
-     ~Multiset_Retain_Rest~ to check if two arrays are equal up to a
-     permutation except for a particular value. As we will see later,
-     we will need another form of ~Multiset_Retain_Rest~, but this
-     time with two excluded values. The definition of
+     ~Multiset_Retain_Rest~ to check whether two arrays are equal up
+     to a permutation except for a particular value. As we will see
+     later, we will need another form of ~Multiset_Retain_Rest~, but
+     this time with two excluded values. The definition of
      ~Multiset_Retain_Rest_Double~ is not that different from
      ~Multiset_Retain_Rest~:
 
@@ -121,7 +121,7 @@
       duplicated and ~V~ has lost one occurrence in ~A~. The
       ~Make_Prove_Prologue~ represents this property:
 
-      #+INCLUDE: "../../../lemmas/push_heap_lemmas.ads" :src ada :range-begin "procedure Make_Prove_Prologue" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "26-37"
+      #+INCLUDE: "../../../lemmas/push_heap_lemmas.ads" :src ada :range-begin "procedure Make_Prove_Prologue" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-23"
 
       The postcondition of ~Make_Prove_Prologue~ correctly represents
       what is expected at the end of the prologue. Notice that the
@@ -130,7 +130,7 @@
       As usual, we have to give an implementation of the lemma to
       guide the provers:
 
-      #+INCLUDE: "../../../lemmas/push_heap_lemmas.adb" :src ada :range-begin "procedure Make_Prove_Prologue" :range-end "End Make_Prove_Prologue;" :lines "18-33"
+      #+INCLUDE: "../../../lemmas/push_heap_lemmas.adb" :src ada :range-begin "procedure Make_Prove_Prologue" :range-end "End Make_Prove_Prologue;" :lines "5-20"
 
       The implementation is quite basic for this kind of lemma (we
       loop on ~T~ values), except for the loop invariant which is a
@@ -152,7 +152,7 @@
       switch values accordingly. The implementation of the Main Act is
       the following:
 
-      #+INCLUDE: "../../../heap/push_heap_p.adb" :src ada :range-begin "-- beginning of Main Act" :range-end "-- end of Main Act" :lines "31-76"
+      #+INCLUDE: "../../../heap/push_heap_p.adb" :src ada :range-begin "-- beginning of Main Act" :range-end "-- end of Main Act" :lines "31-75"
 
       The actual code is not that long: we modify in the llop the
       position of the ~Hole~ index (we go up in the heap) to find the
@@ -168,10 +168,10 @@
       ~A~ at each iteration, we can use the ~Is_Set~ predicate
       previously defined to compare ~A~ with ~A_Save~.
 
-      As for the Prologue, we define a ~Make_Prove_Loop~ lemma which
-      calculates the ~Multiset~ properties that hold between ~A~ and
-      ~A_Old~, considering the predicates between ~A~ and ~A_Save~ and
-      between ~A_Save~ and ~A_Old~. The next subsections detail
+      As for the Prologue, we will define a ~Make_Prove_Loop~ lemma
+      which calculates the ~Multiset~ properties that hold between ~A~
+      and ~A_Old~, considering the predicates between ~A~ and ~A_Save~
+      and between ~A_Save~ and ~A_Old~. The next subsections detail
       ~Make_Prove_Loop~.
 
       The loop invariants specify the fact that:
@@ -184,48 +184,25 @@
         has lost an occurrence compared to ~A_Old~ and the occurrences
         of the other values have not changed
 
-***** The No_Changes lemma
-
-      The ~No_Changes~ lemma is similar to the ~No_Changes~ defined to
-      prove ~Remove_Copy~. It takes three arrays as parameters: ~A~,
-      ~A_Old~ and ~A_Save~. Its goal is to prove that if ~A~ and
-      ~A_Save~ are identical arrays, then if some multiset properties
-      are true on ~A~ and ~A_Hold~, then they also hold on ~A_Old~ and
-      ~A_Save~. Of course, the multiset properties mainly concern the
-      number of occurrences of the value contained at a certain
-      position ~Hole~. It is used to state that at the beginning of
-      the ~While~ loop, ~A~, ~A_Old~ and ~A_Save~ are "identical" up
-      to a value.
-
-      The definition of the ~No_Changes~ lemma is the following:
-
-      #+INCLUDE: "../../../lemmas/push_heap_lemmas.ads" :src ada :range-begin "procedure No_Changes" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-25"
-
-      The implementation of ~No_Changes~ is the following:
-
-      #+INCLUDE: "../../../lemmas/push_heap_lemmas.adb" :src ada :range-begin "procedure No_Changes" :range-end "end No_Changes;" :lines "5-17"
-
-      As usual, the lemma is proved by showing the expected property
-      for all possible values in ~T~.
-
 ***** The Make_Prove_Loop lemma
 
-      This lemma helps proving the multiset predicates between ~A~ and
-      ~A_Old~ considering the predicates holding between ~A_Old~ and
-      ~A_Save~ and between ~A~ and ~A_Save~. Its specification is:
+      The ~Make_Prove_Loop~ lemma helps proving the multiset
+      predicates between ~A~ and ~A_Old~ considering the predicates
+      holding between ~A_Old~ and ~A_Save~ and between ~A~ and
+      ~A_Save~. Its specification is:
 
-      #+INCLUDE: "../../../lemmas/push_heap_lemmas.ads" :src ada :range-begin "procedure Make_Prove_Loop" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "38-53"
+      #+INCLUDE: "../../../lemmas/push_heap_lemmas.ads" :src ada :range-begin "procedure Make_Prove_Loop" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "24-39"
 
       Its implementation is:
 
-      #+INCLUDE: "../../../lemmas/push_heap_lemmas.adb" :src ada :range-begin "procedure Make_Prove_Prologue" :range-end "End Make_Prove_Prologue;" :lines "18-33"
+      #+INCLUDE: "../../../lemmas/push_heap_lemmas.adb" :src ada :range-begin "procedure Make_Prove_Prologue" :range-end "End Make_Prove_Prologue;" :lines "5-20"
 
       The only thing to do during the loop is to calculate the number
       of occurrences of the values in ~A~, considering the number of
       occurrences in ~A_Save~ (only one value differs between ~A~ and
       ~A_Save~ at this point of the algorithm).
 
-      Using the lemmas, ~GNATprove~ proves the main act.
+      Using ~Make_Prove_Loop~, ~GNATprove~ proves the main act.
 
 **** Epilogue
 ***** Implementation of Epilogue
@@ -233,7 +210,7 @@
       Now that the final index where ~V~ can be has been found, we just have to insert
       ~V~ in the array. The implementation of the Epilogue is:
 
-      #+INCLUDE: "../../../heap/push_heap_p.adb" :src ada :range-begin "-- beginning of Epilogue" :range-end "end Push_Heap;" :lines "77-91"
+      #+INCLUDE: "../../../heap/push_heap_p.adb" :src ada :range-begin "-- beginning of Epilogue" :range-end "end Push_Heap;" :lines "76-89"
 
       We need to make a final backup ~A_Save~ of the array to prove
       the ~Multiset_Unchanged~ predicates between ~A~ and ~A_Old~.
@@ -243,11 +220,11 @@
       The lemma is very similar to the two others and is just here to
       finalize the proof after the Epilogue. Its specification is:
 
-      #+INCLUDE: "../../../lemmas/push_heap_lemmas.ads" :src ada :range-begin "procedure Make_Prove_Epilogue" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "54-67"
+      #+INCLUDE: "../../../lemmas/push_heap_lemmas.ads" :src ada :range-begin "procedure Make_Prove_Epilogue" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "40-53"
 
       Its implementation is:
 
-      #+INCLUDE: "../../../lemmas/push_heap_lemmas.adb" :src ada :range-begin "procedure Make_Prove_Epilogue" :range-end "end Make_Prove_Epilogue;" :lines "54-68"
+      #+INCLUDE: "../../../lemmas/push_heap_lemmas.adb" :src ada :range-begin "procedure Make_Prove_Epilogue" :range-end "end Make_Prove_Epilogue;" :lines "41-55"
 
       Using ~GNATprove~, the implementations and the specifications,
       everything is now proved.
