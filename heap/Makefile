@@ -1,4 +1,4 @@
-PROJECT=Heap_Algorithms.gpr
+PROJECT=heap_algorithms.gpr
 
 #timeout for chapter
 HEAP_DEFAULT_TIMEOUT = "TIMEOUT=10"
