@@ -55,5 +55,6 @@ BEGIN and END are regexps which define the line range to use."
   (progn
     (find-file org-file)
     (endless/update-includes)
+    (save-buffer)
     )
   )

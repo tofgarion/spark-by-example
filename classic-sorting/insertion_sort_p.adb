@@ -1,5 +1,6 @@
 package body Insertion_Sort_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
    procedure Insertion_Sort (A : in out T_Arr) is
       K : Integer;

@@ -7,7 +7,7 @@ with Classic_Lemmas;      use Classic_Lemmas;
 package Push_Heap_Lemmas with
    Spark_Mode,
    Ghost
-  is
+ is
 
    procedure Make_Prove_Prologue
      (A, A_Old : T_Arr;

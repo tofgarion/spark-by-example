@@ -1,7 +1,11 @@
 package body Partial_Sum_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   procedure Partial_Sum (A : T_Arr; B : in out T_Arr) is
+   procedure Partial_Sum
+     (A :        T_Arr;
+      B : in out T_Arr)
+   is
    begin
       if A'Length > 0 then
          B (B'First) := A (A'First);

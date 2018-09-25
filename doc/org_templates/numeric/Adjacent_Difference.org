@@ -35,7 +35,7 @@
 
     We can now give a specification for ~Adjacent_Difference~:
 
-    #+INCLUDE: "../../../numeric/adjacent_difference_p.ads" :src ada :range-begin "procedure Adjacent_Difference" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-23"
+    #+INCLUDE: "../../../numeric/adjacent_difference_p.ads" :src ada :range-begin "procedure Adjacent_Difference" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-22"
 
     The precondition states that there should be no overflow when
     subtracting any value to the one following, and that both arrays
@@ -51,7 +51,7 @@
     We can write an implementation for the procedure respecting the
     previous specification easily:
 
-    #+INCLUDE: "../../../numeric/adjacent_difference_p.adb" :src ada :range-begin "procedure Adjacent_Difference" :range-end "End Adjacent_Difference;" :lines "4-27"
+    #+INCLUDE: "../../../numeric/adjacent_difference_p.adb" :src ada :range-begin "procedure Adjacent_Difference" :range-end "End Adjacent_Difference;" :lines "5-31"
 
     The algorithm is really simple. There is only one assertion inside
     the loop to check that there is no overflow when computing the

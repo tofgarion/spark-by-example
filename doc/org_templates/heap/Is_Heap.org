@@ -51,7 +51,7 @@
 
     The ~Is_Heap~ can be specified as follows:
 
-    #+INCLUDE: "../../../heap/is_heap_p.ads" :src ada :range-begin "function Is_Heap" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-9"
+    #+INCLUDE: "../../../heap/is_heap_p.ads" :src ada :range-begin "function Is_Heap" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-12"
 
     There is no precondition on our ~Heap~ record, and the only
     postcondition is that ~Is_Heap~ returns the same result as our
@@ -61,7 +61,7 @@
 
     ~Is_Heap~ can be implemented in the following way:
 
-    #+INCLUDE: "../../../heap/is_heap_p.adb" :src ada :range-begin "function Is_Heap" :range-end "End Is_Heap;" :lines "4-37"
+    #+INCLUDE: "../../../heap/is_heap_p.adb" :src ada :range-begin "function Is_Heap" :range-end "End Is_Heap;" :lines "5-40"
 
     We first check that the member ~Size~ of ~H~ is valid, i.e. less
     that the length of the record array. We then verify that for each

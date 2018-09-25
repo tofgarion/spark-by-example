@@ -71,7 +71,7 @@
 
     The specification of ~Inner_Product~ is the following:
 
-    #+INCLUDE: "../../../numeric/inner_product_p.ads" :src ada :range-begin "function Inner_Product" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-13"
+    #+INCLUDE: "../../../numeric/inner_product_p.ads" :src ada :range-begin "function Inner_Product" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-18"
 
     The preconditions check that no overflow will occur during the
     algorithm. The postcondition checks that the result has to be the
@@ -81,7 +81,7 @@
 
     The implementation of ~Inner_Product~ is quite simple:
 
-    #+INCLUDE: "../../../numeric/inner_product_p.adb" :src ada :range-begin "function Inner_Product" :range-end "End Inner_Product;" :lines "3-17"
+    #+INCLUDE: "../../../numeric/inner_product_p.adb" :src ada :range-begin "function Inner_Product" :range-end "End Inner_Product;" :lines "4-23"
 
     As in ~Accumulate~, the assertion inside the loop is here to help
     the prover with the overflow checks.

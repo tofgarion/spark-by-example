@@ -1,6 +1,10 @@
 package body Iota_P with
-     Spark_Mode is
-   procedure Iota (A : in out T_Arr; Val : T) is
+   Spark_Mode
+ is
+   procedure Iota
+     (A   : in out T_Arr;
+      Val :        T)
+   is
       Count : T := Val;
    begin
       for I in A'Range loop

@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 14:02
+# Created 2018-09-25 Tue 10:57
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Iota.org
 
@@ -40,7 +40,9 @@ Notice that the precondition ensures that no overflow will happen
 The specification of ~iota~ is rather simple:
 
 #+BEGIN_SRC ada
-  procedure Iota (A : in out T_Arr; Val : T) with
+  procedure Iota
+    (A   : in out T_Arr;
+     Val :        T) with
      Pre  => Val + T (A'Length) <= T'Last,
      Post => Is_Iota (A, Val);
 #+END_SRC
@@ -53,7 +55,10 @@ are dealing with numerical values.
 The implementation of ~iota~ is the following.
 
 #+BEGIN_SRC ada
-  procedure Iota (A : in out T_Arr; Val : T) is
+  procedure Iota
+    (A   : in out T_Arr;
+     Val :        T)
+  is
      Count : T := Val;
   begin
      for I in A'Range loop

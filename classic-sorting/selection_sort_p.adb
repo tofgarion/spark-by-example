@@ -1,5 +1,6 @@
 package body Selection_Sort_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
    procedure Selection_Sort (A : in out T_Arr) is
       Sel : Integer;

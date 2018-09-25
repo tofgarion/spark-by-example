@@ -6,7 +6,8 @@ with Sorted_P;            use Sorted_P;
 with Multiset_Predicates; use Multiset_Predicates;
 
 package Heap_Sort_P with
-     Spark_Mode is
+   Spark_Mode
+ is
    procedure Heap_Sort (A : in out T_Arr) with
       Pre  => A'Length <= MAX_SIZE and then A'Last < Positive'Last,
       Post => Sorted (A) and then Multiset_Unchanged (A, A'Old);

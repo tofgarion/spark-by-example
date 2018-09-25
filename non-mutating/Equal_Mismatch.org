@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 13:23
+# Created 2018-09-25 Tue 10:57
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Equal_Mismatch.org
 
@@ -29,7 +29,10 @@ identical. Using Ada support for array types, we can directly use
 equality on arrays to define the predicate:
 
 #+BEGIN_SRC ada
-  
+  function Equal_Ranges
+    (A : T_Arr;
+     B : T_Arr)
+     return Boolean is (A = B);
 #+END_SRC
 
 ~Equal_Ranges (A, B)~ will be false if ~B~ is longer than ~A~, so
@@ -41,7 +44,10 @@ an offset (this is just syntactic sugar as slices can also be
 used):
 
 #+BEGIN_SRC ada
-  
+  function Equal_Ranges
+    (A : T_Arr;
+     B : T_Arr)
+     return Boolean is (A = B);
 #+END_SRC
 
 We need to add a [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#preconditions][precondition]] to exclude invalid ~Offset~
@@ -61,21 +67,22 @@ The specification of Mismatch is based on two contract cases:
     ~B~ are equal up to offset ~I~
 
 #+BEGIN_SRC ada
-  is
-    function Mismatch
-      (A : T_Arr;
-       B : T_Arr)
-       return Option with
-       Pre            => A'Length = B'Length,
-       Contract_Cases =>
-       (Equal_Ranges (A, B (B'First .. B'First - 1 + A'Length)) =>
-  	not Mismatch'Result.Exists,
-        others =>
-  	Mismatch'Result.Exists
-  	and then
-  	(A (A'First + Mismatch'Result.Value) /=
-  	 B (B'First + Mismatch'Result.Value))
-  	and then
+  function Mismatch
+    (A : T_Arr;
+     B : T_Arr)
+     return Option with
+     Pre            => A'Length = B'Length,
+     Contract_Cases =>
+     (Equal_Ranges (A, B (B'First .. B'First - 1 + A'Length)) =>
+        not Mismatch'Result.Exists,
+      others =>
+        Mismatch'Result.Exists
+        and then
+        (A (A'First + Mismatch'Result.Value) /=
+         B (B'First + Mismatch'Result.Value))
+        and then
+        (if (Mismatch'Result.Value /= 0) then
+  	 Equal_Ranges (A, B, Mismatch'Result.Value - 1)));
 #+END_SRC
 
 Notice that we must add a precondition specifying that ~A~ has the
@@ -102,6 +109,11 @@ The implementation of ~Mismatch~ is the following:
         end if;
   
         pragma Loop_Invariant (Equal_Ranges (A, B, I));
+        pragma Loop_Invariant (not Result.Exists);
+     end loop;
+  
+     return Result;
+  end Mismatch;
 #+END_SRC
 
 The invariants are rather simple to write using the predicate
@@ -118,6 +130,10 @@ the first ~A'Length~ elements of ~B~ with the ones of ~A~.
   function Equal
     (A : T_Arr;
      B : T_Arr)
+     return Boolean with
+     Pre  => A'Length <= B'Length,
+     Post => Equal'Result =
+     Equal_Ranges (A, B (B'First .. B'First - 1 + A'Length));
 #+END_SRC
 
 ** Implementation of Equal
@@ -128,6 +144,8 @@ the first ~A'Length~ elements of ~B~ with the ones of ~A~.
   function Equal
     (A : T_Arr;
      B : T_Arr)
+     return Boolean is
+    (not Mismatch (A, B (B'First .. B'First - 1 + A'Length)).Exists);
 #+END_SRC
 
 As ~Equal~ is defined with an expression function, we could also
@@ -148,6 +166,7 @@ mismatch:
      return Boolean is (A = B (B'First .. B'First - 1 + A'Length)) with
      Pre  => A'Length <= B'Length,
      Post => Equal'Result =
+     (not Mismatch (A, B (B'First .. B'First - 1 + A'Length)).Exists);
 #+END_SRC
 
 These specification and implementation of ~Equal~ can also be

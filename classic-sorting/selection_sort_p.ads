@@ -6,7 +6,8 @@ with Min_Element_P;       use Min_Element_P;
 with Lower_Bound_P;       use Lower_Bound_P;
 
 package Selection_Sort_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
    procedure Selection_Sort (A : in out T_Arr) with
       Post => Sorted (A) and then Multiset_Unchanged (A, A'Old);

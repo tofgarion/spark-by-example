@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 15:15
+# Created 2018-09-25 Tue 10:57
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Equal_Range.org
 

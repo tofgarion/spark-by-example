@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 17:01
+# Created 2018-09-25 Tue 10:57
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Is_Heap.org
 
@@ -82,7 +82,9 @@ of ~I~.
 The ~Is_Heap~ can be specified as follows:
 
 #+BEGIN_SRC ada
-  function Is_Heap (H : Heap) return Boolean with
+  function Is_Heap
+    (H : Heap)
+     return Boolean with
      Post => Is_Heap'Result = Is_Heap_Def (H);
 #+END_SRC
 
@@ -95,7 +97,10 @@ previously defined predicate.
 ~Is_Heap~ can be implemented in the following way:
 
 #+BEGIN_SRC ada
-  function Is_Heap (H : Heap) return Boolean is
+  function Is_Heap
+    (H : Heap)
+     return Boolean
+  is
      Parent : Natural := 1;
   begin
      if H.Size > H.A'Length then
@@ -110,18 +115,17 @@ previously defined predicate.
   	    end if;
   
   	    pragma Loop_Invariant
-  	      (1 <= Parent
-  	       and then Parent < Child
+  	      (1 <= Parent and then Parent < Child
   	       and then Child <= H.Size);
   	    pragma Loop_Invariant (Parent = Heap_Parent (Child));
   	    pragma Loop_Invariant (Is_Heap_Def ((A => H.A, Size => Child)));
-  	    pragma Assert(if Child = H.Size then Is_Heap_Def(H)); 
+  	    pragma Assert (if Child = H.Size then Is_Heap_Def (H));
   	    if Child mod 2 = 1 then
   	       Parent := Parent + 1;
   	    end if;
   
   	 end loop;
-  	 pragma Assert(Is_Heap_Def(H));
+  	 pragma Assert (Is_Heap_Def (H));
         end if;
   
         return True;

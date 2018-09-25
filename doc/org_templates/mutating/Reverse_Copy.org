@@ -39,7 +39,7 @@
 
     ~Reverse_Copy~ is implemented in the following way:
 
-    #+INCLUDE: "../../../mutating/reverse_copy_p.adb" :src ada :range-begin "procedure Reverse_Copy" :range-end "end Reverse_Copy;" :lines "5-20"
+    #+INCLUDE: "../../../mutating/reverse_copy_p.adb" :src ada :range-begin "procedure Reverse_Copy" :range-end "end Reverse_Copy;" :lines "5-19"
 
     The implementation is straightforward, the loop invariant
     specifies that the sub-array composed of the first ~I-B'First~

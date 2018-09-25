@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 13:23
+# Created 2018-09-25 Tue 10:57
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Count.org
 
@@ -38,6 +38,8 @@ non-recursive functions*.
     (if A'Length = 0 then 0
      elsif A (A'Last) = Val then Occ_Def (Remove_Last (A), Val) + 1
      else Occ_Def (Remove_Last (A), Val)) with
+     Post => Occ_Def'Result <= A'Length;
+  pragma Annotate (Gnatprove, Terminating, Occ_Def);
 #+END_SRC
 
 The line ~pragma Annotate (Gnatprove, Terminating, Occ_Def);~ is
@@ -52,8 +54,11 @@ After having defined ~Occ_def~, the definition of ~Occ~ is rather
 easy:
 
 #+BEGIN_SRC ada
-  is
-    function Occ
+  function Occ
+    (A   : T_Arr;
+     Val : T)
+     return Natural is (Occ_Def (A, Val)) with
+     Post => Occ'Result <= A'Length;
 #+END_SRC
 
 #+BEGIN_SRC ada
@@ -73,6 +78,9 @@ The specification of ~Count~ is the following:
     (A   : T_Arr;
      Val : T)
      return Natural with
+     Post =>
+     (Count'Result <= A'Length and then Count'Result in 0 .. A'Length
+      and then Count'Result = Occ (A, Val));
 #+END_SRC
 
 The postconditions express
@@ -99,6 +107,11 @@ The implementation of ~Count~ is the following:
         end if;
   
         pragma Loop_Invariant (Result <= A'Length);
+        pragma Loop_Invariant (Result = Occ (A (A'First .. I), Val));
+     end loop;
+  
+     return Result;
+  end Count;
 #+END_SRC
 
 The first invariant states that ~Result~ always stays in a correct

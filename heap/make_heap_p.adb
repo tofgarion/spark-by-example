@@ -1,7 +1,11 @@
 package body Make_Heap_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Make_Heap (A : T_Arr) return Heap is
+   function Make_Heap
+     (A : T_Arr)
+      return Heap
+   is
       Result : Heap;
       A_Save : T_Arr := Result.A with
          Ghost;
@@ -22,24 +26,20 @@ package body Make_Heap_P with
                A_Save      := Result.A;
 
                Unchanged_Transitivity
-                 (A (A'First .. J - 1),
-                  Result.A (1 .. Size - 1),
+                 (A (A'First .. J - 1), Result.A (1 .. Size - 1),
                   A_Save (1 .. Size - 1));
 
                Result.A (Size) := A (J);
 
                Unchanged_Transitivity
-                 (A (A'First .. J - 1),
-                  A_Save (1 .. Size - 1),
+                 (A (A'First .. J - 1), A_Save (1 .. Size - 1),
                   Result.A (1 .. Size - 1));
                New_Element (A (A'First .. J), Result.A (1 .. Size));
 
                A_Save := Result.A;
 
                Unchanged_Transitivity
-                 (A (A'First .. J),
-                  Result.A (1 .. Size),
-                  A_Save (1 .. Size));
+                 (A (A'First .. J), Result.A (1 .. Size), A_Save (1 .. Size));
 
                Push_Heap (Result);
 
@@ -48,9 +48,7 @@ package body Make_Heap_P with
                end if;
 
                Unchanged_Transitivity
-                 (A (A'First .. J),
-                  A_Save (1 .. Size),
-                  Result.A (1 .. Size));
+                 (A (A'First .. J), A_Save (1 .. Size), Result.A (1 .. Size));
 
                pragma Loop_Invariant
                  (Result.Size = J - A'First + 1 and Result.Size = Size);

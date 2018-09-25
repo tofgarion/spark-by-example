@@ -1,7 +1,12 @@
 package body Accumulate_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Accumulate (A : T_Arr; Init : T) return T is
+   function Accumulate
+     (A    : T_Arr;
+      Init : T)
+      return T
+   is
       Result : T := Init;
    begin
       for J in A'Range loop

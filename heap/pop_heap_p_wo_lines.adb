@@ -1,16 +1,20 @@
 package body Pop_Heap_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Maximum_Heap_Child (H : Heap; P : Positive) return Option is
+   function Maximum_Heap_Child
+     (H : Heap;
+      P : Positive)
+      return Option
+   is
       Right, Left : Positive;  -- storage for the two childs.
    begin
       if P <= H.Size / 2 then
          Right := 2 * P + 1;
          Left  := Right - 1;
          if Right <= H.Size then
-            return
-              (Exists => True,
-               Value  => (if H.A (Right) <= H.A (Left) then Left else Right));
+            return (Exists => True,
+               Value => (if H.A (Right) <= H.A (Left) then Left else Right));
          else
             return (Exists => True, Value => Left);
          end if;
@@ -29,18 +33,15 @@ package body Pop_Heap_P with
       A_Init : T_Arr (H.A'Range) := H.A with
          Ghost;  -- initial array backup
    begin
-      if H.A (H.Size) <
-        V
+      if H.A (H.Size) < V
       then  --nothing to be done otherwise (H.A is "constant")
          Child := Maximum_Heap_Child (H, Hole);
-         while Child.Exists
-           and then Child.Value < H.Size
+         while Child.Exists and then Child.Value < H.Size
            and then H.A (H.Size) < H.A (Child.Value)
          loop
 
             Swap_Array
-              (Interm,
-               Hole,
+              (Interm, Hole,
                Child
                  .Value); -- permutation approach: preserves multiset but not heap structure
 
@@ -59,7 +60,7 @@ package body Pop_Heap_P with
          H.A (H.Size) := V;
          Swap_Array (Interm, Hole, H.Size);
 
-	    else
+      else
       end if;
 
       H.Size := H.Size - 1;

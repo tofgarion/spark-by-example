@@ -1,4 +1,4 @@
-# Created 2018-09-21 Fri 18:02
+# Created 2018-09-25 Tue 10:58
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../sorting/Partial_Sort.org
 
@@ -34,19 +34,15 @@ The ~Partition~ predicate is the following:
 The specification of ~Partial_Sort~ is rather simple:
 
 #+BEGIN_SRC ada
-  procedure Partial_Sort_Aux (H : in out Heap; M : Positive) with
-     Pre => H.Size > 0
-     and then M in 2 .. H.Size
-     and then H.Size <= MAX_SIZE
+  procedure Partial_Sort_Aux
+    (H : in out Heap;
+     M :        Positive) with
+     Pre => H.Size > 0 and then M in 2 .. H.Size and then H.Size <= MAX_SIZE
      and then (if M > 1 then Is_Heap_Def ((A => H.A, Size => M - 1))),
-     Post => Sorted (H.A (1 .. M - 1))
-     and then Partition (H.A, M, H.Size)
-     and then Multiset_Unchanged (H.A'Old, H.A)
-     and then H.Size = H'Old.Size
+     Post => Sorted (H.A (1 .. M - 1)) and then Partition (H.A, M, H.Size)
+     and then Multiset_Unchanged (H.A'Old, H.A) and then H.Size = H'Old.Size
      and then
-     (if
-        H.Size < MAX_SIZE
-      then
+     (if H.Size < MAX_SIZE then
         H'Old.A (H.Size + 1 .. MAX_SIZE) = H.A (H.Size + 1 .. MAX_SIZE));
 #+END_SRC
 
@@ -64,19 +60,15 @@ indexes ~1~ and ~M-1~ instead of an array ~A~.
 The specification of our auxiliary function is:
 
 #+BEGIN_SRC ada
-  procedure Partial_Sort_Aux (H : in out Heap; M : Positive) with
-     Pre => H.Size > 0
-     and then M in 2 .. H.Size
-     and then H.Size <= MAX_SIZE
+  procedure Partial_Sort_Aux
+    (H : in out Heap;
+     M :        Positive) with
+     Pre => H.Size > 0 and then M in 2 .. H.Size and then H.Size <= MAX_SIZE
      and then (if M > 1 then Is_Heap_Def ((A => H.A, Size => M - 1))),
-     Post => Sorted (H.A (1 .. M - 1))
-     and then Partition (H.A, M, H.Size)
-     and then Multiset_Unchanged (H.A'Old, H.A)
-     and then H.Size = H'Old.Size
+     Post => Sorted (H.A (1 .. M - 1)) and then Partition (H.A, M, H.Size)
+     and then Multiset_Unchanged (H.A'Old, H.A) and then H.Size = H'Old.Size
      and then
-     (if
-        H.Size < MAX_SIZE
-      then
+     (if H.Size < MAX_SIZE then
         H'Old.A (H.Size + 1 .. MAX_SIZE) = H.A (H.Size + 1 .. MAX_SIZE));
 #+END_SRC
 
@@ -90,40 +82,41 @@ changed.
 The implementation of ~Partial_Sort_Aux~ is the following:
 
 #+BEGIN_SRC ada
-  procedure Partial_Sort_Aux (H : in out Heap; M : Positive) is
+  procedure Partial_Sort_Aux
+    (H : in out Heap;
+     M :        Positive)
+  is
      Old_Size : constant Natural := H.Size;
      Size     : constant Natural := M - 1;
      A_Save   : T_Arr            := H.A with
         Ghost;
   begin
-        H.Size := Size;
-        for J in M .. Old_Size loop
-  	 if H.A (J) < H.A (1) then
-  	    Pop_Heap (H);
-  	    Swap_Array (H.A, M - 1, J);
-  	    H.Size := Size;
-  	    A_Save := H.A;
-  	    Push_Heap (H);
-  	    Prove_Lower_Bound (H.A, A_Save, M, J);
+     H.Size := Size;
+     for J in M .. Old_Size loop
+        if H.A (J) < H.A (1) then
+  	 Pop_Heap (H);
+  	 Swap_Array (H.A, M - 1, J);
+  	 H.Size := Size;
+  	 A_Save := H.A;
+  	 Push_Heap (H);
+  	 Prove_Lower_Bound (H.A, A_Save, M, J);
   
-  	 end if;
-  	 Upper_Bound_Heap (H, H.A (1));
-  	 pragma Loop_Invariant (H.Size = Size);
-  	 pragma Loop_Invariant (Is_Heap_Def (H));
-  	 pragma Loop_Invariant (Upper_Bound (H.A (1 .. M - 1), H.A (1)));
-  	 pragma Loop_Invariant (Lower_Bound (H.A (M .. J), H.A (1)));
-  	 pragma Loop_Invariant (Multiset_Unchanged (H.A, H'Loop_Entry.A));
-  	 pragma Loop_Invariant
-  	   (if
-  	      J < MAX_SIZE
-  	    then
-  	      H.A (J + 1 .. MAX_SIZE) = H'Loop_Entry.A (J + 1 .. MAX_SIZE));
-        end loop;
-        A_Save := H.A;
-        Sort_Heap (H);
+        end if;
+        Upper_Bound_Heap (H, H.A (1));
+        pragma Loop_Invariant (H.Size = Size);
+        pragma Loop_Invariant (Is_Heap_Def (H));
+        pragma Loop_Invariant (Upper_Bound (H.A (1 .. M - 1), H.A (1)));
+        pragma Loop_Invariant (Lower_Bound (H.A (M .. J), H.A (1)));
+        pragma Loop_Invariant (Multiset_Unchanged (H.A, H'Loop_Entry.A));
+        pragma Loop_Invariant
+  	(if J < MAX_SIZE then
+  	   H.A (J + 1 .. MAX_SIZE) = H'Loop_Entry.A (J + 1 .. MAX_SIZE));
+     end loop;
+     A_Save := H.A;
+     Sort_Heap (H);
   
-        H.Size := Old_Size;
-        Prove_Partition (H.A, A_Save, M, Old_Size);
+     H.Size := Old_Size;
+     Prove_Partition (H.A, A_Save, M, Old_Size);
   end Partial_Sort_Aux;
 #+END_SRC
 
@@ -375,7 +368,10 @@ heap. The only thing remaining is playing with a backup of ~A~ to
 prove the ~Multiset_Unchanged~ preservation.
 
 #+BEGIN_SRC ada
-  procedure Partial_Sort (A : in out T_Arr; M : Positive) is
+  procedure Partial_Sort
+    (A : in out T_Arr;
+     M :        Positive)
+  is
      H      : Heap;
      A_Save : T_Arr := H.A with
         Ghost;
@@ -390,20 +386,17 @@ prove the ~Multiset_Unchanged~ preservation.
   	 A_Save := H.A;
   
   	 Unchanged_Transitivity
-  	   (A_Old (A'First .. J - 1),
-  	    H.A (1 .. J - A'First),
+  	   (A_Old (A'First .. J - 1), H.A (1 .. J - A'First),
   	    A_Save (1 .. J - A'First));
   	 H.A (J - A'First + 1) := A (J);
   	 Unchanged_Transitivity
-  	   (A_Old (A'First .. J - 1),
-  	    A_Save (1 .. J - A'First),
+  	   (A_Old (A'First .. J - 1), A_Save (1 .. J - A'First),
   	    H.A (1 .. J - A'First));
   	 New_Element (A_Old (A'First .. J), H.A (1 .. J - A'First + 1));
   
   	 pragma Loop_Invariant
   	   (Multiset_Unchanged
-  	      (A_Old (A'First .. J),
-  	       H.A (1 .. J - A'First + 1)));
+  	      (A_Old (A'First .. J), H.A (1 .. J - A'First + 1)));
   	 pragma Loop_Invariant
   	   (Is_Heap_Def ((A => H.A, Size => M - A'First)));
         end loop;

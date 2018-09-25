@@ -1,5 +1,6 @@
 package body Push_Heap_P with
-     Spark_Mode is
+   Spark_Mode
+ is
    procedure Push_Heap (H : in out Heap) is
       V    : T                 := H.A (H.Size);
       Size : constant Positive := H.Size with
@@ -26,9 +27,9 @@ package body Push_Heap_P with
             H.A (H.Size) := H.A (Hole);
             Make_Prove_Prologue (H.A, A_Old, V, H.Size);
 
-	    -- end of Prologue
+            -- end of Prologue
 
-	    -- beginning of Main Act
+            -- beginning of Main Act
 
             if 1 < Hole then
 
@@ -53,9 +54,7 @@ package body Push_Heap_P with
                   end if;
 
                   pragma Loop_Invariant
-                    (if
-                       Size < MAX_SIZE
-                     then
+                    (if Size < MAX_SIZE then
                        A_Old (Size + 1 .. MAX_SIZE) =
                        H.A (Size + 1 .. MAX_SIZE));
                   pragma Loop_Invariant (Hole in 1 .. H.Size);
@@ -71,12 +70,12 @@ package body Push_Heap_P with
                end loop;
             end if;
 
-	    -- end of Main Act
+            -- end of Main Act
 
-	    -- beginning of Epilogue
+            -- beginning of Epilogue
 
-            A_Save := H.A;
-            V_Old  := H.A (Hole);
+            A_Save     := H.A;
+            V_Old      := H.A (Hole);
             H.A (Hole) := V;
 
             Make_Prove_Epilogue (H.A, A_Save, A_Old, V, Hole);

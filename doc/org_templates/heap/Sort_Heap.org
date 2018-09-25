@@ -15,7 +15,7 @@
 
     The specification of ~Sort_Heap~ is as follows:
 
-    #+INCLUDE: "../../../heap/sort_heap_p.ads" :src ada :range-begin "procedure Sort_Heap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-22"
+    #+INCLUDE: "../../../heap/sort_heap_p.ads" :src ada :range-begin "procedure Sort_Heap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "13-21"
 
     The only precondition states that ~H~ should represent a heap data
     structure. The postcondition expresses that:
@@ -30,7 +30,7 @@
     With the help of the previously implemented procedure [[Pop_Heap.org][Pop_Heap]],
     ~Sort_Heap~ is quite easy to implement:
 
-    #+INCLUDE: "../../../heap/sort_heap_p.adb" :src ada :range-begin "procedure Sort_Heap" :range-end "End Sort_Heap;" :lines "4-29"
+    #+INCLUDE: "../../../heap/sort_heap_p.adb" :src ada :range-begin "procedure Sort_Heap" :range-end "End Sort_Heap;" :lines "5-28"
 
     The ghost variable ~Interm~ will be used to compare the state of
     ~H~ during the execution of the loop with the previous iteration.

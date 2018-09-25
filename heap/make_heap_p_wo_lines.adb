@@ -1,7 +1,11 @@
 package body Make_Heap_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Make_Heap (A : T_Arr) return Heap is
+   function Make_Heap
+     (A : T_Arr)
+      return Heap
+   is
       Result : Heap;
    begin
       if A'Length > 0 then

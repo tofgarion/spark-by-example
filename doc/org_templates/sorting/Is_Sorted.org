@@ -14,7 +14,7 @@
 
     The specification is simple to write:
 
-    #+INCLUDE: "../../../sorting/is_sorted_p.ads" :src ada :range-begin "function Is_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-16"
+    #+INCLUDE: "../../../sorting/is_sorted_p.ads" :src ada :range-begin "function Is_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "13-18"
 
 *** The Weakly_Sorted predicate and its lemma
 
@@ -28,11 +28,11 @@
     the prover cannot prove this implication on its own. We have to
     write a lemma to prove it:
 
-    #+INCLUDE: "../../../sorting/is_sorted_p.ads" :src ada :range-begin "procedure Weakly_To_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-11"
+    #+INCLUDE: "../../../sorting/is_sorted_p.ads" :src ada :range-begin "procedure Weakly_To_Sorted" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-12"
 
     Its implementation is classic:
 
-    #+INCLUDE: "../../../sorting/is_sorted_p.adb" :src ada :range-begin "procedure Weakly_To_Sorted" :range-end "End Weakly_To_Sorted;" :lines "4-11"
+    #+INCLUDE: "../../../sorting/is_sorted_p.adb" :src ada :range-begin "procedure Weakly_To_Sorted" :range-end "End Weakly_To_Sorted;" :lines "5-12"
 
 *** Implementation of Is_Sorted
 
@@ -40,7 +40,7 @@
     or not. If this is the case, we will apply our previous lemma and
     return ~True~:
 
-    #+INCLUDE: "../../../sorting/is_sorted_p.adb" :src ada :range-begin "function Is_Sorted" :range-end "End Is_Sorted;" :lines "12-29"
+    #+INCLUDE: "../../../sorting/is_sorted_p.adb" :src ada :range-begin "function Is_Sorted" :range-end "End Is_Sorted;" :lines "13-33"
 
     Everything is proved by ~GNATprove~.
 

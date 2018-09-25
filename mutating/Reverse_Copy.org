@@ -1,4 +1,4 @@
-# Created 2018-08-17 Fri 14:51
+# Created 2018-09-25 Tue 10:57
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Reverse_Copy.org
 
@@ -54,21 +54,20 @@ reverse order of those of ~B~.
 ~Reverse_Copy~ is implemented in the following way:
 
 #+BEGIN_SRC ada
-     procedure Reverse_Copy
-       (A :        T_Arr;
-        B : in out T_Arr)
-     is
-     begin
-        for J in B'Range loop
-  	 B (J) := A (A'Last - (J - B'First));
+  procedure Reverse_Copy
+    (A :        T_Arr;
+     B : in out T_Arr)
+  is
+  begin
+     for J in B'Range loop
+        B (J) := A (A'Last - (J - B'First));
   
-  	 pragma Loop_Invariant
-  	   (Is_Reversed
-  	      (B (B'First .. J), A (A'Last - (J - B'First) .. A'Last)));
+        pragma Loop_Invariant
+  	(Is_Reversed
+  	   (B (B'First .. J), A (A'Last - (J - B'First) .. A'Last)));
   
-        end loop;
-     end Reverse_Copy;
-  end Reverse_Copy_P;
+     end loop;
+  end Reverse_Copy;
 #+END_SRC
 
 The implementation is straightforward, the loop invariant

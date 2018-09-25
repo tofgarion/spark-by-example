@@ -14,7 +14,7 @@
 
     The specification of ~Make_Heap~ is the following:
 
-    #+INCLUDE: "../../../heap/make_heap_p.ads" :src ada :range-begin "function Make_Heap" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-21"
+    #+INCLUDE: "../../../heap/make_heap_p.ads" :src ada :range-begin "function Make_Heap" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-23"
 
     The function takes an array that should have a length less than
     the maximum size of a heap. The postconditions are expresse
@@ -37,7 +37,7 @@
 
     #+RESULTS[8d748b62231c92a51325bfdcb47287c2d081853d]:
 
-    #+INCLUDE: "../../../heap/make_heap_p_wo_lines.adb" :src ada :range-begin "function Make_Heap" :range-end "end Make_Heap;" :lines "4-32"
+    #+INCLUDE: "../../../heap/make_heap_p_wo_lines.adb" :src ada :range-begin "function Make_Heap" :range-end "end Make_Heap;" :lines "5-36"
 
     The loop invariants specify the fact that:
     - the size of the heap is increasing at each loop
@@ -83,7 +83,7 @@
      The final implementation of ~Make_Heap~ with all necessary calls
      to lemmas is:
 
-     #+INCLUDE: "../../../heap/make_heap_p.adb" :src ada :range-begin "function Make_Heap" :range-end "End Make_Heap;" :lines "4-67"
+     #+INCLUDE: "../../../heap/make_heap_p.adb" :src ada :range-begin "function Make_Heap" :range-end "End Make_Heap;" :lines "5-65"
 
      Everything is proved Using ~GNATprove~.
 

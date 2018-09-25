@@ -20,7 +20,7 @@
    ~Has_Value_Of~ predicate using the previously defined ~Has_Value~
    predicate:
 
-   #+INCLUDE: "../../../spec/has_value_of_p.ads" :src ada :range-begin "function Has_Value_Of" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-14"
+   #+INCLUDE: "../../../spec/has_value_of_p.ads" :src ada :range-begin "function Has_Value_Of" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-15"
 
    Again, ~Has_Value_Of~ is defined in a package with the ~Ghost~
    aspect, so ~Has_Value_Of~ can only be used in
@@ -33,7 +33,7 @@
     Using ~Has_Value~ and ~Has_Value_Of~, the specification of
     ~Find_First_Of~ can be written as
 
-    #+INCLUDE: "../../../non-mutating/find_first_of_p.ads" :src ada :range-begin "function Find_First_Of" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-18"
+    #+INCLUDE: "../../../non-mutating/find_first_of_p.ads" :src ada :range-begin "function Find_First_Of" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-22"
 
     There are two behaviors for ~Find_First_Of~ (defined here by two
     contract cases):
@@ -49,7 +49,7 @@
 
     The implementation of Find_First_Of is the following:
 
-    #+INCLUDE: "../../../non-mutating/find_first_of_p.adb" :src ada :range-begin "function Find_First_Of" :range-end "end Find_First_Of;" :lines "7-23"
+    #+INCLUDE: "../../../non-mutating/find_first_of_p.adb" :src ada :range-begin "function Find_First_Of" :range-end "end Find_First_Of;" :lines "8-28"
 
     We use the ~Find~ algorithm on each element of ~A~ to check if it
     is present in ~B~. The invariants are rather

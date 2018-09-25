@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 13:23
+# Created 2018-09-25 Tue 10:57
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Find_First_Of.org
 
@@ -22,10 +22,10 @@ In order to specify ~Find_First_Of~, we first define the
 predicate:
 
 #+BEGIN_SRC ada
-  is
-    function Has_Value_Of
-      (A : T_Arr;
-       B : T_Arr)
+  function Has_Value_Of
+    (A : T_Arr;
+     B : T_Arr)
+     return Boolean is (for some I in A'Range => Has_Value (B, A (I)));
 #+END_SRC
 
 Again, ~Has_Value_Of~ is defined in a package with the ~Ghost~
@@ -47,6 +47,10 @@ Using ~Has_Value~ and ~Has_Value_Of~, the specification of
      Contract_Cases =>
      (Has_Value_Of (A, B) =>
         (Find_First_Of'Result.Exists = True)
+        and then (Has_Value (B, A (Find_First_Of'Result.Value)))
+        and then
+        (not Has_Value_Of (A (A'First .. Find_First_Of'Result.Value - 1), B)),
+      others => Find_First_Of'Result.Exists = False);
 #+END_SRC
 
 There are two behaviors for ~Find_First_Of~ (defined here by two
@@ -79,6 +83,11 @@ The implementation of Find_First_Of is the following:
         end if;
   
         pragma Loop_Invariant (not Has_Value_Of (A (A'First .. I), B));
+        pragma Loop_Invariant (not Result.Exists);
+     end loop;
+  
+     return Result;
+  end Find_First_Of;
 #+END_SRC
 
 We use the ~Find~ algorithm on each element of ~A~ to check if it

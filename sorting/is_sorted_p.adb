@@ -1,5 +1,6 @@
 package body Is_Sorted_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
    procedure Weakly_To_Sorted (A : T_Arr) is
    begin
@@ -9,7 +10,10 @@ package body Is_Sorted_P with
       end loop;
    end Weakly_To_Sorted;
 
-   function Is_Sorted (A : T_Arr) return Boolean is
+   function Is_Sorted
+     (A : T_Arr)
+      return Boolean
+   is
    begin
       if A'Length > 0 then
          for J in A'First .. A'Last - 1 loop

@@ -1,4 +1,4 @@
-# Created 2018-09-21 Fri 15:39
+# Created 2018-09-25 Tue 10:58
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Make_Heap.org
 
@@ -16,15 +16,16 @@ with the same values. Its signature is the following:
 The specification of ~Make_Heap~ is the following:
 
 #+BEGIN_SRC ada
-  function Make_Heap (A : T_Arr) return Heap with
+  function Make_Heap
+    (A : T_Arr)
+     return Heap with
      Pre            => A'Length <= MAX_SIZE and A'Last < Positive'Last,
      Contract_Cases =>
      (A'Length > 0 =>
         Make_Heap'Result.Size = A'Length
         and then Is_Heap_Def (Make_Heap'Result)
         and then Multiset_Unchanged
-  	(Make_Heap'Result.A (1 .. Make_Heap'Result.Size),
-  	 A),
+  	(Make_Heap'Result.A (1 .. Make_Heap'Result.Size), A),
       others => Make_Heap'Result = (A => (others => 0), Size => 0));
 #+END_SRC
 
@@ -44,7 +45,10 @@ through contract cases:
 The implementation of ~Make_Heap~ is the following:
 
 #+BEGIN_SRC ada
-  function Make_Heap (A : T_Arr) return Heap is
+  function Make_Heap
+    (A : T_Arr)
+     return Heap
+  is
      Result : Heap;
   begin
      if A'Length > 0 then
@@ -143,7 +147,10 @@ The final implementation of ~Make_Heap~ with all necessary calls
 to lemmas is:
 
 #+BEGIN_SRC ada
-  function Make_Heap (A : T_Arr) return Heap is
+  function Make_Heap
+    (A : T_Arr)
+     return Heap
+  is
      Result : Heap;
      A_Save : T_Arr := Result.A with
         Ghost;
@@ -164,24 +171,20 @@ to lemmas is:
   	    A_Save      := Result.A;
   
   	    Unchanged_Transitivity
-  	      (A (A'First .. J - 1),
-  	       Result.A (1 .. Size - 1),
+  	      (A (A'First .. J - 1), Result.A (1 .. Size - 1),
   	       A_Save (1 .. Size - 1));
   
   	    Result.A (Size) := A (J);
   
   	    Unchanged_Transitivity
-  	      (A (A'First .. J - 1),
-  	       A_Save (1 .. Size - 1),
+  	      (A (A'First .. J - 1), A_Save (1 .. Size - 1),
   	       Result.A (1 .. Size - 1));
   	    New_Element (A (A'First .. J), Result.A (1 .. Size));
   
   	    A_Save := Result.A;
   
   	    Unchanged_Transitivity
-  	      (A (A'First .. J),
-  	       Result.A (1 .. Size),
-  	       A_Save (1 .. Size));
+  	      (A (A'First .. J), Result.A (1 .. Size), A_Save (1 .. Size));
   
   	    Push_Heap (Result);
   
@@ -190,9 +193,7 @@ to lemmas is:
   	    end if;
   
   	    Unchanged_Transitivity
-  	      (A (A'First .. J),
-  	       A_Save (1 .. Size),
-  	       Result.A (1 .. Size));
+  	      (A (A'First .. J), A_Save (1 .. Size), Result.A (1 .. Size));
   
   	    pragma Loop_Invariant
   	      (Result.Size = J - A'First + 1 and Result.Size = Size);

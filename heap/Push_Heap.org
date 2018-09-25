@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 09:40
+# Created 2018-09-25 Tue 10:58
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Push_Heap.org
 
@@ -35,12 +35,9 @@ The specification of ~Push_Heap~ is rather simple to express:
   procedure Push_Heap (H : in out Heap) with
      Pre => H.Size in 1 .. MAX_SIZE
      and then Is_Heap_Def ((A => H.A, Size => H.Size - 1)),
-     Post => Is_Heap_Def (H)
-     and then Multiset_Unchanged (H'Old.A, H.A)
+     Post => Is_Heap_Def (H) and then Multiset_Unchanged (H'Old.A, H.A)
      and then
-     (if
-        H.Size < MAX_SIZE
-      then
+     (if H.Size < MAX_SIZE then
         H'Old.A (H.Size + 1 .. MAX_SIZE) = H.A (H.Size + 1 .. MAX_SIZE))
      and then H.Size = H'Old.Size;
 #+END_SRC
@@ -269,9 +266,7 @@ the following:
         end if;
   
         pragma Loop_Invariant
-  	(if
-  	   Size < MAX_SIZE
-  	 then
+  	(if Size < MAX_SIZE then
   	   A_Old (Size + 1 .. MAX_SIZE) =
   	   H.A (Size + 1 .. MAX_SIZE));
         pragma Loop_Invariant (Hole in 1 .. H.Size);
@@ -381,8 +376,8 @@ Now that the final index where ~V~ can be has been found, we just have to insert
 #+BEGIN_SRC ada
   	 -- beginning of Epilogue
   
-  	 A_Save := H.A;
-  	 V_Old  := H.A (Hole);
+  	 A_Save     := H.A;
+  	 V_Old      := H.A (Hole);
   	 H.A (Hole) := V;
   
   	 Make_Prove_Epilogue (H.A, A_Save, A_Old, V, Hole);

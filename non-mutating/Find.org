@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 13:23
+# Created 2018-09-25 Tue 10:57
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Find.org
 
@@ -42,6 +42,9 @@ A first specification of ~Find~ can be the following:
      (Find'Result <= A'Last + 1
       and then (for all I in A'First .. Find'Result - 1 => A (I) /= Val)),
      Contract_Cases =>
+     ((for some I in A'Range => A (I) = Val) =>
+        Find'Result <= A'Last and then A (Find'Result) = Val,
+      others => Find'Result = A'Last + 1);
 #+END_SRC
 
 - the [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#postconditions][postcondition]] indicates that the result of ~Find~ is always
@@ -74,6 +77,9 @@ A first specification of ~Find~ can be the following:
        (Find'Result <= A'Last + 1
         and then (for all I in A'First .. Find'Result - 1 => A (I) /= Val)),
        Contract_Cases =>
+       ((for some I in A'Range => A (I) = Val) =>
+          Find'Result <= A'Last and then A (Find'Result) = Val,
+        (for some I in A'Range => A (I) /= Val) => Find'Result = A'Last + 1);
   #+END_SRC
 
   In this case, ~GNATprove~ emits two errors:
@@ -104,6 +110,10 @@ The implementation of ~Find~ is straightforward:
         end if;
   
         pragma Loop_Invariant (for all J in A'First .. I => A (J) /= Val);
+     end loop;
+  
+     return A'Last + 1;
+  end Find;
 #+END_SRC
 
 - the implementation is classic: we range over ~A~ indexes trying
@@ -158,6 +168,8 @@ Defining the ~Has_Value~ predicate is rather straightforward:
 #+BEGIN_SRC ada
   function Has_Value
     (A   : T_Arr;
+     Val : T)
+     return Boolean is (for some I in A'Range => A (I) = Val);
 #+END_SRC
 
 Notice that ~Has_Value~ is defined in a package with the ~Ghost~
@@ -204,6 +216,9 @@ The specification of ~Find~ is now:
      (Has_Value (A, Val) =>
         (Find'Result.Exists = True)
         and then Find'Result.Value in A'First .. A'Last
+        and then (A (Find'Result.Value) = Val)
+        and then (not Has_Value (A (A'First .. Find'Result.Value - 1), Val)),
+      others => Find'Result.Exists = False);
 #+END_SRC
 
 Using ~Option~ overloads the function specification but is
@@ -235,6 +250,10 @@ except the use of the ~Option~ type:
   
         pragma Loop_Invariant (not Has_Value (A (A'First .. I), Val));
         pragma Loop_Invariant (not Result.Exists);
+     end loop;
+  
+     return Result;
+  end Find;
 #+END_SRC
 
 Notice that a slice is also used for the loop invariant and that

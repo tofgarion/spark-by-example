@@ -27,7 +27,7 @@
     identical. Using Ada support for array types, we can directly use
     equality on arrays to define the predicate:
 
-    #+INCLUDE: "../../../spec/equal_ranges_p.ads" :src ada :range-begin "function Equal_Ranges" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-11"
+    #+INCLUDE: "../../../spec/equal_ranges_p.ads" :src ada :range-begin "function Equal_Ranges" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-15"
 
     ~Equal_Ranges (A, B)~ will be false if ~B~ is longer than ~A~, so
     we have to pay attention to the slices that will be used in
@@ -37,7 +37,7 @@
     an offset (this is just syntactic sugar as slices can also be
     used):
 
-    #+INCLUDE: "../../../spec/equal_ranges_p.ads" :src ada :range-begin "function Equal_Ranges" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-11"
+    #+INCLUDE: "../../../spec/equal_ranges_p.ads" :src ada :range-begin "function Equal_Ranges" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-15"
 
     We need to add a [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#preconditions][precondition]] to exclude invalid ~Offset~
     values. Notice that running ~GNATprove~ on the corresponding file
@@ -55,7 +55,7 @@
       - ~A~ and ~B~ differ at offset ~I~ and all elements of ~A~ and
         ~B~ are equal up to offset ~I~
 
-    #+INCLUDE: "../../../non-mutating/mismatch_p.ads" :src ada :range-begin "function Mismatch" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-24"
+    #+INCLUDE: "../../../non-mutating/mismatch_p.ads" :src ada :range-begin "function Mismatch" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-26"
 
     Notice that we must add a precondition specifying that ~A~ has the
     same length than ~B~ to mimic ACSL by Example specification and to
@@ -65,7 +65,7 @@
 
     The implementation of ~Mismatch~ is the following:
 
-    #+INCLUDE: "../../../non-mutating/mismatch_p.adb" :src ada :range-begin "function Mismatch" :range-end "end Mismatch;" :lines "6-22"
+    #+INCLUDE: "../../../non-mutating/mismatch_p.adb" :src ada :range-begin "function Mismatch" :range-end "end Mismatch;" :lines "7-27"
 
     The invariants are rather simple to write using the predicate
     ~Equal_Ranges~.
@@ -77,13 +77,13 @@
     but that ~B~ may be longer than ~A~. In this case, we only compare
     the first ~A'Length~ elements of ~B~ with the ones of ~A~.
 
-    #+INCLUDE: "../../../non-mutating/equal_p.ads" :src ada :range-begin "function Equal" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-13"
+    #+INCLUDE: "../../../non-mutating/equal_p.ads" :src ada :range-begin "function Equal" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-17"
 
 *** Implementation of Equal
 
     ~Equal~ is easily implemented using ~Mismatch~:
 
-    #+INCLUDE: "../../../non-mutating/equal_p.adb" :src ada :range-begin "function Equal" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-11"
+    #+INCLUDE: "../../../non-mutating/equal_p.adb" :src ada :range-begin "function Equal" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-13"
 
     As ~Equal~ is defined with an expression function, we could also
     have directly give the implementation of ~Equal~ within its
@@ -96,7 +96,7 @@
     specifying as a postcondition that arrays ~A~ and ~B~ do not
     mismatch:
 
-    #+INCLUDE: "../../../non-mutating/equal_rev_p.ads" :src ada :range-begin "function Equal" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-17"
+    #+INCLUDE: "../../../non-mutating/equal_rev_p.ads" :src ada :range-begin "function Equal" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-18"
 
     These specification and implementation of ~Equal~ can also be
     proved.

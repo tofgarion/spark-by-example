@@ -7,7 +7,8 @@ with Upper_Bound_P;        use Upper_Bound_P;
 with Lower_Bound_P;        use Lower_Bound_P;
 
 package Insertion_Sort_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
    procedure Insertion_Sort (A : in out T_Arr) with
       Pre  => A'Last < Positive'Last,

@@ -1,5 +1,6 @@
 package body Sort_Heap_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
    procedure Sort_Heap (H : in out Heap) is
       Interm : Heap := H with
@@ -20,9 +21,7 @@ package body Sort_Heap_P with
          pragma Loop_Invariant (Lower_Bound (H.A (J .. N), H.A (J)));
          pragma Loop_Invariant (Sorted (H.A (J .. N)));
          pragma Loop_Invariant
-           (if
-              N < MAX_SIZE
-            then
+           (if N < MAX_SIZE then
               H.A (N + 1 .. MAX_SIZE) = H'Loop_Entry.A (N + 1 .. MAX_SIZE));
       end loop;
    end Sort_Heap;

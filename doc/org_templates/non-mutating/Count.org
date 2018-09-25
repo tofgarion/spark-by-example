@@ -23,7 +23,7 @@
     as *~GNATprove~ only introduces axioms for postconditions of
     non-recursive functions*.
 
-    #+INCLUDE: "../../../spec/occ_def_p.ads" :src ada :range-begin "function Remove_Last" :range-end "Occ_Def);" :lines "6-20"
+    #+INCLUDE: "../../../spec/occ_def_p.ads" :src ada :range-begin "function Remove_Last" :range-end "Occ_Def);" :lines "7-22"
 
     The line ~pragma Annotate (Gnatprove, Terminating, Occ_Def);~ is
     very important here. It states that the function ~Occ_Def~
@@ -36,7 +36,7 @@
     After having defined ~Occ_def~, the definition of ~Occ~ is rather
     easy:
 
-    #+INCLUDE: "../../../spec/occ_p.ads" :src ada :range-begin "function Occ" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-9"
+    #+INCLUDE: "../../../spec/occ_p.ads" :src ada :range-begin "function Occ" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-13"
 
     #+BEGIN_SRC ada
       function Occ (A : T_Arr; Val : T) return Natural is (Occ_Def (A, Val)) with
@@ -50,7 +50,7 @@
 
     The specification of ~Count~ is the following:
 
-    #+INCLUDE: "../../../non-mutating/count_p.ads" :src ada :range-begin "function Count" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-12"
+    #+INCLUDE: "../../../non-mutating/count_p.ads" :src ada :range-begin "function Count" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-15"
 
     The postconditions express
       - that the number returned is correct (it is not less than 0 nor
@@ -62,7 +62,7 @@
 
     The implementation of ~Count~ is the following:
 
-    #+INCLUDE: "../../../non-mutating/count_p.adb" :src ada :range-begin "function Count" :range-end "end Count;" :lines "6-20"
+    #+INCLUDE: "../../../non-mutating/count_p.adb" :src ada :range-begin "function Count" :range-end "end Count;" :lines "7-25"
 
     The first invariant states that ~Result~ always stays in a correct
     range. The second one states that at each loop iteration, we can

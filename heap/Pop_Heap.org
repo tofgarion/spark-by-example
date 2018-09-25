@@ -1,4 +1,4 @@
-# Created 2018-09-21 Fri 15:28
+# Created 2018-09-25 Tue 10:58
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Pop_Heap.org
 
@@ -28,13 +28,10 @@ With these considerations in mind, the specification for
   procedure Pop_Heap (H : in out Heap) with
      Pre  => H.Size >= 1 and then Is_Heap_Def (H),
      Post => Multiset_Unchanged (H.A, H'Old.A)
-     and then H'Old.Size = H.Size + 1
-     and then Is_Heap_Def (H)
+     and then H'Old.Size = H.Size + 1 and then Is_Heap_Def (H)
      and then H.A (H.Size + 1) = H'Old.A (1)
      and then
-     (if
-        H'Old.Size /= H'Old.A'Last
-      then
+     (if H'Old.Size /= H'Old.A'Last then
         (for all J in H'Old.Size + 1 .. H.A'Last => H.A (J) = H'Old.A (J)))
      and then Max_Element_Def (H.A (1 .. H.Size + 1), H.Size + 1);
 #+END_SRC
@@ -109,9 +106,11 @@ value is the greatest *if it such child exists in the heap*.
 Its specification is as follows:
 
 #+BEGIN_SRC ada
-  function Maximum_Heap_Child (H : Heap; P : Positive) return Option with
-     Pre => H.Size in 2 .. Positive'Last - 1
-     and then P in 1 .. H.Size - 1
+  function Maximum_Heap_Child
+    (H : Heap;
+     P : Positive)
+     return Option with
+     Pre => H.Size in 2 .. Positive'Last - 1 and then P in 1 .. H.Size - 1
      and then Is_Heap_Def (H),
      Contract_Cases =>
      (H.Size / 2 < P => not Maximum_Heap_Child'Result.Exists,
@@ -134,16 +133,19 @@ cases:
 This function can be implemented in the following way:
 
 #+BEGIN_SRC ada
-  function Maximum_Heap_Child (H : Heap; P : Positive) return Option is
+  function Maximum_Heap_Child
+    (H : Heap;
+     P : Positive)
+     return Option
+  is
      Right, Left : Positive;  -- storage for the two childs.
   begin
      if P <= H.Size / 2 then
         Right := 2 * P + 1;
         Left  := Right - 1;
         if Right <= H.Size then
-  	 return
-  	   (Exists => True,
-  	    Value  => (if H.A (Right) <= H.A (Left) then Left else Right));
+  	 return (Exists => True,
+  	    Value => (if H.A (Right) <= H.A (Left) then Left else Right));
         else
   	 return (Exists => True, Value => Left);
         end if;
@@ -270,18 +272,15 @@ understand the working principle of the algorithm:
      A_Init : T_Arr (H.A'Range) := H.A with
         Ghost;  -- initial array backup
   begin
-     if H.A (H.Size) <
-       V
+     if H.A (H.Size) < V
      then  --nothing to be done otherwise (H.A is "constant")
         Child := Maximum_Heap_Child (H, Hole);
-        while Child.Exists
-  	and then Child.Value < H.Size
+        while Child.Exists and then Child.Value < H.Size
   	and then H.A (H.Size) < H.A (Child.Value)
         loop
   
   	 Swap_Array
-  	   (Interm,
-  	    Hole,
+  	   (Interm, Hole,
   	    Child
   	      .Value); -- permutation approach: preserves multiset but not heap structure
   
@@ -300,7 +299,7 @@ understand the working principle of the algorithm:
         H.A (H.Size) := V;
         Swap_Array (Interm, Hole, H.Size);
   
-  	 else
+     else
      end if;
   
      H.Size := H.Size - 1;
@@ -345,8 +344,7 @@ is the following:
         Ghost;  -- intermediary ghost heap.
   begin
      pragma Assert (V = A_Init (1));
-     if H.A (H.Size) <
-       V
+     if H.A (H.Size) < V
      then  --nothing to be done otherwise (H.A is "constant")
         pragma Assert (H.Size >= 2);
         Child := Maximum_Heap_Child (H, Hole);
@@ -357,8 +355,7 @@ is the following:
         end if;
   
         pragma Assert (Is_Heap_Def (H));
-        while Child.Exists
-  	and then Child.Value < H.Size
+        while Child.Exists and then Child.Value < H.Size
   	and then H.A (H.Size) < H.A (Child.Value)
         loop
   
@@ -369,8 +366,7 @@ is the following:
   	    and then Child.Value in Interm'Range); -- precondition checking
   
   	 Swap_Array
-  	   (Interm,
-  	    Hole,
+  	   (Interm, Hole,
   	    Child
   	      .Value); -- permutation approach: preserves multiset but not heap structure
   
@@ -388,9 +384,7 @@ is the following:
   	 pragma Assert (H.A (1) = A_Init (C1));
   	 pragma Assert (Is_Set (Save.A, Hole, Save.A (Child.Value), H.A));
   	 Heap_Set
-  	   (Save,
-  	    H,
-  	    Hole,
+  	   (Save, H, Hole,
   	    Child
   	      .Value); -- guide to automatic solvers, helps them keep track of the modifications.
   
@@ -401,9 +395,7 @@ is the following:
   	 pragma Assert (H.Size <= H.A'Last);
   
   	 pragma Loop_Invariant
-  	   (if
-  	      Sizes /= H.A'Last
-  	    then
+  	   (if Sizes /= H.A'Last then
   	      (for all J in H.Size + 1 .. H.A'Last =>
   		 H.A (J) = H'Loop_Entry.A (J)));
   	 pragma Loop_Invariant (H.A (1) = H'Loop_Entry.A (C1));
@@ -434,18 +426,14 @@ is the following:
         Save := H;
   
         pragma Assert
-  	(if
-  	   Child.Exists and then Child.Value < H.Size and then Hole /= 1
-  	 then
-  	   H.A (H.Size) < H.A (Heap_Parent (Hole)));
+  	(if Child.Exists and then Child.Value < H.Size and then Hole /= 1
+  	 then H.A (H.Size) < H.A (Heap_Parent (Hole)));
   
         H.A (Hole) := H.A (H.Size);
   
         pragma Assert
   	(Is_Set
-  	   (Save.A,
-  	    Hole,
-  	    Save.A (H.Size),
+  	   (Save.A, Hole, Save.A (H.Size),
   	    H.A));  -- checks to help prove heap structure.
         pragma Assert (Is_Heap_Def (H));
   
@@ -453,15 +441,13 @@ is the following:
         Swap_Array (Interm, Hole, H.Size);
   
         pragma Assert
-  	(if
-  	   Sizes /= H.A'Last
-  	 then
+  	(if Sizes /= H.A'Last then
   	   (for all J in H.Size + 1 .. H.A'Last => H.A (J) = A_Init (J)));
   
-  	 else
-  	    pragma Assert(H.A(H.Size) >= H.A(1));
-  	    Upper_Bound_Heap(H,H.A(1));
-  	    pragma Assert
+     else
+        pragma Assert (H.A (H.Size) >= H.A (1));
+        Upper_Bound_Heap (H, H.A (1));
+        pragma Assert
   	(H.A (H.Size) =
   	 H.A
   	   (1));  -- if nothing was done we verify that the last element and first element of the heap are equal (should be since the array is constant)

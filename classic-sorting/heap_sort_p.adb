@@ -1,5 +1,6 @@
 package body Heap_Sort_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
    procedure Heap_Sort (A : in out T_Arr) is
       H      : Heap;

@@ -1,16 +1,20 @@
 package body Pop_Heap_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Maximum_Heap_Child (H : Heap; P : Positive) return Option is
+   function Maximum_Heap_Child
+     (H : Heap;
+      P : Positive)
+      return Option
+   is
       Right, Left : Positive;  -- storage for the two childs.
    begin
       if P <= H.Size / 2 then
          Right := 2 * P + 1;
          Left  := Right - 1;
          if Right <= H.Size then
-            return
-              (Exists => True,
-               Value  => (if H.A (Right) <= H.A (Left) then Left else Right));
+            return (Exists => True,
+               Value => (if H.A (Right) <= H.A (Left) then Left else Right));
          else
             return (Exists => True, Value => Left);
          end if;
@@ -36,8 +40,7 @@ package body Pop_Heap_P with
          Ghost;  -- intermediary ghost heap.
    begin
       pragma Assert (V = A_Init (1));
-      if H.A (H.Size) <
-        V
+      if H.A (H.Size) < V
       then  --nothing to be done otherwise (H.A is "constant")
          pragma Assert (H.Size >= 2);
          Child := Maximum_Heap_Child (H, Hole);
@@ -48,8 +51,7 @@ package body Pop_Heap_P with
          end if;
 
          pragma Assert (Is_Heap_Def (H));
-         while Child.Exists
-           and then Child.Value < H.Size
+         while Child.Exists and then Child.Value < H.Size
            and then H.A (H.Size) < H.A (Child.Value)
          loop
 
@@ -60,8 +62,7 @@ package body Pop_Heap_P with
                and then Child.Value in Interm'Range); -- precondition checking
 
             Swap_Array
-              (Interm,
-               Hole,
+              (Interm, Hole,
                Child
                  .Value); -- permutation approach: preserves multiset but not heap structure
 
@@ -79,9 +80,7 @@ package body Pop_Heap_P with
             pragma Assert (H.A (1) = A_Init (C1));
             pragma Assert (Is_Set (Save.A, Hole, Save.A (Child.Value), H.A));
             Heap_Set
-              (Save,
-               H,
-               Hole,
+              (Save, H, Hole,
                Child
                  .Value); -- guide to automatic solvers, helps them keep track of the modifications.
 
@@ -92,9 +91,7 @@ package body Pop_Heap_P with
             pragma Assert (H.Size <= H.A'Last);
 
             pragma Loop_Invariant
-              (if
-                 Sizes /= H.A'Last
-               then
+              (if Sizes /= H.A'Last then
                  (for all J in H.Size + 1 .. H.A'Last =>
                     H.A (J) = H'Loop_Entry.A (J)));
             pragma Loop_Invariant (H.A (1) = H'Loop_Entry.A (C1));
@@ -125,18 +122,14 @@ package body Pop_Heap_P with
          Save := H;
 
          pragma Assert
-           (if
-              Child.Exists and then Child.Value < H.Size and then Hole /= 1
-            then
-              H.A (H.Size) < H.A (Heap_Parent (Hole)));
+           (if Child.Exists and then Child.Value < H.Size and then Hole /= 1
+            then H.A (H.Size) < H.A (Heap_Parent (Hole)));
 
          H.A (Hole) := H.A (H.Size);
 
          pragma Assert
            (Is_Set
-              (Save.A,
-               Hole,
-               Save.A (H.Size),
+              (Save.A, Hole, Save.A (H.Size),
                H.A));  -- checks to help prove heap structure.
          pragma Assert (Is_Heap_Def (H));
 
@@ -144,15 +137,13 @@ package body Pop_Heap_P with
          Swap_Array (Interm, Hole, H.Size);
 
          pragma Assert
-           (if
-              Sizes /= H.A'Last
-            then
+           (if Sizes /= H.A'Last then
               (for all J in H.Size + 1 .. H.A'Last => H.A (J) = A_Init (J)));
 
-	    else
-	       pragma Assert(H.A(H.Size) >= H.A(1));
-	       Upper_Bound_Heap(H,H.A(1));
-	       pragma Assert
+      else
+         pragma Assert (H.A (H.Size) >= H.A (1));
+         Upper_Bound_Heap (H, H.A (1));
+         pragma Assert
            (H.A (H.Size) =
             H.A
               (1));  -- if nothing was done we verify that the last element and first element of the heap are equal (should be since the array is constant)

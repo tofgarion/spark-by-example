@@ -1,4 +1,4 @@
-# Created 2018-09-21 Fri 16:57
+# Created 2018-09-25 Tue 10:58
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../sorting/Is_Sorted.org
 
@@ -16,10 +16,11 @@ signature is the following:
 The specification is simple to write:
 
 #+BEGIN_SRC ada
-  function Is_Sorted (A : T_Arr) return Boolean with
-     Contract_Cases =>
-     (Sorted (A) => Is_Sorted'Result = True,
-      others     => Is_Sorted'Result = False);
+  function Is_Sorted
+    (A : T_Arr)
+     return Boolean with
+     Contract_Cases => (Sorted (A) => Is_Sorted'Result = True,
+      others => Is_Sorted'Result = False);
 #+END_SRC
 
 ** The Weakly_Sorted predicate and its lemma
@@ -66,7 +67,10 @@ or not. If this is the case, we will apply our previous lemma and
 return ~True~:
 
 #+BEGIN_SRC ada
-  function Is_Sorted (A : T_Arr) return Boolean is
+  function Is_Sorted
+    (A : T_Arr)
+     return Boolean
+  is
   begin
      if A'Length > 0 then
         for J in A'First .. A'Last - 1 loop

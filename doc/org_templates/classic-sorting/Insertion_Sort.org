@@ -23,7 +23,7 @@
     ~Selection_Sort~ (in fact, it should be the case for all sorting
     algorithms):
 
-    #+INCLUDE: "../../../classic-sorting/insertion_sort_p.ads" :src ada :range-begin "procedure Insertion_Sort" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-15"
+    #+INCLUDE: "../../../classic-sorting/insertion_sort_p.ads" :src ada :range-begin "procedure Insertion_Sort" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "13-16"
 
     There is only an extra precondition on the last index of ~A~ that
     should be less than ~Positive'Last~ to avoid possible overflows.
@@ -46,7 +46,7 @@
     emulate the effects of ~Rotate~ with a loop of [[../mutating/Random_Shuffle.org#the-swap_array-procedure][Swap_Array]], which
     can be annotated to our needs:
 
-    #+INCLUDE: "../../../classic-sorting/insertion_sort_p.adb" :src ada :range-begin "procedure Insertion_Sort" :range-end "End Insertion_Sort;" :lines "4-37"
+    #+INCLUDE: "../../../classic-sorting/insertion_sort_p.adb" :src ada :range-begin "procedure Insertion_Sort" :range-end "End Insertion_Sort;" :lines "5-38"
 
     In this implementation, we can see that there is a second loop
     embedded within the main loop. Its function is to insert the

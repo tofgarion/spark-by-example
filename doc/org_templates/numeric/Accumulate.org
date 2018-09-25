@@ -50,7 +50,7 @@
 
      An implementation satifying our specification is the following
 
-     #+INCLUDE: "../../../numeric/accumulate_naive.adb" :src ada :range-begin "function Accumulate_Naive" :range-end "End Accumulate_Naive;" :lines "4-17"
+     #+INCLUDE: "../../../numeric/accumulate_naive.adb" :src ada :range-begin "function Accumulate_Naive" :range-end "End Accumulate_Naive;" :lines "5-22"
 
      The assertion in the loop verifies that there will not be any
      overflows during the sum, and the loop invariant ensures that the
@@ -133,7 +133,7 @@
 
      We can now rewrite the specification for ~Accumulate~:
 
-     #+INCLUDE: "../../../numeric/accumulate_p.ads" :src ada :range-begin "function Accumulate" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-10"
+     #+INCLUDE: "../../../numeric/accumulate_p.ads" :src ada :range-begin "function Accumulate" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-14"
 
      The precondition and postcondition are virtually the same, they
      simply make use of the new return type of ~Acc_Def_Rec~. We do
@@ -145,7 +145,7 @@
 
      An implementation deriving from the previous specification is:
 
-     #+INCLUDE: "../../../numeric/accumulate_p.adb" :src ada :range-begin "function Accumulate" :range-end "End Accumulate;" :lines "4-16"
+     #+INCLUDE: "../../../numeric/accumulate_p.adb" :src ada :range-begin "function Accumulate" :range-end "End Accumulate;" :lines "5-21"
 
      The assertion inside the loop checks that there are no overflow
      when adding ~A(J)~ to the intermediary result. The loop invariant

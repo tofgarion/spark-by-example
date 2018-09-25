@@ -21,7 +21,7 @@
 
     Partial sum can be specified as follows:
 
-    #+INCLUDE: "../../../numeric/partial_sum_p.ads" :src ada :range-begin "procedure Partial_Sum" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-14"
+    #+INCLUDE: "../../../numeric/partial_sum_p.ads" :src ada :range-begin "procedure Partial_Sum" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-17"
 
     The preconditions express that ~A~ and ~B~ must be of same length,
     and that there should be no overflows during the computation of
@@ -33,7 +33,7 @@
 
     Given its specification, ~Partial_Sum~ can be implemented as follows:
 
-    #+INCLUDE: "../../../numeric/partial_sum_p.adb" :src ada :range-begin "procedure Partial_Sum" :range-end "End Partial_Sum;" :lines "4-23"
+    #+INCLUDE: "../../../numeric/partial_sum_p.adb" :src ada :range-begin "procedure Partial_Sum" :range-end "End Partial_Sum;" :lines "5-27"
 
     This implementation is quite similar to the one of [[Accumulate.org][Accumulate]], the
     assertions ensures that there are no overflows and the loop

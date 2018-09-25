@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 14:33
+# Created 2018-09-25 Tue 10:57
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Inner_Product.org
 
@@ -143,7 +143,11 @@ As usual, the recursive call is encapsulated in a wrapper function:
 The specification of ~Inner_Product~ is the following:
 
 #+BEGIN_SRC ada
-  function Inner_Product (A : T_Arr; B : T_Arr; Init : T) return T with
+  function Inner_Product
+    (A    : T_Arr;
+     B    : T_Arr;
+     Init : T)
+     return T with
      Pre => A'Length = B'Length
      and then
      (for all J in 0 .. A'Length - 1 => Inner_Prod_Def (A, B, 0, J, Init).OK),
@@ -160,7 +164,12 @@ same than the one computed by the function ~Inner_Prod_Def~.
 The implementation of ~Inner_Product~ is quite simple:
 
 #+BEGIN_SRC ada
-  function Inner_Product (A : T_Arr; B : T_Arr; Init : T) return T is
+  function Inner_Product
+    (A    : T_Arr;
+     B    : T_Arr;
+     Init : T)
+     return T
+  is
      Result : T := Init;
   begin
      for J in 0 .. A'Length - 1 loop

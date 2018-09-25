@@ -1,4 +1,4 @@
-# Created 2018-08-18 Sat 23:34
+# Created 2018-09-25 Tue 10:57
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Random_Shuffle.org
 
@@ -130,7 +130,7 @@ then be:
      Post => A'Old (J) = A (K) and then A'Old (K) = A (J)
      and then
      (for all L in A'Old'Range =>
-        (if J /= K and then K /= K then A'Old (L) = A (L)))
+        (if J /= L and then K /= L then A'Old (L) = A (L)))
      and then Multiset_Unchanged (A'Old, A);
 #+END_SRC
 

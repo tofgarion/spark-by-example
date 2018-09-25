@@ -5,7 +5,8 @@ with Acc_Def_P;             use Acc_Def_P;
 with Overflow;              use Overflow;
 
 package Numeric_Inv with
-     Spark_Mode is
+   Spark_Mode
+ is
 
    procedure Partial_Sum_Inv (A, B : in out T_Arr) with
       Pre => A'Length = B'Length

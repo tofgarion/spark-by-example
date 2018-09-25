@@ -1,7 +1,11 @@
 package body Adjacent_Difference_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   procedure Adjacent_Difference (A : T_Arr; B : in out T_Arr) is
+   procedure Adjacent_Difference
+     (A :        T_Arr;
+      B : in out T_Arr)
+   is
    begin
       if A'Length > 0 then
          B (B'First) := A (A'First);

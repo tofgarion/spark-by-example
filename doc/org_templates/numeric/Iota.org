@@ -31,7 +31,7 @@
 
     The specification of ~iota~ is rather simple:
 
-    #+INCLUDE: "../../../numeric/iota_p.ads" :src ada :range-begin "procedure Iota" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-9"
+    #+INCLUDE: "../../../numeric/iota_p.ads" :src ada :range-begin "procedure Iota" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-12"
 
     The precondition is necessary to prevent possible overflows, as we
     are dealing with numerical values.
@@ -40,7 +40,7 @@
 
     The implementation of ~iota~ is the following.
 
-    #+INCLUDE: "../../../numeric/iota_p.adb" :src ada :range-begin "procedure Iota" :range-end "End Iota;" :lines "3-13"
+    #+INCLUDE: "../../../numeric/iota_p.adb" :src ada :range-begin "procedure Iota" :range-end "End Iota;" :lines "4-17"
 
     The loop invariants specify the fact that:
     - ~Count~ is indeed a counter starting at ~Val~ and has the right value

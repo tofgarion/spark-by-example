@@ -1,7 +1,11 @@
 package body Is_Heap_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Is_Heap (H : Heap) return Boolean is
+   function Is_Heap
+     (H : Heap)
+      return Boolean
+   is
       Parent : Natural := 1;
    begin
       if H.Size > H.A'Length then
@@ -16,18 +20,17 @@ package body Is_Heap_P with
                end if;
 
                pragma Loop_Invariant
-                 (1 <= Parent
-                  and then Parent < Child
+                 (1 <= Parent and then Parent < Child
                   and then Child <= H.Size);
                pragma Loop_Invariant (Parent = Heap_Parent (Child));
                pragma Loop_Invariant (Is_Heap_Def ((A => H.A, Size => Child)));
-	       pragma Assert(if Child = H.Size then Is_Heap_Def(H)); 
+               pragma Assert (if Child = H.Size then Is_Heap_Def (H));
                if Child mod 2 = 1 then
                   Parent := Parent + 1;
                end if;
 
-	    end loop;
-            pragma Assert(Is_Heap_Def(H));
+            end loop;
+            pragma Assert (Is_Heap_Def (H));
          end if;
 
          return True;

@@ -17,7 +17,7 @@
     ~Heap_Sort~ is a sorting algorithm, and as such its specification
     is quite similar to the one of [[Selection_Sort.org][Selection_Sort]] or [[Insertion_Sort.org][Insertion_Sort]]:
 
-    #+INCLUDE: "../../../classic-sorting/heap_sort_p.ads" :src ada :range-begin "procedure Heap_Sort" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-13"
+    #+INCLUDE: "../../../classic-sorting/heap_sort_p.ads" :src ada :range-begin "procedure Heap_Sort" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-14"
 
     The postconditions are identical to those of the previously
     mentioned sorting algorithms, but there are some preconditions,
@@ -28,7 +28,7 @@
     ~Heap_Sort~ will be implemented by simply calling [[../heap/Make_Heap.org][Make_Heap]] and
     [[../heap/Sort_Heap.org][Sort_Heap]] consecutively:
 
-    #+INCLUDE: "../../../classic-sorting/heap_sort_p.adb" :src ada :range-begin "procedure Heap_Sort" :range-end "End Heap_Sort;" :lines "4-27"
+    #+INCLUDE: "../../../classic-sorting/heap_sort_p.adb" :src ada :range-begin "procedure Heap_Sort" :range-end "End Heap_Sort;" :lines "5-28"
 
     As mentioned above, the only two instructions that are not
     operations on ghost variables or annotations are the call to

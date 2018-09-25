@@ -23,7 +23,7 @@
     With these considerations in mind, the specification for
     ~Pop_Heap~ is:
 
-    #+INCLUDE: "../../../heap/pop_heap_p.ads" :src ada :range-begin "procedure Pop_Heap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "25-37"
+    #+INCLUDE: "../../../heap/pop_heap_p.ads" :src ada :range-begin "procedure Pop_Heap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "28-37"
 
     The preconditions state that in order to remove an element from
     the heap, the heap must not be empty, and the record of type ~Heap~
@@ -77,7 +77,7 @@
 
      Its specification is as follows:
 
-     #+INCLUDE: "../../../heap/pop_heap_p.ads" :src ada :range-begin "function Maximum_Heap_Child" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "13-24"
+     #+INCLUDE: "../../../heap/pop_heap_p.ads" :src ada :range-begin "function Maximum_Heap_Child" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "14-27"
 
      The preconditions express that ~H~ represents a heap data
      structure with at least two elements and that ~P~ is a valid
@@ -90,7 +90,7 @@
 
      This function can be implemented in the following way:
 
-     #+INCLUDE: "../../../heap/pop_heap_p.adb" :src ada :range-begin "function Maximum_Heap_Child" :range-end "End Maximum_Heap_Child;" :lines "4-22"
+     #+INCLUDE: "../../../heap/pop_heap_p.adb" :src ada :range-begin "function Maximum_Heap_Child" :range-end "End Maximum_Heap_Child;" :lines "5-26"
 
      The implementation is quite straightforward, as there are no
      loops or calls to other functions. The program does not need
@@ -168,7 +168,7 @@
 
     #+RESULTS[419801cf41cdb90239665b3b41ef2bb68e161f2f]:
 
-    #+INCLUDE: "../../../heap/pop_heap_p_wo_lines.adb" :src ada :range-begin "procedure Pop_Heap" :range-end "End Pop_Heap;" :lines "23-68"
+    #+INCLUDE: "../../../heap/pop_heap_p_wo_lines.adb" :src ada :range-begin "procedure Pop_Heap" :range-end "End Pop_Heap;" :lines "27-69"
 
     The idea behind the procedure is the following:
 
@@ -190,7 +190,7 @@
     The implementation for ~Pop_Heap~ with all necessary assertions
     is the following:
 
-    #+INCLUDE: "../../../heap/pop_heap_p.adb" :src ada :range-begin "procedure Pop_Heap" :range-end "End Pop_Heap;" :lines "23-185"
+    #+INCLUDE: "../../../heap/pop_heap_p.adb" :src ada :range-begin "procedure Pop_Heap" :range-end "End Pop_Heap;" :lines "27-176"
 
     We have first to define some ghost variables to help us with the
     lemmas in the implementation:

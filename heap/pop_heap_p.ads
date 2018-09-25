@@ -8,11 +8,14 @@ with Occ_P;               use Occ_P;
 with Pop_Heap_Lemmas;     use Pop_Heap_Lemmas;
 
 package Pop_Heap_P with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Maximum_Heap_Child (H : Heap; P : Positive) return Option with
-      Pre => H.Size in 2 .. Positive'Last - 1
-      and then P in 1 .. H.Size - 1
+   function Maximum_Heap_Child
+     (H : Heap;
+      P : Positive)
+      return Option with
+      Pre => H.Size in 2 .. Positive'Last - 1 and then P in 1 .. H.Size - 1
       and then Is_Heap_Def (H),
       Contract_Cases =>
       (H.Size / 2 < P => not Maximum_Heap_Child'Result.Exists,
@@ -25,13 +28,10 @@ package Pop_Heap_P with
    procedure Pop_Heap (H : in out Heap) with
       Pre  => H.Size >= 1 and then Is_Heap_Def (H),
       Post => Multiset_Unchanged (H.A, H'Old.A)
-      and then H'Old.Size = H.Size + 1
-      and then Is_Heap_Def (H)
+      and then H'Old.Size = H.Size + 1 and then Is_Heap_Def (H)
       and then H.A (H.Size + 1) = H'Old.A (1)
       and then
-      (if
-         H'Old.Size /= H'Old.A'Last
-       then
+      (if H'Old.Size /= H'Old.A'Last then
          (for all J in H'Old.Size + 1 .. H.A'Last => H.A (J) = H'Old.A (J)))
       and then Max_Element_Def (H.A (1 .. H.Size + 1), H.Size + 1);
 

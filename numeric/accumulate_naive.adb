@@ -1,7 +1,12 @@
 package body Accumulate_Naive with
-     Spark_Mode is
+   Spark_Mode
+ is
 
-   function Accumulate_Naive (A : T_Arr; Init : T) return T is
+   function Accumulate_Naive
+     (A    : T_Arr;
+      Init : T)
+      return T
+   is
       Result : T := Init;
    begin
       for I in A'Range loop

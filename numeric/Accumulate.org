@@ -1,4 +1,4 @@
-# Created 2018-09-17 Mon 14:40
+# Created 2018-09-25 Tue 10:57
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Accumulate.org
 
@@ -55,9 +55,8 @@ function terminates.
 With the given predicates we can write a specification for ~Accumulate~:
 
 #+BEGIN_SRC ada
-  function Accumulate_Naive (A : T_Arr; Init : T) return T with
-     Pre  => (for all I in A'Range => Acc_Def (A (A'First .. I), Init) in T),
-     Post => Accumulate_Naive'Result = Acc_Def (A, Init);
+  function Accumulate_Naive
+    (A    : T_Arr;
 #+END_SRC
 
 The precondition expresses that all the intermediary sums we are
@@ -69,7 +68,11 @@ expresses that our algorithm returns the correct value.
 An implementation satifying our specification is the following
 
 #+BEGIN_SRC ada
-  function Accumulate_Naive (A : T_Arr; Init : T) return T is
+  function Accumulate_Naive
+    (A    : T_Arr;
+     Init : T)
+     return T
+  is
      Result : T := Init;
   begin
      for I in A'Range loop
@@ -203,7 +206,10 @@ calculations, and that the sum of the result of ~Acc_Def_Rec (A,
 We can now rewrite the specification for ~Accumulate~:
 
 #+BEGIN_SRC ada
-  function Accumulate (A : T_Arr; Init : T) return T with
+  function Accumulate
+    (A    : T_Arr;
+     Init : T)
+     return T with
      Pre  => (for all J in A'Range => Acc_Def (A, A'First, J, Init).OK),
      Post => Accumulate'Result = Acc_Def (A, A'First, A'Last, Init).Value;
 #+END_SRC
@@ -219,7 +225,11 @@ precondition.
 An implementation deriving from the previous specification is:
 
 #+BEGIN_SRC ada
-  function Accumulate (A : T_Arr; Init : T) return T is
+  function Accumulate
+    (A    : T_Arr;
+     Init : T)
+     return T
+  is
      Result : T := Init;
   begin
      for J in A'Range loop

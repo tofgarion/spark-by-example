@@ -19,7 +19,7 @@
     we have everything needed to specify the ~Selection_Sort~
     algorithm:
 
-    #+INCLUDE: "../../../classic-sorting/selection_sort_p.ads" :src ada :range-begin "procedure Selection_Sort" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-13"
+    #+INCLUDE: "../../../classic-sorting/selection_sort_p.ads" :src ada :range-begin "procedure Selection_Sort" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-14"
 
     The algorithm has no preconditions, and the postconditions simply
     specify that the array must be sorted in ascending order and that
@@ -31,7 +31,7 @@
     already implemented and proved in previous chapters. Its
     implementation is as follows:
 
-    #+INCLUDE: "../../../classic-sorting/selection_sort_p.adb" :src ada :range-begin "procedure Selection_Sort" :range-end "End Selection_Sort;" :lines "4-21"
+    #+INCLUDE: "../../../classic-sorting/selection_sort_p.adb" :src ada :range-begin "procedure Selection_Sort" :range-end "End Selection_Sort;" :lines "5-22"
 
     The algorithm is quite simple. For each iteration of the loop we
     find the minimum value of the array among the indexes that have
