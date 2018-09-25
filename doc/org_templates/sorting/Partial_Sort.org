@@ -24,7 +24,7 @@
 
     The specification of ~Partial_Sort~ is rather simple:
 
-    #+INCLUDE: "../../../sorting/partial_sort_p.ads" :src ada :range-begin "procedure Partial_Sort" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "27-37"
+    #+INCLUDE: "../../../sorting/partial_sort_p.ads" :src ada :range-begin "procedure Partial_Sort[^_]" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "38-44"
 
     The length of ~A~ has to be less than the maximum size of a heap
     because a heap will be used in the implementation.
