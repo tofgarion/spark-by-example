@@ -1,7 +1,7 @@
 * SPARK by Example
 
-  SPARK by Example is a project (greatly) inspired by [[https://github.com/fraunhoferfokus/acsl-by-example][ACSL by Example]], a
-  collection of verified C functions and data types from the C++
+  SPARK by Example is a project (greatly) inspired by [[https://github.com/fraunhoferfokus/acsl-by-example][ACSL by Example]],
+  a collection of verified C functions and data types from the C++
   standard library. SPARK by Example has two objectives
 
   - implement and verify the same functions as ACSL by Example using
@@ -37,16 +37,16 @@
    Ghost functions that may be used in several algorithms are grouped
    in the ~spec~ directory at the root of the project.
 
-   A makefile is provided for each chapter with some default values for
-   provers timeouts, levels of proof etc. These default values are
+   A makefile is provided for each chapter with some default values
+   for provers timeouts, levels of proof etc. These default values are
    sufficient to prove the corresponding algorithms with the previous
    tools on a machine equipped with an Intel Core i7-4810MQ CPU and
    16GB of RAM. Moreover, a ~STATS~ option enables the generation of
-   statistics on the proof, based on the standard output. generated files
-   will be placed in the ~stats~ directory at the root of the project.
-   Executing the file [[file:all-chapters.sh][all-chapters.sh]] will proove all the functions,
-   gather statistics for all the functions, and generate a recap file in
-   the ~stats~ directory.
+   statistics on the proof, based on the standard output. Generated
+   files will be placed in the ~stats~ directory at the root of the
+   project.  Executing the file [[file:all-chapters.sh][all-chapters.sh]] will prove all the
+   functions, gather statistics, and generate a recap file in the
+   ~stats~ directory.
 
 ** Table of contents
 
