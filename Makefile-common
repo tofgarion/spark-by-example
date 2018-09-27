@@ -6,6 +6,7 @@ _PARALLEL = $(if $(PARALLEL),-j $(PARALLEL),-j 0)
 _PROJECT = $(if $(PROJECT),-P $(PROJECT),-P spark_by_example.gpr)
 _WHYCONF = $(if $(WHYCONF),--why3-conf=$(WHYCONF),)
 _DEBUG = $(if $(DEBUG),-d -v,)
+_STATS_TIME = $(if $(STATS),/usr/bin/time -o ../stats/$(FILE).time.txt -f "%E" ,)
 _STATS = $(if $(STATS),> ../stats/$(FILE).stdout;python ../stats/parse_stdout.py ../stats/$(FILE);\
 		cp gnatprove/gnatprove.out ../stats/$(FILE).out;python ../stats/generate_csv_function.py ../stats/$(FILE);\
 		rm ../stats/$(FILE).out ../stats/$(FILE).stdout  ,)
@@ -22,6 +23,9 @@ clean:
 	gprclean tests/harness/test_driver.gpr
 	- rm -rf *~
 
+clean-stats:
+	- rm -rf ../stats/*.out.csv ../stats/*.time.txt
+
 distclean: clean
 	- rm -rf gnatprove auto.cgpr
 
@@ -37,11 +41,10 @@ run-tests:
 	./tests/harness/test_runner
 
 prove:
-	gnatprove $(_PROJECT) --clean; gnatprove $(_DEBUG) $(_PROJECT) -f $(_PARALLEL) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) $(FILE) $(_STATS)
+	$(_STATS_TIME) gnatprove $(_PROJECT) --clean; gnatprove $(_DEBUG) $(_PROJECT) -f $(_PARALLEL) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) $(FILE) $(_STATS)
 
 prove-coq:
-	gnatprove --prover=coq $(_PROJECT) -f $(_PARALLEL) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(FILE)
-	$(_STATS)
+	$(_STATS_TIME) gnatprove --prover=coq $(_PROJECT) -f $(_PARALLEL) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(FILE) $(_STATS)
 
 all-chapters :
 	cd non-mutating; $(MAKE) all
