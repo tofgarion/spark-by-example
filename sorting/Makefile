@@ -21,6 +21,8 @@ LEVEL_PARTIAL_SORT = 1
 
 include ../Makefile-common
 
+.PHONY: $(ALL_PROOF_TARGETS)
+
 # Is_Sorted
 is_sorted: $(call GENERATE_DEP, is_sorted) $(SPEC_IS_SORTED)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_IS_SORTED) $(SORTING_DEFAULT_TIMEOUT)

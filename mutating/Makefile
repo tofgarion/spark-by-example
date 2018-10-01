@@ -48,6 +48,8 @@ LEVEL_RANDOM_SHUFFLE         = 1
 
 include ../Makefile-common
 
+.PHONY: $(ALL_PROOF_TARGETS)
+
 # Fill
 fill: $(call GENERATE_DEP, fill) $(SPEC_FILL)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_FILL) $(MUTATING_DEFAULT_TIMEOUT)

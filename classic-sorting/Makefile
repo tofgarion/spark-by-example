@@ -20,7 +20,7 @@ ALL_PROOF_TARGETS = selection_sort insertion_sort heap_sort
 
 include ../Makefile-common
 
-.PHONY:
+.PHONY: $(ALL_PROOF_TARGETS)
 
 # Selection_Sort
 selection_sort: $(call GENERATE_DEP, selection_sort)

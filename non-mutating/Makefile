@@ -44,7 +44,7 @@ ALL_PROOF_TARGETS = naive_find naive_find_contract_pb find find_first_of adjacen
 
 include ../Makefile-common
 
-.PHONY:
+.PHONY: $(ALL_PROOF_TARGETS)
 
 # Find
 naive_find: $(call GENERATE_DEP,naive_find)

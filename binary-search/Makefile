@@ -21,7 +21,7 @@ ALL_PROOF_TARGETS = search_upper_bound search_lower_bound search_equal_range sea
 
 include ../Makefile-common
 
-.PHONY:
+.PHONY: $(ALL_PROOF_TARGETS)
 
 # Search_Upper_Bound
 search_upper_bound: $(call GENERATE_DEP, search_upper_bound) $(SPEC_SEARCH_BOUND)

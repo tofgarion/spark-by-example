@@ -27,7 +27,7 @@ ALL_PROOF_TARGETS = is_heap push_heap pop_heap make_heap sort_heap
 
 include ../Makefile-common
 
-.PHONY:
+.PHONY: $(ALL_PROOF_TARGETS)
 
 # Is_Heap
 is_heap: $(call GENERATE_DEP, is_heap)

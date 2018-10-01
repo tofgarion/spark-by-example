@@ -30,7 +30,7 @@ ALL_PROOF_TARGETS = iota accumulate inner_product partial_sum adjacent_differenc
 
 include ../Makefile-common
 
-.PHONY:
+.PHONY: $(ALL_PROOF_TARGETS)
 
 # Iota
 iota: $(call GENERATE_DEP, iota) $(SPEC_IOTA)

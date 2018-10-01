@@ -22,6 +22,8 @@ LEVEL_MAX_SEQ	             = 0
 
 include ../Makefile-common
 
+.PHONY: $(ALL_PROOF_TARGETS)
+
 # Max_Element_WO_Ghost
 max_element_wo_ghost: $(call GENERATE_DEP, max_element_wo_ghost) $(SPEC_MAX_ELEMENT_WO_GHOST)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_MAX_ELEMENT_WO_GHOST) $(MAX_MIN_DEFAULT_TIMEOUT)
