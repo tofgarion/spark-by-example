@@ -24,8 +24,8 @@
   |                     | ~iota_p.adb~                   |                                                       |
   |---------------------+--------------------------------+-------------------------------------------------------|
   | [[file:Accumulate.org][Accumulate]]          | ~../spec/acc_def_naive_p.ads~  |                                                       |
-  |                     | ~accumulate_naive.ads~         | naive implementation without proper overflow handling |
-  |                     | ~accumulate_naive.adb~         |                                                       |
+  |                     | ~accumulate_naive_p.ads~       | naive implementation without proper overflow handling |
+  |                     | ~accumulate_naive_p.adb~       |                                                       |
   |                     | ~../spec/acc_def_p.ads~        |                                                       |
   |                     | ~../spec/overflow.ads~         |                                                       |
   |                     | ~accumulate_p.ads~             | correct implementation with proper overflow handling  |
