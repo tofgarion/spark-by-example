@@ -18,7 +18,7 @@
    [[https://www.adacore.com/community][GNAT Community 2018]] has been used for this project. You may
    download and install it using the previous link.
 
-** Content of each directory
+** Content of each directory and global Makefile
 
    Each directory corresponds to a chapter of ACSL by Example. Each
    directory contains a GNAT Project file (the file ending by ~.gpr~)
@@ -39,16 +39,40 @@
    proofs are grouped in the ~lemmas~ directory at the root of the
    project.
 
-   A makefile is provided for each chapter with some default values
+   A Makefile is provided for each chapter with some default values
    for provers timeouts, levels of proof etc. These default values are
    sufficient to prove the corresponding algorithms with the previous
    tools on a machine equipped with an Intel Core i7-4810MQ CPU and
-   16GB of RAM. Moreover, a ~STATS~ option enables the generation of
-   statistics on the proof, based on the standard output. Generated
-   files will be placed in the ~stats~ directory at the root of the
-   project.  Executing the file [[file:all-chapters.sh][all-chapters.sh]] will prove all the
-   functions, gather statistics, and generate a recap file in the
-   ~stats~ directory.
+   16GB of RAM. For each chapter, a ~all~ target proves all functions
+   and procedures of the chapter. Each function or procedure has a
+   corresponding target to prove it.
+
+   The following variables can be used to control the behaviour of the
+   Makefiles:
+
+   - ~CHAPTER_NAME_DEFAULT_TIMEOUT~ (defined at the beginning of each
+     Makefile) contains the default value for provers timeout
+   - ~LEVEL_FUNCTION_NAME~ defines for each function the level used by
+     ~GNATprove~
+   - ~MEMCACHED=1~ enables the use of a [[https://www.memcached.org][Memcached]] server to cache
+     proofs (it speeds up the proof process as some lemmas are used in
+     several function for instance). Variables ~MEMCACHED_SERVER~ and
+     ~MEMCACHED_PORT~ can be used to specify IP and port of server
+     (~localhost:11211~ by default)
+   - ~STATS=1~ enables the generation of statistics on the proof,
+     based on the standard output. Generated files will be placed in
+     the ~stats~ directory at the root of the project
+   - ~PARALLEL~ controls the ~-j~ option of ~GNATprove~ for
+     parallelizing proofs (default ~0~, use all cores of the machine)
+   - ~DEBUG=1~ enables debug and verbose options of ~GNATprove~
+
+   Other variables are available, see the ~Makefile-common~ file at
+   the root of the project.
+
+   A Makefile is also available at the root of the project. It has a
+   ~all-chapters~ target that proves all the chapters, gathers
+   statistics, and generate a ~recap.csv~ file in the ~stats~
+   directory.
 
 ** Table of contents
 
