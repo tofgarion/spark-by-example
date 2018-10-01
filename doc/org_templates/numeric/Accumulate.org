@@ -40,7 +40,7 @@
 
      With the given predicates we can write a specification for ~Accumulate~:
 
-     #+INCLUDE: ../../../numeric/accumulate_naive.ads :src ada :range-begin "function Accumulate_Naive" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-10"
+     #+INCLUDE: "../../../numeric/accumulate_naive_p.ads" :src ada :range-begin "function Accumulate_Naive" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-14"
 
      The precondition expresses that all the intermediary sums we are
      going to evaluate should not overflow. The postcondition
@@ -50,7 +50,7 @@
 
      An implementation satifying our specification is the following
 
-     #+INCLUDE: "../../../numeric/accumulate_naive.adb" :src ada :range-begin "function Accumulate_Naive" :range-end "End Accumulate_Naive;" :lines "5-22"
+     #+INCLUDE: "../../../numeric/accumulate_naive_p.adb" :src ada :range-begin "function Accumulate_Naive" :range-end "End Accumulate_Naive;" :lines "5-22"
 
      The assertion in the loop verifies that there will not be any
      overflows during the sum, and the loop invariant ensures that the
@@ -64,8 +64,8 @@
      two errors:
 
      #+BEGIN_SRC shell
-       acc_def_naive.ads:8:13: medium: subprogram "Acc_Def_Rec" might not terminate, terminating annotation could be incorrect
-       acc_def_naive.ads:14:57: medium: overflow check might fail
+       acc_def_naive_p.ads:8:13: medium: subprogram "Acc_Def_Rec" might not terminate, terminating annotation could be incorrect
+       acc_def_naive_p.ads:14:57: medium: overflow check might fail
      #+END_SRC
 
      The first error is simply due to the recursive nature of

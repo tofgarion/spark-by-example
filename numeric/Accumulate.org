@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-10-01 Mon 14:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Accumulate.org
 
@@ -57,6 +57,10 @@ With the given predicates we can write a specification for ~Accumulate~:
 #+BEGIN_SRC ada
   function Accumulate_Naive
     (A    : T_Arr;
+     Init : T)
+     return T with
+     Pre  => (for all I in A'Range => Acc_Def (A (A'First .. I), Init) in T),
+     Post => Accumulate_Naive'Result = Acc_Def (A, Init);
 #+END_SRC
 
 The precondition expresses that all the intermediary sums we are
@@ -99,8 +103,8 @@ the postcondition are proved. Nevertheless, ~GNATprove~ outputs
 two errors:
 
 #+BEGIN_SRC shell
-  acc_def_naive.ads:8:13: medium: subprogram "Acc_Def_Rec" might not terminate, terminating annotation could be incorrect
-  acc_def_naive.ads:14:57: medium: overflow check might fail
+  acc_def_naive_p.ads:8:13: medium: subprogram "Acc_Def_Rec" might not terminate, terminating annotation could be incorrect
+  acc_def_naive_p.ads:14:57: medium: overflow check might fail
 #+END_SRC
 
 The first error is simply due to the recursive nature of
