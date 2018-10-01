@@ -1,4 +1,4 @@
-package body Accumulate_Naive with
+package body Accumulate_Naive_P with
    Spark_Mode
  is
 
@@ -20,4 +20,4 @@ package body Accumulate_Naive with
 
    end Accumulate_Naive;
 
-end Accumulate_Naive;
+end Accumulate_Naive_P;

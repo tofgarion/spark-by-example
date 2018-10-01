@@ -8,7 +8,7 @@ NUMERIC_INV_TIMEOUT = "TIMEOUT=10"
 SPEC_TYPES		 = ../spec/types.ads
 SPEC_OVERFLOW		 = ../spec/overflow.ads ../spec/overflow.adb $(SPEC_TYPES)
 SPEC_IOTA		 = ../spec/is_iota_p.ads $(SPEC_TYPES)
-SPEC_ACCUMULATE_NAIVE	 = ../spec/acc_def_naive.ads $(SPEC_TYPES)
+SPEC_ACCUMULATE_NAIVE	 = ../spec/acc_def_naive_p.ads $(SPEC_TYPES)
 SPEC_ACCUMULATE		 = ../spec/acc_def_p.ads $(SPEC_OVERFLOW) $(SPEC_TYPES)
 SPEC_INNER_PRODUCT	 =../spec/inner_prod_def_p.ads $(SPEC_OVERFLOW) $(SPEC_TYPES)
 SPEC_PARTIAL_SUM	 = ../spec/acc_def_p.ads $(SPEC_OVERFLOW) $(SPEC_TYPES)
@@ -25,7 +25,7 @@ LEVEL_ADJACENT_DIFFERENCE 	= 1
 LEVEL_NUMERIC_INV 		= 1
 
 # all proof targets
-ALL_PROOF_TARGETS = iota accumulate_naive accumulate inner_product partial_sum adjacent_difference numeric_inv
+ALL_PROOF_TARGETS = iota accumulate inner_product partial_sum adjacent_difference numeric_inv
 
 include ../Makefile-common
 
@@ -36,8 +36,8 @@ iota: $(call GENERATE_DEP, iota) $(SPEC_IOTA)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_IOTA) $(NUMERIC_DEFAULT_TIMEOUT)
 
 # Accumulate
-accumulate_naive: accumulate_naive.ads $(SPEC_ACCUMULATE_NAIVE)
-	make prove FILE=$@.adb LEVEL=$(LEVEL_ACCUMULATE_NAIVE) $(NUMERIC_DEFAULT_TIMEOUT)
+accumulate_naive: accumulate_naive_p.ads $(SPEC_ACCUMULATE_NAIVE)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_ACCUMULATE_NAIVE) $(NUMERIC_DEFAULT_TIMEOUT)
 
 accumulate: $(call GENERATE_DEP, accumulate) $(SPEC_ACCUMULATE)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_ACCUMULATE) $(NUMERIC_DEFAULT_TIMEOUT)

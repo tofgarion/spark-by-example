@@ -1,7 +1,7 @@
-with Types;         use Types;
-with Acc_Def_Naive; use Acc_Def_Naive;
+with Types;           use Types;
+with Acc_Def_Naive_P; use Acc_Def_Naive_P;
 
-package Accumulate_Naive with
+package Accumulate_Naive_P with
    Spark_Mode
  is
 
@@ -12,4 +12,4 @@ package Accumulate_Naive with
       Pre  => (for all I in A'Range => Acc_Def (A (A'First .. I), Init) in T),
       Post => Accumulate_Naive'Result = Acc_Def (A, Init);
 
-end Accumulate_Naive;
+end Accumulate_Naive_P;
