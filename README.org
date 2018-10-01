@@ -69,10 +69,25 @@
    Other variables are available, see the ~Makefile-common~ file at
    the root of the project.
 
+   For instance, if you want to prove all functions of chapter on
+   non-mutating algorithms with statistics and by changing the default
+   timeout to 10, issue the following command from the project root:
+
+   #+BEGIN_SRC shell
+     make -C non-mutating all STATS=1 NON_MUTATING_DEFAULT_TIMEOUT="TIMEOUT=10"
+   #+END_SRC
+
    A Makefile is also available at the root of the project. It has a
    ~all-chapters~ target that proves all the chapters, gathers
    statistics, and generate a ~recap.csv~ file in the ~stats~
    directory.
+
+   For instance, if you want to prove all chapters with statistics and
+   Memcached, issue the following command:
+
+   #+BEGIN_SRC shell
+     make all-chapters STATS=1 MEMCACHED=1
+   #+END_SRC
 
 ** Table of contents
 
