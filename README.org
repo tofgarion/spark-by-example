@@ -18,6 +18,17 @@
    [[https://www.adacore.com/community][GNAT Community 2018]] has been used for this project. You may
    download and install it using the previous link.
 
+** Table of contents
+
+  1. [[./non-mutating/README.org][non mutating algorithms]]
+  2. [[file:maxmin/README.org][maxmin algorithms]]
+  3. [[file:binary-search/README.org][binary search algorithms]]
+  4. [[file:mutating/README.org][mutating algorithms]]
+  5. [[file:numeric/README.org][numeric algorithms]]
+  6. [[file:heap/README.org][heap algorithms]]
+  7. [[file:sorting/README.org][sorting algorithms]]
+  8. [[file:classic-sorting/README.org][classic sorting algorithms]]
+
 ** Content of each directory and global Makefile
 
    Each directory corresponds to a chapter of ACSL by Example. Each
@@ -88,17 +99,6 @@
    #+BEGIN_SRC shell
      make all-chapters STATS=1 MEMCACHED=1
    #+END_SRC
-
-** Table of contents
-
-  1. [[./non-mutating/README.org][non mutating algorithms]]
-  2. [[file:maxmin/README.org][maxmin algorithms]]
-  3. [[file:binary-search/README.org][binary search algorithms]]
-  4. [[file:mutating/README.org][mutating algorithms]]
-  5. [[file:numeric/README.org][numeric algorithms]]
-  6. [[file:heap/README.org][heap algorithms]]
-  7. [[file:sorting/README.org][sorting algorithms]]
-  8. [[file:classic-sorting/README.org][classic sorting algorithms]]
 
 ** References
 
