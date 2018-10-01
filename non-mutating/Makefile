@@ -1,4 +1,5 @@
-PROJECT = non_mutating_algorithms.gpr
+PROJECT      = non_mutating_algorithms.gpr
+CHAPTER_NAME = non-mutating
 
 # timeout for chapter
 NON_MUTATING_DEFAULT_TIMEOUT = "TIMEOUT=5"
@@ -95,6 +96,6 @@ find_end: $(call GENERATE_DEP,find_end) $(SPEC_FIND_END)
 count: $(call GENERATE_DEP,count) $(SPEC_COUNT)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_COUNT) $(NON_MUTATING_DEFAULT_TIMEOUT)
 
-# All proofs
+# all proofs
 all: $(ALL_PROOF_TARGETS)
-	$(if $(STATS), python ../stats/generate_csv_chapter.py non-mutating; python ../stats/generate_csv_chapter_stdout.py non-mutating,)
+	$(_STATS_CHAPTER)

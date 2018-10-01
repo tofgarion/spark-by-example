@@ -1,4 +1,5 @@
-PROJECT=heap_algorithms.gpr
+PROJECT      = heap_algorithms.gpr
+CHAPTER_NAME = heap
 
 #timeout for chapter
 HEAP_DEFAULT_TIMEOUT = "TIMEOUT=10"
@@ -48,6 +49,6 @@ make_heap: $(call GENERATE_DEP, make_heap)
 sort_heap: $(call GENERATE_DEP, sort_heap)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SORT_HEAP)  $(HEAP_DEFAULT_TIMEOUT)
 
-# All proofs
+# all proofs
 all: $(ALL_PROOF_TARGETS)
-	$(if $(STATS), python ../stats/generate_csv_chapter.py heap; python ../stats/generate_csv_chapter_stdout.py heap,)
+	$(_STATS_CHAPTER)

@@ -1,18 +1,20 @@
-PROJECT=max_min_algorithms.gpr
-#timeout for chapter
+PROJECT      = max_min_algorithms.gpr
+CHAPTER_NAME = maxmin
+
+# timeout for chapter
 MAX_MIN_DEFAULT_TIMEOUT = "TIMEOUT=5"
 
-#All proof target
+# all proof targets
 ALL_PROOF_TARGET = max_element_wo_ghost max_element max_seq min_element
 
-#specification dependencies for each function
+# specification dependencies for each function
 SPEC_TYPES       		= ../spec/types.ads
 SPEC_MAX_ELEMENT_WO_GHOST 	= $(SPEC_TYPES)
 SPEC_MAX_ELEMENT	 	= $(SPEC_TYPES) ../spec/upper_bound_p.ads
 SPEC_MIN_ELEMENT 		= $(SPEC_TYPES)
 SPEC_MAX_SEQ 			= $(SPEC_MAX_ELEMENT) ../spec/has_value_p.ads $(call GENERATE_DEP, max_element)
 
-#proof level for each function
+# proof level for each function
 LEVEL_MAX_ELEMENT            = 0
 LEVEL_MAX_ELEMENT_WO_GHOST   = 0
 LEVEL_MIN_ELEMENT            = 0
@@ -36,6 +38,6 @@ max_seq: $(call GENERATE_DEP, max_seq) $(SPEC_MAX_SEQ)
 min_element: $(call GENERATE_DEP, min_element) $(SPEC_MIN_ELEMENT)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_MIN_ELEMENT) $(MAX_MIN_DEFAULT_TIMEOUT)
 
-# All proofs
+# all proofs
 all: $(ALL_PROOF_TARGET)
-	$(if $(STATS), python ../stats/generate_csv_chapter.py maxmin; python ../stats/generate_csv_chapter_stdout.py maxmin,)
+	$(_STATS_CHAPTER)

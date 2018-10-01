@@ -1,4 +1,5 @@
-PROJECT=numeric_algorithms.gpr
+PROJECT      = numeric_algorithms.gpr
+CHAPTER_NAME = numeric
 
 # timeout for chapter
 NUMERIC_DEFAULT_TIMEOUT = "TIMEOUT=5"
@@ -58,6 +59,6 @@ adjacent_difference: $(call GENERATE_DEP, adjacent_difference) $(SPEC_ADJACENT_D
 numeric_inv: numeric_inv.adb numeric_inv.ads $(SPEC_NUMERIC_INV)
 	make prove FILE=$@.adb LEVEL=$(LEVEL_NUMERIC_INV) $(NUMERIC_INV_TIMEOUT)
 
-# All proods
+# all proofs
 all: $(ALL_PROOF_TARGETS)
-	$(if $(STATS), python ../stats/generate_csv_chapter.py numeric; python ../stats/generate_csv_chapter_stdout.py numeric,)
+	$(_STATS_CHAPTER)

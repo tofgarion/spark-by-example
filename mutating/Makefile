@@ -1,12 +1,14 @@
-PROJECT=mutating_algorithms.gpr
-#timeout for chapter
+PROJECT      = mutating_algorithms.gpr
+CHAPTER_NAME = mutating
+
+# timeout for chapter
 MUTATING_DEFAULT_TIMEOUT = "TIMEOUT=5"
 
-#All proof target
+# all proof targets
 ALL_PROOF_TARGET = copy fill random_shuffle remove_copy replace_copy replace reverse_copy \
 		reverse_in_place rotate_copy rotate swap swap_ranges
 
-#specification dependencies for each function
+# specification dependencies for each function
 SPEC_TYPES       		= ../spec/types.ads
 SPEC_LEMMAS 			= ../lemmas/classic_lemmas.ads
 SPEC_FILL 			= $(SPEC_TYPES) ../spec/has_constant_subrange_p.ads
@@ -26,7 +28,7 @@ SPEC_REMOVE_COPY_FIRST 		= $(SPEC_TYPES) ../spec/multiset_predicates.ads ../spec
 SPEC_REMOVE_COPY_SECOND 	= $(SPEC_TYPES) ../spec/multiset_predicates.ads ../spec/occ_p.ads ../spec/occ_def_p.ads ../lemmas/remove_copy_lemmas.ads
 SPEC_RANDOM_SHUFFLE 		= $(SPEC_TYPES) $(SPEC_LEAMMAS) ../spec/multiset_predicates.ads $(call GENERATE_DEP, random) $(call GENERATE_DEP, swap_array)
 
-#proof level for each function
+# proof level for each function
 LEVEL_FILL                   = 0
 LEVEL_SWAP                   = 0
 LEVEL_SWAP_RANGES            = 1
@@ -110,5 +112,6 @@ remove_copy_second: $(call GENERATE_DEP, remove_copy_second) $(SPEC_REMOVE_COPY_
 random_shuffle: $(call GENERATE_DEP, random_shuffle) $(SPEC_RANDOM_SHUFFLE)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_RANDOM_SHUFFLE) $(MUTATING_DEFAULT_TIMEOUT)
 
+# all proofs
 all :$(ALL_PROOF_TARGET)
-	$(if $(STATS), python ../stats/generate_csv_chapter.py mutating; python ../stats/generate_csv_chapter_stdout.py mutating,)
+	$(_STATS_CHAPTER)

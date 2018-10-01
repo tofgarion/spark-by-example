@@ -1,4 +1,5 @@
-PROJECT=classic_sorting_algorithms.gpr
+PROJECT      = classic_sorting_algorithms.gpr
+CHAPTER_NAME = classic-sorting
 
 # timeout for chapter
 CLASSIC_SORTING_DEFAULT_TIMEOUT = "TIMEOUT=10"
@@ -12,7 +13,7 @@ SPEC_HEAP_SORT 		   = $(call GENERATE_DEP, ../heap/make_heap) $(call GENERATE_DE
 # level for each function
 LEVEL_SELECTION_SORT = 1
 LEVEL_INSERTION_SORT = 1
-LEVEL_HEAP_SORT = 1 
+LEVEL_HEAP_SORT = 1
 
 # all proof targets
 ALL_PROOF_TARGETS = selection_sort insertion_sort heap_sort
@@ -33,6 +34,6 @@ insertion_sort: $(call GENERATE_DEP, insertion_sort)
 heap_sort: $(call GENERATE_DEP, heap_sort)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_HEAP_SORT) $(CLASSIC_SORTING_DEFAULT_TIMEOUT)
 
-# All proofs
+# all proofs
 all: $(ALL_PROOF_TARGETS)
-	$(if $(STATS), python ../stats/generate_csv_chapter.py classic-sorting; python ../stats/generate_csv_chapter_stdout.py classic-sorting,)
+	$(_STATS_CHAPTER)
