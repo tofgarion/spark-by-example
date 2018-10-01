@@ -35,7 +35,9 @@
    names.
 
    Ghost functions that may be used in several algorithms are grouped
-   in the ~spec~ directory at the root of the project.
+   in the ~spec~ directory at the root of the project. Lemmas used in
+   proofs are grouped in the ~lemmas~ directory at the root of the
+   project.
 
    A makefile is provided for each chapter with some default values
    for provers timeouts, levels of proof etc. These default values are
