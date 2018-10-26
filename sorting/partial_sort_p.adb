@@ -2,7 +2,7 @@ package body Partial_Sort_P with
    Spark_Mode
  is
 
-   procedure Partial_Sort_Aux
+   procedure Partial_Sort_Heap
      (H : in out Heap;
       M :        Positive)
    is
@@ -37,7 +37,7 @@ package body Partial_Sort_P with
 
       H.Size := Old_Size;
       Prove_Partition (H.A, A_Save, M, Old_Size);
-   end Partial_Sort_Aux;
+   end Partial_Sort_Heap;
 
    procedure Partial_Sort
      (A : in out T_Arr;
@@ -76,7 +76,7 @@ package body Partial_Sort_P with
          Unchanged_Transitivity (A_Old, H.A (1 .. Size), A_Save (1 .. Size));
          H.Size := Size;
 
-         Partial_Sort_Aux (H, M - A'First + 1);
+         Partial_Sort_Heap (H, M - A'First + 1);
          if Size < MAX_SIZE then
             Multiset_With_Eq (H.A, A_Save, Size + 1);
          end if;

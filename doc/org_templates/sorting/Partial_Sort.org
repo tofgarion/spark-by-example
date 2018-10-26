@@ -39,31 +39,31 @@
     The precondition on the length of ~A~ is necessary as a heap will
     be used in the implementation.
 
-*** The Partial_Sort_Aux procedure
+*** The Partial_Sort_Heap procedure
 
     As a heap will be used in the implementation of ~Partial_Sort~, we
     first define an auxiliary function that does the same job on a
-    heap. ~Partial_Sort_Aux~ takes a ~Heap~ ~H~ as parameter such that
-    the ~M - 1~ first elements of the encapsulated array ~H.A~ are
-    considered to be a heap. ~Partial_Sort_Aux~ then sorts ~H.A~ up to
-    ~M - 1~ and guarantees that ~H.A~ is correctly partitioned with
-    ~M~ as pivot.
+    heap. ~Partial_Sort_Heap~ takes a ~Heap~ ~H~ as parameter such
+    that the ~M - 1~ first elements of the encapsulated array ~H.A~
+    are considered to be a heap. ~Partial_Sort_Heap~ then sorts ~H.A~
+    up to ~M - 1~ and guarantees that ~H.A~ is correctly partitioned
+    with ~M~ as pivot.
 
-**** Specification of Partial_Sort_Aux
+**** Specification of Partial_Sort_Heap
 
      The specification of our auxiliary function is:
 
-     #+INCLUDE: "../../../sorting/partial_sort_p.ads" :src ada :range-begin "procedure Partial_Sort_Aux" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "22-32"
+     #+INCLUDE: "../../../sorting/partial_sort_p.ads" :src ada :range-begin "procedure Partial_Sort_Heap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "22-32"
 
      Notice that at the end of the function, the ~Size~ attribute and
      the elements of the encapsulated array after index ~H.Size + 1~
      have not changed.
 
-**** Implementation of Partial_Sort_Aux
+**** Implementation of Partial_Sort_Heap
 
-     The implementation of ~Partial_Sort_Aux~ is the following:
+     The implementation of ~Partial_Sort_Heap~ is the following:
 
-     #+INCLUDE: "../../../sorting/partial_sort_p.adb" :src ada :range-begin "procedure Partial_Sort_Aux" :range-end "End Partial_Sort_Aux;" :lines "5-41"
+     #+INCLUDE: "../../../sorting/partial_sort_p.adb" :src ada :range-begin "procedure Partial_Sort_Heap" :range-end "End Partial_Sort_Heap;" :lines "5-41"
 
      The ~Size~ constant is equal to the size of the encapsulated
      array that is a heap. ~Old_Size~ is equal to the size of the
@@ -80,9 +80,9 @@
      proving that after sorting the heap, the array remains a
      partition. It is described in the following.
 
-*** Lemmas used to prove Partial_Sort_Aux
+*** Lemmas used to prove Partial_Sort_Heap
 
-    We need a bunch of lemmas to prove ~Partial_Sort_Aux~. We define
+    We need a bunch of lemmas to prove ~Partial_Sort_Heap~. We define
     first new "classic" lemmas about occurrences of elements in an
     array, then lemmas on bounds and finally the main lemmas to prove
     the partitioning.
@@ -114,8 +114,8 @@
 
      The ~Prove_Lower_Bound~ lemma helps proving the ~Lower_Bound~
      loop invariant.  Before calling ~Push_Heap (H)~ in
-     ~Partial_Sort_Aux~, the assertion ~Lower_Bound (H.A (M .. J), H.A
-     (K))~ for all ~K in 1 .. M - 1~ is proved. After executing
+     ~Partial_Sort_Heap~, the assertion ~Lower_Bound (H.A (M .. J),
+     H.A (K))~ for all ~K in 1 .. M - 1~ is proved. After executing
      ~Push_Heap (H)~, the provers cannot prove it anymore. We will
      thus apply our classic trick: make a backup of ~H.A~ before
      pushing the heap, and then use this lemma to prove that the lower
@@ -167,13 +167,13 @@
 
 *** Implementation of ~Partial_Sort~
 
-    The point here is to prepare a ~Heap~ to apply ~Partial_Sort_Aux~
+    The point here is to prepare a ~Heap~ to apply ~Partial_Sort_Heap~
     on it. We first make a heap with the ~M - A'First~ first elements
     of ~A~ and we add the following elements one by one, preserving
     the ~Multiset_Unchanged~ predicate using the ~New_Element~ lemma
-    described in [[../heap/Make_Heap.org][Make_Heap]]. We finally apply the ~Partial_Sort_Aux~
+    described in [[../heap/Make_Heap.org][Make_Heap]]. We finally apply the ~Partial_Sort_Heap~
     function to our heap. Notice that all preconditions of
-    ~Partial_Sort_Aux~ are verified, as ~M > A'First~. The only thing
+    ~Partial_Sort_Heap~ are verified, as ~M > A'First~. The only thing
     remaining is to prove the ~Multiset_Unchanged~ preservation, which
     is done by playing with a backup of ~A~
 

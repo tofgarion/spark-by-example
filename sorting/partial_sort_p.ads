@@ -19,7 +19,7 @@ package Partial_Sort_P with
    Spark_Mode
  is
 
-   procedure Partial_Sort_Aux
+   procedure Partial_Sort_Heap
      (H : in out Heap;
       M :        Positive) with
       Pre => H.Size > 0 and then M in 2 .. H.Size and then H.Size <= MAX_SIZE
