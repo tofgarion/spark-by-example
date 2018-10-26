@@ -22,13 +22,17 @@
 
 *** The Partition predicate
 
-    The ~Partition~ predicate is the following:
+    We define first a ~Partition~ predicate to specify that the
+    values in an array ~A~ are partitioned given an index ~M~
+    (partitioning meaning that all values before ~M~ are less than all
+    values after ~M~):
 
     #+INCLUDE: "../../../spec/partition_p.ads" :src ada :range-begin "function Partition" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-15"
 
 *** Specification of Partial_Sort
 
-    The specification of ~Partial_Sort~ is rather simple:
+    Given the previous predicate, the specification of ~Partial_Sort~
+    is rather simple:
 
     #+INCLUDE: "../../../sorting/partial_sort_p.ads" :src ada :range-begin "procedure Partial_Sort[^_]" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "38-44"
 

@@ -1,4 +1,4 @@
-# Created 2018-10-26 Fri 12:06
+# Created 2018-10-26 Fri 12:08
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../sorting/Partial_Sort.org
 
@@ -23,7 +23,10 @@ heaps]] before.
 
 ** The Partition predicate
 
-The ~Partition~ predicate is the following:
+We define first a ~Partition~ predicate to specify that the
+values in an array ~A~ are partitioned given an index ~M~
+(partitioning meaning that all values before ~M~ are less than all
+values after ~M~):
 
 #+BEGIN_SRC ada
   function Partition
@@ -37,7 +40,8 @@ The ~Partition~ predicate is the following:
 
 ** Specification of Partial_Sort
 
-The specification of ~Partial_Sort~ is rather simple:
+Given the previous predicate, the specification of ~Partial_Sort~
+is rather simple:
 
 #+BEGIN_SRC ada
   procedure Partial_Sort
