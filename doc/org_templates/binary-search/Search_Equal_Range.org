@@ -85,7 +85,7 @@
      another implementation is proposed in the C++ standard library,
      which in SPARK translates to:
 
-     #+INCLUDE: "../../../binary-search/search_equal_range2_p.adb" :src ada :range-begin "function Search_Equal_Range2" :range-end "End Search_Equal_Range2;" :lines "5-66"
+     #+INCLUDE: "../../../binary-search/search_equal_range_opt_p.adb" :src ada :range-begin "function Search_Equal_Range_Opt" :range-end "End Search_Equal_Range_Opt;" :lines "5-66"
 
      The working principle of this code is to narrow down at the same
      time the ranges where ~Search_Lower_Bound~ and

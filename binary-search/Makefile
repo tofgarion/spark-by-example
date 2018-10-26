@@ -35,7 +35,7 @@ search_lower_bound: $(call GENERATE_DEP, search_lower_bound) $(SPEC_SEARCH_BOUND
 search_equal_range: $(call GENERATE_DEP, search_equal_range) $(SPEC_EQUAL_RANGE)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_EQUAL_RANGE) $(BINARY_SEARCH_DEFAULT_TIMEOUT)
 
-search_equal_range2: $(call GENERATE_DEP, search_equal_range2) $(SPEC_EQUAL_RANGE)
+search_equal_range_opt: $(call GENERATE_DEP, search_equal_range_opt) $(SPEC_EQUAL_RANGE)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_EQUAL_RANGE) $(BINARY_SEARCH_DEFAULT_TIMEOUT)
 
 # Binary_Search

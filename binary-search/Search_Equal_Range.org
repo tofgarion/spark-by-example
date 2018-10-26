@@ -1,4 +1,4 @@
-# Created 2018-10-26 Fri 10:08
+# Created 2018-10-26 Fri 10:15
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Equal_Range.org
 
@@ -142,7 +142,7 @@ another implementation is proposed in the C++ standard library,
 which in SPARK translates to:
 
 #+BEGIN_SRC ada
-  function Search_Equal_Range2
+  function Search_Equal_Range_Opt
     (A : T_Arr;
      V : T)
      return Option_Pair
@@ -202,7 +202,7 @@ which in SPARK translates to:
   
      return Result;
   
-  end Search_Equal_Range2;
+  end Search_Equal_Range_Opt;
 #+END_SRC
 
 The working principle of this code is to narrow down at the same

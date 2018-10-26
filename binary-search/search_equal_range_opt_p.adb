@@ -1,8 +1,8 @@
-package body Search_Equal_Range2_P with
+package body Search_Equal_Range_Opt_P with
    Spark_Mode
  is
 
-   function Search_Equal_Range2
+   function Search_Equal_Range_Opt
      (A : T_Arr;
       V : T)
       return Option_Pair
@@ -62,6 +62,6 @@ package body Search_Equal_Range2_P with
 
       return Result;
 
-   end Search_Equal_Range2;
+   end Search_Equal_Range_Opt;
 
-end Search_Equal_Range2_P;
+end Search_Equal_Range_Opt_P;
