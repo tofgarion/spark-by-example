@@ -1,4 +1,4 @@
-# Created 2018-10-26 Fri 12:46
+# Created 2018-10-26 Fri 13:35
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../sorting/Partial_Sort.org
 
@@ -220,55 +220,6 @@ greater or equal to ~1~.
 
 For further details about the implementations, please refer to
 functions such as [[file:../mutating/Remove_Copy.org][Remove_Copy]] or [[file:../mutating/Random_Shuffle.org][Random_Shuffle]].
-
-We also need a lemma to prove a property about
-~Multiset_Unchanged~. When ~Multiset_Unchanged (A, B)~ is
-verified and ~A (Eq .. A'Last) = B (Eq - A'First + B'First
-     .. B'Last)~ for a valid index ~Eq~, then ~Multiset_Unchanged(A
-     (A'First .. Eq - 1), B (B'First .. Eq - A'First + B'First - 1))~
-holds.
-
-The specification of ~Partial_Eq~ is:
-
-#+BEGIN_SRC ada
-  procedure Partial_Eq
-    (A, B : T_Arr;
-     Eq   : Positive;
-     E    : T) with
-     Pre => A'Length = B'Length and then A'Length >= 1
-     and then Eq in A'First + 1 .. A'Last
-     and then (for all J in Eq .. A'Last => A (J) = B (J - A'First + B'First))
-     and then Occ (A, E) = Occ (B, E),
-     Post => Occ (A (A'First .. Eq - 1), E) =
-     Occ (B (B'First .. Eq - A'First + B'First - 1), E);
-#+END_SRC
-
-Its implementation is:
-
-#+BEGIN_SRC ada
-  procedure Partial_Eq
-    (A, B : T_Arr;
-     Eq   : Positive;
-     E    : T)
-  is
-  begin
-     if A'Last = Eq then
-        return;
-     end if;
-  
-     if A (A'Last) = E then
-        pragma Assert (B (B'Last) = E);
-     else
-        pragma Assert (B (B'Last) /= E);
-     end if;
-  
-     Partial_Eq (Remove_Last (A), Remove_Last (B), Eq, E);
-  end Partial_Eq;
-#+END_SRC
-
-The implementation may seem very difficult but we just adapt the
-lemma for the cases where ~A~ and ~B~ does not have the same
-first index, to allow the user to use it outside of our function.
 
 *** The Prove_Lower_Bound lemma
 

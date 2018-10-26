@@ -34,7 +34,7 @@
     Given the previous predicate, the specification of ~Partial_Sort~
     is rather simple:
 
-    #+INCLUDE: "../../../sorting/partial_sort_p.ads" :src ada :range-begin "procedure Partial_Sort[^_]" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "38-44"
+    #+INCLUDE: "../../../sorting/partial_sort_p.ads" :src ada :range-begin "procedure Partial_Sort[^_]" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "33-39"
 
     The precondition on the length of ~A~ is necessary as a heap will
     be used in the implementation.
@@ -53,7 +53,7 @@
 
      The specification of our auxiliary function is:
 
-     #+INCLUDE: "../../../sorting/partial_sort_p.ads" :src ada :range-begin "procedure Partial_Sort_Aux" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "27-37"
+     #+INCLUDE: "../../../sorting/partial_sort_p.ads" :src ada :range-begin "procedure Partial_Sort_Aux" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "22-32"
 
      Notice that at the end of the function, the ~Size~ attribute and
      the elements of the encapsulated array after index ~H.Size + 1~
@@ -63,7 +63,7 @@
 
      The implementation of ~Partial_Sort_Aux~ is the following:
 
-     #+INCLUDE: "../../../sorting/partial_sort_p.adb" :src ada :range-begin "procedure Partial_Sort_Aux" :range-end "End Partial_Sort_Aux;" :lines "15-51"
+     #+INCLUDE: "../../../sorting/partial_sort_p.adb" :src ada :range-begin "procedure Partial_Sort_Aux" :range-end "End Partial_Sort_Aux;" :lines "5-41"
 
      The ~Size~ constant is equal to the size of the encapsulated
      array that is a heap. ~Old_Size~ is equal to the size of the
@@ -109,25 +109,6 @@
 
      For further details about the implementations, please refer to
      functions such as [[../mutating/Remove_Copy.org][Remove_Copy]] or [[../mutating/Random_Shuffle.org][Random_Shuffle]].
-
-     We also need a lemma to prove a property about
-     ~Multiset_Unchanged~. When ~Multiset_Unchanged (A, B)~ is
-     verified and ~A (Eq .. A'Last) = B (Eq - A'First + B'First
-     .. B'Last)~ for a valid index ~Eq~, then ~Multiset_Unchanged(A
-     (A'First .. Eq - 1), B (B'First .. Eq - A'First + B'First - 1))~
-     holds.
-
-     The specification of ~Partial_Eq~ is:
-
-     #+INCLUDE: "../../../lemmas/classic_lemmas.ads" :src ada :range-begin "procedure Partial_Eq" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "66-76"
-
-     Its implementation is:
-
-     #+INCLUDE: "../../../lemmas/classic_lemmas.adb" :src ada :range-begin "procedure Partial_Eq" :range-end "End Partial_Eq;" :lines "93-111"
-
-     The implementation may seem very difficult but we just adapt the
-     lemma for the cases where ~A~ and ~B~ does not have the same
-     first index, to allow the user to use it outside of our function.
 
 **** The Prove_Lower_Bound lemma
 
@@ -196,7 +177,7 @@
     remaining is to prove the ~Multiset_Unchanged~ preservation, which
     is done by playing with a backup of ~A~
 
-    #+INCLUDE: "../../../sorting/partial_sort_p.adb" :src ada :range-begin "procedure Partial_Sort[^_]" :range-end "End Partial_Sort;" :lines "52-99"
+    #+INCLUDE: "../../../sorting/partial_sort_p.adb" :src ada :range-begin "procedure Partial_Sort[^_]" :range-end "End Partial_Sort;" :lines "42-89"
 
     Using this implementation and specification, ~GNATprove~ proves
     the ~Partial_Sort~ algorithm.

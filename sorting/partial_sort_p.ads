@@ -12,17 +12,12 @@ with Partition_P;         use Partition_P;
 with Sorted_P;            use Sorted_P;
 with Occ_Def_P;           use Occ_Def_P;
 with Classic_Lemmas;      use Classic_Lemmas;
+with Pop_Heap_Lemmas;     use Pop_Heap_Lemmas;
 with Partial_Sort_Lemmas; use Partial_Sort_Lemmas;
 
 package Partial_Sort_P with
    Spark_Mode
  is
-
-   procedure Upper_Bound_Heap
-     (H : Heap;
-      V : T) with
-      Pre  => H.Size >= 1 and then Is_Heap_Def (H) and then V >= H.A (1),
-      Post => (for all J in 1 .. H.Size => V >= H.A (J));
 
    procedure Partial_Sort_Aux
      (H : in out Heap;
