@@ -71,9 +71,9 @@
      [[Search_Upper_Bound.org][Search_Upper_Bound]] as they directly provide the desired pair of
      indexes:
 
-     #+INCLUDE: "../../../binary-search/search_equal_range2_p.adb" :src ada :range-begin "function Search_Equal_Range2" :range-end "End Search_Equal_Range2;" :lines "5-66"
+     #+INCLUDE: "../../../binary-search/search_equal_range_p.adb" :src ada :range-begin "function Search_Equal_Range" :range-end "End Search_Equal_Range;" :lines "5-26"
 
-     ~GNATprove~ doesn't need any annotations other than the
+     ~GNATprove~ does not need any annotations other than the
      specification of the function itself to prove this
      implementation.
 
@@ -85,7 +85,7 @@
      another implementation is proposed in the C++ standard library,
      which in SPARK translates to:
 
-     #+INCLUDE: "../../../binary-search/search_equal_range_p.adb" :src ada :range-begin "function Search_Equal_Range" :range-end "End Search_Equal_Range;" :lines "5-26"
+     #+INCLUDE: "../../../binary-search/search_equal_range2_p.adb" :src ada :range-begin "function Search_Equal_Range2" :range-end "End Search_Equal_Range2;" :lines "5-66"
 
      The working principle of this code is to narrow down at the same
      time the ranges where ~Search_Lower_Bound~ and
@@ -97,11 +97,12 @@
 
      - ~Left~ and ~Right~ remain in the correct range  and in the
        correct position with relation to each other
-     - all values found at an index strictly lower than ~Left~ are less than ~V~
+     - all values found at an index strictly lower than ~Left~ are
+       less than ~V~
      - all values found at an index greater or equal than ~Right~ are
        strictly greater than ~V~.
 
-     These loop invariants, in additions to the postconditions of
+     These loop invariants and the postconditions of
      ~Search_Lower_Bound~ and ~Search_Upper_Bound~, enable ~GNATprove~
      to prove everything.
 

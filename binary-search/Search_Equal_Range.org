@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-10-26 Fri 10:08
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Equal_Range.org
 
@@ -106,6 +106,42 @@ previously defined functions [[Search_Lower_Bound.org][Search_Lower_Bound]] and
 indexes:
 
 #+BEGIN_SRC ada
+  function Search_Equal_Range
+    (A : T_Arr;
+     V : T)
+     return Option_Pair
+  is
+  
+     Result : Option_Pair := (Exists => False);
+  begin
+  
+     if A'Length > 0 then
+        Result :=
+  	(Exists => True, Lower => Search_Lower_Bound (A, V).Value,
+  	 Upper  => Search_Upper_Bound (A, V).Value);
+  
+     else
+        null;
+  
+     end if;
+  
+     return Result;
+  end Search_Equal_Range;
+#+END_SRC
+
+~GNATprove~ does not need any annotations other than the
+specification of the function itself to prove this
+implementation.
+
+*** A more elaborate implementation
+
+The first version, while being easy to implement, understand and
+prove, does some work two times (the array is traversed entirely
+by ~Search_Lower_Bound~ and ~Search_Upper_Bound~). This is why
+another implementation is proposed in the C++ standard library,
+which in SPARK translates to:
+
+#+BEGIN_SRC ada
   function Search_Equal_Range2
     (A : T_Arr;
      V : T)
@@ -169,42 +205,6 @@ indexes:
   end Search_Equal_Range2;
 #+END_SRC
 
-~GNATprove~ doesn't need any annotations other than the
-specification of the function itself to prove this
-implementation.
-
-*** A more elaborate implementation
-
-The first version, while being easy to implement, understand and
-prove, does some work two times (the array is traversed entirely
-by ~Search_Lower_Bound~ and ~Search_Upper_Bound~). This is why
-another implementation is proposed in the C++ standard library,
-which in SPARK translates to:
-
-#+BEGIN_SRC ada
-  function Search_Equal_Range
-    (A : T_Arr;
-     V : T)
-     return Option_Pair
-  is
-  
-     Result : Option_Pair := (Exists => False);
-  begin
-  
-     if A'Length > 0 then
-        Result :=
-  	(Exists => True, Lower => Search_Lower_Bound (A, V).Value,
-  	 Upper  => Search_Upper_Bound (A, V).Value);
-  
-     else
-        null;
-  
-     end if;
-  
-     return Result;
-  end Search_Equal_Range;
-#+END_SRC
-
 The working principle of this code is to narrow down at the same
 time the ranges where ~Search_Lower_Bound~ and
 ~Search_Upper_Bound~ will look for the results instead of calling
@@ -215,10 +215,11 @@ iteration. The loop invariants express that
 
 - ~Left~ and ~Right~ remain in the correct range  and in the
   correct position with relation to each other
-- all values found at an index strictly lower than ~Left~ are less than ~V~
+- all values found at an index strictly lower than ~Left~ are
+  less than ~V~
 - all values found at an index greater or equal than ~Right~ are
   strictly greater than ~V~.
 
-These loop invariants, in additions to the postconditions of
+These loop invariants and the postconditions of
 ~Search_Lower_Bound~ and ~Search_Upper_Bound~, enable ~GNATprove~
 to prove everything.
