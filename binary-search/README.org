@@ -1,4 +1,4 @@
-# Created 2018-08-01 Wed 16:35
+# Created 2018-10-26 Fri 10:17
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/README.org
 
@@ -41,8 +41,8 @@ specification/implementation of each function):
 |                                                       | ~search_upper_bound_p.adb~     |                                                       |
 |                                                       | ~search_equal_range_p.ads~     |                                                       |
 |                                                       | ~search_equal_range_p.adb~     |                                                       |
-|                                                       | ~search_equal_range2_p.ads~    |                                                       |
-|                                                       | ~saerch_equal_range2_p.adb~    |                                                       |
+|                                                       | ~search_equal_range_opt_p.ads~ |                                                       |
+|                                                       | ~saerch_equal_range_opt_p.adb~ |                                                       |
 |-------------------------------------------------------+--------------------------------+-------------------------------------------------------|
 | [[file:Binary_Search.org][Binary_Search]]             | ~../spec/sorted_p.ads~         |                                                       |
 |                                                       | ~../spec/has_value~            |                                                       |

@@ -40,8 +40,8 @@
   |                    | ~search_upper_bound_p.adb~     |                                                       |
   |                    | ~search_equal_range_p.ads~     |                                                       |
   |                    | ~search_equal_range_p.adb~     |                                                       |
-  |                    | ~search_equal_range2_p.ads~    |                                                       |
-  |                    | ~saerch_equal_range2_p.adb~    |                                                       |
+  |                    | ~search_equal_range_opt_p.ads~ |                                                       |
+  |                    | ~saerch_equal_range_opt_p.adb~ |                                                       |
   |--------------------+--------------------------------+-------------------------------------------------------|
   | [[file:Binary_Search.org][Binary_Search]]      | ~../spec/sorted_p.ads~         |                                                       |
   |                    | ~../spec/has_value~            |                                                       |
