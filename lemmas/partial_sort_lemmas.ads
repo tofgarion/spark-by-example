@@ -10,13 +10,13 @@ with Multiset_Predicates; use Multiset_Predicates;
 with Classic_Lemmas;      use Classic_Lemmas;
 
 package Partial_Sort_Lemmas with
-   Spark_Mode
+   Ghost,
+   SPARK_Mode
  is
 
    procedure Prove_Lower_Bound
      (A, A_Save : T_Arr;
       M, J      : Positive) with
-      Ghost,
       Pre => A'Length > 0 and then M in A'First + 1 .. A'Last
       and then J in A'Range and then A_Save'First = A'First
       and then A_Save'Last = A'Last and then A'First = 1
@@ -30,7 +30,6 @@ package Partial_Sort_Lemmas with
    procedure Prove_Partition
      (A, A_Save : T_Arr;
       M, Size   : Positive) with
-      Ghost,
       Pre => A'Length > 0 and then M in A'First + 1 .. Size
       and then Size in A'Range and then A_Save'First = A'First
       and then A_Save'Last = A'Last and then A'First = 1

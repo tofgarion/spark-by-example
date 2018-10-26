@@ -1,4 +1,4 @@
-# Created 2018-10-26 Fri 12:08
+# Created 2018-10-26 Fri 12:46
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../sorting/Partial_Sort.org
 
@@ -52,14 +52,18 @@ is rather simple:
      and then Sorted (A (A'First .. M - 1)) and then Partition (A, M, A'Last);
 #+END_SRC
 
-The length of ~A~ has to be less than the maximum size of a heap
-because a heap will be used in the implementation.
+The precondition on the length of ~A~ is necessary as a heap will
+be used in the implementation.
 
 ** The Partial_Sort_Aux procedure
 
-This function is used in our implementation and apply the
-algorithm on a ~Heap~ data structure representing a heap between
-indexes ~1~ and ~M-1~ instead of an array ~A~.
+As a heap will be used in the implementation of ~Partial_Sort~, we
+first define an auxiliary function that does the same job on a
+heap. ~Partial_Sort_Aux~ takes a ~Heap~ ~H~ as parameter such that
+the ~M - 1~ first elements of the encapsulated array ~H.A~ are
+considered to be a heap. ~Partial_Sort_Aux~ then sorts ~H.A~ up to
+~M - 1~ and guarantees that ~H.A~ is correctly partitioned with
+~M~ as pivot.
 
 *** Specification of Partial_Sort_Aux
 
@@ -78,10 +82,9 @@ The specification of our auxiliary function is:
         H'Old.A (H.Size + 1 .. MAX_SIZE) = H.A (H.Size + 1 .. MAX_SIZE));
 #+END_SRC
 
-This function will only be called if ~M > A'First~, that is why
-~M~ is in range ~2 .. H.Size~. At the end of the function, the
-~Size~ attribute and the rest of the encapsulated array have not
-changed.
+Notice that at the end of the function, the ~Size~ attribute and
+the elements of the encapsulated array after index ~H.Size + 1~
+have not changed.
 
 *** Implementation of Partial_Sort_Aux
 
@@ -137,13 +140,18 @@ less than every element encountered between ~M~ and ~J~. If the
 the first element which is now at index ~M - 1~ with the ~J + 1~
 th and then we push the heap. The ~Prove_Lower_Bound~ lemma is
 used to prove the loop invariant with
-~Lower_Bound~. ~Prove_Partition~ will help proving that after
-sorting the heap, the array remains a partition.
+~Lower_Bound~. ~Prove_Partition~ is a lemma that will help
+proving that after sorting the heap, the array remains a
+partition. It is described in the following.
 
-** The lemmas
+** Lemmas used to prove Partial_Sort_Aux
+
+We need a bunch of lemmas to prove ~Partial_Sort_Aux~. We define
+first new "classic" lemmas about occurrences of elements in an
+array, then lemmas on bounds and finally the main lemmas to prove
+the partitioning.
+
 *** New classic lemmas
-
-We need to write some useful lemmas first.
 
 The first lemma proves that if ~Occ (A, V)~ is greater or equal
 to ~1~, then ~Has_Value (A, V)~ is true. The specification of
@@ -210,9 +218,8 @@ greater or equal to ~1~.
   end Has_Value_To_Occ;
 #+END_SRC
 
-For further details about the two implementations, we already
-explained it in detail when proving functions such as [[file:../mutating/Remove_Copy.org][Remove_Copy]]
-or [[file:../mutating/Random_Shuffle.org][Random_Shuffle]].
+For further details about the implementations, please refer to
+functions such as [[file:../mutating/Remove_Copy.org][Remove_Copy]] or [[file:../mutating/Random_Shuffle.org][Random_Shuffle]].
 
 We also need a lemma to prove a property about
 ~Multiset_Unchanged~. When ~Multiset_Unchanged (A, B)~ is
@@ -236,7 +243,7 @@ The specification of ~Partial_Eq~ is:
      Occ (B (B'First .. Eq - A'First + B'First - 1), E);
 #+END_SRC
 
-The implementation is:
+Its implementation is:
 
 #+BEGIN_SRC ada
   procedure Partial_Eq
@@ -265,12 +272,14 @@ first index, to allow the user to use it outside of our function.
 
 *** The Prove_Lower_Bound lemma
 
-This lemma helps proving the ~Lower_Bound~ loop invariant.
-Before calling ~Push_Heap (H)~ in ~Partial_Sort_Aux~, the
-assertion ~Lower_Bound (H.A (M .. J), H.A (K))~ for all ~K in 1
-     .. M - 1~ is proved. After the command, it is not proved any
-more. We need to make a backup of ~H.A~ before pushing the heap,
-and then use this lemma.
+The ~Prove_Lower_Bound~ lemma helps proving the ~Lower_Bound~
+loop invariant.  Before calling ~Push_Heap (H)~ in
+~Partial_Sort_Aux~, the assertion ~Lower_Bound (H.A (M .. J), H.A
+     (K))~ for all ~K in 1 .. M - 1~ is proved. After executing
+~Push_Heap (H)~, the provers cannot prove it anymore. We will
+thus apply our classic trick: make a backup of ~H.A~ before
+pushing the heap, and then use this lemma to prove that the lower
+bound property is verified.
 
 The specification of the lemma is:
 
@@ -278,7 +287,6 @@ The specification of the lemma is:
   procedure Prove_Lower_Bound
     (A, A_Save : T_Arr;
      M, J      : Positive) with
-     Ghost,
      Pre => A'Length > 0 and then M in A'First + 1 .. A'Last
      and then J in A'Range and then A_Save'First = A'First
      and then A_Save'Last = A'Last and then A'First = 1
@@ -290,7 +298,8 @@ The specification of the lemma is:
      Post => Lower_Bound (A (M .. J), A (1));
 #+END_SRC
 
-The method used is to implement it is the following:
+The implementation will follow the following sketch:
+
 - we suppose ~Multiset_Unchanged (A, A_Save)~ and ~for all K in M
          .. MAX_SIZE => A (K) = A_Save (K)~, then we have
   ~Multiset_Unchanged(A (1 .. Eq - 1), A_Save (1 .. Eq - 1))~.
@@ -305,32 +314,34 @@ The method used is to implement it is the following:
          A_Save (K))~ then for the specific index where ~A(1)~ is, it is
   also true too.
 
-  This implementation of this lemma is:
+The implementation of this lemma is finally:
 
-  #+BEGIN_SRC ada
-    procedure Prove_Lower_Bound
-      (A, A_Save : T_Arr;
-       M, J      : Positive)
-    is
-    begin
-       Multiset_With_Eq (A, A_Save, M);
-       Has_Value_To_Occ (A (1 .. M - 1), A (1));
-       Occ_To_Has_Value (A_Save (1 .. M - 1), A (1));
+#+BEGIN_SRC ada
+  procedure Prove_Lower_Bound
+    (A, A_Save : T_Arr;
+     M, J      : Positive)
+  is
+  begin
+     Multiset_With_Eq (A, A_Save, M);
+     Has_Value_To_Occ (A (1 .. M - 1), A (1));
+     Occ_To_Has_Value (A_Save (1 .. M - 1), A (1));
   
-    end Prove_Lower_Bound;
-  #+END_SRC
+  end Prove_Lower_Bound;
+#+END_SRC
 
 *** The Prove_Partition lemma
 
-This lemma helps proving that the array with the ~Partition~
-property on the ~M~ th value will keep verifying the property if
-we sort it before ~M~.  The specification is:
+This lemma is our final lemma and helps proving that an array ~A~
+that verifies the ~Partition~ property on the ~M~ th value will
+continue to verify the property if we sort it before ~M~. We will
+thus consider in the lemma two arrays ~A~ and ~A_Save~, such that
+~A_Save~ is a permutation of ~A~ and is equal to ~A~ starting
+from an index ~M~. The specification of the lemma is:
 
 #+BEGIN_SRC ada
   procedure Prove_Partition
     (A, A_Save : T_Arr;
      M, Size   : Positive) with
-     Ghost,
      Pre => A'Length > 0 and then M in A'First + 1 .. Size
      and then Size in A'Range and then A_Save'First = A'First
      and then A_Save'Last = A'Last and then A'First = 1
@@ -342,7 +353,7 @@ we sort it before ~M~.  The specification is:
 
 The implementation is similar to the previous one, except for the
 fact that we want to prove the ~Partition~ predicate for all ~K~
-in a certain range. The implementation is the following:
+in a certain range. It is therefore the following:
 
 #+BEGIN_SRC ada
   procedure Prove_Partition
@@ -366,13 +377,15 @@ proved.
 
 ** Implementation of ~Partial_Sort~
 
-The point here is to prepare a ~Heap~ to apply our auxiliary
-function on it. We first make a heap with the ~M - 1~ first
-elements, and we add the following elements one by one, preserving
+The point here is to prepare a ~Heap~ to apply ~Partial_Sort_Aux~
+on it. We first make a heap with the ~M - A'First~ first elements
+of ~A~ and we add the following elements one by one, preserving
 the ~Multiset_Unchanged~ predicate using the ~New_Element~ lemma
-described in [[file:../heap/Make_Heap.org][Make_Heap]]. We apply the auxiliary function to our
-heap. The only thing remaining is playing with a backup of ~A~ to
-prove the ~Multiset_Unchanged~ preservation.
+described in [[file:../heap/Make_Heap.org][Make_Heap]]. We finally apply the ~Partial_Sort_Aux~
+function to our heap. Notice that all preconditions of
+~Partial_Sort_Aux~ are verified, as ~M > A'First~. The only thing
+remaining is to prove the ~Multiset_Unchanged~ preservation, which
+is done by playing with a backup of ~A~
 
 #+BEGIN_SRC ada
   procedure Partial_Sort
