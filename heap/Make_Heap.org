@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:58
+# Created 2018-10-26 Fri 13:48
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../heap/Make_Heap.org
 
@@ -139,6 +139,98 @@ Its trivial implementation is:
   begin
      null;
   end New_Element;
+#+END_SRC
+
+*** The Multiset_With_Eq lemma
+
+We also need a lemma to prove a property about
+~Multiset_Unchanged~. When ~Multiset_Unchanged (A, B)~ is
+verified and ~A (Eq .. A'Last) = B (Eq - A'First + B'First
+     .. B'Last)~ for a valid index ~Eq~, then ~Multiset_Unchanged(A
+     (A'First .. Eq - 1), B (B'First .. Eq - A'First + B'First - 1))~
+holds.
+
+We first define a ~Partial_Eq~ lemma to deal with the number of
+occurrences of a particular value. This lemma states that if a
+value ~E~ as the same number of occurrences in two arrays and
+that the arrays are equal starting from an index ~Eq~, then the
+number of occurrences of ~E~ before ~Eq~ in both arrays is the
+same. Its specification is:
+
+#+BEGIN_SRC ada
+  procedure Partial_Eq
+    (A, B : T_Arr;
+     Eq   : Positive;
+     E    : T) with
+     Pre => A'Length = B'Length and then A'Length >= 1
+     and then Eq in A'First + 1 .. A'Last
+     and then (for all J in Eq .. A'Last => A (J) = B (J - A'First + B'First))
+     and then Occ (A, E) = Occ (B, E),
+     Post => Occ (A (A'First .. Eq - 1), E) =
+     Occ (B (B'First .. Eq - A'First + B'First - 1), E);
+#+END_SRC
+
+Its implementation is:
+
+#+BEGIN_SRC ada
+  procedure Partial_Eq
+    (A, B : T_Arr;
+     Eq   : Positive;
+     E    : T)
+  is
+  begin
+     if A'Last = Eq then
+        return;
+     end if;
+  
+     if A (A'Last) = E then
+        pragma Assert (B (B'Last) = E);
+     else
+        pragma Assert (B (B'Last) /= E);
+     end if;
+  
+     Partial_Eq (Remove_Last (A), Remove_Last (B), Eq, E);
+  end Partial_Eq;
+#+END_SRC
+
+The implementation may seem very difficult but we just adapt the
+lemma for the cases where ~A~ and ~B~ does not have the same
+first index, to allow the user to use it outside of our function.
+
+We can now write the ~Multiset_With_Eq~ lemma:
+
+#+BEGIN_SRC ada
+  procedure Multiset_With_Eq
+    (A, B : T_Arr;
+     Eq   : Positive) with
+     Pre => A'Length = B'Length and then B'Last < Positive'Last
+     and then A'Length >= 1 and then Eq in A'First + 1 .. A'Last
+     and then Multiset_Unchanged (A, B)
+     and then
+     (for all J in Eq .. A'Last => A (J) = B (J - A'First + B'First)),
+     Post => Multiset_Unchanged
+       (A (A'First .. Eq - 1), B (B'First .. Eq - A'First + B'First - 1));
+#+END_SRC
+
+And its implementation is rather straightforward using
+~Partial_Eq~:
+
+#+BEGIN_SRC ada
+  procedure Multiset_With_Eq
+    (A, B : T_Arr;
+     Eq   : Positive)
+  is
+     Eq_B : constant Positive := Eq - A'First + B'First;
+  begin
+     for E in T loop
+        Partial_Eq (A, B, Eq, E);
+        pragma Loop_Invariant
+  	(for all F in T'First .. E =>
+  	   Occ (A (A'First .. Eq - 1), F) =
+  	   Occ (B (B'First .. Eq_B - 1), F));
+     end loop;
+  
+  end Multiset_With_Eq;
 #+END_SRC
 
 *** Final implementation of Make_Heap
