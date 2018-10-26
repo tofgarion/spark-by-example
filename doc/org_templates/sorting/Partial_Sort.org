@@ -3,16 +3,22 @@
 
 ** The Partial_Sort algorithm
 
-   The ~Partial_Sort~ algorithm sorts one part of an array and
-   ensures that every element at the left is less than every element
-   at the right. Its signature is:
+   The ~Partial_Sort~ algorithm takes an array ~A~ and a valid index
+   ~M~ as parameters and
+
+   - ensures that all values after index ~M~ are greater than all
+     values before index ~M~
+   - sorts ~A~ up to index ~M~
+
+   Its signature is:
 
    #+BEGIN_SRC ada
      procedure Partial_Sort (A : in out T_Arr; M : Positive)
    #+END_SRC
 
-   This algorithm uses a lot of previously proved algorithms and
-   previously used techniques to help the provers.
+   This algorithm uses previously proved algorithms and techniques to
+   help the provers, so it is better to read the [[../heap/README.org][chapter on binary
+   heaps]] before.
 
 *** The Partition predicate
 
