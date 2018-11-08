@@ -8,7 +8,7 @@ The ~Count~ algorithm counts the number of occurrences of a value
 ~Val~ in an array ~A~. Its signature can be expressed as:
 
 #+BEGIN_SRC ada
-  function Count (A : T_Arr; Val : T) return Natural
+  function Count (A : T_Arr; Val : T) return Natural;
 #+END_SRC
 
 ** The predicate Occ
@@ -21,7 +21,7 @@ serve as a mathematical specification for ~Count~.
 array (see [[http://docs.adacore.com/spark2014-docs/html/ug/GNATprove_by_example/manual_proof.html#manual-proof-using-ghost-code][SPARK 2014 user guide chapter on manual proof with
 ghost code]] for a similar and more detailed example). We first
 define a recursive function ~Occ_Def~ which will be used in ~Occ~
-as *~GNATprove~ only introduces axioms for postconditions of
+as *GNATprove only introduces axioms for postconditions of
 non-recursive functions*.
 
 #+BEGIN_SRC ada
@@ -30,7 +30,7 @@ non-recursive functions*.
      return T_Arr is (A (A'First .. A'Last - 1)) with
      Pre => A'Length > 0,
      Ghost;
-  
+
   function Occ_Def
     (A   : T_Arr;
      Val : T)
@@ -105,11 +105,11 @@ The implementation of ~Count~ is the following:
         if A (I) = Val then
   	 Result := Result + 1;
         end if;
-  
+
         pragma Loop_Invariant (Result <= A'Length);
         pragma Loop_Invariant (Result = Occ (A (A'First .. I), Val));
      end loop;
-  
+
      return Result;
   end Count;
 #+END_SRC

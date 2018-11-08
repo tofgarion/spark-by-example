@@ -8,7 +8,7 @@ The ~Binary_Search~ algorithm is a classic Computer Science
 algorithm. Its signature can be expressed as
 
 #+BEGIN_SRC ada
-  function Binary_Search (A : T_Arr; Val : T) return Boolean
+  function Binary_Search (A : T_Arr; Val : T) return Boolean;
 #+END_SRC
 
 It will simply return ~True~ if ~Val~ is contained in ~A~.
@@ -54,7 +54,7 @@ The implementation of ~Binary_Search~ is
      else
         return False;
      end if;
-  
+
   end Binary_Search;
 #+END_SRC
 

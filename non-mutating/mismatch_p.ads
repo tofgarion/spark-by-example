@@ -13,7 +13,7 @@ package Mismatch_P with
       return Option with
       Pre            => A'Length = B'Length,
       Contract_Cases =>
-      (Equal_Ranges (A, B (B'First .. B'First - 1 + A'Length)) =>
+      (Equal_Ranges (A, B) =>
          not Mismatch'Result.Exists,
        others =>
          Mismatch'Result.Exists

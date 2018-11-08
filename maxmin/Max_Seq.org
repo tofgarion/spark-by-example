@@ -10,7 +10,7 @@ array.
 Its signature can be defined as:
 
 #+BEGIN_SRC ada
-  function Max_Seq (A : T_Arr) return T
+  function Max_Seq (A : T_Arr) return T;
 #+END_SRC
 
 This algorithm will use the previous ~Max_Element~ algorithm,

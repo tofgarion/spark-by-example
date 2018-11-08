@@ -22,7 +22,7 @@ package Search_N_P with
          and then
          (if Search_N'Result.Value > A'First then
             not Has_Constant_Subrange
-              (A (A'First .. Search_N'Result.Value - 1), Val, N)),
+              (A (A'First .. Search_N'Result.Value + N - 2), Val, N)),
        others => not Search_N'Result.Exists);
 
 end Search_N_P;

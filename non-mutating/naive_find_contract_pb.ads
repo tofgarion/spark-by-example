@@ -10,6 +10,7 @@ package Naive_Find_Contract_Pb with
      (A   : T_Arr;
       Val : T)
       return Positive with
+      Import,
       Post =>
       (Find'Result <= A'Last + 1
        and then (for all I in A'First .. Find'Result - 1 => A (I) /= Val)),
