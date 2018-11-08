@@ -8,7 +8,7 @@ The ~Adjacent_Find~ algorithm is another finding algorithm. Its
 signature is the following:
 
 #+BEGIN_SRC ada
-  function Adjacent_Find (A : T_Arr) return Option
+  function Adjacent_Find (A : T_Arr) return Option;
 #+END_SRC
 
 Given an array ~A~, ~Adjacent_Find~ will either return:
@@ -79,19 +79,19 @@ for two consecutive elements that are equal is defined as follows:
      if A'Length <= 1 then
         return Result;
      end if;
-  
+
      for I in A'First .. A'Last - 1 loop
         if A (I) = A (I + 1) then
   	 Result := (Exists => True, Value => I);
-  
+
   	 return Result;
         end if;
-  
+
         pragma Loop_Invariant
   	(not Has_Equal_Neighbors (A (A'First .. I + 1)));
         pragma Loop_Invariant (not Result.Exists);
      end loop;
-  
+
      return Result;
   end Adjacent_Find;
 #+END_SRC

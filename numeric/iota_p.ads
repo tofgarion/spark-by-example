@@ -7,6 +7,6 @@ package Iota_P with
    procedure Iota
      (A   : in out T_Arr;
       Val :        T) with
-      Pre  => Val + T (A'Length) <= T'Last,
+      Pre  => Val + A'Length <= T'Last,
       Post => Is_Iota (A, Val);
 end Iota_P;

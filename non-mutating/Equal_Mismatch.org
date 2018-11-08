@@ -8,14 +8,14 @@
 signatures are the following:
 
 #+BEGIN_SRC ada
-  function Equal (A : T_Arr; B : T_Arr) return Boolean
-  function Mismatch (A : T_Arr; B : T_Arr) return Option
+  function Equal (A : T_Arr; B : T_Arr) return Boolean;
+  function Mismatch (A : T_Arr; B : T_Arr) return Option;
 #+END_SRC
 
 ~Equal (A, B)~ returns ~True~ if ~A~ and ~B~ have the same length
 and elements of ~A~ and ~B~ are equal when traversing ~A~ and ~B~
 in the same order. ~Mismatch~ is not simply the negation of
-~Equal~: it returns the least valid index ~J~ of ~A~ such that ~A
+~Equal~: it returns the smallest valid index ~J~ of ~A~ such that ~A
    (J)~ differs from ~B (J)~ (an ~Option~ is used to consider the case
 where ~A~ and ~B~ are identical).
 
@@ -45,9 +45,12 @@ used):
 
 #+BEGIN_SRC ada
   function Equal_Ranges
-    (A : T_Arr;
-     B : T_Arr)
-     return Boolean is (A = B);
+    (A      : T_Arr;
+     B      : T_Arr;
+     Offset : Natural)
+     return Boolean is
+    (A (A'First .. A'First + Offset) = B (B'First .. B'First + Offset)) with
+     Pre => Offset < A'Length and then Offset < B'Length;
 #+END_SRC
 
 We need to add a [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#preconditions][precondition]] to exclude invalid ~Offset~
@@ -104,14 +107,14 @@ The implementation of ~Mismatch~ is the following:
      for I in 0 .. A'Length - 1 loop
         if A (A'First + I) /= B (B'First + I) then
   	 Result := (Exists => True, Value => I);
-  
+
   	 return Result;
         end if;
-  
+
         pragma Loop_Invariant (Equal_Ranges (A, B, I));
         pragma Loop_Invariant (not Result.Exists);
      end loop;
-  
+
      return Result;
   end Mismatch;
 #+END_SRC

@@ -16,7 +16,7 @@ package Adjacent_Find_P with
          (A (Adjacent_Find'Result.Value) = A (Adjacent_Find'Result.Value + 1))
          and then
          (not Has_Equal_Neighbors
-            (A (A'First .. Adjacent_Find'Result.Value - 1))),
+            (A (A'First .. Adjacent_Find'Result.Value))),
        others => Adjacent_Find'Result.Exists = False);
 
 end Adjacent_Find_P;

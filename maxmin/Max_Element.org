@@ -8,7 +8,7 @@ The ~Max_Element~ algorithm finds the index of the maximum value of
 an array. Its signature can be expressed as:
 
 #+BEGIN_SRC ada
-  function Max_Element (A : T_Arr) return Option
+  function Max_Element (A : T_Arr) return Option;
 #+END_SRC
 
 ~Max_Element~ will return the first index where the maximum is
@@ -74,7 +74,7 @@ such an element, we replace ~Result.Value~ by its index.
   	 if A (Result.Value) < A (I) then
   	    Result.Value := I;
   	 end if;
-  
+
   	 pragma Loop_Invariant (A'First <= Result.Value);
   	 pragma Loop_Invariant (A'Last >= Result.Value);
   	 pragma Loop_Invariant
@@ -83,13 +83,13 @@ such an element, we replace ~Result.Value~ by its index.
   	   (for all K in A'First .. Result.Value - 1 =>
   	      A (K) < A (Result.Value));
         end loop;
-  
+
         return Result;
      end if;
   end Max_Element;
 #+END_SRC
 
-As usual with ~For~ loops in SPARK, no variant is needed. The loop
+As usual with ~for~ loops in SPARK, no variant is needed. The loop
 invariants specify that:
 
 1. the ~Result.Value~ value is in range ~A'First .. A'Last~.
@@ -128,7 +128,7 @@ index is less than the maximum value.
 These two ghost functions are only wrappers for expressions used
 previously in the specification of ~Max_Element~. Notice that we
 use an array as parameter without asking for start and end
-indexesin ~Strict_Upper_Bound~, therefore we will use slices when
+indexes in ~Strict_Upper_Bound~, therefore we will use slices when
 using this predicate.
 
 *** Specification of Max_Element
@@ -169,7 +169,7 @@ The implementation is almost the same as before:
   	 if A (Result.Value) < A (I) then
   	    Result.Value := I;
   	 end if;
-  
+
   	 pragma Loop_Invariant (A'First <= Result.Value);
   	 pragma Loop_Invariant (Result.Value <= A'Last);
   	 pragma Loop_Invariant
@@ -179,7 +179,7 @@ The implementation is almost the same as before:
   	      Strict_Upper_Bound
   		(A (A'First .. Result.Value - 1), A (Result.Value)));
         end loop;
-  
+
         return Result;
      end if;
   end Max_Element;

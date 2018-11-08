@@ -2,8 +2,6 @@ project Spark_By_Example_Shared is
 
   for Source_Dirs use ();
 
-  for Object_Dir use "obj";
-
   package Compiler is
     for Default_Switches ("Ada") use ("-gnat12", "-gnato13", "-gnata");
   end Compiler;

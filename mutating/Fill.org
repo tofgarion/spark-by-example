@@ -8,7 +8,7 @@ The ~Fill~ algorithm initializes an array with a particular
 value. Here is its signature:
 
 #+BEGIN_SRC ada
-  procedure Fill (A : in out T_Arr; Val : T)
+  procedure Fill (A : in out T_Arr; Val : T);
 #+END_SRC
 
 ~A~ needs of course to be passed as a ~out~ parameter as it will be
@@ -41,7 +41,7 @@ The implementation of ~Fill~ is the following:
   begin
      for I in A'Range loop
         A (I) := Val;
-  
+
         pragma Loop_Invariant
   	(Constant_Range_From_Location (A, Val, A'First, I - A'First + 1));
      end loop;

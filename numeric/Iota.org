@@ -9,12 +9,12 @@ the initial value is specified by the user. Its signature is the
 following:
 
 #+BEGIN_SRC ada
-  procedure Iota (A : in out T_Arr ; Val : T)
+  procedure Iota (A : in out T_Arr ; Val : T);
 #+END_SRC
 
 For instance, let us suppose that ~A~ is an ~T~ array of size ~5~,
 then after a call ~Iota (A, 3)~, ~A~ will be ~(3, 4, 5, 6,
-   7)~. Notice that the incrementation step in not precised in the
+   7)~. Notice that the incrementation step in not specified in the
 function signature.
 
 ** The predicate Is_Iota
@@ -29,11 +29,10 @@ follows:
      Val : T)
      return Boolean is
     (for all I in A'Range => A (I) = Val + T (I - A'First)) with
-     Pre => Val + T (A'Length) <= T'Last;
+     Pre => Val + A'Length <= T'Last;
 #+END_SRC
 
-Notice that the precondition ensures that no overflow will happen
-(~T (A'Length)~ is the ~A'Length~ th value of type ~T~).
+Notice that the precondition ensures that no overflow will happen.
 
 ** Specification of Iota
 

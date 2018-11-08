@@ -8,7 +8,7 @@ The ~Min_Element~ algorithm searches the minimum in a general sequence.
 Its signature can be expressed as:
 
 #+BEGIN_SRC ada
-  function Min_Element(A : T_arr) return Option
+  function Min_Element(A : T_arr) return Option;
 #+END_SRC
 
 ~Min_Element~ will return an option containing the first index ~I~
@@ -67,14 +67,14 @@ The specification of ~Min_Element~ can be expressed as follows:
   	    A (Min_Element'Result.Value))));
 #+END_SRC
 
-Here, the post conditions are expressed through 2 contract cases:
+Here, the postconditions are expressed through 2 contract cases:
 
 - if ~A~ is empty then an "empty" ~Option~ is returned
 - else there is a valid index returned and
   1. the result is a lower bound for the values in ~A~
   2. for all value ~V~ of ~A~ found at an index stricly lower than
      ~Result.Value~ then ~V > A(Result.Value)~. This expresses the
-     fact that rhe result is indeed the first index containing the
+     fact that the result is indeed the first index containing the
      minimum element of ~A~.
 
 ** Implementation of Min_Element
@@ -90,12 +90,12 @@ Here, the post conditions are expressed through 2 contract cases:
         return Result;
      else
         Result := (Exists => True, Value => A'First);
-  
+
         for I in A'First .. A'Last loop
   	 if A (I) < A (Result.Value) then
   	    Result.Value := I;
   	 end if;
-  
+
   	 pragma Loop_Invariant (Result.Value in A'First .. A'Last);
   	 pragma Loop_Invariant
   	   (Lower_Bound (A (A'First .. I), A (Result.Value)));
@@ -103,13 +103,13 @@ Here, the post conditions are expressed through 2 contract cases:
   	   ((if Result.Value > A'First then
   	       Strict_Lower_Bound
   		 (A (A'First .. Result.Value - 1), A (Result.Value))));
-  
+
         end loop;
-  
+
         return Result;
-  
+
      end if;
-  
+
   end Min_Element;
 #+END_SRC
 

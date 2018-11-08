@@ -8,10 +8,10 @@ The ~Search~ algorithm finds a subsequence in an array identical
 to a given sequence. Its signature can be defined as:
 
 #+BEGIN_SRC ada
-  function Search (A : T_Arr; B : T_Arr) return Option
+  function Search (A : T_Arr; B : T_Arr) return Option;
 #+END_SRC
 
-~Search~ will return an option containing the *first valid* index
+~Search~ will return an option containing the smallest valid index
 ~J~ of ~A~ such that ~A (J .. J + B'Length - 1) = B~ if it exists.
 
 ** A first version of Search without ghost functions for specification
@@ -82,19 +82,19 @@ A specification of ~Search~ can be written as follows:
      if (A'Length < B'Length or else B'Length = 0) then
         return Result;
      end if;
-  
+
      for I in A'First .. A'Last + 1 - B'Length loop
         if A (I .. I - 1 + B'Length) = B then
   	 Result := (Exists => True, Value => I);
-  
+
   	 return Result;
         end if;
-  
+
         pragma Loop_Invariant
   	(for all J in A'First .. I => A (J .. J - 1 + B'Length) /= B);
         pragma Loop_Invariant (not Result.Exists);
      end loop;
-  
+
      return Result;
   end Search;
 #+END_SRC
@@ -203,19 +203,19 @@ the use of ~Has_Subrange~:
      if (A'Length < B'Length or else B'Length = 0) then
         return Result;
      end if;
-  
+
      for I in A'First .. A'Last + 1 - B'Length loop
         if A (I .. I - 1 + B'Length) = B then
   	 Result := (Exists => True, Value => I);
-  
+
   	 return Result;
         end if;
-  
+
         pragma Loop_Invariant
   	((not Has_Subrange (A (A'First .. I + B'Length - 1), B)));
         pragma Loop_Invariant (not Result.Exists);
      end loop;
-  
+
      return Result;
   end Search;
 #+END_SRC
@@ -229,7 +229,7 @@ implementation.
 
 An usual trick to help SMT solvers is to hide the unnecessary
 quantifiers in auxiliary subprograms (this has been suggested by
-Yannick Moy of Adacore). A previous version of ~Search~ redefines
+Yannick Moy of AdaCore). A previous version of ~Search~ redefines
 the ~Has_Subrange~ function by using two intermediate functions
 allowing to hide the quantifiers: one function to express that a
 subrange of ~A~ is equal to ~B~ starting from a particular index
@@ -240,7 +240,7 @@ to bound the subrange with a lower index and the other one with an
 upper index). See the ~GPL2017~ branch of Spark by Example
 repository for this implementation.
 
-Claire Dross from Adacore suggested that the provers have
+Claire Dross from AdaCore suggested that the provers have
 difficulties with the slices and particularly the expression ~J -
     1 + B'Length~ that is used to qualify the last index of a slice of
 ~A~ starting from ~J~ and with a length equal to ~B~
@@ -314,22 +314,22 @@ The implementation of ~Search~ is the following:
      Result : Option := (Exists => False);
   begin
      if (A'Length < B'Length or else B'Length = 0) then
-  
+
         return Result;
      end if;
-  
+
      for J in A'First .. A'Last + 1 - B'Length loop
         if A (J .. J - 1 + B'Length) = B then
   	 Result := (Exists => True, Value => J);
-  
+
   	 return Result;
         end if;
-  
+
         pragma Loop_Invariant
   	(for all K in A'First .. J => A (K .. Last (K, B)) /= B);
         pragma Loop_Invariant (not Result.Exists);
      end loop;
-  
+
      return Result;
   end Search;
 #+END_SRC

@@ -81,16 +81,15 @@ implementation is defined as follows:
 
 #+BEGIN_SRC ada
   procedure Random_Shuffle (A : in out T_Arr) is
-        J : Positive;
-     begin
-  
-        for I in A'Range loop
-  	 J := Random_Number(A'First, I);
-  	 Swap(A(I),A(J));
-  
-  	 pragma Loop_Invariant(Multiset_Unchanged(A,A'Loop_Entry));
-  
-        end loop;
+     J : Positive;
+  begin
+     for I in A'Range loop
+        J := Random_Number(A'First, I);
+  	Swap(A(I),A(J));
+
+  	pragma Loop_Invariant(Multiset_Unchanged(A,A'Loop_Entry));
+
+      end loop;
   end Random_Shuffle;
 #+END_SRC
 
@@ -146,11 +145,11 @@ The implementation (without SPARK annotations) is quite straightforward:
 #+BEGIN_SRC ada
   function Swap_Array (A : T_Arr; I : Positive;
   		     J : Positive) return T_Arr is
-        Temp : T := A(I);
-     begin
-        A(I) := A(J);
-        A(J) := Temp;
-     end Swap_Array;
+     Temp : T := A(I);
+  begin
+     A(I) := A(J);
+     A(J) := Temp;
+  end Swap_Array;
 #+END_SRC
 
 With this current implementation, the desired result is
@@ -230,7 +229,7 @@ The proof of the lemma is given in its implementation:
      if A'Length = 0 then
         return;
      end if;
-  
+
      if J = A'Last then
         Occ_Equal (Tmp, Remove_Last (B), E);
      else
@@ -329,14 +328,14 @@ procedure to ~Swap_Array~:
   is
      A_Init : T_Arr (A'Range) := A;
      Temp   : T               := A (J);
-  
+
      -- ghost variable
-  
+
      A_After_First : T_Arr (A'Range) with
         Ghost;
-  
+
         -- ghost procedure
-  
+
      procedure Prove_Perm with
         Ghost,
         Pre => J in A'Range and then K in A'Range
@@ -352,18 +351,18 @@ procedure to ~Swap_Array~:
   	   (for all F in T'First .. V => Occ (A_Init, F) = Occ (A, F));
         end loop;
      end Prove_Perm;
-  
+
   begin
      A (J)         := A (K);
      A_After_First := A; -- ghost code
-  
+
      pragma Assert (Is_Set (A_Init, J, A_Init (K), A_After_First));
-  
+
      A (K) := Temp;
-  
+
      pragma Assert (Is_Set (A_After_First, K, A_Init (J), A));
      Prove_Perm; -- ghost code
-  
+
   end Swap_Array;
 #+END_SRC
 
@@ -376,13 +375,13 @@ We can now give somewhat condensed and simple implementation of
   procedure Random_Shuffle (A : in out T_Arr) is
      J : Positive;
   begin
-  
+
      for I in A'Range loop
         J := Random_Number (A'First, I);
-  
+
         Swap_Array (A, I, J);
         pragma Loop_Invariant (Multiset_Unchanged (A, A'Loop_Entry));
-  
+
      end loop;
   end Random_Shuffle;
 #+END_SRC
@@ -424,14 +423,14 @@ specification and implementation of ~Random_Number~ are:
      Last  : Positive)
      return Positive
   is
-  
+
      subtype Rng is Positive range First .. Last;
      package Alea is new Ada.Numerics.Discrete_Random (Rng);
      use Alea;
-  
+
      Rnd_Gen : Generator;
      Result  : Integer;
-  
+
   begin
      Reset (Rnd_Gen);
      Result := Random (Rnd_Gen);
@@ -440,9 +439,9 @@ specification and implementation of ~Random_Number~ are:
      elsif Result > Last then
         Result := Last;
      end if;
-  
+
      return Result;
-  
+
   end Random_Number;
 #+END_SRC
 

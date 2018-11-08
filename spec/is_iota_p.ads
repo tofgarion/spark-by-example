@@ -9,5 +9,5 @@ package Is_Iota_P with
       Val : T)
       return Boolean is
      (for all I in A'Range => A (I) = Val + T (I - A'First)) with
-      Pre => Val + T (A'Length) <= T'Last;
+      Pre => Val + A'Length <= T'Last;
 end Is_Iota_P;

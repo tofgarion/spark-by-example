@@ -16,7 +16,7 @@ As usual, we will use an ~Option~ to encapsulate the result.
 
 ** The Constant_Range_From_Location and Has_Constant_Subrange predicates
 
-Like usual, we define predicates to express more easily the
+As usual, we define predicates to express more easily the
 specification of ~Search_N~.
 
 First, we define a ~Constant_Range_From_Location~ ghost function to
@@ -110,16 +110,16 @@ The implementation of ~Search_N~ is the following:
      if A'Length < N then
         return Result;
      end if;
-  
+
      for I in A'Range loop
         if A (I) /= Val then
   	 Start := I + 1;
         elsif I + 1 - Start = N then
   	 Result := (Exists => True, Value => Start);
-  
+
   	 return Result;
         end if;
-  
+
         pragma Loop_Invariant (not Result.Exists);
         pragma Loop_Invariant (Start in A'First .. I + 1);
         pragma Loop_Invariant
@@ -129,9 +129,9 @@ The implementation of ~Search_N~ is the following:
   	(not Has_Constant_Subrange (A (A'First .. I), Val, N));
         pragma Loop_Invariant (if Start > A'First then A (Start - 1) /= Val);
      end loop;
-  
+
      return Result;
-  
+
   end Search_N;
 #+END_SRC
 

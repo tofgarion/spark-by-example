@@ -9,7 +9,7 @@ given array ~A~ in another array ~B~ without modifying ~A~. Its
 signature is:
 
 #+BEGIN_SRC ada
-  procedure Reverse_Copy (A : T_Arr; B : in out T_Arr)
+  procedure Reverse_Copy (A : T_Arr; B : in out T_Arr);
 #+END_SRC
 
 ** The Is_Reversed predicate
@@ -61,11 +61,11 @@ reverse order of those of ~B~.
   begin
      for J in B'Range loop
         B (J) := A (A'Last - (J - B'First));
-  
+
         pragma Loop_Invariant
   	(Is_Reversed
   	   (B (B'First .. J), A (A'Last - (J - B'First) .. A'Last)));
-  
+
      end loop;
   end Reverse_Copy;
 #+END_SRC
