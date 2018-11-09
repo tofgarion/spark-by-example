@@ -15,7 +15,7 @@
 
 *** The Constant_Range_From_Location and Has_Constant_Subrange predicates
 
-    Like usual, we define predicates to express more easily the
+    As usual, we define predicates to express more easily the
     specification of ~Search_N~.
 
     First, we define a ~Constant_Range_From_Location~ ghost function to

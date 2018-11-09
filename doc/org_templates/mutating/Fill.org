@@ -7,7 +7,7 @@
    value. Here is its signature:
 
    #+BEGIN_SRC ada
-     procedure Fill (A : in out T_Arr; Val : T)
+     procedure Fill (A : in out T_Arr; Val : T);
    #+END_SRC
 
    ~A~ needs of course to be passed as a ~out~ parameter as it will be

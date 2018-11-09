@@ -8,7 +8,7 @@
    modifying it, instead of copying it. Its signature reads:
 
    #+BEGIN_SRC ada
-     procedure Reverse_In_Place (A : in out T_Arr)
+     procedure Reverse_In_Place (A : in out T_Arr);
    #+END_SRC
 
 *** Specification of Reverse_In_Place

@@ -4,17 +4,20 @@
 ** The Swap algorithm
 
    The ~Swap~ algorithm exchanges the contents of two variables. Its
-   signature can be expressed as: ~procedure Swap (P : in out T; Q :
-   in out T)~
+   signature can be expressed as:
+
+   #+BEGIN_SRC ada
+     procedure Swap (P : in out T; Q : in out T);
+   #+END_SRC
 
 *** Specification of Swap
 
     The specification of ~Swap~ is the following:
 
-    #+INCLUDE: "../../../mutating/swap_p.ads" :src ada :range-begin "procedure Swap" :range-end "\s-*(\(.*?\(?:\n.*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "5-7"
+    #+INCLUDE: "../../../mutating/swap_p.ads" :src ada :range-begin "procedure Swap" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "6-10"
 
     The postcondition expresses the fact that the two variables have
-    actually been exchanged, using the ~'Old~ attribute available in
+    actually been exchanged, using the ~Old~ attribute available in
     SPARK. This attribute stores the state of the variables *before*
     the execution of the procedure.
 

@@ -7,7 +7,7 @@
    Its signature can be expressed as:
 
    #+BEGIN_SRC ada
-     function Min_Element(A : T_arr) return Option
+     function Min_Element(A : T_arr) return Option;
    #+END_SRC
 
    ~Min_Element~ will return an option containing the first index ~I~
@@ -42,14 +42,14 @@
 
     #+INCLUDE: "../../../maxmin/min_element_p.ads" :src ada :range-begin "function Min_Element" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-21"
 
-    Here, the post conditions are expressed through 2 contract cases:
+    Here, the postconditions are expressed through 2 contract cases:
 
     - if ~A~ is empty then an "empty" ~Option~ is returned
     - else there is a valid index returned and
       1. the result is a lower bound for the values in ~A~
       2. for all value ~V~ of ~A~ found at an index stricly lower than
          ~Result.Value~ then ~V > A(Result.Value)~. This expresses the
-         fact that rhe result is indeed the first index containing the
+         fact that the result is indeed the first index containing the
          minimum element of ~A~.
 
 *** Implementation of Min_Element

@@ -1,19 +1,19 @@
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../maxmin/Max_Element.org
 
-* The Max_Element algorithm
+** The Max_Element algorithm
 
    The ~Max_Element~ algorithm finds the index of the maximum value of
    an array. Its signature can be expressed as:
 
    #+BEGIN_SRC ada
-     function Max_Element (A : T_Arr) return Option
+      function Max_Element (A : T_Arr) return Option;
    #+END_SRC
 
    ~Max_Element~ will return the first index where the maximum is
    located if the array is not empty.
 
-** A first version of Max_Element without ghost functions for specification
+*** A first version of Max_Element without ghost functions for specification
 
     We will first specify and implement ~Max_Element~ without using
     ghost functions. There will be minor changes between the
@@ -21,44 +21,44 @@
     ghost functions as ghost functions are only used for readability
     here.
 
-*** Specification of Max_Element without ghost functions
+**** Specification of Max_Element without ghost functions
 
-    #+INCLUDE: "../../../maxmin/max_element_wo_ghost_p.ads" :src ada :range-begin "function Max_Element" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-20"
+     #+INCLUDE: "../../../maxmin/max_element_wo_ghost_p.ads" :src ada :range-begin "function Max_Element" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-20"
 
-    The postconditions are expressed through contract cases:
+     The postconditions are expressed through contract cases:
 
-    - if the array is empty, then there is no index returned (the
-      ~Option~ is empty).
-    - if the array is not empty, then
-      1. the result is in range ~A'First .. A'Last~.
-      2. all the elements of the array are less or equal than the
-         value located at the returned index.
-      3. all the elements of the array located before the index
-         returned are less than the value located at the index
-         returned. This postcondition ensures that the index returned
-         is the first index containing the maximum value of the array.
+     - if the array is empty, then there is no index returned (the
+       ~Option~ is empty).
+     - if the array is not empty, then
+       1. the result is in range ~A'First .. A'Last~.
+       2. all the elements of the array are less or equal than the
+          value located at the returned index.
+       3. all the elements of the array located before the index
+          returned are less than the value located at the index
+          returned. This postcondition ensures that the index returned
+          is the first index containing the maximum value of the array.
 
-*** Implementation of Max_Element
+**** Implementation of Max_Element
 
-    The implementation is classic: we range over ~A~ indexes, trying
-    to find an element greater than ~A (Result.Value)~. If we find
-    such an element, we replace ~Result.Value~ by its index.
+     The implementation is classic: we range over ~A~ indexes, trying
+     to find an element greater than ~A (Result.Value)~. If we find
+     such an element, we replace ~Result.Value~ by its index.
 
-    #+INCLUDE: "../../../maxmin/max_element_wo_ghost_p.adb" :src ada :range-begin "function Max_Element" :range-end "End Max_Element;" :lines "5-32"
+     #+INCLUDE: "../../../maxmin/max_element_wo_ghost_p.adb" :src ada :range-begin "function Max_Element" :range-end "End Max_Element;" :lines "5-32"
 
-    As usual with ~For~ loops in SPARK, no variant is needed. The loop
-    invariants specify that:
+     As usual with ~for~ loops in SPARK, no variant is needed. The loop
+     invariants specify that:
 
-    1. the ~Result.Value~ value is in range ~A'First .. A'Last~.
-    2. every traversed elements is less or equal than the value at
-       index ~Result.Value~.
-    3. every element before index ~Result.Value~ is less than the
-       value at index ~Result.Value~.
+     1. the ~Result.Value~ value is in range ~A'First .. A'Last~.
+     2. every traversed elements is less or equal than the value at
+        index ~Result.Value~.
+     3. every element before index ~Result.Value~ is less than the
+        value at index ~Result.Value~.
 
-    When using ~GNATprove~ on the body of ~Max_Element~, everything is
-    proved.
+     When using ~GNATprove~ on the body of ~Max_Element~, everything is
+     proved.
 
-** A version of Max_Element with ghost functions
+*** A version of Max_Element with ghost functions
 
     We will now define two predicates to represent the main properties
     used in specification, i.e. the fact that all elements of the
@@ -66,26 +66,26 @@
     returned, and the fact that every element before the returned
     index is less than the maximum value.
 
-*** The Upper_Bound and Strict_Upper_Bound predicates
+**** The Upper_Bound and Strict_Upper_Bound predicates
 
-    #+INCLUDE: "../../../spec/upper_bound_p.ads" :src ada :range-begin "function Upper_Bound" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-11"
+     #+INCLUDE: "../../../spec/upper_bound_p.ads" :src ada :range-begin "function Upper_Bound" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-11"
 
-    #+INCLUDE: "../../../spec/upper_bound_p.ads" :src ada :range-begin "function Strict_Upper_Bound" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-16"
+     #+INCLUDE: "../../../spec/upper_bound_p.ads" :src ada :range-begin "function Strict_Upper_Bound" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "12-16"
 
-    These two ghost functions are only wrappers for expressions used
-    previously in the specification of ~Max_Element~. Notice that we
-    use an array as parameter without asking for start and end
-    indexesin ~Strict_Upper_Bound~, therefore we will use slices when
-    using this predicate.
+     These two ghost functions are only wrappers for expressions used
+     previously in the specification of ~Max_Element~. Notice that we
+     use an array as parameter without asking for start and end indexes
+     in ~Strict_Upper_Bound~, therefore we will use slices when using
+     this predicate.
 
-*** Specification of Max_Element
+**** Specification of Max_Element
 
-    With the previously defined predicates, the specification of
-    ~Max_Element~ is:
+     With the previously defined predicates, the specification of
+     ~Max_Element~ is:
 
-    #+INCLUDE: "../../../maxmin/max_element_p.ads" :src ada :range-begin "function Max_Element" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-19"
+     #+INCLUDE: "../../../maxmin/max_element_p.ads" :src ada :range-begin "function Max_Element" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "8-19"
 
-*** Implementation of Max_Element
+**** Implementation of Max_Element
 
      The implementation is almost the same as before:
 
@@ -100,6 +100,6 @@
 
      With this implementation, everything is proved with ~GNATprove~.
 
-# Local Variables:
-# ispell-dictionary: "english"
-# End:
+ # Local Variables:
+ # ispell-dictionary: "english"
+ # End:

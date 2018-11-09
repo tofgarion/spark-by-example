@@ -9,7 +9,7 @@
    Its signature can be expressed as :
 
    #+BEGIN_SRC ada
-     function Search_Equal_Range (A : T_Arr; V : T) return Option_Pair
+     function Search_Equal_Range (A : T_Arr; V : T) return Option_Pair;
    #+END_SRC
 
    This function returns an ~Option_Pair~. ~Option_Pair~ is just a
@@ -57,7 +57,7 @@
          = V~
       4. for all ~J~ in ~Result.Upper .. A'Last~ then ~V < A(J)~
 
-      Again, the ranges defined for $J$ may be empty.
+      Again, the ranges defined for ~J~ may be empty.
 
 *** Implementations of Search_Equal_Range
 

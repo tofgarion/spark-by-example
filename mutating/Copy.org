@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Copy.org
 
@@ -49,9 +49,9 @@ A possible implementation for ~Copy~ is the following:
   	 K : Positive := B'First + (J - A'First);
         begin
   	 B (K) := A (J);
-
+  
   	 pragma Loop_Invariant (A (A'First .. J) = B (B'First .. K));
-
+  
         end;
      end loop;
   end Copy;

@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Reverse_Copy.org
 
@@ -61,11 +61,11 @@ reverse order of those of ~B~.
   begin
      for J in B'Range loop
         B (J) := A (A'Last - (J - B'First));
-
+  
         pragma Loop_Invariant
   	(Is_Reversed
   	   (B (B'First .. J), A (A'Last - (J - B'First) .. A'Last)));
-
+  
      end loop;
   end Reverse_Copy;
 #+END_SRC

@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Reverse_In_Place.org
 
@@ -39,16 +39,16 @@ defined earlier:
   	(if A'Length mod 2 = 0 then 0 else 1)
         else 1);
   begin
-
+  
      if A'Length <= 1 then
         return;
      end if;
-
+  
      for J in 0 .. Half - A'First loop
-
+  
         pragma Assert (A'First + J /= A'Last - J);
         Swap (A (A'First + J), A (A'Last - J));
-
+  
         pragma Loop_Variant (Increases => J);
         pragma Loop_Invariant
   	(A (A'First + J + 1 .. A'Last - (J + 1)) =
@@ -61,9 +61,9 @@ defined earlier:
   	(Is_Reversed
   	   (A'Loop_Entry (A'First .. A'First + J),
   	    A (A'Last - J .. A'Last)));
-
+  
      end loop;
-
+  
   end Reverse_In_Place;
 #+END_SRC
 
@@ -106,16 +106,16 @@ the implementation of ~Reverse_In_Place~ by removing the call to
         else 1);
      T1 : T;
   begin
-
+  
      if A'Length <= 1 then
         return;
      end if;
-
+  
      for J in 0 .. Half - A'First loop
         T1              := A (A'First + J);
         A (A'First + J) := A (A'Last - J);
         A (A'Last - J)  := T1;
-
+  
         pragma Loop_Variant (Increases => J);
         pragma Loop_Invariant
   	(A (A'First + J + 1 .. A'Last - (J + 1)) =
@@ -128,9 +128,9 @@ the implementation of ~Reverse_In_Place~ by removing the call to
   	(Is_Reversed
   	   (A'Loop_Entry (A'First .. A'First + J),
   	    A (A'Last - J .. A'Last)));
-
+  
      end loop;
-
+  
   end Reverse_In_Place;
 #+END_SRC
 

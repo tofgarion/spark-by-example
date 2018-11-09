@@ -7,10 +7,10 @@
    array. Its signature is the following:
 
    #+BEGIN_SRC ada
-     procedure Copy (A : T_Arr; B : in out T_Arr)
+     procedure Copy (A : T_Arr; B : in out T_Arr);
    #+END_SRC
 
-   The usefulness of this procedure could be doubted in ADA, since the
+   The usefulness of this procedure could be doubted in Ada, since the
    simple command ~A := B~ achieves the same goal for arrays with same
    length. The purpose of this document being to prove classic
    algorithms defined in [[https://github.com/fraunhoferfokus/acsl-by-example][ACSL by Example]] for the C language, we choose

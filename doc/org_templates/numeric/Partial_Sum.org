@@ -7,13 +7,13 @@
    sums of an array. Its signature reads:
 
    #+BEGIN_SRC ada
-     procedure Partial_Sum (A : T_Arr; B : in out T_Arr)
+     procedure Partial_Sum (A : T_Arr; B : in out T_Arr);
    #+END_SRC
 
    The result of the algorithm will be stored in ~B~, and for all ~K~
-   in ~(0 .. A'Length - 1)~, ~B(B'First+K) = A (A'First) + A (A'First
-   + 1) + .. + A(A'First + K)~. This can also be expressed with the
-   previously defined [[Accumulate.org][Accumulate]] algorithm: for all ~K~ in ~0
+   in ~(0 .. A'Length - 1)~, ~B (B'First + K) = A (A'First) + A
+   (A'First + 1) + .. + A (A'First + K)~. This can also be expressed
+   with the previously defined [[Accumulate.org][Accumulate]] algorithm: for all ~K~ in ~0
    .. A'Length-1~ then ~B (B'First + K) = Accumulate (A (A'First
    .. A'First + K), 0)~.
 

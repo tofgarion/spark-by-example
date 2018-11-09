@@ -7,16 +7,16 @@
    signatures are the following:
 
    #+BEGIN_SRC ada
-   function Equal (A : T_Arr; B : T_Arr) return Boolean
-   function Mismatch (A : T_Arr; B : T_Arr) return Option
+     function Equal (A : T_Arr; B : T_Arr) return Boolean;
+     function Mismatch (A : T_Arr; B : T_Arr) return Option;
    #+END_SRC
 
    ~Equal (A, B)~ returns ~True~ if ~A~ and ~B~ have the same length
    and elements of ~A~ and ~B~ are equal when traversing ~A~ and ~B~
    in the same order. ~Mismatch~ is not simply the negation of
-   ~Equal~: it returns the least valid index ~J~ of ~A~ such that ~A
-   (J)~ differs from ~B (J)~ (an ~Option~ is used to consider the case
-   where ~A~ and ~B~ are identical).
+   ~Equal~: it returns the smallest valid index ~J~ of ~A~ such that
+   ~A (J)~ differs from ~B (J)~ (an ~Option~ is used to consider the
+   case where ~A~ and ~B~ are identical).
 
    In the following, we will first define ~Mismatch~ and then ~Equal~
    using ~Mismatch~.
@@ -37,7 +37,7 @@
     an offset (this is just syntactic sugar as slices can also be
     used):
 
-    #+INCLUDE: "../../../spec/equal_ranges_p.ads" :src ada :range-begin "function Equal_Ranges" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "11-15"
+    #+INCLUDE: "../../../spec/equal_ranges_p.ads" :src ada :range-begin "function Equal_Ranges[^)]*? Natural" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "16-23"
 
     We need to add a [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/subprogram_contracts.html#preconditions][precondition]] to exclude invalid ~Offset~
     values. Notice that running ~GNATprove~ on the corresponding file

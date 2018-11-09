@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Count.org
 
@@ -30,7 +30,7 @@ non-recursive functions*.
      return T_Arr is (A (A'First .. A'Last - 1)) with
      Pre => A'Length > 0,
      Ghost;
-
+  
   function Occ_Def
     (A   : T_Arr;
      Val : T)
@@ -105,11 +105,11 @@ The implementation of ~Count~ is the following:
         if A (I) = Val then
   	 Result := Result + 1;
         end if;
-
+  
         pragma Loop_Invariant (Result <= A'Length);
         pragma Loop_Invariant (Result = Occ (A (A'First .. I), Val));
      end loop;
-
+  
      return Result;
   end Count;
 #+END_SRC

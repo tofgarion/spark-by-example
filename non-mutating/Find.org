@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Find.org
 
@@ -9,7 +9,7 @@ The array will be represented by the following types:
 
 #+BEGIN_SRC ada
   type T is new Integer;
-
+  
   type T_Arr is array (Positive range <>) of T;
 #+END_SRC
 
@@ -23,9 +23,9 @@ defined as follows:
   function Find (A : T_Arr; Val : T) return Positive;
 #+END_SRC
 
-~Find~ will return the *smallest valid* index ~I~ of ~A~ such that ~A
-   (I) = Val~. If no such index exists, ~Find~ returns the length of
-~A~.
+~Find~ will return the *smallest valid* index ~I~ of ~A~ such that
+~A (I) = Val~. If no such index exists, ~Find~ returns the length
+of ~A~.
 
 ** A first (naive) version of Find
 
@@ -73,6 +73,7 @@ A first specification of ~Find~ can be the following:
       (A   : T_Arr;
        Val : T)
        return Positive with
+       Import,
        Post =>
        (Find'Result <= A'Last + 1
         and then (for all I in A'First .. Find'Result - 1 => A (I) /= Val)),
@@ -108,10 +109,10 @@ The implementation of ~Find~ is straightforward:
         if A (I) = Val then
   	 return I;
         end if;
-
+  
         pragma Loop_Invariant (for all J in A'First .. I => A (J) /= Val);
      end loop;
-
+  
      return A'Last + 1;
   end Find;
 #+END_SRC
@@ -121,8 +122,8 @@ The implementation of ~Find~ is straightforward:
   its index is returned, which guarantees that this will be the
   smallest valid index.
 - in order to prove the postconditions of ~Find~, we must add a
-  *loop invariant*. At each loop iteration, we can assert after the
-  conditional that each traversed element differs from
+  *loop invariant*. At each loop iteration, we can assert after
+  the conditional that each traversed element differs from
   ~Val~. This will be useful to prove that the returned value is
   the smallest valid index of ~A~ such that the corresponding
   element is equal to ~Val~ and this is the invariant we have
@@ -244,14 +245,14 @@ except the use of the ~Option~ type:
      for I in A'Range loop
         if A (I) = Val then
   	 Result := (Exists => True, Value => I);
-
+  
   	 return Result;
         end if;
-
+  
         pragma Loop_Invariant (not Has_Value (A (A'First .. I), Val));
         pragma Loop_Invariant (not Result.Exists);
      end loop;
-
+  
      return Result;
   end Find;
 #+END_SRC

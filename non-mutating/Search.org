@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Search.org
 
@@ -11,8 +11,9 @@ to a given sequence. Its signature can be defined as:
   function Search (A : T_Arr; B : T_Arr) return Option;
 #+END_SRC
 
-~Search~ will return an option containing the smallest valid index
-~J~ of ~A~ such that ~A (J .. J + B'Length - 1) = B~ if it exists.
+~Search~ will return an option containing the *smallest valid*
+index ~J~ of ~A~ such that ~A (J .. J + B'Length - 1) = B~ if it
+exists.
 
 ** A first version of Search without ghost functions for specification
 
@@ -82,19 +83,19 @@ A specification of ~Search~ can be written as follows:
      if (A'Length < B'Length or else B'Length = 0) then
         return Result;
      end if;
-
+  
      for I in A'First .. A'Last + 1 - B'Length loop
         if A (I .. I - 1 + B'Length) = B then
   	 Result := (Exists => True, Value => I);
-
+  
   	 return Result;
         end if;
-
+  
         pragma Loop_Invariant
   	(for all J in A'First .. I => A (J .. J - 1 + B'Length) /= B);
         pragma Loop_Invariant (not Result.Exists);
      end loop;
-
+  
      return Result;
   end Search;
 #+END_SRC
@@ -203,19 +204,19 @@ the use of ~Has_Subrange~:
      if (A'Length < B'Length or else B'Length = 0) then
         return Result;
      end if;
-
+  
      for I in A'First .. A'Last + 1 - B'Length loop
         if A (I .. I - 1 + B'Length) = B then
   	 Result := (Exists => True, Value => I);
-
+  
   	 return Result;
         end if;
-
+  
         pragma Loop_Invariant
   	((not Has_Subrange (A (A'First .. I + B'Length - 1), B)));
         pragma Loop_Invariant (not Result.Exists);
      end loop;
-
+  
      return Result;
   end Search;
 #+END_SRC
@@ -314,22 +315,22 @@ The implementation of ~Search~ is the following:
      Result : Option := (Exists => False);
   begin
      if (A'Length < B'Length or else B'Length = 0) then
-
+  
         return Result;
      end if;
-
+  
      for J in A'First .. A'Last + 1 - B'Length loop
         if A (J .. J - 1 + B'Length) = B then
   	 Result := (Exists => True, Value => J);
-
+  
   	 return Result;
         end if;
-
+  
         pragma Loop_Invariant
   	(for all K in A'First .. J => A (K .. Last (K, B)) /= B);
         pragma Loop_Invariant (not Result.Exists);
      end loop;
-
+  
      return Result;
   end Search;
 #+END_SRC

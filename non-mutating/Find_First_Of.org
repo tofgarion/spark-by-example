@@ -1,12 +1,12 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Find_First_Of.org
 
 * The Find_First_Of algorithm
 
 The ~Find_First_Of~ algorithm is related to ~Find~: given an array
-~A~ and an array ~B~, it will return the smallest valid index of ~A~
-such that the element at this position also occurs in ~B~. The
+~A~ and an array ~B~, it will return the smallest valid index of
+~A~ such that the element at this position also occurs in ~B~. The
 ~Option~ type is again used to encapsulate the result.
 
 The signature of ~Find_First_Of~ is the following:
@@ -78,14 +78,14 @@ The implementation of Find_First_Of is the following:
      for I in A'Range loop
         if Find (B, A (I)).Exists then
   	 Result := (Exists => True, Value => I);
-
+  
   	 return Result;
         end if;
-
+  
         pragma Loop_Invariant (not Has_Value_Of (A (A'First .. I), B));
         pragma Loop_Invariant (not Result.Exists);
      end loop;
-
+  
      return Result;
   end Find_First_Of;
 #+END_SRC

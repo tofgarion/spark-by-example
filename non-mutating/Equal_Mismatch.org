@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Equal_Mismatch.org
 
@@ -15,9 +15,9 @@ signatures are the following:
 ~Equal (A, B)~ returns ~True~ if ~A~ and ~B~ have the same length
 and elements of ~A~ and ~B~ are equal when traversing ~A~ and ~B~
 in the same order. ~Mismatch~ is not simply the negation of
-~Equal~: it returns the smallest valid index ~J~ of ~A~ such that ~A
-   (J)~ differs from ~B (J)~ (an ~Option~ is used to consider the case
-where ~A~ and ~B~ are identical).
+~Equal~: it returns the smallest valid index ~J~ of ~A~ such that
+~A (J)~ differs from ~B (J)~ (an ~Option~ is used to consider the
+case where ~A~ and ~B~ are identical).
 
 In the following, we will first define ~Mismatch~ and then ~Equal~
 using ~Mismatch~.
@@ -76,7 +76,7 @@ The specification of Mismatch is based on two contract cases:
      return Option with
      Pre            => A'Length = B'Length,
      Contract_Cases =>
-     (Equal_Ranges (A, B (B'First .. B'First - 1 + A'Length)) =>
+     (Equal_Ranges (A, B) =>
         not Mismatch'Result.Exists,
       others =>
         Mismatch'Result.Exists
@@ -107,14 +107,14 @@ The implementation of ~Mismatch~ is the following:
      for I in 0 .. A'Length - 1 loop
         if A (A'First + I) /= B (B'First + I) then
   	 Result := (Exists => True, Value => I);
-
+  
   	 return Result;
         end if;
-
+  
         pragma Loop_Invariant (Equal_Ranges (A, B, I));
         pragma Loop_Invariant (not Result.Exists);
      end loop;
-
+  
      return Result;
   end Mismatch;
 #+END_SRC

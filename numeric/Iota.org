@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Iota.org
 
@@ -14,7 +14,7 @@ following:
 
 For instance, let us suppose that ~A~ is an ~T~ array of size ~5~,
 then after a call ~Iota (A, 3)~, ~A~ will be ~(3, 4, 5, 6,
-   7)~. Notice that the incrementation step in not specified in the
+   7)~. Notice that the incrementation step is not specified in the
 function signature.
 
 ** The predicate Is_Iota
@@ -42,7 +42,7 @@ The specification of ~iota~ is rather simple:
   procedure Iota
     (A   : in out T_Arr;
      Val :        T) with
-     Pre  => Val + T (A'Length) <= T'Last,
+     Pre  => Val + A'Length <= T'Last,
      Post => Is_Iota (A, Val);
 #+END_SRC
 

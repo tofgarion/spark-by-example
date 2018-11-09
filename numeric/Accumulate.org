@@ -1,4 +1,4 @@
-# Created 2018-10-01 Mon 14:38
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../numeric/Accumulate.org
 
@@ -80,14 +80,14 @@ An implementation satifying our specification is the following
      Result : T := Init;
   begin
      for I in A'Range loop
-
+  
         pragma Assert (Acc_Def (A (A'First .. I), Init) in T);
         Result := Result + A (I);
         pragma Loop_Invariant (Result = Acc_Def (A (A'First .. I), Init));
-
+  
      end loop;
      return Result;
-
+  
   end Accumulate_Naive;
 #+END_SRC
 
@@ -240,9 +240,9 @@ An implementation deriving from the previous specification is:
         pragma Assert (Acc_Def (A, A'First, J, Init).OK);
         Result := Result + A (J);
         pragma Loop_Invariant (Result = Acc_Def (A, A'First, J, Init).Value);
-
+  
      end loop;
-
+  
      return Result;
   end Accumulate;
 #+END_SRC

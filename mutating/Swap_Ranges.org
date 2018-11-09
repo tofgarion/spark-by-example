@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Swap_Ranges.org
 
@@ -7,7 +7,9 @@
 The ~Swap_Ranges~ algorithm exchanges the contents of two arrays.
 Its signature is the following:
 
-~procedure Swap_Ranges (A : in out T_Arr; B: in out T_Arr);~
+#+BEGIN_SRC ada
+  procedure Swap_Ranges (A : in out T_Arr; B: in out T_Arr);
+#+END_SRC
 
 ** Specification of Swap_Ranges
 
@@ -34,10 +36,10 @@ for arrays, the assertion are easy to write.
      B : in out T_Arr)
   is
   begin
-
+  
      for J in 0 .. A'Length - 1 loop
         Swap (A (A'First + J), B (B'First + J));
-
+  
         pragma Loop_Invariant
   	(B'Loop_Entry (B'First .. B'First + J) =
   	 A (A'First .. A'First + J));
@@ -78,13 +80,13 @@ least to our point of view) implementation of ~Swap_Ranges~:
      B : in out T_Arr)
   is
   begin
-
+  
      for J in A'Range loop
         declare
   	 K : Positive := B'First + (J - A'First);
         begin
   	 Swap (A (J), B (K));
-
+  
   	 pragma Loop_Invariant
   	   (B'Loop_Entry (B'First .. K) = A (A'First .. J));
   	 pragma Loop_Invariant
@@ -96,7 +98,7 @@ least to our point of view) implementation of ~Swap_Ranges~:
   	 pragma Loop_Invariant
   	   (if J < A'Last then
   	      A'Loop_Entry (J + 1 .. A'Last) = A (J + 1 .. A'Last));
-
+  
         end;
      end loop;
   end Swap_Ranges;

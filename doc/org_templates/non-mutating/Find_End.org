@@ -7,11 +7,12 @@
    subsquence in a given array. Its signature can be expressed as:
 
    #+BEGIN_SRC ada
-     function Find_End (A : T_Arr; B : T_Arr) return Option
+     function Find_End (A : T_Arr; B : T_Arr) return Option;
    #+END_SRC
 
-   ~Find_End~ will return an option containing the *last valid* index
-   ~I~ of ~A~ such that ~A (I .. I + B'Length -1 ) = B~ if it exists.
+   ~Find_End~ will return an option containing the *greatest valid*
+   index ~I~ of ~A~ such that ~A (I .. I + B'Length -1 ) = B~ if it
+   exists.
 
    The ~Find_End~ function is quite similar to the [[Search.org][Search]] function,
    since they both have to find the same thing, the main difference

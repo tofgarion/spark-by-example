@@ -4,14 +4,14 @@
 ** The Find_First_Of algorithm
 
    The ~Find_First_Of~ algorithm is related to ~Find~: given an array
-   ~A~ and an array ~B~, it will return the least valid index of ~A~
-   such that the element at this position also occurs in ~B~. The
+   ~A~ and an array ~B~, it will return the smallest valid index of
+   ~A~ such that the element at this position also occurs in ~B~. The
    ~Option~ type is again used to encapsulate the result.
 
    The signature of ~Find_First_Of~ is the following:
 
    #+BEGIN_SRC ada
-     function Find_First_Of (A : T_Arr; B : T_Arr) return Option
+     function Find_First_Of (A : T_Arr; B : T_Arr) return Option;
    #+END_SRC
 
 *** The predicate Has_Value_Of

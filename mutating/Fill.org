@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../mutating/Fill.org
 
@@ -41,7 +41,7 @@ The implementation of ~Fill~ is the following:
   begin
      for I in A'Range loop
         A (I) := Val;
-
+  
         pragma Loop_Invariant
   	(Constant_Range_From_Location (A, Val, A'First, I - A'First + 1));
      end loop;

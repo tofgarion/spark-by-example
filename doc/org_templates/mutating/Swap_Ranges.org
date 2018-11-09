@@ -6,11 +6,13 @@
    The ~Swap_Ranges~ algorithm exchanges the contents of two arrays.
    Its signature is the following:
 
-   ~procedure Swap_Ranges (A : in out T_Arr; B: in out T_Arr)~
+   #+BEGIN_SRC ada
+     procedure Swap_Ranges (A : in out T_Arr; B: in out T_Arr);
+   #+END_SRC
 
 *** Specification of Swap_Ranges
 
-    The specification of ~swap_ranges~ is the following:
+    The specification of ~Swap_Ranges~ is the following:
 
     #+INCLUDE: "../../../mutating/swap_ranges_p.ads" :src ada :range-begin "procedure Swap_Ranges" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "7-12"
 
@@ -43,7 +45,7 @@
 
     In this implementation, we will not use an offset as loop
     variable, but range over ~A'Range~. A local variable is defined
-    for readibility to define the corresponding index for ~B~.
+    for readability to define the corresponding index for ~B~.
 
     Again, everything is proved using ~GNATprove~.
 

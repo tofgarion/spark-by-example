@@ -1,4 +1,4 @@
-# Created 2018-10-26 Fri 10:15
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Equal_Range.org
 
@@ -111,20 +111,20 @@ indexes:
      V : T)
      return Option_Pair
   is
-
+  
      Result : Option_Pair := (Exists => False);
   begin
-
+  
      if A'Length > 0 then
         Result :=
   	(Exists => True, Lower => Search_Lower_Bound (A, V).Value,
   	 Upper  => Search_Upper_Bound (A, V).Value);
-
+  
      else
         null;
-
+  
      end if;
-
+  
      return Result;
   end Search_Equal_Range;
 #+END_SRC
@@ -147,7 +147,7 @@ which in SPARK translates to:
      V : T)
      return Option_Pair
   is
-
+  
      Result : Option_Pair := (Exists => False);
      Middle : Integer     := A'First;
      Left   : Integer     := A'First;
@@ -157,7 +157,7 @@ which in SPARK translates to:
         Result := (Exists => True, Lower => A'First, Upper => A'Last + 1);
         while Right > Left loop
   	 Middle := Left + (Right - Left) / 2;
-
+  
   	 if A (Middle) < V then
   	    Left := Middle + 1;
   	 elsif V < A (Middle) then
@@ -165,7 +165,7 @@ which in SPARK translates to:
   	 else
   	    exit;
   	 end if;
-
+  
   	 pragma Loop_Variant (Decreases => Right - Left);
   	 pragma Loop_Invariant
   	   (A'First <= Left and then Left <= Right
@@ -176,32 +176,32 @@ which in SPARK translates to:
   	 pragma Loop_Invariant
   	   (if Right /= A'Last + 1 then
   	      Strict_Lower_Bound (A (Right .. A'Last), V));
-
+  
         end loop;
-
+  
         if Left < Right then
-
+  
   	 Result.Lower := Search_Lower_Bound (A (Left .. Middle), V).Value;
-
+  
   	 Middle := Middle + 1;
-
+  
   	 if Middle < A'Last + 1 then
   	    Result.Upper :=
   	      Search_Upper_Bound (A (Middle .. A'Last), V).Value;
   	 else
   	    Result.Upper := A'Last + 1;
   	 end if;
-
+  
         else
   	 Result.Lower := Left;
   	 Result.Upper := Right;
-
+  
         end if;
-
+  
      end if;
-
+  
      return Result;
-
+  
   end Search_Equal_Range_Opt;
 #+END_SRC
 

@@ -9,7 +9,7 @@
    expressed as:
 
    #+BEGIN_SRC ada
-     function Search_Upper_Bound (A : T_arr; V : T) return Option
+     function Search_Upper_Bound (A : T_arr; V : T) return Option;
    #+END_SRC
 
 *** Working principle

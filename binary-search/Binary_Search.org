@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Binary_Search.org
 
@@ -54,7 +54,7 @@ The implementation of ~Binary_Search~ is
      else
         return False;
      end if;
-
+  
   end Binary_Search;
 #+END_SRC
 

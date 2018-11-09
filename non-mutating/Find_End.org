@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Find_End.org
 
@@ -11,8 +11,9 @@ subsquence in a given array. Its signature can be expressed as:
   function Find_End (A : T_Arr; B : T_Arr) return Option;
 #+END_SRC
 
-~Find_End~ will return an option containing the greatest valid index
-~I~ of ~A~ such that ~A (I .. I + B'Length -1 ) = B~ if it exists.
+~Find_End~ will return an option containing the *greatest valid*
+index ~I~ of ~A~ such that ~A (I .. I + B'Length -1 ) = B~ if it
+exists.
 
 The ~Find_End~ function is quite similar to the [[Search.org][Search]] function,
 since they both have to find the same thing, the main difference
@@ -73,14 +74,14 @@ The specification of ~Find_End~ is as follows:
      if (A'Length < B'Length or else B'Length = 0) then
         return Result;
      end if;
-
+  
      for J in A'First .. A'Last - B'Length + 1 loop
         if A (J .. J - 1 + B'Length) = B then
   	 Result := (Exists => True, Value => J);
-
+  
   	 pragma Assert (J - 1 + B'Length = Last (J, B));
         end if;
-
+  
         pragma Loop_Invariant
   	(if Result.Exists then
   	   Has_Subrange (A, B)
@@ -91,11 +92,11 @@ The specification of ~Find_End~ is as follows:
   	      not Has_Subrange
   		(A (Result.Value + 1 .. J - 1 + B'Length), B))
   	 else not Has_Subrange (A (A'First .. J - 1 + B'Length), B));
-
+  
      end loop;
-
+  
      return Result;
-
+  
   end Find_End;
 #+END_SRC
 

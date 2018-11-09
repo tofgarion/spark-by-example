@@ -8,19 +8,19 @@
 
    #+INCLUDE: "../../../spec/types.ads" :src ada :range-begin "type T is new Integer;" :range-end "(Positive range <>) of T" :lines "5-8"
 
-   ~T_Arr~ is an array of integers, with indexes ranging the positive
+   ~T_Arr~ is an array of integers, with indexes ranging over positive
    integers. We will use this type in the functions needing an array.
 
    Mimicking the C++ standard library, the signature of ~Find~ can be
    defined as follows:
 
    #+BEGIN_SRC ada
-     function Find (A : T_Arr; Val : T) return Positive
+     function Find (A : T_Arr; Val : T) return Positive;
    #+END_SRC
 
-   ~Find~ will return the *least valid* index ~I~ of ~A~ such that ~A
-   (I) = Val~. If no such index exists, ~Find~ returns the length of
-   ~A~.
+   ~Find~ will return the *smallest valid* index ~I~ of ~A~ such that
+   ~A (I) = Val~. If no such index exists, ~Find~ returns the length
+   of ~A~.
 
 *** A first (naive) version of Find
 
@@ -51,7 +51,7 @@
        disjointedness of contract cases. For instance, consider the
        following specification for ~Find~:
 
-       #+INCLUDE: "../../../non-mutating/naive_find_contract_pb.ads" :src ada :range-begin "function Find" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-20"
+       #+INCLUDE: "../../../non-mutating/naive_find_contract_pb.ads" :src ada :range-begin "function Find" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-21"
 
        In this case, ~GNATprove~ emits two errors:
 
@@ -73,13 +73,13 @@
      - the implementation is classic: we range over ~A~ indexes trying
        to find an element equal to ~Val~. If we find such an element,
        its index is returned, which guarantees that this will be the
-       least valid index.
+       smallest valid index.
      - in order to prove the postconditions of ~Find~, we must add a
-       *loop invariant*. At each loop turn, we can assert after the
-       conditional that each traversed element differs from
+       *loop invariant*. At each loop iteration, we can assert after
+       the conditional that each traversed element differs from
        ~Val~. This will be useful to prove that the returned value is
-       the least valid index of ~A~ such that the corresponding
-       element is equal to ~A~ and this is the invariant we have
+       the smallest valid index of ~A~ such that the corresponding
+       element is equal to ~Val~ and this is the invariant we have
        chosen.
 
        You can try to remove the invariant: in this case, some
@@ -108,7 +108,7 @@
     - factorizing specification in a *ghost* function ~Has_Value~ that
       specifies that a value occurs in an array. This ghost function
       can be reused in other specifications. [[http://docs.adacore.com/spark2014-docs/html/ug/en/source/specification_features.html#ghost-code][Ghost functions]] are
-      functions that are discared during compilation but can be used
+      functions that are discarded during compilation but can be used
       for specification. They can be used like *predicates* in ACSL.
     - solving the range and overflow errors by encapsulating the
       result of the function in an "option" type

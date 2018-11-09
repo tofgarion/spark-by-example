@@ -7,7 +7,7 @@
    algorithm. Its signature can be expressed as
 
    #+BEGIN_SRC ada
-     function Binary_Search (A : T_Arr; Val : T) return Boolean
+     function Binary_Search (A : T_Arr; Val : T) return Boolean;
    #+END_SRC
 
    It will simply return ~True~ if ~Val~ is contained in ~A~.

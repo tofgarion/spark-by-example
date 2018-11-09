@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Search_N.org
 
@@ -73,7 +73,7 @@ The specification of ~Search_N~ is rather easy to express:
         and then
         (if Search_N'Result.Value > A'First then
   	 not Has_Constant_Subrange
-  	   (A (A'First .. Search_N'Result.Value - 1), Val, N)),
+  	   (A (A'First .. Search_N'Result.Value + N - 2), Val, N)),
       others => not Search_N'Result.Exists);
 #+END_SRC
 
@@ -110,16 +110,16 @@ The implementation of ~Search_N~ is the following:
      if A'Length < N then
         return Result;
      end if;
-
+  
      for I in A'Range loop
         if A (I) /= Val then
   	 Start := I + 1;
         elsif I + 1 - Start = N then
   	 Result := (Exists => True, Value => Start);
-
+  
   	 return Result;
         end if;
-
+  
         pragma Loop_Invariant (not Result.Exists);
         pragma Loop_Invariant (Start in A'First .. I + 1);
         pragma Loop_Invariant
@@ -129,9 +129,9 @@ The implementation of ~Search_N~ is the following:
   	(not Has_Constant_Subrange (A (A'First .. I), Val, N));
         pragma Loop_Invariant (if Start > A'First then A (Start - 1) /= Val);
      end loop;
-
+  
      return Result;
-
+  
   end Search_N;
 #+END_SRC
 

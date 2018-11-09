@@ -120,16 +120,17 @@
         unchanged
       - the resulting array is a permutation of the input array
 
-      The implementation (without SPARK annotations) is quite straightforward:
+      The implementation (without SPARK annotations) is quite
+      straightforward:
 
       #+BEGIN_SRC ada
         function Swap_Array (A : T_Arr; I : Positive;
                              J : Positive) return T_Arr is
-              Temp : T := A(I);
-           begin
-              A(I) := A(J);
-              A(J) := Temp;
-           end Swap_Array;
+            Temp : T := A(I);
+        begin
+            A(I) := A(J);
+            A(J) := Temp;
+        end Swap_Array;
       #+END_SRC
 
       With this current implementation, the desired result is

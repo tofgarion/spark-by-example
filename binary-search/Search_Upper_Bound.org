@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-11-09 Fri 22:38
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../binary-search/Search_Upper_Bound.org
 
@@ -81,13 +81,13 @@ The implementation of ~Search_Upper_Bound~ is defined as follows:
         Result := (Exists => True, Value => A'Last + 1);
         while (Left < Result.Value) loop
   	 Middle := Left + (Result.Value - Left) / 2;
-
+  
   	 if A (Middle) <= Val then
   	    Left := Middle + 1;
   	 else
   	    Result.Value := Middle;
   	 end if;
-
+  
   	 pragma Loop_Variant (Decreases => Result.Value - Left);
   	 pragma Loop_Invariant (A'First <= Left);
   	 pragma Loop_Invariant (Left <= Result.Value);
@@ -101,7 +101,7 @@ The implementation of ~Search_Upper_Bound~ is defined as follows:
         end loop;
         return Result;
      end if;
-
+  
   end Search_Upper_Bound;
 #+END_SRC
 
@@ -110,7 +110,7 @@ is narrowed down. Again, note that the ~middle~ is calculated to
 avoid potential overflows.
 
 The loop variant is ~Result.Value - Left~ which decreases at each
-step. It is needed as we use a ~for~ loop here. The loop
+step. It is needed as we use a ~For~ loop here. The loop
 invariants express
 
 - that ~Result.Value~ and ~Left~ are in the correct range and
