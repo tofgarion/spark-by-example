@@ -103,7 +103,7 @@
 ** Contributing
 
    If you want to contribute to SPARK by Example, please read the
-   [[CONTRIBUTING]] file.
+   [[./CONTRIBUTING.org][CONTRIBUTING]] file.
 
 ** References
 
