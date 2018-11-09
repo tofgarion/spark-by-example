@@ -100,6 +100,11 @@
      make all-chapters STATS=1 MEMCACHED=1
    #+END_SRC
 
+** Contributing
+
+   If you want to contribute to SPARK by Example, please read the
+   [[CONTRIBUTING]] file.
+
 ** References
 
   - [[http://docs.adacore.com/spark2014-docs/html/ug/index.html][SPARK 2014 user guide 19.0]]
