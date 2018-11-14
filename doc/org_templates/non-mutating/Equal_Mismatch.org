@@ -73,9 +73,8 @@
 *** Specification of Equal
 
     ~Equal~ is easily specified with the ~Equal_Ranges~ predicate. We
-    suppose that ~A~ and ~B~ do not have necessarily the same length,
-    but that ~B~ may be longer than ~A~. In this case, we only compare
-    the first ~A'Length~ elements of ~B~ with the ones of ~A~.
+    suppose that ~A~ and ~B~ have the same length as in ACSL by
+    Example.
 
     #+INCLUDE: "../../../non-mutating/equal_p.ads" :src ada :range-begin "function Equal" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-17"
 

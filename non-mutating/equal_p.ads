@@ -11,7 +11,7 @@ package Equal_P with
      (A : T_Arr;
       B : T_Arr)
       return Boolean with
-      Pre  => A'Length <= B'Length,
+      Pre  => A'Length = B'Length,
       Post => Equal'Result =
       Equal_Ranges (A, B (B'First .. B'First - 1 + A'Length));
 end Equal_P;
