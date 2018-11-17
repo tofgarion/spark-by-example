@@ -1,8 +1,8 @@
 * SPARK by Example
 
   SPARK by Example is a project (greatly) inspired by [[https://github.com/fraunhoferfokus/acsl-by-example][ACSL by Example]],
-  a collection of verified C functions and data types from the C++
-  standard library. SPARK by Example has two objectives
+  a collection of verified C functions and data types from the C++ standard library. SPARK is a programming language, 
+  which is a formally verified subset of the programming language Ada. SPARK by Example has two objectives
 
   - implement and verify the same functions as ACSL by Example using
     SPARK 2014 (a programming language based on Ada)
