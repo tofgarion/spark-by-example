@@ -5,7 +5,8 @@
   standard library. SPARK by Example has two objectives
 
   - implement and verify the same functions as ACSL by Example using
-    SPARK 2014 (a programming language based on Ada)
+    SPARK 2014 ([[https://www.adacore.com/about-spark][SPARK 2014]] is a formally verified subset of the Ada
+    programming language)
   - highlight differences between verification of C programs and
     verification of SPARK programs
 
