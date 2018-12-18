@@ -44,10 +44,10 @@ run-tests:
 	./tests/harness/test_runner
 
 prove:
-	$(_STATS_TIME) gnatprove $(_PROJECT) --clean; gnatprove $(_DEBUG) $(_PROJECT) -f $(_PARALLEL) $(_MEMCACHED) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) $(FILE) $(_STATS)
+	$(_STATS_TIME) gnatprove $(_PROJECT) --clean; gnatprove --proof-warnings $(_DEBUG) $(_PROJECT) -f $(_PARALLEL) $(_MEMCACHED) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(_LEVEL) $(_TIMEOUT) $(FILE) $(_STATS)
 
 prove-coq:
-	$(_STATS_TIME) gnatprove --prover=coq $(_PROJECT) -f $(_PARALLEL) $(_MEMCACHED) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(FILE) $(_STATS)
+	$(_STATS_TIME) gnatprove --prover=coq --proof-warnings $(_PROJECT) -f $(_PARALLEL) $(_MEMCACHED) $(_LINE_FILTER) $(_SUBPROG_FILTER) $(_WHYCONF) $(FILE) $(_STATS)
 
 # Local Variables:
 # mode: makefile
