@@ -4,7 +4,15 @@ project Numeric_Algorithms is
 
   for Source_Dirs use (".", "../spec");
 
-  package Compiler renames Spark_By_Example_Shared.Compiler;
+  package Compiler is
+    for Default_Switches ("Ada") use ("-gnat12", "-gnato13", "-gnata");
+
+    for Switches ("overflow.adb")
+      use ("-gnat12", "-gnato13", "-gnata");
+
+    for Switches ("overflow.ads")
+      use ("-gnat12", "-gnato13", "-gnata");
+ end Compiler;
 
   package Prove renames Spark_By_Example_Shared.Prove;
 
