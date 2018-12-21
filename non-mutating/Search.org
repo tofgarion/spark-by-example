@@ -1,4 +1,4 @@
-# Created 2018-11-09 Fri 22:38
+# Created 2018-12-21 Fri 15:39
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Search.org
 
@@ -78,25 +78,22 @@ A specification of ~Search~ can be written as follows:
      B : T_Arr)
      return Option
   is
-     Result : Option := (Exists => False);
   begin
      if (A'Length < B'Length or else B'Length = 0) then
-        return Result;
+  
+        return (Exists => False);
      end if;
   
-     for I in A'First .. A'Last + 1 - B'Length loop
-        if A (I .. I - 1 + B'Length) = B then
-  	 Result := (Exists => True, Value => I);
-  
-  	 return Result;
+     for J in A'First .. A'Last + 1 - B'Length loop
+        if A (J .. J - 1 + B'Length) = B then
+  	 return (Exists => True, Value => J);
         end if;
   
         pragma Loop_Invariant
-  	(for all J in A'First .. I => A (J .. J - 1 + B'Length) /= B);
-        pragma Loop_Invariant (not Result.Exists);
+  	(for all K in A'First .. J => A (K .. K - 1 + B'Length) /= B);
      end loop;
   
-     return Result;
+     return (Exists => False);
   end Search;
 #+END_SRC
 
@@ -112,10 +109,13 @@ powerful machine. Notice that the counterexample returned in the
 case where ~B~ is a subarray of ~A~ is wrong:
 
 #+BEGIN_SRC shell
-  search_wo_ghost_p.ads:14:42: medium: contract case might fail
-    (e.g. when A = (others => 0) and A'First = 0 and A'Last = 0 and
-  	     B = (others => 0) and B'First = 0 and B'Last = 0 and
-  	     Search'Result = (Exists => False, Value => 0))
+  search_wo_ghost_p.ads:17:42: medium: contract case might fail
+    (e.g. when A = (1 => -1, others => 0) and
+  	     A'First = 1 and A'Last = 5 and
+  	     B = (-1 => 0, -3 => 0, -5 => 0, 0 => 0, 1 => 0, 2 => -1, others => -1) and
+  	     B'First = 1 and B'Last = 3 and
+  	     K = 2147483646 and
+  	     Search'Result = (Exists => False, Value => 2147483647))
 #+END_SRC
 
 This may happen when solvers are stopped during their search
@@ -199,25 +199,22 @@ the use of ~Has_Subrange~:
      B : T_Arr)
      return Option
   is
-     Result : Option := (Exists => False);
   begin
      if (A'Length < B'Length or else B'Length = 0) then
-        return Result;
+  
+        return (Exists => False);
      end if;
   
-     for I in A'First .. A'Last + 1 - B'Length loop
-        if A (I .. I - 1 + B'Length) = B then
-  	 Result := (Exists => True, Value => I);
-  
-  	 return Result;
+     for J in A'First .. A'Last + 1 - B'Length loop
+        if A (J .. J - 1 + B'Length) = B then
+  	 return (Exists => True, Value => J);
         end if;
   
         pragma Loop_Invariant
-  	((not Has_Subrange (A (A'First .. I + B'Length - 1), B)));
-        pragma Loop_Invariant (not Result.Exists);
+  	((not Has_Subrange (A (A'First .. J + B'Length - 1), B)));
      end loop;
   
-     return Result;
+     return (Exists => False);
   end Search;
 #+END_SRC
 
@@ -312,26 +309,22 @@ The implementation of ~Search~ is the following:
      B : T_Arr)
      return Option
   is
-     Result : Option := (Exists => False);
   begin
      if (A'Length < B'Length or else B'Length = 0) then
   
-        return Result;
+        return (Exists => False);
      end if;
   
      for J in A'First .. A'Last + 1 - B'Length loop
         if A (J .. J - 1 + B'Length) = B then
-  	 Result := (Exists => True, Value => J);
-  
-  	 return Result;
+  	 return (Exists => True, Value => J);
         end if;
   
         pragma Loop_Invariant
   	(for all K in A'First .. J => A (K .. Last (K, B)) /= B);
-        pragma Loop_Invariant (not Result.Exists);
      end loop;
   
-     return Result;
+     return (Exists => False);
   end Search;
 #+END_SRC
 

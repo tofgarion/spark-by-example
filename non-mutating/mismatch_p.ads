@@ -12,9 +12,7 @@ package Mismatch_P with
       B : T_Arr)
       return Option with
       Pre            => A'Length = B'Length,
-      Contract_Cases =>
-      (Equal_Ranges (A, B) =>
-         not Mismatch'Result.Exists,
+      Contract_Cases => (Equal_Ranges (A, B) => not Mismatch'Result.Exists,
        others =>
          Mismatch'Result.Exists
          and then

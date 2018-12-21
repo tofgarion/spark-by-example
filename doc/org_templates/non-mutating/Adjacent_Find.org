@@ -42,7 +42,7 @@
     - or ~Adjacent_Find~ must return an ~Option~ specifying that
       such an index does not exist
 
-    #+INCLUDE: "../../../non-mutating/adjacent_find_p.ads" :src ada :range-begin "function Adjacent_Find" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-21"
+    #+INCLUDE: "../../../non-mutating/adjacent_find_p.ads" :src ada :range-begin "function Adjacent_Find" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "9-20"
 
 *** Implementation of Adjacent_Find
 

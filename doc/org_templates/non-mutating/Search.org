@@ -51,7 +51,7 @@
 
 **** Implementation of Search
 
-     #+INCLUDE: "../../../non-mutating/search_wo_ghost_p.adb" :src ada :range-begin "function Search" :range-end "End Search;" :lines "7-32"
+     #+INCLUDE: "../../../non-mutating/search_wo_ghost_p.adb" :src ada :range-begin "function Search" :range-end "End Search;" :lines "7-29"
 
      - the implementation is (again) classic: we range over ~A~ indexes trying
        to find a subsequence equal to ~B~
@@ -65,10 +65,13 @@
      case where ~B~ is a subarray of ~A~ is wrong:
 
      #+BEGIN_SRC shell
-       search_wo_ghost_p.ads:14:42: medium: contract case might fail
-         (e.g. when A = (others => 0) and A'First = 0 and A'Last = 0 and
-                    B = (others => 0) and B'First = 0 and B'Last = 0 and
-                    Search'Result = (Exists => False, Value => 0))
+       search_wo_ghost_p.ads:17:42: medium: contract case might fail
+         (e.g. when A = (1 => -1, others => 0) and
+                    A'First = 1 and A'Last = 5 and
+                    B = (-1 => 0, -3 => 0, -5 => 0, 0 => 0, 1 => 0, 2 => -1, others => -1) and
+                    B'First = 1 and B'Last = 3 and
+                    K = 2147483646 and
+                    Search'Result = (Exists => False, Value => 2147483647))
      #+END_SRC
 
      This may happen when solvers are stopped during their search
@@ -119,7 +122,7 @@
      The implementation of ~Search~ is the same as previous excepting
      the use of ~Has_Subrange~:
 
-     #+INCLUDE: "../../../non-mutating/search_with_ghost_p.adb" :src ada :range-begin "function Search" :range-end "end Search;" :lines "7-32"
+     #+INCLUDE: "../../../non-mutating/search_with_ghost_p.adb" :src ada :range-begin "function Search" :range-end "end Search;" :lines "7-29"
 
      Using this specification and this implementation, ~GNATprove~
      cannot prove contract cases. This is not surprising, as the ghost
@@ -175,7 +178,7 @@
 
      The implementation of ~Search~ is the following:
 
-     #+INCLUDE: "../../../non-mutating/search_p.adb" :src ada :range-begin "function Search" :range-end "end Search;" :lines "7-33"
+     #+INCLUDE: "../../../non-mutating/search_p.adb" :src ada :range-begin "function Search" :range-end "end Search;" :lines "7-29"
 
      Everything is now proved by ~GNATprove~ at level 1 with a timeout
      of 5s. The previous specification and implementation available in

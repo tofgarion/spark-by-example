@@ -55,7 +55,7 @@
       - ~A~ and ~B~ differ at offset ~I~ and all elements of ~A~ and
         ~B~ are equal up to offset ~I~
 
-    #+INCLUDE: "../../../non-mutating/mismatch_p.ads" :src ada :range-begin "function Mismatch" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-26"
+    #+INCLUDE: "../../../non-mutating/mismatch_p.ads" :src ada :range-begin "function Mismatch" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "10-24"
 
     Notice that we must add a precondition specifying that ~A~ has the
     same length than ~B~ to mimic ACSL by Example specification and to

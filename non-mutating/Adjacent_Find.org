@@ -1,4 +1,4 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2018-12-21 Fri 15:39
 #+OPTIONS: author:nil title:nil toc:nil
 #+EXPORT_FILE_NAME: ../../../non-mutating/Adjacent_Find.org
 
@@ -8,7 +8,7 @@ The ~Adjacent_Find~ algorithm is another finding algorithm. Its
 signature is the following:
 
 #+BEGIN_SRC ada
-  function Adjacent_Find (A : T_Arr) return Option;
+  function Adjacent_Find (A : T_Arr) return Option
 #+END_SRC
 
 Given an array ~A~, ~Adjacent_Find~ will either return:
@@ -59,8 +59,7 @@ contract cases:
         and then
         (A (Adjacent_Find'Result.Value) = A (Adjacent_Find'Result.Value + 1))
         and then
-        (not Has_Equal_Neighbors
-  	 (A (A'First .. Adjacent_Find'Result.Value - 1))),
+        (not Has_Equal_Neighbors (A (A'First .. Adjacent_Find'Result.Value))),
       others => Adjacent_Find'Result.Exists = False);
 #+END_SRC
 
@@ -79,19 +78,19 @@ for two consecutive elements that are equal is defined as follows:
      if A'Length <= 1 then
         return Result;
      end if;
-
+  
      for I in A'First .. A'Last - 1 loop
         if A (I) = A (I + 1) then
   	 Result := (Exists => True, Value => I);
-
+  
   	 return Result;
         end if;
-
+  
         pragma Loop_Invariant
   	(not Has_Equal_Neighbors (A (A'First .. I + 1)));
         pragma Loop_Invariant (not Result.Exists);
      end loop;
-
+  
      return Result;
   end Adjacent_Find;
 #+END_SRC
