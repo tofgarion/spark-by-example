@@ -11,10 +11,10 @@
    #+END_SRC
 
    The usefulness of this procedure could be doubted in Ada, since the
-   simple command ~A := B~ achieves the same goal for arrays with same
-   length. The purpose of this document being to prove classic
+   simple command ~A := B~ achieves the same goal for arrays with the
+   same length. The purpose of this document being to prove classic
    algorithms defined in [[https://github.com/fraunhoferfokus/acsl-by-example][ACSL by Example]] for the C language, we choose
-   to keep ~Copy~.
+   to keep ~Copy~ as for the [[./Fill.org][Fill]] algorithm.
 
 *** Specification of Copy
 

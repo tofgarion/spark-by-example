@@ -24,16 +24,36 @@
 
 *** Implementation of Fill
 
-    The implementation of ~Fill~ is the following:
+    We will present two implementations of ~Fill~ in the following
+    (the second one has been suggested by Yannick Moy of AdaCore). The
+    first is the one implemented in ACSL by Example and simply
+    initializes the array by traversing it. The second one benefits
+    from SPARK expressiveness and uses an aggregate to initialize the
+    array.
 
-    #+INCLUDE: "../../../mutating/fill_p.adb" :src ada :range-begin "procedure Fill" :range-end "End Fill;" :lines "4-16"
+**** A "classic" implementation of Fill
 
-    The loop invariant specify that there is a constant range of ~Val~
-    values starting at index ~A'First~ with length ~I - A'First + 1~
-    in ~A~.
+     The implementation of ~Fill~ is the following:
 
-    Everything is easily proved with ~GNATprove~.
+     #+INCLUDE: "../../../mutating/fill_p.adb" :src ada :range-begin "procedure Fill" :range-end "End Fill;" :lines "4-16"
 
-# Local Variables:
-# ispell-dictionary: "english"
-# End:
+     The loop invariant specify that there is a constant range of ~Val~
+     values starting at index ~A'First~ with length ~I - A'First + 1~
+     in ~A~.
+
+     Everything is easily proved with ~GNATprove~.
+
+**** A more "SPARKish" implementation of Fill
+
+     The previous implementation follows the implementation of ~Fill~
+     from ACSL by example. A more natural way to initialize an array
+     with a value in SPARK is to use an aggregate ~(others => Val)~
+     specifying that all values of the array are equal to ~Val~. The
+     implementation is given in the ~fill_agg_p.adb~ file and is
+     really simple:
+
+     #+INCLUDE: "fill_agg_p.adb" :src ada :range-begin "procedure Fill" :range-end "End Fill;" :lines "4-11"
+
+ # Local Variables:
+ # ispell-dictionary: "english"
+ # End:

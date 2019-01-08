@@ -54,6 +54,8 @@ include ../Makefile-common
 fill: $(call GENERATE_DEP, fill) $(SPEC_FILL)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_FILL) $(MUTATING_DEFAULT_TIMEOUT)
 
+fill_agg: $(call GENERATE_DEP, fill_agg) $(SPEC_FILL)
+	make prove FILE=$@_p.adb LEVEL=$(LEVEL_FILL) $(MUTATING_DEFAULT_TIMEOUT)
 # Swap
 swap: $(call GENERATE_DEP,swap) $(SPEC_SWAP)
 	make prove FILE=$@_p.adb LEVEL=$(LEVEL_SWAP) $(MUTATING_DEFAULT_TIMEOUT)

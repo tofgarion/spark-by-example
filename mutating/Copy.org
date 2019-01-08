@@ -1,33 +1,33 @@
-# Created 2018-11-09 Fri 22:38
+# Created 2019-01-08 Tue 16:49
 #+OPTIONS: author:nil title:nil toc:nil
-#+EXPORT_FILE_NAME: ../../../mutating/Copy.org
+#+export_file_name: ../../../mutating/Copy.org
 
 * The Copy Algorithm
 
 The ~Copy~ procedure copies the content of an array into another
 array. Its signature is the following:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Copy (A : T_Arr; B : in out T_Arr);
-#+END_SRC
+#+end_src
 
 The usefulness of this procedure could be doubted in Ada, since the
-simple command ~A := B~ achieves the same goal for arrays with same
-length. The purpose of this document being to prove classic
+simple command ~A := B~ achieves the same goal for arrays with the
+same length. The purpose of this document being to prove classic
 algorithms defined in [[https://github.com/fraunhoferfokus/acsl-by-example][ACSL by Example]] for the C language, we choose
-to keep ~Copy~.
+to keep ~Copy~ as for the [[file:./Fill.org][Fill]] algorithm.
 
 ** Specification of Copy
 
 ~Copy~ specification is the following:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Copy
     (A :        T_Arr;
      B : in out T_Arr) with
      Pre  => A'Length = B'Length,
      Post => B = A;
-#+END_SRC
+#+end_src
 
 The precondition expresses the fact that ~A~ and ~B~ should be of
 the same size. This is not a limitation, as copying part of an
@@ -38,7 +38,7 @@ that ~A~ and ~B~ are equal element-wise.
 
 A possible implementation for ~Copy~ is the following:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Copy
     (A :        T_Arr;
      B : in out T_Arr)
@@ -49,13 +49,13 @@ A possible implementation for ~Copy~ is the following:
   	 K : Positive := B'First + (J - A'First);
         begin
   	 B (K) := A (J);
-  
+
   	 pragma Loop_Invariant (A (A'First .. J) = B (B'First .. K));
-  
+
         end;
      end loop;
   end Copy;
-#+END_SRC
+#+end_src
 
 We have defined a local variable ~K~ to hold the result of
 ~B'First + J - A'First~, i.e. the corresponding index of ~B~, for

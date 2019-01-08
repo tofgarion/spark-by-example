@@ -23,6 +23,8 @@
   | [[./Fill.org][Fill]]             | ~../spec/has_constant_subrange_p.ads~ |                                                      |
   |                  | ~fill_p.ads~                          |                                                      |
   |                  | ~fill_p.adb~                          |                                                      |
+  |                  | ~fill_agg_p.ads~                      | implementation of ~Fill~ with SPARK aggregates       |
+  |                  | ~fill_agg_p.adb~                      |                                                      |
   |------------------+---------------------------------------+------------------------------------------------------|
   | [[./Swap.org][Swap]]             | ~swap_p.ads~                          |                                                      |
   |                  | ~swap_p.adb~                          |                                                      |
