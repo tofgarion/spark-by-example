@@ -14,7 +14,7 @@ package Search_N_P with
       return Option with
       Pre            => A'First <= A'Last and then A'Last < Positive'Last,
       Contract_Cases =>
-      (Has_Constant_Subrange (A, Val, N) =>
+      (Has_Constant_Subrange (A, Val, A'Last, N) =>
          Search_N'Result.Exists and then Search_N'Result.Value >= A'First
          and then Search_N'Result.Value <= A'Last - N + 1
          and then Constant_Range_From_Location
@@ -22,7 +22,7 @@ package Search_N_P with
          and then
          (if Search_N'Result.Value > A'First then
             not Has_Constant_Subrange
-              (A (A'First .. Search_N'Result.Value + N - 2), Val, N)),
+              (A, Val, Search_N'Result.Value + N - 2, N)),
        others => not Search_N'Result.Exists);
 
 end Search_N_P;

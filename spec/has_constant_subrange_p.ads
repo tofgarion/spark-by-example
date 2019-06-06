@@ -17,12 +17,12 @@ package Has_Constant_Subrange_P with
       and then Loc - 1 + Length <= Positive'Last;
 
    function Has_Constant_Subrange
-     (A   : T_Arr;
-      Val : T;
-      N   : Positive)
+     (A    : T_Arr;
+      Val  : T;
+      I, N : Positive)
       return Boolean is
-     (for some I in A'First .. A'Last - N + 1 =>
-        Constant_Range_From_Location (A, Val, I, N)) with
-      Pre => A'First <= A'Last;
+     (for some J in A'First .. I - N + 1 =>
+        Constant_Range_From_Location (A, Val, J, N)) with
+      Pre => I in A'Range;
 
 end Has_Constant_Subrange_P;

@@ -20,6 +20,9 @@ package body Search_N_P with
       for I in A'Range loop
          if A (I) /= Val then
             Start := I + 1;
+
+            pragma Assert
+              (if I <= A'Last - N + 1 then not Constant_Range_From_Location (A, Val, I, N));
          elsif I + 1 - Start = N then
             Result := (Exists => True, Value => Start);
 
@@ -32,7 +35,7 @@ package body Search_N_P with
            (if Start <= I then
               Constant_Range_From_Location (A, Val, Start, I + 1 - Start));
          pragma Loop_Invariant
-           (not Has_Constant_Subrange (A (A'First .. I), Val, N));
+           (not Has_Constant_Subrange (A, Val, I, N));
          pragma Loop_Invariant (if Start > A'First then A (Start - 1) /= Val);
       end loop;
 
