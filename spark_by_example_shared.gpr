@@ -7,10 +7,10 @@ project Spark_By_Example_Shared is
   end Compiler;
 
   package Prove is
-    for Switches use ("--mode=prove",
-                      "--report=statistics",
-                      "--proof=per_check",
-                      "--warnings=continue");
+    for Proof_Switches ("Ada") use ("--mode=prove",
+                                    "--report=statistics",
+                                    "--proof=per_check",
+                                    "--warnings=continue");
   end Prove;
 
 end Spark_By_Example_Shared;
