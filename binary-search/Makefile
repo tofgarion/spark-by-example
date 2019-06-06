@@ -14,7 +14,7 @@ SPEC_BINARY_SEARCH	= search_lower_bound_p.ads ../spec/has_value_p.ads $(SPEC_BOU
 # level for each function
 LEVEL_SEARCH_BOUND	= 0
 LEVEL_EQUAL_RANGE 	= 1
-LEVEL_BINARY_SEARCH     = 0
+LEVEL_BINARY_SEARCH     = 1
 
 # all proof targets
 ALL_PROOF_TARGETS = search_upper_bound search_lower_bound search_equal_range search_equal_range2 binary_search
