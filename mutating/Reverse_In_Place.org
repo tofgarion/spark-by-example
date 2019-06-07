@@ -1,6 +1,6 @@
-# Created 2018-11-09 Fri 22:38
+# Created 2019-06-07 Fri 14:54
 #+OPTIONS: author:nil title:nil toc:nil
-#+EXPORT_FILE_NAME: ../../../mutating/Reverse_In_Place.org
+#+export_file_name: ../../../mutating/Reverse_In_Place.org
 
 * The Reverse_In_Place algorithm
 
@@ -8,30 +8,48 @@ The ~Reverse_In_Place~ algorithm aims to achieve the same goal as
 [[Reverse_Copy.org][Reverse_Copy]] but the result is stored in the original array, thus
 modifying it, instead of copying it. Its signature reads:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Reverse_In_Place (A : in out T_Arr);
-#+END_SRC
+#+end_src
 
 ** Specification of Reverse_In_Place
 
 ~Reverse_In_Place~ can be specified as follows:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Reverse_In_Place (A : in out T_Arr) with
-     Post => Is_Reversed (A, A'Old);
-#+END_SRC
+    Post => Is_Reversed (A, A'Old);
+#+end_src
 
 The postcondition ensures that ~A~ is indeed reversed at the end
 of the procedure compared to its state at the beginning of the
 procedure (using the ~Old~ attribute).
 
 ** Implementation of Reverse_In_Place
+*** The function Is_Reversed_Up_To
+
+As the most obvious algorithm will simply reverse the elements of
+~A~ one by one starting from the first, it will be easier for
+writing assertions to define a function that asserts that two
+arrays ~A~ and ~B~ are reversed up to a particular index
+~J~. This is express by the ~Is_Reversed_Up_To~ function:
+
+#+begin_src ada
+  function Is_Reversed_Up_To
+    (A : T_Arr;
+     B : T_Arr;
+     N : Natural)
+     return Boolean is
+    (for all J in A'First .. A'First + N  => A (J) = B (B'Last - (J - A'First))) with
+     Pre => A'Length = B'Length and then N < A'Length;
+#+end_src
+
 *** A first version using Swap
 
 ~Reverse_In_Place~ can be implemented using the [[Swap.org][Swap]] function
 defined earlier:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Reverse_In_Place (A : in out T_Arr) is
      Half : Positive :=
        (if A'Length > 1 then
@@ -39,33 +57,29 @@ defined earlier:
   	(if A'Length mod 2 = 0 then 0 else 1)
         else 1);
   begin
-  
+
      if A'Length <= 1 then
         return;
      end if;
-  
+
      for J in 0 .. Half - A'First loop
-  
+
         pragma Assert (A'First + J /= A'Last - J);
         Swap (A (A'First + J), A (A'Last - J));
-  
+
         pragma Loop_Variant (Increases => J);
         pragma Loop_Invariant
   	(A (A'First + J + 1 .. A'Last - (J + 1)) =
   	 A'Loop_Entry (A'First + J + 1 .. A'Last - (J + 1)));
         pragma Loop_Invariant
-  	(Is_Reversed
-  	   (A (A'First .. A'First + J),
-  	    A'Loop_Entry (A'Last - J .. A'Last)));
+  	(Is_Reversed_Up_To (A, A'Loop_Entry, J));
         pragma Loop_Invariant
-  	(Is_Reversed
-  	   (A'Loop_Entry (A'First .. A'First + J),
-  	    A (A'Last - J .. A'Last)));
-  
+  	(Is_Reversed_Up_To (A'Loop_Entry, A, J));
+
      end loop;
-  
+
   end Reverse_In_Place;
-#+END_SRC
+#+end_src
 
 There are a few things to point out here:
 - ~Half~ is calculated so that if ~A~ has an odd length then we
@@ -74,18 +88,17 @@ There are a few things to point out here:
 - the first loop invariant specifies that the array remains
   unchanged in the ~A'Length - 2 * J~ middle indexes, which the
   algorithm has not yet covered at iteration ~J~
-- the two other invariants specify that the sub-arrays ~A(A'First
-         .. A'First + J)~ and ~A(A'Last - J .. A'Last)~ are reversed
-  compared to the arrays before entering the loop.
+- the two other invariants specify that ~A~ is reversed up to
+  index J compared to its value before entering the loop.
 
 With this implementation, ~GNATprove~ manages to prove everything
 but one thing: it cannot verify that ~A (A'First + J)~ and ~A
      (A'Last - J)~ are not aliased (see [[http://docs.adacore.com/spark2014-docs/html/lrm/subprograms.html#anti-aliasing][SPARK reference manual section
 6.4.2]]):
 
-#+BEGIN_SRC shell
-  reverse_in_place_swap_p.adb:23:15: medium: formal parameters "P" and "Q" might be aliased (SPARK RM 6.4.2)
-#+END_SRC
+#+begin_src shell
+  reverse_in_place_swap_p.adb:20:16: medium: formal parameters "P" and "Q" might be aliased (SPARK RM 6.4.2)
+#+end_src
 
 Notice that even if the assertion ~A'First + J /= A'Last - J~
 placed before the call to ~Swap~ proves the absence of aliasing,
@@ -97,7 +110,7 @@ In order to avoid the aliasing issue, it is possible to modify
 the implementation of ~Reverse_In_Place~ by removing the call to
 ~Swap~ and doing the swap "manually" with an extra variable:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Reverse_In_Place (A : in out T_Arr) is
      Half : Positive :=
        (if A'Length > 1 then
@@ -106,32 +119,27 @@ the implementation of ~Reverse_In_Place~ by removing the call to
         else 1);
      T1 : T;
   begin
-  
+
      if A'Length <= 1 then
         return;
      end if;
-  
+
      for J in 0 .. Half - A'First loop
         T1              := A (A'First + J);
         A (A'First + J) := A (A'Last - J);
         A (A'Last - J)  := T1;
-  
+
         pragma Loop_Variant (Increases => J);
         pragma Loop_Invariant
   	(A (A'First + J + 1 .. A'Last - (J + 1)) =
   	 A'Loop_Entry (A'First + J + 1 .. A'Last - (J + 1)));
         pragma Loop_Invariant
-  	(Is_Reversed
-  	   (A (A'First .. A'First + J),
-  	    A'Loop_Entry (A'Last - J .. A'Last)));
+  	(Is_Reversed_Up_To (A, A'Loop_Entry, J));
         pragma Loop_Invariant
-  	(Is_Reversed
-  	   (A'Loop_Entry (A'First .. A'First + J),
-  	    A (A'Last - J .. A'Last)));
-  
+  	(Is_Reversed_Up_To (A'Loop_Entry, A, J));
      end loop;
-  
+
   end Reverse_In_Place;
-#+END_SRC
+#+end_src
 
 This implementation enables ~GNATprove~ to prove everything.

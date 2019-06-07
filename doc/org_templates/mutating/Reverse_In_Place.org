@@ -30,7 +30,7 @@
      arrays ~A~ and ~B~ are reversed up to a particular index
      ~J~. This is express by the ~Is_Reversed_Up_To~ function:
 
-     #+INCLUDE: "is_reversed_p.ads" :src ada :range-begin "function Is_Reversed_Up_To" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "15-22"
+     #+INCLUDE: "../../../spec/is_reversed_p.ads" :src ada :range-begin "function Is_Reversed_Up_To" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "15-22"
 
 **** A first version using Swap
 
