@@ -1,6 +1,6 @@
-# Created 2018-09-25 Tue 10:57
+# Created 2019-06-07 Fri 16:53
 #+OPTIONS: author:nil title:nil toc:nil
-#+EXPORT_FILE_NAME: ../../../mutating/Remove_Copy.org
+#+export_file_name: ../../../mutating/Remove_Copy.org
 
 * The Remove_Copy algorithm
 
@@ -9,9 +9,9 @@ another array but deletes every occurrence of a given value when
 copying.  It also modifies an argument which will be the last index
 at which the second array has been modified:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Remove_Copy (A : T_Arr; B : in out T_Arr; Val : T; K : in out Natural)
-#+END_SRC
+#+end_src
 
 Implementing and proving this procedure is not obvious as you will
 see. We will introduce in this section manual proofs with lemmas in
@@ -28,14 +28,14 @@ the same number of occurrences of each of their values except for
 a given value. The ~Multiset_Retain_Rest~ predicate can be
 expressed as:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Multiset_Retain_Rest
     (A   : T_Arr;
      B   : T_Arr;
      Val : T)
      return Boolean is
     (for all X in T => (if X /= Val then Occ (A, X) = Occ (B, X)));
-#+END_SRC
+#+end_src
 
 The predicate will return true if and only if for each value in
 type ~T~ different from ~Val~, the number of occurrences of this
@@ -45,14 +45,14 @@ value in the two arrays ~A~ and ~B~ is the same.
 
 The ~Remove_Count~ predicate is quite simple:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Remove_Count
     (A   : T_Arr;
      Val : T)
      return Natural is (A'Length - Occ (A, Val)) with
      Pre  => A'Length > 0,
      Post => Remove_Count'Result in 0 .. A'Length;
-#+END_SRC
+#+end_src
 
 This predicate returns the number of indexes in a given array
 such that the values at these indexes are different from a given
@@ -62,7 +62,7 @@ value ~Val~.
 
 The specification of ~Remove_Copy~ is the following:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Remove_Copy
     (A   :        T_Arr;
      B   : in out T_Arr;
@@ -79,7 +79,7 @@ The specification of ~Remove_Copy~ is the following:
          (if K >= B'First then
   	  Multiset_Retain_Rest (A, B (B'First .. K), Val))),
       others => (B'Old = B and then K'Old = K));
-#+END_SRC
+#+end_src
 
 The preconditions express the fact that ~A~ and ~B~ have the same
 length, and that ~B'Last~ is strictly less than ~Positive'Last~
@@ -107,7 +107,7 @@ The contract cases express the following facts:
 
 A first implementation of ~Remove_Copy~ could be the following:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Remove_Copy_First
     (A   :        T_Arr;
      B   : in out T_Arr;
@@ -115,17 +115,17 @@ A first implementation of ~Remove_Copy~ could be the following:
      K   : in out Natural)
   is
      J : Integer := A'First - 1;
-  
+
   begin
      if A'Length > 0 then
         K := B'First;
-  
+
         for J in A'Range loop
   	 if A (J) /= Val then
   	    B (K) := A (J);
   	    K     := K + 1;
   	 end if;
-  
+
   	 pragma Loop_Invariant
   	   (K = B'First + Remove_Count (A (A'First .. J), Val));
   	 pragma Loop_Invariant
@@ -139,12 +139,12 @@ A first implementation of ~Remove_Copy~ could be the following:
   	 pragma Loop_Invariant
   	   (for all L in K .. B'Last => B (L) = B'Loop_Entry (L));
         end loop;
-  
+
         K := K - 1;
      end if;
-  
+
   end Remove_Copy_First;
-#+END_SRC
+#+end_src
 
 The loop invariants specify that:
 - ~K~ is equal to ~B'First~ plus the number of values different
@@ -203,18 +203,18 @@ to help it prove the lemma.
 
 Its specification is rather simple:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Unique_Value
     (A   : T_Arr;
      E   : T;
      Val : T) with
      Pre => (for all L in A'First .. A'Last => A (L) = Val) and then E /= Val,
      Post => Occ (A, E) = 0;
-#+END_SRC
+#+end_src
 
 Its implementation is the following:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Unique_Value
     (A   : T_Arr;
      E   : T;
@@ -226,7 +226,7 @@ Its implementation is the following:
      end if;
      Unique_Value (Remove_Last (A), E, Val);
   end Unique_Value;
-#+END_SRC
+#+end_src
 
 Remember that the implementation of ~Unique_Value~ represents a
 sketch of proof for the lemma. First, we specify the final
@@ -250,19 +250,18 @@ of course help the solvers with the inductive part of the proof.
 
 The lemma is written as follows:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Make_Prove_Multiset
     (A   : T_Arr;
      B   : T_Arr;
      Val : T) with
-     Ghost,
      Pre => A'Length > 0 and then B'Length > 0
      and then
      (if B'Length = 1 then (for all L in A'First .. A'Last - 1 => A (L) = Val)
       else Multiset_Retain_Rest (Remove_Last (A), Remove_Last (B), Val))
      and then A (A'Last) = B (B'Last),
      Post => Multiset_Retain_Rest (A, B, Val);
-#+END_SRC
+#+end_src
 
 The preconditions, representing the hypotheses of the lemma, are
 the following:
@@ -279,26 +278,25 @@ complete arrays.
 
 Its implementation is the following:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Make_Prove_Multiset
     (A   : T_Arr;
      B   : T_Arr;
      Val : T)
   is
-     V : T := A (A'Last);
   begin
      for E in T loop
         if E /= Val and then B'Length = 1 then
   	 Unique_Value (Remove_Last (A), E, Val);
         end if;
-  
+
         pragma Loop_Invariant
   	(for all F in T'First .. E =>
   	   (if F /= Val then Occ (A, F) = Occ (B, F)));
      end loop;
-  
+
   end Make_Prove_Multiset;
-#+END_SRC
+#+end_src
 
 To prove the lemma, we loop on all possible values for ~E~. Is
 ~E = Val~, then, nothing has to be done. If ~E /= Val~ and
@@ -315,7 +313,7 @@ algorithm, thus helping the provers by stating that
      Val)~ when finding a value different from ~Val~ (and therefore
 incrementing ~K~):
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Remove_Copy_Second
     (A   :        T_Arr;
      B   : in out T_Arr;
@@ -323,11 +321,11 @@ incrementing ~K~):
      K   : in out Natural)
   is
      J : Integer := A'First - 1;
-  
+
   begin
      if A'Length > 0 then
         K := B'First;
-  
+
         for J in A'Range loop
   	 if A (J) /= Val then
   	    pragma Assert
@@ -345,7 +343,7 @@ incrementing ~K~):
   	    Make_Prove_Multiset
   	      (A (A'First .. J), B (B'First .. K - 1), Val);
   	 end if;
-  
+
   	 pragma Loop_Invariant
   	   (if K = B'First then (for all L in A'First .. J => A (L) = Val));
   	 pragma Loop_Invariant
@@ -361,9 +359,9 @@ incrementing ~K~):
         end loop;
         K := K - 1;
      end if;
-  
+
   end Remove_Copy_Second;
-#+END_SRC
+#+end_src
 
 Using ~GNATprove~ with this implementation, a ~precondition might
      fail~ appears when instantiating the lemma in the loop. With the
@@ -401,18 +399,18 @@ procedure, verifies that if two arrays are equal, then the
 number of occurences of a given value are equal in both
 arrays. Its specification is the following:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Occ_Equal
     (A : T_Arr;
      B : T_Arr;
      E : T) with
      Pre  => A = B,
      Post => Occ (A, E) = Occ (B, E);
-#+END_SRC
+#+end_src
 
 To prove the lemma, we give an implementation:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Occ_Equal
     (A : T_Arr;
      B : T_Arr;
@@ -422,16 +420,16 @@ To prove the lemma, we give an implementation:
      if A'Length = 0 then
         return;
      end if;
-  
+
      if A (A'Last) = E then
         pragma Assert (B (B'Last) = E);
      else
         pragma Assert (B (B'Last) /= E);
      end if;
-  
+
      Occ_Equal (Remove_Last (A), Remove_Last (B), E);
   end Occ_Equal;
-#+END_SRC
+#+end_src
 
 The property is proved inductively:
 - if both arrays are empty then there is nothing to prove
@@ -455,7 +453,7 @@ arrays ~B~ and ~C~ and consider that ~Multiset_Retain_Rest
 that ~Multiset_Retain_Rest (A,C,Val)~ also holds. The
 specification of ~Mutliset_Retain_Rest_Equal~ is:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Multiset_Retain_Rest_Equal
     (A   : T_Arr;
      B   : T_Arr;
@@ -464,12 +462,12 @@ specification of ~Mutliset_Retain_Rest_Equal~ is:
      Pre => A'Length > 0 and then B = C
      and then Multiset_Retain_Rest (A, B, Val),
      Post => Multiset_Retain_Rest (A, C, Val);
-#+END_SRC
+#+end_src
 
 The implementation of the procedure, which is a proof of the
 lemma, is:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Multiset_Retain_Rest_Equal
     (A   : T_Arr;
      B   : T_Arr;
@@ -487,7 +485,7 @@ lemma, is:
   	   (if F /= Val then Occ (A, F) = Occ (C, F)));
      end loop;
   end Multiset_Retain_Rest_Equal;
-#+END_SRC
+#+end_src
 
 The proof is rather simple: we loop on ~T~ values. If the
 current value ~E~ is different from ~Val~, then we prove that
@@ -499,7 +497,7 @@ values.
 
 The final implementation for ~Remove_Copy~ is the following:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Remove_Copy
     (A   :        T_Arr;
      B   : in out T_Arr;
@@ -509,11 +507,11 @@ The final implementation for ~Remove_Copy~ is the following:
      J      : Integer := A'First - 1;
      B_Save : T_Arr   := B with
         Ghost;
-  
+
   begin
      if A'Length > 0 then
         K := B'First;
-  
+
         for J in A'Range loop
   	 if A (J) /= Val then
   	    B_Save := B;
@@ -527,7 +525,7 @@ The final implementation for ~Remove_Copy~ is the following:
   	    Make_Prove_Multiset
   	      (A (A'First .. J), B (B'First .. K - 1), Val);
   	 end if;
-  
+
   	 pragma Loop_Invariant
   	   (if K = B'First then (for all L in A'First .. J => A (L) = Val));
   	 pragma Loop_Invariant
@@ -541,12 +539,12 @@ The final implementation for ~Remove_Copy~ is the following:
   	 pragma Loop_Invariant
   	   (for all L in K .. B'Last => B (L) = B'Loop_Entry (L));
         end loop;
-  
+
         K := K - 1;
      end if;
-  
+
   end Remove_Copy;
-#+END_SRC
+#+end_src
 
 We use a ghost variable ~B_Save~ to store the value of ~B~ before
 changing one of its element. We instantiate the

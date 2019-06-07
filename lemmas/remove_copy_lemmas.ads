@@ -19,7 +19,6 @@ package Remove_Copy_Lemmas with
      (A   : T_Arr;
       B   : T_Arr;
       Val : T) with
-      Ghost,
       Pre => A'Length > 0 and then B'Length > 0
       and then
       (if B'Length = 1 then (for all L in A'First .. A'Last - 1 => A (L) = Val)

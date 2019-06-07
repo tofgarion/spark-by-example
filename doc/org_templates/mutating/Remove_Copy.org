@@ -162,7 +162,7 @@
 
       The lemma is written as follows:
 
-      #+INCLUDE: "../../../lemmas/remove_copy_lemmas.ads" :src ada :range-begin "procedure Make_Prove_Multiset" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "18-29"
+      #+INCLUDE: "../../../lemmas/remove_copy_lemmas.ads" :src ada :range-begin "procedure Make_Prove_Multiset" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "18-28"
 
       The preconditions, representing the hypotheses of the lemma, are
       the following:
@@ -179,7 +179,7 @@
 
       Its implementation is the following:
 
-      #+INCLUDE: "../../../lemmas/remove_copy_lemmas.adb" :src ada :range-begin "procedure Make_Prove_Multiset" :range-end "end Make_Prove_Multiset;" :lines "17-35"
+      #+INCLUDE: "../../../lemmas/remove_copy_lemmas.adb" :src ada :range-begin "procedure Make_Prove_Multiset" :range-end "end Make_Prove_Multiset;" :lines "17-34"
 
       To prove the lemma, we loop on all possible values for ~E~. Is
       ~E = Val~, then, nothing has to be done. If ~E /= Val~ and
@@ -262,12 +262,12 @@
       that ~Multiset_Retain_Rest (A,C,Val)~ also holds. The
       specification of ~Mutliset_Retain_Rest_Equal~ is:
 
-      #+INCLUDE: "../../../lemmas/remove_copy_lemmas.ads" :src ada :range-begin "procedure Multiset_Retain_Rest_Equal" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "30-38"
+      #+INCLUDE: "../../../lemmas/remove_copy_lemmas.ads" :src ada :range-begin "procedure Multiset_Retain_Rest_Equal" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "29-37"
 
       The implementation of the procedure, which is a proof of the
       lemma, is:
 
-      #+INCLUDE: "../../../lemmas/remove_copy_lemmas.adb" :src ada :range-begin "procedure Multiset_Retain_Rest_Equal" :range-end "End Multiset_Retain_Rest_Equal;" :lines "36-53"
+      #+INCLUDE: "../../../lemmas/remove_copy_lemmas.adb" :src ada :range-begin "procedure Multiset_Retain_Rest_Equal" :range-end "End Multiset_Retain_Rest_Equal;" :lines "35-52"
 
       The proof is rather simple: we loop on ~T~ values. If the
       current value ~E~ is different from ~Val~, then we prove that

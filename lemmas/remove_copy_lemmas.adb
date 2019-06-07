@@ -19,7 +19,6 @@ package body Remove_Copy_Lemmas with
       B   : T_Arr;
       Val : T)
    is
-      V : T := A (A'Last);
    begin
       for E in T loop
          if E /= Val and then B'Length = 1 then
