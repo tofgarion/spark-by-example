@@ -7,7 +7,7 @@ with Has_Value_P;         use Has_Value_P;
 package Classic_Lemmas with
    Spark_Mode,
    Ghost
- is
+is
 
    procedure Occ_Equal
      (A : T_Arr;
@@ -21,7 +21,7 @@ package Classic_Lemmas with
       J : Positive;
       V : T;
       B : T_Arr)
-      return Boolean is
+     return Boolean is
      (A'First = B'First and then A'Last = B'Last and then B (J) = V
       and then (for all K in A'Range => (if J /= K then B (K) = A (K)))) with
       Pre => J in A'Range;

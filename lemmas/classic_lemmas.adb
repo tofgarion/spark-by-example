@@ -1,6 +1,6 @@
 package body Classic_Lemmas with
    Spark_Mode
- is
+is
 
    procedure Occ_Equal
      (A : T_Arr;
@@ -45,7 +45,12 @@ package body Classic_Lemmas with
 
    procedure New_Element (A, B : T_Arr) is
    begin
-      null;
+      for X in T loop
+         pragma Assert (Occ (Remove_Last (A), X) = Occ (Remove_Last (B), X));
+
+         pragma Loop_Invariant
+           (for all Y in T'First .. X => (Occ (A, Y) = Occ (B, Y)));
+      end loop;
    end New_Element;
 
    procedure Unchanged_Transitivity (A, B, C : T_Arr) is
@@ -63,6 +68,7 @@ package body Classic_Lemmas with
       if A'Length = 1 then
          return;
       end if;
+
       if A (A'Last) = V then
          return;
       else
