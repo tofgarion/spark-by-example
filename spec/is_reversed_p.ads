@@ -9,7 +9,15 @@ package Is_Reversed_P with
      (A : T_Arr;
       B : T_Arr)
       return Boolean is
-     (for all I in A'Range => A (I) = B (B'Last - (I - A'First))) with
+     (for all J in A'Range => A (J) = B (B'Last - (J - A'First))) with
       Pre => A'Length = B'Length;
+
+   function Is_Reversed_Up_To
+     (A : T_Arr;
+      B : T_Arr;
+      N : Natural)
+      return Boolean is
+     (for all J in A'First .. A'First + N  => A (J) = B (B'Last - (J - A'First))) with
+      Pre => A'Length = B'Length and then N < A'Length;
 
 end Is_Reversed_P;

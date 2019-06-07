@@ -22,12 +22,22 @@
     procedure (using the ~Old~ attribute).
 
 *** Implementation of Reverse_In_Place
+**** The function Is_Reversed_Up_To
+
+     As the most obvious algorithm will simply reverse the elements of
+     ~A~ one by one starting from the first, it will be easier for
+     writing assertions to define a function that asserts that two
+     arrays ~A~ and ~B~ are reversed up to a particular index
+     ~J~. This is express by the ~Is_Reversed_Up_To~ function:
+
+     #+INCLUDE: "is_reversed_p.ads" :src ada :range-begin "function Is_Reversed_Up_To" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "15-22"
+
 **** A first version using Swap
 
      ~Reverse_In_Place~ can be implemented using the [[Swap.org][Swap]] function
      defined earlier:
 
-     #+INCLUDE: "../../../mutating/reverse_in_place_swap_p.adb" :src ada :range-begin "procedure Reverse_In_Place" :range-end "end Reverse_In_Place;" :lines "5-38"
+     #+INCLUDE: "../../../mutating/reverse_in_place_swap_p.adb" :src ada :range-begin "procedure Reverse_In_Place" :range-end "end Reverse_In_Place;" :lines "5-34"
 
      There are a few things to point out here:
      - ~Half~ is calculated so that if ~A~ has an odd length then we
@@ -36,9 +46,8 @@
      - the first loop invariant specifies that the array remains
        unchanged in the ~A'Length - 2 * J~ middle indexes, which the
        algorithm has not yet covered at iteration ~J~
-     - the two other invariants specify that the sub-arrays ~A(A'First
-       .. A'First + J)~ and ~A(A'Last - J .. A'Last)~ are reversed
-       compared to the arrays before entering the loop.
+     - the two other invariants specify that ~A~ is reversed up to
+       index J compared to its value before entering the loop.
 
      With this implementation, ~GNATprove~ manages to prove everything
      but one thing: it cannot verify that ~A (A'First + J)~ and ~A
@@ -46,7 +55,7 @@
      6.4.2]]):
 
      #+BEGIN_SRC shell
-       reverse_in_place_swap_p.adb:23:15: medium: formal parameters "P" and "Q" might be aliased (SPARK RM 6.4.2)
+       reverse_in_place_swap_p.adb:20:16: medium: formal parameters "P" and "Q" might be aliased (SPARK RM 6.4.2)
      #+END_SRC
 
      Notice that even if the assertion ~A'First + J /= A'Last - J~
@@ -59,7 +68,7 @@
      the implementation of ~Reverse_In_Place~ by removing the call to
      ~Swap~ and doing the swap "manually" with an extra variable:
 
-     #+INCLUDE: "../../../mutating/reverse_in_place_p.adb" :src ada :range-begin "procedure Reverse_In_Place" :range-end "end Reverse_In_Place;" :lines "5-39"
+     #+INCLUDE: "../../../mutating/reverse_in_place_p.adb" :src ada :range-begin "procedure Reverse_In_Place" :range-end "end Reverse_In_Place;" :lines "5-34"
 
      This implementation enables ~GNATprove~ to prove everything.
 

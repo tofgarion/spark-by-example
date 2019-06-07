@@ -25,14 +25,9 @@ package body Reverse_In_Place_P with
            (A (A'First + J + 1 .. A'Last - (J + 1)) =
             A'Loop_Entry (A'First + J + 1 .. A'Last - (J + 1)));
          pragma Loop_Invariant
-           (Is_Reversed
-              (A (A'First .. A'First + J),
-               A'Loop_Entry (A'Last - J .. A'Last)));
+           (Is_Reversed_Up_To (A, A'Loop_Entry, J));
          pragma Loop_Invariant
-           (Is_Reversed
-              (A'Loop_Entry (A'First .. A'First + J),
-               A (A'Last - J .. A'Last)));
-
+           (Is_Reversed_Up_To (A'Loop_Entry, A, J));
       end loop;
 
    end Reverse_In_Place;
