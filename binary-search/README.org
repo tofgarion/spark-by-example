@@ -1,6 +1,6 @@
-# Created 2018-10-26 Fri 10:17
+# Created 2019-06-07 Fri 13:02
 #+OPTIONS: author:nil title:nil toc:nil
-#+EXPORT_FILE_NAME: ../../../binary-search/README.org
+#+export_file_name: ../../../binary-search/README.org
 
 * Binary search algorithms
 

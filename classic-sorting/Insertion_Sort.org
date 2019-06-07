@@ -1,15 +1,15 @@
-# Created 2018-09-25 Tue 10:58
+# Created 2019-06-07 Fri 13:02
 #+OPTIONS: author:nil title:nil toc:nil
-#+EXPORT_FILE_NAME: ../../../classic-sorting/Insertion_Sort.org
+#+export_file_name: ../../../classic-sorting/Insertion_Sort.org
 
 * The Insertion_Sort algorithm
 
 The ~Insertion_Sort~ algorithm sorts an array in ascending
 order. Its signature is the following:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Insertion_Sort (A : in out T_Arr)
-#+END_SRC
+#+end_src
 
 The ~Insertion_Sort~ algorithm sorts an array by locating the
 appropriate index in the sorted array for the current value being
@@ -24,11 +24,11 @@ The specification of ~Insertion_Sort~ is the same as the one of
 ~Selection_Sort~ (in fact, it should be the case for all sorting
 algorithms):
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Insertion_Sort (A : in out T_Arr) with
      Pre  => A'Last < Positive'Last,
      Post => Sorted (A) and then Multiset_Unchanged (A, A'Old);
-#+END_SRC
+#+end_src
 
 There is only an extra precondition on the last index of ~A~ that
 should be less than ~Positive'Last~ to avoid possible overflows.
@@ -38,14 +38,14 @@ should be less than ~Positive'Last~ to avoid possible overflows.
 ~Insertion_Sort~ could be implemented with the help of the [[file:../mutating/Rotate.org][Rotate]]
 algorithm, as it is done in [[https://github.com/fraunhoferfokus/acsl-by-example/blob/master/StandardAlgorithms/classic-sorting/insertion_sort/insertion_sort.c][ACSL by example]]:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Insertion_Sort (A : in out T_Arr) is
      K : Integer;
   begin
      if A'Length = 0 then
         return;
      end if;
-  
+
      for J in A'Range loop
         K :=
   	(if J = A'First then A'First
@@ -54,9 +54,9 @@ algorithm, as it is done in [[https://github.com/fraunhoferfokus/acsl-by-example
   	 Rotate (A (K .. J), J - K);
         end if;
      end loop;
-  
+
   end Insertion_Sort;
-#+END_SRC
+#+end_src
 
 This approach, while being concise, makes the proof quite
 difficult since the specification of ~Rotate~ only specifies
@@ -69,23 +69,23 @@ To make the proof easier, we will take another approach: we
 emulate the effects of ~Rotate~ with a loop of [[file:../mutating/Random_Shuffle.org#the-swap_array-procedure][Swap_Array]], which
 can be annotated to our needs:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Insertion_Sort (A : in out T_Arr) is
      K : Integer;
   begin
      if A'Length = 0 then
         return;
      end if;
-  
+
      for J in A'Range loop
         K :=
   	(if J = A'First then A'First
   	 else Search_Upper_Bound (A (A'First .. J - 1), A (J)).Value);
-  
+
         for L in reverse K .. J - 1 loop
-  
+
   	 Swap_Array (A, L, L + 1);
-  
+
   	 pragma Loop_Invariant (if L > K then A (L - 1) <= A (L + 1));
   	 pragma Loop_Invariant (Multiset_Unchanged (A, A'Loop_Entry));
   	 pragma Loop_Invariant
@@ -96,14 +96,14 @@ can be annotated to our needs:
   	 pragma Loop_Invariant (for all M in K .. J => A (M) >= A (L));
   	 pragma Loop_Invariant (Sorted (A (L .. J)));
         end loop;
-  
+
         pragma Loop_Invariant (Sorted (A (A'First .. J)));
         pragma Loop_Invariant (Multiset_Unchanged (A, A'Loop_Entry));
-  
+
      end loop;
-  
+
   end Insertion_Sort;
-#+END_SRC
+#+end_src
 
 In this implementation, we can see that there is a second loop
 embedded within the main loop. Its function is to insert the

@@ -1,6 +1,6 @@
-# Created 2018-09-25 Tue 10:58
+# Created 2019-06-07 Fri 13:02
 #+OPTIONS: author:nil title:nil toc:nil
-#+EXPORT_FILE_NAME: ../../../classic-sorting/Selection_Sort.org
+#+export_file_name: ../../../classic-sorting/Selection_Sort.org
 
 * The Selection_Sort algorithm
 
@@ -10,9 +10,9 @@ each iteration, select the lowest value in the part of the array
 that has not yet been sorted, and swap it with the value right next
 to the last sorted index. Its signature is the following:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Selection_Sort (A : in out T_Arr)
-#+END_SRC
+#+end_src
 
 ** Specification of Selection_Sort
 
@@ -20,10 +20,10 @@ With all the predicates already defined in the previous chapters
 we have everything needed to specify the ~Selection_Sort~
 algorithm:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Selection_Sort (A : in out T_Arr) with
      Post => Sorted (A) and then Multiset_Unchanged (A, A'Old);
-#+END_SRC
+#+end_src
 
 The algorithm has no preconditions, and the postconditions simply
 specify that the array must be sorted in ascending order and that
@@ -35,25 +35,25 @@ Selection sort can easily be implemented with the functions
 already implemented and proved in previous chapters. Its
 implementation is as follows:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   procedure Selection_Sort (A : in out T_Arr) is
      Sel : Integer;
   begin
      if A'Length = 0 then  -- nothing to do and to prove.
         return;
      end if;
-  
+
      for J in A'Range loop
-  
+
         Sel := Min_Element (A (J .. A'Last)).Value;
         Swap_Array (A, J, Sel);
-  
+
         pragma Loop_Invariant (Lower_Bound (A (J .. A'Last), A (J)));
         pragma Loop_Invariant (Multiset_Unchanged (A, A'Loop_Entry));
         pragma Loop_Invariant (Sorted (A (A'First .. J)));
      end loop;
   end Selection_Sort;
-#+END_SRC
+#+end_src
 
 The algorithm is quite simple. For each iteration of the loop we
 find the minimum value of the array among the indexes that have

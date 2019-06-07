@@ -73,8 +73,5 @@
     termination of ~Occ_Def~).
 
 # Local Variables:
-# ispell-dictionary : "english"
-# End:
-# Local Variables:
 # ispell-dictionary: "english"
 # End:

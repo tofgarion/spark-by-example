@@ -11,7 +11,7 @@
      function Search_N (A : T_Arr; Val : Integer; N : Positive) return Option;
    #+END_SRC
 
-   As usual, we will use an ~Option~ to encapsulate the result.
+   We will use an ~Option~ to encapsulate the result.
 
 *** The Constant_Range_From_Location and Has_Constant_Subrange predicates
 
@@ -27,8 +27,9 @@
     The preconditions avoid possible overflows.
 
     Then, a ~Has_Constant_Subrange~ ghost function is defined to
-    express that an array has a subrange containing only a given value
-    (the precondition avoids a possible overflow too):
+    express that an array has a subrange containing only a given
+    value. The subrange end should not exceed index ~I~. The
+    precondition avoids a possible overflow too:
 
     #+INCLUDE: "../../../spec/has_constant_subrange_p.ads" :src ada :range-begin "function Has_Constant_Subrange" :range-end "\s-*(\([^()]*?\(?:\n[^()]*\)*?\)*)\s-*\([^;]*?\(?:\n[^;]*\)*?\)*;" :lines "19-27"
 
@@ -58,7 +59,7 @@
 
     The implementation of ~Search_N~ is the following:
 
-    #+INCLUDE: "../../../non-mutating/search_n_p.adb" :src ada :range-begin "function Search_N" :range-end "end Search_N;" :lines "7-42"
+    #+INCLUDE: "../../../non-mutating/search_n_p.adb" :src ada :range-begin "function Search_N" :range-end "end Search_N;" :lines "7-45"
 
     The loop invariants specify that:
       - no subsequence of ~N~ times the value ~Value~ has been found
@@ -67,8 +68,8 @@
         means that the subsequence does not exist).
       - if ~Start~ is less than ~I~, then there is a constant range of
         ~Val~ starting at ~Start~ of length ~I + 1 - Start~.
-      - there is no subsequence of ~N~ times the value ~Val~ in the
-        range ~A'First .. I~ of the array.
+      - there is no subsequence of length ~N~ containing only the
+        value ~Val~ in the range ~A'First .. I~ of the array.
       - if ~A'First~ is less than ~Start~, then the value at index
         ~Start - 1~ is different from ~Val~. This allows to prove the
         previous invariant. Indeed, there could be a subsequence of
@@ -76,11 +77,19 @@
         ~Val~. This invariant states that ~Start~ *is* the first index
         of the constant range.
 
+     In order to prove the invariant on ~Has_Constant_Subrange~
+     stating that there is no constant subrange containing ~Val~ in
+     ~A~ of length ~N~ up to index ~I~, an assertion must be added
+     inside the then branch of the condition:
+
+     #+INCLUDE: "../../../non-mutating/search_n_p.adb" :src ada :lines "24-26"
+
+     This assertion states there is no constant subrange of length ~N~
+     containing ~Val~ starting from ~I~ in ~A~ which is normal as the
+     then branch of the conditional is executed when ~A (I) /= Val~.
+
      Everything is proved by ~GNATprove~.
 
- # Local Variables:
- # ispell-dictionary : "english"
- # End:
 # Local Variables:
 # ispell-dictionary: "english"
 # End:

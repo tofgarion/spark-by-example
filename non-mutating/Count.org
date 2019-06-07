@@ -1,15 +1,15 @@
-# Created 2018-11-09 Fri 22:38
+# Created 2019-06-07 Fri 13:02
 #+OPTIONS: author:nil title:nil toc:nil
-#+EXPORT_FILE_NAME: ../../../non-mutating/Count.org
+#+export_file_name: ../../../non-mutating/Count.org
 
 * The Count algorithm
 
 The ~Count~ algorithm counts the number of occurrences of a value
 ~Val~ in an array ~A~. Its signature can be expressed as:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Count (A : T_Arr; Val : T) return Natural;
-#+END_SRC
+#+end_src
 
 ** The predicate Occ
 
@@ -24,13 +24,13 @@ define a recursive function ~Occ_Def~ which will be used in ~Occ~
 as *GNATprove only introduces axioms for postconditions of
 non-recursive functions*.
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Remove_Last
     (A : T_Arr)
      return T_Arr is (A (A'First .. A'Last - 1)) with
      Pre => A'Length > 0,
      Ghost;
-  
+
   function Occ_Def
     (A   : T_Arr;
      Val : T)
@@ -40,7 +40,7 @@ non-recursive functions*.
      else Occ_Def (Remove_Last (A), Val)) with
      Post => Occ_Def'Result <= A'Length;
   pragma Annotate (Gnatprove, Terminating, Occ_Def);
-#+END_SRC
+#+end_src
 
 The line ~pragma Annotate (Gnatprove, Terminating, Occ_Def);~ is
 very important here. It states that the function ~Occ_Def~
@@ -53,18 +53,18 @@ verify by other means that ~Occ_Def~ really terminates.
 After having defined ~Occ_def~, the definition of ~Occ~ is rather
 easy:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Occ
     (A   : T_Arr;
      Val : T)
      return Natural is (Occ_Def (A, Val)) with
      Post => Occ'Result <= A'Length;
-#+END_SRC
+#+end_src
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Occ (A : T_Arr; Val : T) return Natural is (Occ_Def (A, Val)) with
     Post => Occ'Result <= A'Length;
-#+END_SRC
+#+end_src
 
 The postcondition is necessary to prove loop invariants in
 ~Count~.
@@ -73,7 +73,7 @@ The postcondition is necessary to prove loop invariants in
 
 The specification of ~Count~ is the following:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Count
     (A   : T_Arr;
      Val : T)
@@ -81,7 +81,7 @@ The specification of ~Count~ is the following:
      Post =>
      (Count'Result <= A'Length and then Count'Result in 0 .. A'Length
       and then Count'Result = Occ (A, Val));
-#+END_SRC
+#+end_src
 
 The postconditions express
 - that the number returned is correct (it is not less than 0 nor
@@ -93,7 +93,7 @@ The postconditions express
 
 The implementation of ~Count~ is the following:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Count
     (A   : T_Arr;
      Val : T)
@@ -105,14 +105,14 @@ The implementation of ~Count~ is the following:
         if A (I) = Val then
   	 Result := Result + 1;
         end if;
-  
+
         pragma Loop_Invariant (Result <= A'Length);
         pragma Loop_Invariant (Result = Occ (A (A'First .. I), Val));
      end loop;
-  
+
      return Result;
   end Count;
-#+END_SRC
+#+end_src
 
 The first invariant states that ~Result~ always stays in a correct
 range. The second one states that at each loop iteration, we can

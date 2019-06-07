@@ -1,6 +1,6 @@
-# Created 2018-11-09 Fri 22:38
+# Created 2019-06-07 Fri 13:02
 #+OPTIONS: author:nil title:nil toc:nil
-#+EXPORT_FILE_NAME: ../../../binary-search/Search_Upper_Bound.org
+#+export_file_name: ../../../binary-search/Search_Upper_Bound.org
 
 * The Search_Upper_Bound algorithm
 
@@ -9,9 +9,9 @@ at which a value can be found in a sorted array. It is very close
 to the ~Search_Lower_Bound~ algorithm. Its signature can be
 expressed as:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Search_Upper_Bound (A : T_arr; V : T) return Option;
-#+END_SRC
+#+end_src
 
 ** Working principle
 
@@ -25,7 +25,7 @@ should be noted that ~J~ satisfies the inequality ~A'First <= J <=
 
 The ~Search_Upper_Bound~ algorithm can be specified as follows:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Search_Upper_Bound
     (A   : T_Arr;
      Val : T)
@@ -40,7 +40,7 @@ The ~Search_Upper_Bound~ algorithm can be specified as follows:
   	(A (A'First .. Search_Upper_Bound'Result.Value - 1), Val)
         and then Strict_Lower_Bound
   	(A (Search_Upper_Bound'Result.Value .. A'Last), Val));
-#+END_SRC
+#+end_src
 
 It uses the predicates ~Upper_Bound~ and ~Strict_Lower_Bound~
 defined in chapter 4.
@@ -65,7 +65,7 @@ The postconditions are expressed with contract cases:
 
 The implementation of ~Search_Upper_Bound~ is defined as follows:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Search_Upper_Bound
     (A   : T_Arr;
      Val : T)
@@ -81,13 +81,13 @@ The implementation of ~Search_Upper_Bound~ is defined as follows:
         Result := (Exists => True, Value => A'Last + 1);
         while (Left < Result.Value) loop
   	 Middle := Left + (Result.Value - Left) / 2;
-  
+
   	 if A (Middle) <= Val then
   	    Left := Middle + 1;
   	 else
   	    Result.Value := Middle;
   	 end if;
-  
+
   	 pragma Loop_Variant (Decreases => Result.Value - Left);
   	 pragma Loop_Invariant (A'First <= Left);
   	 pragma Loop_Invariant (Left <= Result.Value);
@@ -101,9 +101,9 @@ The implementation of ~Search_Upper_Bound~ is defined as follows:
         end loop;
         return Result;
      end if;
-  
+
   end Search_Upper_Bound;
-#+END_SRC
+#+end_src
 
 At each iteration, the range that contains the sought-after result
 is narrowed down. Again, note that the ~middle~ is calculated to

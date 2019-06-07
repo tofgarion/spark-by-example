@@ -1,15 +1,15 @@
-# Created 2018-11-09 Fri 22:38
+# Created 2019-06-07 Fri 13:02
 #+OPTIONS: author:nil title:nil toc:nil
-#+EXPORT_FILE_NAME: ../../../binary-search/Binary_Search.org
+#+export_file_name: ../../../binary-search/Binary_Search.org
 
 * The Binary_Search algorithm
 
 The ~Binary_Search~ algorithm is a classic Computer Science
 algorithm. Its signature can be expressed as
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Binary_Search (A : T_Arr; Val : T) return Boolean;
-#+END_SRC
+#+end_src
 
 It will simply return ~True~ if ~Val~ is contained in ~A~.
 
@@ -17,14 +17,14 @@ It will simply return ~True~ if ~Val~ is contained in ~A~.
 
 The specification of ~Binary_Search~ can be expressed as
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Binary_Search
     (A   : T_Arr;
      Val : T)
      return Boolean with
      Pre  => Sorted (A) and then A'Last < Positive'Last,
      Post => Binary_Search'Result = Has_Value (A, Val);
-#+END_SRC
+#+end_src
 
 The first precondition specifies that the array has to be
 sorted. The second precondition is needed because we will use the
@@ -39,7 +39,7 @@ complexity whereas ~Binary_Search~ has a logarithmic complexity.
 
 The implementation of ~Binary_Search~ is
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Binary_Search
     (A   : T_Arr;
      Val : T)
@@ -54,9 +54,9 @@ The implementation of ~Binary_Search~ is
      else
         return False;
      end if;
-  
+
   end Binary_Search;
-#+END_SRC
+#+end_src
 
 Note that if ~Low.Exists = True~, ~Val <= A(Low.Value)~ is always true. This
 is why we only check for ~A (I) <= Val~ to be true.
