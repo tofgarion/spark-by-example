@@ -16,7 +16,7 @@
 
 ** Tools used
 
-   [[https://www.adacore.com/community][GNAT Community 2018]] has been used for this project. You may
+   [[https://www.adacore.com/community][GNAT Community 2019]] has been used for this project. You may
    download and install it using the previous link.
 
 ** Table of contents
