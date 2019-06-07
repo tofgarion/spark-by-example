@@ -29,7 +29,7 @@ SPEC_REMOVE_COPY_SECOND 	= $(SPEC_TYPES) ../spec/multiset_predicates.ads ../spec
 SPEC_RANDOM_SHUFFLE 		= $(SPEC_TYPES) $(SPEC_LEAMMAS) ../spec/multiset_predicates.ads $(call GENERATE_DEP, random) $(call GENERATE_DEP, swap_array)
 
 # proof level for each function
-LEVEL_FILL                   = 0
+LEVEL_FILL                   = 1
 LEVEL_SWAP                   = 0
 LEVEL_SWAP_RANGES            = 1
 LEVEL_SWAP_RANGES_INDEX      = 1
