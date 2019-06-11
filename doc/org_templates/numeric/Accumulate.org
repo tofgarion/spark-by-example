@@ -65,15 +65,17 @@
 
      #+BEGIN_SRC shell
        acc_def_naive_p.ads:8:13: medium: subprogram "Acc_Def_Rec" might not terminate, terminating annotation could be incorrect
-       acc_def_naive_p.ads:14:57: medium: overflow check might fail
+       acc_def_naive_p.ads:14:57: medium: overflow check might fail [possible explanation: subprogram at line 8 should mention A and Init in a precondition]
      #+END_SRC
 
      The first error is simply due to the recursive nature of
      ~Acc_Ref_Rec~, which is solved with our annotation ~pragma~. The
      second error makes reference to the line of ~Acc_Def_Rec~ where
      the sum occurs. At this point SPARK cannot prove whether the sum
-     will overflow or not. We therefore need to rewrite our functions
-     to avoid any potential overflow in *any part of the code*.
+     will overflow or not. A hint is provided: we should use ~A~ and
+     ~Init~ in a precondition. We therefore need to rewrite our
+     functions to avoid any potential overflow in *any part of the
+     code*.
 
 *** A correct version of Accumulate
 

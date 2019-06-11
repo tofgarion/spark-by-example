@@ -1,15 +1,15 @@
-# Created 2018-11-09 Fri 22:38
+# Created 2019-06-11 Tue 12:48
 #+OPTIONS: author:nil title:nil toc:nil
-#+EXPORT_FILE_NAME: ../../../numeric/Accumulate.org
+#+export_file_name: ../../../numeric/Accumulate.org
 
 * The Accumulate algorithm
 
 The ~Accumulate~ algorithm will compute the sum of the elements of
 an array. Its signature reads:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Accumulate (A : T_Arr; Init : T) return T;
-#+END_SRC
+#+end_src
 
 The algorithm will return ~Init + A (A'First) + A (A'First+1) +
    ... + A (A'Last)~.
@@ -27,7 +27,7 @@ To be able to write the preconditions and postconditions of
 ~Accumulate~ we first need to write a predicate defining what the
 result of our function should be:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Acc_Def_Rec
     (A    : T_Arr;
      Init : T)
@@ -35,14 +35,14 @@ result of our function should be:
     (case A'Length is when 0 => Init,
        when others           =>
          Acc_Def_Rec (A (A'First .. A'Last - 1), Init) + A (A'Last));
-#+END_SRC
+#+end_src
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Acc_Def
     (A    : T_Arr;
      Init : T)
      return T is (Acc_Def_Rec (A, Init));
-#+END_SRC
+#+end_src
 
 As usual with a recursive function, we encapsulate the call to
 the recursive function into a simple function in order to be able
@@ -54,14 +54,14 @@ function terminates.
 
 With the given predicates we can write a specification for ~Accumulate~:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Accumulate_Naive
     (A    : T_Arr;
      Init : T)
      return T with
      Pre  => (for all I in A'Range => Acc_Def (A (A'First .. I), Init) in T),
      Post => Accumulate_Naive'Result = Acc_Def (A, Init);
-#+END_SRC
+#+end_src
 
 The precondition expresses that all the intermediary sums we are
 going to evaluate should not overflow. The postcondition
@@ -71,7 +71,7 @@ expresses that our algorithm returns the correct value.
 
 An implementation satifying our specification is the following
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Accumulate_Naive
     (A    : T_Arr;
      Init : T)
@@ -80,16 +80,16 @@ An implementation satifying our specification is the following
      Result : T := Init;
   begin
      for I in A'Range loop
-  
+
         pragma Assert (Acc_Def (A (A'First .. I), Init) in T);
         Result := Result + A (I);
         pragma Loop_Invariant (Result = Acc_Def (A (A'First .. I), Init));
-  
+
      end loop;
      return Result;
-  
+
   end Accumulate_Naive;
-#+END_SRC
+#+end_src
 
 The assertion in the loop verifies that there will not be any
 overflows during the sum, and the loop invariant ensures that the
@@ -102,17 +102,19 @@ With this implementation, the assertion, the loop invariant and
 the postcondition are proved. Nevertheless, ~GNATprove~ outputs
 two errors:
 
-#+BEGIN_SRC shell
+#+begin_src shell
   acc_def_naive_p.ads:8:13: medium: subprogram "Acc_Def_Rec" might not terminate, terminating annotation could be incorrect
-  acc_def_naive_p.ads:14:57: medium: overflow check might fail
-#+END_SRC
+  acc_def_naive_p.ads:14:57: medium: overflow check might fail [possible explanation: subprogram at line 8 should mention A and Init in a precondition]
+#+end_src
 
 The first error is simply due to the recursive nature of
 ~Acc_Ref_Rec~, which is solved with our annotation ~pragma~. The
 second error makes reference to the line of ~Acc_Def_Rec~ where
 the sum occurs. At this point SPARK cannot prove whether the sum
-will overflow or not. We therefore need to rewrite our functions
-to avoid any potential overflow in *any part of the code*.
+will overflow or not. A hint is provided: we should use ~A~ and
+~Init~ in a precondition. We therefore need to rewrite our
+functions to avoid any potential overflow in *any part of the
+code*.
 
 ** A correct version of Accumulate
 
@@ -128,7 +130,7 @@ that contains ~T~ values (this type is the same as the ~Option~
 type defined in [[file:../non-mutating/README.org][Chapter 3]], only the type of the encapsulated
 value changes):
 
-#+BEGIN_SRC ada
+#+begin_src ada
   type T_Option (OK : Boolean) is record
      case OK is
         when True =>
@@ -137,18 +139,18 @@ value changes):
   	 null;
      end case;
   end record;
-#+END_SRC
+#+end_src
 
 The next function may be the most important of our new version,
 as it will enable us to verify that no overflow occur:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Add_No_Overflow
     (X, Y : T)
      return Boolean is
     (Y = 0 or else (Y > 0 and then T'Last - Y >= X)
      or else (Y < 0 and then T'First - Y <= X));
-#+END_SRC
+#+end_src
 
 In this function, we verify that the sum of ~X~ and ~Y~ will not
 generate an overflow. We cannot check directly the result of ~X +
@@ -169,7 +171,7 @@ We now have a function that will check if there will be an
 overflow when adding two values of type ~T~. ~Acc_Def_Rec~ and
 ~Acc_Def~ are now rewritten as follows:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Acc_Def_Rec
     (A    : T_Arr;
      F, L : Integer;
@@ -184,16 +186,16 @@ overflow when adding two values of type ~T~. ~Acc_Def_Rec~ and
         then (True, Acc_Def_Rec (A, F, L - 1, Init).Value + A (L))
         else (OK => False))) with
      Pre => (if L >= F then L in A'Range and F in A'Range);
-#+END_SRC
+#+end_src
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Acc_Def
     (A    : T_Arr;
      F, L : Integer;
      Init : T)
      return T_Option is (Acc_Def_Rec (A, F, L, Init)) with
      Pre => (if L >= F then L in A'Range and F in A'Range);
-#+END_SRC
+#+end_src
 
 ~Acc_Def_Rec~ has been updated to return a ~T_Option~ with
 ~Value~ containing the sum of the elements of ~A~ from index ~F~
@@ -209,14 +211,14 @@ calculations, and that the sum of the result of ~Acc_Def_Rec (A,
 
 We can now rewrite the specification for ~Accumulate~:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Accumulate
     (A    : T_Arr;
      Init : T)
      return T with
      Pre  => (for all J in A'Range => Acc_Def (A, A'First, J, Init).OK),
      Post => Accumulate'Result = Acc_Def (A, A'First, A'Last, Init).Value;
-#+END_SRC
+#+end_src
 
 The precondition and postcondition are virtually the same, they
 simply make use of the new return type of ~Acc_Def_Rec~. We do
@@ -228,7 +230,7 @@ precondition.
 
 An implementation deriving from the previous specification is:
 
-#+BEGIN_SRC ada
+#+begin_src ada
   function Accumulate
     (A    : T_Arr;
      Init : T)
@@ -240,12 +242,12 @@ An implementation deriving from the previous specification is:
         pragma Assert (Acc_Def (A, A'First, J, Init).OK);
         Result := Result + A (J);
         pragma Loop_Invariant (Result = Acc_Def (A, A'First, J, Init).Value);
-  
+
      end loop;
-  
+
      return Result;
   end Accumulate;
-#+END_SRC
+#+end_src
 
 The assertion inside the loop checks that there are no overflow
 when adding ~A(J)~ to the intermediary result. The loop invariant
