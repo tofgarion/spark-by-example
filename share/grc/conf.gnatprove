@@ -1,0 +1,33 @@
+# pathname
+regexp=.*\.ad(b|s):(\d)+:(\d)+:
+colour=bold
+count=once
+-
+# warning
+regexp=warning:
+colours=yellow
+count=once
+-
+# info
+regexp=info:
+colours=green
+count=once
+-
+# low
+regexp=low:
+colours=bold yellow
+count=once
+-
+# medium
+regexp=medium:
+colours=bold red
+count=once
+-
+# high
+regexp=high:
+colours=bold red
+count=once
+
+# Local Variables:
+# mode: conf
+# End:

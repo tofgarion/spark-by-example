@@ -1,0 +1,9 @@
+#+TITLE: GNATProve configuration for grc
+
+[[https://github.com/garabik/grc][grc]] is a lightweight colorizer for terminals. You will find here a
+simple configuration for GNATProve that highlight the level of
+messages (warning, info, log, medium, hight).
+
+Simply put the ~grc.conf~ and ~conf.gnatprove~ files in your ~~/.grc~
+directory and use the ~grc-gnatprove.zsh~ or ~grc-gnatprove.bash~ to
+configure your shell.
