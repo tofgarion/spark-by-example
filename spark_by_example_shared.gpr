@@ -8,7 +8,7 @@ project Spark_By_Example_Shared is
 
   package Prove is
     for Proof_Switches ("Ada") use ("--mode=prove",
-                                    "--report=statistics",
+                                    "--report=fail",
                                     "--proof=per_check",
                                     "--warnings=continue");
   end Prove;
