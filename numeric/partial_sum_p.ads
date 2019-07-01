@@ -12,7 +12,7 @@ package Partial_Sum_P with
       Pre => A'Length = B'Length
       and then (for all J in A'Range => Acc_Def (A, A'First, J, 0).OK),
       Post =>
-      (for all J in A'Range =>
-         B (B'First + (J - A'First)) = Acc_Def (A, A'First, J, 0).Value);
+      (for all J in 0 .. A'Length - 1 =>
+         B (B'First + J) = Acc_Def (A, A'First, A'First + J, 0).Value);
 
 end Partial_Sum_P;

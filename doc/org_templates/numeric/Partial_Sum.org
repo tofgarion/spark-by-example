@@ -36,8 +36,10 @@
     #+INCLUDE: "../../../numeric/partial_sum_p.adb" :src ada :range-begin "procedure Partial_Sum" :range-end "End Partial_Sum;" :lines "5-27"
 
     This implementation is quite similar to the one of [[Accumulate.org][Accumulate]], the
-    assertions ensures that there are no overflows and the loop
-    invariant verifies that the computed values are correct.
+    assertions ensures are here to ensure that there is no overflow,
+    that the previously computed value in array ~B~ was correct and
+    the loop invariant verifies that all the previously computed
+    values are correct.
 
     With this implementation and specification, everything is proved
     by ~GNATprove~.

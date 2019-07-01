@@ -6,8 +6,9 @@ package Acc_Def_P with
    Ghost
  is
 
-   -- Thanks to Claire Dross from Adacore for the help and the solutions provided to prove this
-   -- program, in particular concerning the handeling of overflows.
+   -- Thanks to Claire Dross from Adacore for the help and the
+   -- solutions provided to prove this program, in particular
+   -- concerning the handling of overflows.
 
    function Acc_Def_Rec
      (A    : T_Arr;

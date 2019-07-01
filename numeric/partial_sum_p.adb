@@ -13,8 +13,7 @@ package body Partial_Sum_P with
          for J in 1 .. A'Length - 1 loop
 
             pragma Assert (Acc_Def (A, A'First, A'First + J, 0).OK);
-            pragma Assert
-              (Add_No_Overflow (A (A'First + J), B (B'First + (J - 1))));
+            pragma Assert (B (B'First + (J - 1)) = Acc_Def (A, A'First, A'First + J - 1, 0).Value);
             B (B'First + J) := B (B'First + (J - 1)) + A (A'First + J);
 
             pragma Loop_Invariant
@@ -23,5 +22,6 @@ package body Partial_Sum_P with
 
          end loop;
       end if;
+
    end Partial_Sum;
 end Partial_Sum_P;
