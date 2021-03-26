@@ -4,6 +4,7 @@ project Spark_By_Example_Shared is
 
   package Compiler is
     for Default_Switches ("Ada") use ("-gnat12", "-gnato13", "-gnata");
+    for Local_Configuration_Pragmas use "noassert.adc";
   end Compiler;
 
   package Prove is
