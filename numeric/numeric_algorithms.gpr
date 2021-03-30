@@ -12,7 +12,9 @@ project Numeric_Algorithms is
 
     for Switches ("overflow.ads")
       use ("-gnat12", "-gnato13", "-gnata");
- end Compiler;
+
+    for Local_Configuration_Pragmas use "../noassert.adc";
+  end Compiler;
 
   package Prove renames Spark_By_Example_Shared.Prove;
 
